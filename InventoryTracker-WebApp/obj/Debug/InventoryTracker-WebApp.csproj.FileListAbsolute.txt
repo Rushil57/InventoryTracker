@@ -1,0 +1,138 @@
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\InventoryTracker-WebApp.dll.config
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\InventoryTracker-WebApp.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\InventoryTracker-WebApp.pdb
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csc.exe
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csc.exe.config
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csc.rsp
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csi.exe
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csi.exe.config
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csi.rsp
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.Managed.Core.targets
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Buffers.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Collections.Immutable.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Memory.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Numerics.Vectors.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Reflection.Metadata.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Runtime.CompilerServices.Unsafe.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Text.Encoding.CodePages.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Threading.Tasks.Extensions.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\vbc.exe
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\vbc.exe.config
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\vbc.rsp
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\VBCSCompiler.exe
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\VBCSCompiler.exe.config
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Antlr3.Runtime.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Dapper.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Microsoft.Web.Infrastructure.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Newtonsoft.Json.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Runtime.CompilerServices.Unsafe.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Helpers.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Mvc.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Optimization.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Razor.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.Deployment.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.Razor.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Abstractions.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Container.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Mvc5.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\WebGrease.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Dapper.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Newtonsoft.Json.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Runtime.CompilerServices.Unsafe.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Helpers.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Mvc.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Optimization.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Razor.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.Deployment.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.Razor.xml
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Abstractions.pdb
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Container.pdb
+D:\Project\InventoryTracker\InventoryTracker-WebApp\bin\Antlr3.Runtime.pdb
+D:\Project\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.csproj.AssemblyReference.cache
+D:\Project\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.csproj.CoreCompileInputs.cache
+D:\Project\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.csproj.CopyComplete
+D:\Project\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.dll
+D:\Project\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.pdb
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\InventoryTracker-WebApp.dll.config
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\InventoryTracker-WebApp.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\InventoryTracker-WebApp.pdb
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csc.exe
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csc.exe.config
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csc.rsp
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csi.exe
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csi.exe.config
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\csi.rsp
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.Managed.Core.targets
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Buffers.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Collections.Immutable.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Memory.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Numerics.Vectors.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Reflection.Metadata.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Runtime.CompilerServices.Unsafe.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Text.Encoding.CodePages.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\System.Threading.Tasks.Extensions.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\vbc.exe
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\vbc.exe.config
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\vbc.rsp
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\VBCSCompiler.exe
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\roslyn\VBCSCompiler.exe.config
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Antlr3.Runtime.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Dapper.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Microsoft.Web.Infrastructure.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Newtonsoft.Json.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Runtime.CompilerServices.Unsafe.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Helpers.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Mvc.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Optimization.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Razor.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.Deployment.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.Razor.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Abstractions.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Container.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Mvc5.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\WebGrease.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Dapper.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Newtonsoft.Json.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Runtime.CompilerServices.Unsafe.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Helpers.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Mvc.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Optimization.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.Razor.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.Deployment.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\System.Web.WebPages.Razor.xml
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Abstractions.pdb
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Unity.Container.pdb
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\bin\Antlr3.Runtime.pdb
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.csproj.AssemblyReference.cache
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.csproj.CoreCompileInputs.cache
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.csproj.CopyComplete
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.dll
+D:\Flash Project\Source\InventoryTracker\InventoryTracker-WebApp\obj\Debug\InventoryTracker-WebApp.pdb

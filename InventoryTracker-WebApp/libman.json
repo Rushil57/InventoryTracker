@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jqueryui@1.13.2",
+      "destination": "Scripts/jqueryui/"
+    },
+    {
+      "library": "bootstrap-datepicker@1.9.0",
+      "destination": "Scripts/bootstrap-datepicker/"
+    },
+    {
+      "library": "datatables@1.10.21",
+      "destination": "Scripts/datatables/"
+    },
+    {
+      "library": "datatables-responsive@2.4.0",
+      "destination": "Scripts/datatables-responsive/"
+    }
+  ]
+}
