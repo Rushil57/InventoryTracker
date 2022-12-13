@@ -502,6 +502,6 @@ function divEntityHDRLoad(element) {
     if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
         startIndexEntity = endIndexEntity;
         endIndexEntity = endIndexEntity + 10;
-        loadEntityHDR('');;
+        loadEntityHDR($('#searchEntityStr').val());;
     }
 }

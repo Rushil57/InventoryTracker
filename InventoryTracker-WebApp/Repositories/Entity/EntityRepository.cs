@@ -20,7 +20,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 string query = string.Empty;
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    query = "select distinct eh.* from EQUIPMENT_HDR as eh join Equipment_Dtl  as ed on eh.EQUIP_ID = ed.Equip_ID and ed.Eq_Value like '%" + searchString + "%' or eh.EQUIP_TYPE like '%" + searchString + "%' or eh.VENDOR  like '%" + searchString + "%' or eh.UNIT_ID  like '%" + searchString + "%'";
+                    query = "select distinct ENT_ID , ENT_TYPE ,ENT_NAME , ASSIGNED from (Select * From  (Select Row_Number() Over (Order By eh.[ENT_ID] ) As RowNum , eh.[ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR] as eh where eh.ENT_NAME like '%" + searchString + "%' or eh.ENT_TYPE like '%" + searchString + "%') t2 Where RowNum > " + startIndex + "and RowNum <= " + endIndex + " union Select * From  (Select Row_Number() Over (Order By eh.[ENT_ID] ) As RowNum , eh.[ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR] as eh join dbo.Entity_Dtl as ed on eh.ENT_ID = ed.Ent_ID  where  ed.Ent_Value like '%" + searchString + "%') t2 Where RowNum > " + startIndex + "and RowNum <= " + endIndex + ") as table";
                 }
                 else
                 {

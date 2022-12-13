@@ -55,7 +55,7 @@ function loadEntityHDR(searchString) {
                     $("#entityHDR > tbody > tr").find("td:eq(" + th + ")").remove();
                     tableHeadLength = tableHeadLength - 1;
                 }
-                if ($('#searchEntityStr').val() == '' && startIndexEntity == 0) {
+                if (startIndexEntity == 0) {
                     $("#entityHDR > tbody >  tr").remove();
                 }
                 $("#entityHDR > tbody").append(entityString);
@@ -136,28 +136,30 @@ function loadEntityHDR(searchString) {
 
 //}
 
-//function addEntityHeader() {
-//    loadEntityHDR('');
-//    addEntityColumn();
-//    $("#entityHDR tr").each(function (index) {
-//        if (index !== 0) {
-//            var row = $(this);
-//            var isHide = true;
-//            row.find('td').each(function () {
-//                if ($(this).text().toLowerCase().indexOf($('#searchEntityStr').val().toLowerCase().trim()) != -1) {
-//                    isHide = false;
-//                    return;
-//                }
-//            })
-//            if (isHide) {
-//                row.hide();
-//            }
-//            else {
-//                row.show();
-//            }
-//        }
-//    });
-//}
+function addEntityHeader() {
+    startIndexEntity = 0;
+    endIndexEntity = 20;
+    loadEntityHDR($('#searchEntityStr').val());
+    addEntityColumn();
+    $("#entityHDR tr").each(function (index) {
+        if (index !== 0) {
+            var row = $(this);
+            var isHide = true;
+            row.find('td').each(function () {
+                if ($(this).text().toLowerCase().indexOf($('#searchEntityStr').val().toLowerCase().trim()) != -1) {
+                    isHide = false;
+                    return;
+                }
+            })
+            if (isHide) {
+                row.hide();
+            }
+            else {
+                row.show();
+            }
+        }
+    });
+}
 
 
 function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, element) {
