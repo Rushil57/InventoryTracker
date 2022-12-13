@@ -45,13 +45,26 @@ function loadEquipmentHDR(searchString) {
         success: function (data) {
             if (data.IsValid) {
                 var equipmentString = '';
+                var isaddEquipmentColumn = false;
                 for (var i = 0; i < data.data.length; i++) {
                     equipmentString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].EQUIP_ID + ',' + null + ',\'' + data.data[i].UNIT_ID + '\',\'' + data.data[i].EQUIP_TYPE + '\',\'' + data.data[i].VENDOR + '\',this)"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
+                }
+
+
+                var tableHeadLength = $("#equipHDR > thead > tr >  th").length
+                for (var th = 4; th <= tableHeadLength;) {
+                    isaddEquipmentColumn = true;
+                    $($("#equipHDR > thead > tr >  th")[th]).remove();
+                    $("#equipHDR > tbody > tr").find("td:eq(" + th + ")").remove();
+                    tableHeadLength = tableHeadLength - 1;
                 }
                 if ($('#searchEquipmentStr').val() == '' && startIndexEquip == 1) {
                     $("#equipHDR > tbody >  tr").remove();
                 }
                 $("#equipHDR > tbody").append(equipmentString);
+                if (isaddEquipmentColumn) {
+                    addEquipmentColumn();
+                }
             }
         }, error: function (ex) { }
     });
@@ -156,14 +169,7 @@ $('#newTemplate').click(function () {
     vendorEle.val("");
     equipmentHDRID.val(0);
     var todayDate = (new Date()).toLocaleDateString().split('T')[0];
-    $("#tblTemplateDtl > tbody >  tr").each(function () {
-        var firsttd = $(this).find("td:eq(1)");
-        var secondtd = $(this).find("td:eq(2)");
-        var thirdtd = $(this).find("td:eq(3)");
-        firsttd.html("<input type='text' class='dropdown-control' style='width:100%' value=''>");
-        secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + todayDate + "'>");
-        thirdtd.html("<input type='text' class='datepicker dropdown-control' value='01/01/9999'>");
-    });
+    $("#tblTemplateDtl > tbody >  tr").remove();
     $('.datepicker').datepicker({
         autoclose: true
     });
@@ -219,9 +225,9 @@ function saveHDRTemplateDtl() {
     $("#tblTemplateDtl > tbody >  tr").each(function () {
         var Equip_Dtl_ID = $(this).find('.equipDtlID').val();
         var Equip_Temp_ID = $(this).find('.equipTmpID').val();
-        var firsttd = (typeof $(this).find("td:eq(1)").text() != 'undefined' && $(this).find("td:eq(1)").text() != "") ? $(this).find("td:eq(1)").text() : $(this).find("td:eq(1) >  input").val();
-        var secondtd = (typeof $(this).find("td:eq(2)").text() != 'undefined' && $(this).find("td:eq(2)").text() != '') ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) >  input").val();
-        var thirdtd = (typeof $(this).find("td:eq(3)").text() != 'undefined' && $(this).find("td:eq(3)").text() != '') ? $(this).find("td:eq(3)").text() : $(this).find("td:eq(3) >  input").val();
+        var firsttd = (typeof $(this).find("td:eq(1)").text() != 'undefined' && $(this).find("td:eq(1)").text().trim() != "") ? $(this).find("td:eq(1)").text() : $(this).find("td:eq(1) >  input").val();
+        var secondtd = (typeof $(this).find("td:eq(2)").text() != 'undefined' && $(this).find("td:eq(2)").text().trim() != '') ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) >  input").val();
+        var thirdtd = (typeof $(this).find("td:eq(3)").text() != 'undefined' && $(this).find("td:eq(3)").text().trim() != '') ? $(this).find("td:eq(3)").text() : $(this).find("td:eq(3) >  input").val();
 
         $(this).find("td:eq(2) > input").css('background-color', 'white');
         $(this).find("td:eq(3) > input").css('background-color', 'white');
@@ -268,7 +274,7 @@ function saveHDRTemplateDtl() {
         success: function (data) {
             if (data.IsValid) {
                 loadEquipmentHDR($('#searchEquipmentStr').val());
-                loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor);
+                $('#equipHDR > tbody >  tr:last').trigger('click');
                 addEquipmentColumn();
             }
         }, error: function (ex) { }
@@ -479,3 +485,32 @@ function enabled() {
     vendorEle.prop("disabled", false);
     vendorEle.css('opacity', '1');
 }
+
+$('#equipType').change(function () {
+    $.ajax({
+        before: AddLoader(),
+        after: RemoveLoader(),
+        url: '/Equipment/GetEquipmentTemplate',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: 'GET',
+        async: false,
+        data: { 'equipmentType': $(this).val() },
+        success: function (data) {
+            if (data.IsValid) {
+                var templateString = '';
+                for (var i = 0; i < data.data.length; i++) {
+                    templateString += "<tr><input type='hidden' class='equipDtlID' value='0' /> <input type='hidden' class='equipTmpID' value='" + data.data[i].Equip_Temp_ID + "'/><td>" + data.data[i].Prop_Name + "</td><td><input type='text' class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
+                }
+                $('#tblTemplateDtl > tbody > tr').remove();
+                $('#tblTemplateDtl > tbody').append(templateString);
+                $('.startdate').datepicker({
+                    autoclose: true
+                }).datepicker('setDate', $('#mainDate').val());
+                $('.enddate').datepicker({
+                    autoclose: true
+                }).datepicker('setDate', '01/01/9999');
+            }
+        }, error: function (ex) { }
+    });
+})
