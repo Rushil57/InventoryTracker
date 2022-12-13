@@ -42,7 +42,7 @@ function loadEntityHDR(searchString) {
             if (data.IsValid) {
                 var entityString = '';
                 for (var i = 0; i < data.data.length; i++) {
-                //    entityString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td class="assigned">' + data.data[i].ASSIGNED + '</td></tr>';
+                    //    entityString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td class="assigned">' + data.data[i].ASSIGNED + '</td></tr>';
 
                     $("#entityHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td></td><tr>')
                     var tableHeadLength = $("#entityHDR > thead > tr >  th").length
@@ -54,16 +54,16 @@ function loadEntityHDR(searchString) {
                         var headtext = $($("#entityHDR > thead > tr >  th")[th]).text();
                         if (headtext == "Entity type") {
                             $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].ENT_TYPE);
-                        }if (headtext == "Entity name") {
+                        } if (headtext == "Entity name") {
                             $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].ENT_NAME);
-                        }if (headtext == "Assigned") {
+                        } if (headtext == "Assigned") {
                             $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").addClass("assigned").text(data.data[i].ASSIGNED);
                         }
                         th = th + 1;
                     }
                 }
                 //$("#entityHDR > tbody >  tr").remove();
-               // $("#entityHDR > tbody").append(entityString);
+                // $("#entityHDR > tbody").append(entityString);
                 $("#entityHDR > tbody >  tr").draggable({
                     helper: 'clone',
                     start: function (e, ui) {
@@ -80,7 +80,7 @@ function loadEntityHDR(searchString) {
                             }
                             th = th - 1;
                         }
-                        
+
                     },
                     stop: function () {
                     }
@@ -112,7 +112,7 @@ function loadEquipmentHDR(searchString) {
             if (data.IsValid) {
                 var equipmentString = '';
                 for (var i = 0; i < data.data.length; i++) {
-                   // equipmentString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td class="addEntity">' + data.data[i].UNIT_ID + '</td><td class="droppable"></td><td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg></td></tr>';
+                    // equipmentString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td class="addEntity">' + data.data[i].UNIT_ID + '</td><td class="droppable"></td><td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg></td></tr>';
                     $("#equipHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td></td><tr>')
 
                     var tableHeadLength = $("#equipHDR > thead > tr >  th").length
@@ -173,6 +173,7 @@ function loadEquipmentHDR(searchString) {
                         });
                     }
                 });
+                addEquipmentColumn();
             }
         }, error: function (ex) { }
     });
@@ -222,6 +223,7 @@ function addEquipmentColumn() {
             var isPresent = true;
 
             var id = $(this).attr('id');
+            var th = 0;
             $("#equipHDR th").each(function (index) {
 
                 if ($(this).text().toLowerCase() == id.toLowerCase()) {
@@ -232,42 +234,33 @@ function addEquipmentColumn() {
                             $('td', el).eq(index).show();
                         });
                         $(this).show();
-                        $.ajax({
-                            url: '/Equipment/EquipmentValueByPropName',
-                            contentType: 'application/json; charset=utf-8',
-                            dataType: 'json',
-                            type: 'GET',
-                            async: false,
-                            data: { 'propName': $(this).attr('id') },
-                            success: function (data) {
-                                $("#equipHDR > tbody >  tr").each(function () {
-                                    $(this).find('.addEntity').after('<td></td>')
-                                })
-                                var tableHeadLength = $("#equipHDR > thead > tr >  th").length
-                                for (var th = tableHeadLength; th >= 0;) {
-                                    var headtext = $($("#equipHDR > thead > tr >  th")[th]).text();
-                                    console.log(headtext);
-                                    if (headtext == id) {
-                                        for (var i = 0; i < data.data.length; i++) {
-                                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Eq_Value);
-                                        }
-                                        break;
-                                    }
-                                }
-                            },
-                            error: function (ex) { }
-                        });
+
                     }
+                    $.ajax({
+                        url: '/Equipment/EquipmentValueByPropName',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        type: 'GET',
+                        async: false,
+                        data: { 'propName': id },
+                        success: function (data) {
+
+                            for (var i = 0; i < data.data.length; i++) {
+                                $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Eq_Value);
+                            }
+                        },
+                        error: function (ex) { }
+                    });
                 }
                 if (hdrdata.indexOf("<th scope=\"col\">" + id + "</th>") == -1) {
-                   
+
                     if ($(this).text().toLowerCase() == "unit id") {
                         var data = $(this).html();
                         var a = hdrdata.indexOf("<th scope=\"col\">Unit ID</th>");
                         hdrdata.splice(a + 1, 0, "<th scope=\"col\">" + id + "</th>");
                     }
                 }
-
+                th = th + 1;
             });
             if (isPresent) {
                 $.ajax({
@@ -377,7 +370,7 @@ function addEntityColumn() {
                             });
                         }
                     }
-                  
+
                 }
                 if (hdrdata.indexOf("<th scope=\"col\">" + id + "</th>") == -1) {
                     hdrdata.push("<th scope=\"col\">" + id + "</th>");
