@@ -20,8 +20,8 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 string query = string.Empty;
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    query = $"Select * from (select distinct eh.* from EQUIPMENT_HDR as eqh " +
-                        $" join Equipment_Dtl  as ed on eqh.EQUIP_ID = ed.Equip_ID " +
+                    query = $"Select * from (select distinct eqh.* from EQUIPMENT_HDR as eqh " +
+                        $" left join Equipment_Dtl  as ed on eqh.EQUIP_ID = ed.Equip_ID " +
                         $" left join EQUIPMENT_ENTITY_ASSIGNMENT as eqea on eqea.EQUIP_ID = eqh.EQUIP_ID " +
                         $" left join ENTITY_HDR as eh on eh.ENT_ID = eqea.ENT_ID " +
                         $" where ed.Eq_Value like '%" + searchString + "%'" +
@@ -53,8 +53,8 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 string query = string.Empty;
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    query = $"Select * from (select distinct eh.* from EQUIPMENT_HDR as eqh " +
-                        $" join Equipment_Dtl  as ed on eqh.EQUIP_ID = ed.Equip_ID " +
+                    query = $"Select * from (select distinct eqh.* from EQUIPMENT_HDR as eqh " +
+                        $" left join Equipment_Dtl  as ed on eqh.EQUIP_ID = ed.Equip_ID " +
                         $" where ed.Eq_Value like '%"+searchString+"%'" +
                         $" or eqh.EQUIP_TYPE like '%"+searchString+"%'" +
                         $" or eqh.VENDOR  like '%"+searchString+ "%'" +

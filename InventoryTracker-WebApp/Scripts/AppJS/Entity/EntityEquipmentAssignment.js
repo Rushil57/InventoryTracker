@@ -181,28 +181,43 @@ function loadEquipmentHDR(searchString,searchflag) {
 
 
 function addEquipmentHeader() {
-
-    //loadEquipmentHDR('');
-    addEquipmentColumn();
-    resizableTable();
-    $("#equipHDR tr").each(function (index) {
-        if (index !== 0) {
-            var row = $(this);
-            var isHide = true;
-            row.find('td').each(function () {
-                if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1) {
-                    isHide = false;
-                    return;
-                }
-            })
-            if (isHide) {
-                row.hide();
-            }
-            else {
-                row.show();
-            }
+    var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
+    if (searchString != '') {
+        if (previousequipsearch == searchString) {
+            previousequipsearch = searchString;
+            loadEquipmentHDR(searchString, false);
+            return;
         }
-    });
+        startIndexEquip = 0;
+        previousequipsearch = searchString;
+        loadEquipmentHDR(searchString, true);
+        return;
+    } else {
+        startIndexEquip = 0;
+        endIndexEquip = 20;
+        loadEquipmentHDR('', true);
+    }
+    // loadEquipmentHDR('');
+    //addEquipmentColumn();
+    resizableTable();
+    //$("#equipHDR tr").each(function (index) {
+    //    if (index !== 0) {
+    //        var row = $(this);
+    //        var isHide = true;
+    //        row.find('td').each(function () {
+    //            if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1) {
+    //                isHide = false;
+    //                return;
+    //            }
+    //        })
+    //        if (isHide) {
+    //            row.hide();
+    //        }
+    //        else {
+    //            row.show();
+    //        }
+    //    }
+    //});
 }
 
 function addEquipmentColumn() {

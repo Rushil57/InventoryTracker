@@ -58,7 +58,7 @@ function loadEquipmentHDR(searchString) {
                     $("#equipHDR > tbody > tr").find("td:eq(" + th + ")").remove();
                     tableHeadLength = tableHeadLength - 1;
                 }
-                if ($('#searchEquipmentStr').val() == '' && startIndexEquip == 1) {
+                if ($('#searchEquipmentStr').val() == '' && startIndexEquip == 0) {
                     $("#equipHDR > tbody >  tr").remove();
                 }
                 $("#equipHDR > tbody").append(equipmentString);
@@ -139,26 +139,41 @@ function loadEquipmentHDR(searchString) {
 //    equipmentTemplate.modal('hide');
 //}
 function addEquipmentHeader() {
-    loadEquipmentHDR(''); //$('#searchEquipmentStr').val().trim()
-    addEquipmentColumn();
-    $("#equipHDR tr").each(function (index) {
-        if (index !== 0) {
-            var row = $(this);
-            var isHide = true;
-            row.find('td').each(function () {
-                if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1 && $(this).css('display') != 'none') {
-                    isHide = false;
-                    return;
-                }
-            })
-            if (isHide) {
-                row.hide();
-            }
-            else {
-                row.show();
-            }
+    var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
+    if (searchString != '') {
+        if (previousequipsearch == searchString) {
+            previousequipsearch = searchString;
+            loadEquipmentHDR(searchString, false);
+            return;
         }
-    });
+        previousequipsearch = searchString;
+        startIndexEquip = 0;
+        endIndexEquip = 20;
+        loadEquipmentHDR(searchString, true);
+    } else {
+        startIndexEquip = 0;
+        endIndexEquip = 20;
+        loadEquipmentHDR(searchString, false);
+    } //$('#searchEquipmentStr').val().trim()
+    //addEquipmentColumn();
+    //$("#equipHDR tr").each(function (index) {
+    //    if (index !== 0) {
+    //        var row = $(this);
+    //        var isHide = true;
+    //        row.find('td').each(function () {
+    //            if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1 && $(this).css('display') != 'none') {
+    //                isHide = false;
+    //                return;
+    //            }
+    //        })
+    //        if (isHide) {
+    //            row.hide();
+    //        }
+    //        else {
+    //            row.show();
+    //        }
+    //    }
+    //});
 }
 
 
