@@ -45,13 +45,26 @@ function loadEquipmentHDR(searchString) {
         success: function (data) {
             if (data.IsValid) {
                 var equipmentString = '';
+                var isaddEquipmentColumn = false;
                 for (var i = 0; i < data.data.length; i++) {
                     equipmentString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].EQUIP_ID + ',' + null + ',\'' + data.data[i].UNIT_ID + '\',\'' + data.data[i].EQUIP_TYPE + '\',\'' + data.data[i].VENDOR + '\',this)"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
+                }
+
+
+                var tableHeadLength = $("#equipHDR > thead > tr >  th").length
+                for (var th = 4; th <= tableHeadLength;) {
+                    isaddEquipmentColumn = true;
+                    $($("#equipHDR > thead > tr >  th")[th]).remove();
+                    $("#equipHDR > tbody > tr").find("td:eq(" + th + ")").remove();
+                    tableHeadLength = tableHeadLength - 1;
                 }
                 if ($('#searchEquipmentStr').val() == '' && startIndexEquip == 1) {
                     $("#equipHDR > tbody >  tr").remove();
                 }
                 $("#equipHDR > tbody").append(equipmentString);
+                if (isaddEquipmentColumn) {
+                    addEquipmentColumn();
+                }
             }
         }, error: function (ex) { }
     });

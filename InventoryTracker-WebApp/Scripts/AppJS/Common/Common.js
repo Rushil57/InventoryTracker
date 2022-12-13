@@ -494,14 +494,14 @@ function resetDeleteAssignmentModel() {
 function divEquipmentHDRLoad(element) {
     if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
         startIndexEquip = endIndexEquip;
-        endIndexEquip = endIndexEquip + 5;
+        endIndexEquip = endIndexEquip + 10;
         loadEquipmentHDR('');
     }
 }
 function divEntityHDRLoad(element) {
     if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
         startIndexEntity = endIndexEntity;
-        endIndexEntity = endIndexEntity + 5;
+        endIndexEntity = endIndexEntity + 10;
         loadEntityHDR('');;
     }
 }

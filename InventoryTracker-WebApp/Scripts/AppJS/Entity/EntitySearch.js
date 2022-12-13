@@ -43,14 +43,25 @@ function loadEntityHDR(searchString) {
         success: function (data) {
             if (data.IsValid) {
                 var entityString = '';
+                var isaddEntityColumn = false;
                 for (var i = 0; i < data.data.length; i++) {
                     entityString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null + ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
                     //entityString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null +    ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
+                }
+                var tableHeadLength = $("#entityHDR > thead > tr >  th").length;
+                for (var th = 3; th <= tableHeadLength;) {
+                    isaddEntityColumn = true;
+                    $($("#entityHDR > thead > tr >  th")[th]).remove();
+                    $("#entityHDR > tbody > tr").find("td:eq(" + th + ")").remove();
+                    tableHeadLength = tableHeadLength - 1;
                 }
                 if ($('#searchEntityStr').val() == '' && startIndexEntity == 1) {
                     $("#entityHDR > tbody >  tr").remove();
                 }
                 $("#entityHDR > tbody").append(entityString);
+                if (isaddEntityColumn) {
+                    addEntityColumn();
+                }
             }
         }, error: function (ex) { }
     });

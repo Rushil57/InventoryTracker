@@ -41,7 +41,7 @@ function loadEquipmentHDR(searchString) {
                 for (var i = 0; i < data.data.length; i++) {
                   //  equipmentString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td class="assigned">' + data.data[i].ASSIGNED + '</td></tr>';
 
-                    $("#equipHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td></td><tr>')
+                    $("#equipHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td ></td><tr>')
 
                     var tableHeadLength = $("#equipHDR > thead > tr >  th").length
                     for (var th = 0; th <= tableHeadLength;) {
@@ -60,8 +60,8 @@ function loadEquipmentHDR(searchString) {
                             $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].UNIT_ID);
                         }
                         if (headtext == "Assigned") {
-                            var a = " "+ data.data[i].ASSIGNED;
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").text(a);
+                            var a = " " + data.data[i].ASSIGNED;
+                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").addClass('assigned').text(a);
                         }
                         th = th+1;
                     }
