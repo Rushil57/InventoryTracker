@@ -29,12 +29,19 @@ var previousEquipmentElement = '';
 //})
 
 
-function loadEntityHDR(searchString) {
-
+function loadEntityHDR(searchString, searchflag) {
+    if (searchflag == true) {
+        entitysearchflag = true;
+        $("#entityHDR > tbody > tr").remove();
+    }
+    if (startIndexEntity == 0) {
+        entitysearchflag = false;
+        $("#entityHDR > tbody > tr").remove();
+    }
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
-        url: '/Entity/GetEntityHeaders',
+        url: '/Entity/GetEntityHeaderfromEntityEquipment',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         type: 'GET',
@@ -258,7 +265,7 @@ $('#deleteTemplate').click(function () {
                 data: JSON.stringify({ 'entityID': currentEntityID }),
                 success: function (data) {
                     if (data.IsValid) {
-                        loadEntityHDR($('#searchEntityStr').val().trim());
+                        loadEntityHDR($('#searchEntityStr').val().trim(), true);
                         $("#tblTemplateDtl > tbody >  tr").remove();
                         $("#tblEquipmentHistory > tbody >  tr").remove();
                         entityType.val(0);
@@ -375,7 +382,7 @@ function saveHDRTemplateDtl() {
         data: JSON.stringify({ 'entityHDR': JSON.stringify(entityHDR), 'entityTmpDtl': JSON.stringify(entityTmpDtl) }),
         success: function (data) {
             if (data.IsValid) {
-                loadEntityHDR($('#searchEntityStr').val());
+                loadEntityHDR($('#searchEntityStr').val(),true);
                 $('#entityHDR > tbody >  tr:last').trigger('click');
                 addEntityColumn();
             }
