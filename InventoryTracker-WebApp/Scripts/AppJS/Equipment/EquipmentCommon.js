@@ -21,7 +21,7 @@ $(document).ready(function () {
             loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
         }
         else {
-            loadEntityHDR('');
+            loadEntityHDR('', false);
             addEntityHeader();
         }
         currentUpdateAssignDate = currentDate;
@@ -52,7 +52,8 @@ $(document).ready(function () {
 //}
 
 $('#search').click(function () {
-    addEquipmentHeader()
+    addEquipmentHeader();
+
 })
 
 //function addEquipmentHeader() {

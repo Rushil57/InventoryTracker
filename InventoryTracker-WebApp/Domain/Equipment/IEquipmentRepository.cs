@@ -6,6 +6,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
     public interface IEquipmentRepository
     {
         List<EquipmentHeader> GetEquipmentHeaders(string searchString, int startRow, int endRow);
+        List<EquipmentHeader> GetEquipmentHeadersfromEquipmentEntity(string searchString, int startRow, int endRow);
         bool DeleteEquipmentHeader(int equipID);
         List<EquipmentTemplate> GetEquipmentTemplates(string equipmentType);
         bool SaveEquipmentTemplate(List<EquipmentTemplate> equipmentTemplate);

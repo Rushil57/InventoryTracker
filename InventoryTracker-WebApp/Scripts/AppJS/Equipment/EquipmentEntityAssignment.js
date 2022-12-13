@@ -4,7 +4,6 @@ var dropEntityID = 0;
 var draggedElementUnitID = '';
 var startDate = $('.datepicker');
 var tblHDR = '<th scope="col">Entity Name</th>';
-
 $(document).ready(function () {
     //    loadAllEquipTemp();
     //    $('.datepicker').datepicker({
@@ -18,18 +17,24 @@ $(document).ready(function () {
     //        //loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
     //    }).datepicker('setDate', new Date());
     loadAllEntityTemp();
-    loadEntityHDR('');
-    loadEquipmentHDR('');
+    loadEntityHDR('', false);
+    loadEquipmentHDR('',false);
     resizableTable();
     sortableTable();
 })
 
 
-function loadEquipmentHDR(searchString) {
+function loadEquipmentHDR(searchString, searchflag) {
+    if (searchflag == true) {
+        $("#equipHDR > tbody > tr").remove();
+    }
+    if (startIndexEquip == 0) {
+        $("#equipHDR > tbody > tr").remove();
+    }
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
-        url: '/Equipment/GetEquipmentHeaders',
+        url: '/Equipment/GetEquipmentHeadersfromEquipmentEntity',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         type: 'GET',
@@ -113,12 +118,13 @@ function loadEquipmentHDR(searchString) {
 }
 
 
-function loadEntityHDR(searchString) {
-    //if (searchString == '') {
-    //    var tableHeader = '<th scope="col">Entity Name</th><th scope="col">Equipment Assigned</th><th></th>';
-    //    $("#entityHDR > thead >  tr > th").remove();
-    //    $("#entityHDR > thead >  tr").append(tableHeader);
-    //}
+function loadEntityHDR(searchString,searchflag) {
+    if (searchflag == true) {  
+        $("#entityHDR > tbody > tr").remove();
+    } 
+    if (startIndexEntity == 0) {
+        $("#entityHDR > tbody > tr").remove();
+    }
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
@@ -188,88 +194,9 @@ function loadEntityHDR(searchString) {
     });
 }
 
-//function deleteAssignment(entityID,equipID) {
-//    $.ajax({
-//        before: AddLoader(),
-//        after: RemoveLoader(),
-//        url: '/Equipment/SaveEquipmentEntityAssignment',
-//        contentType: 'application/json; charset=utf-8',
-//        dataType: 'json',
-//        type: 'POST',
-//        async: false,
-//        data: JSON.stringify({ 'entityID': entityID, 'equipID': equipID, 'isDelete': 1 }),
-//        success: function (data) {
-//            loadEntityHDR('');
-//            addEntityHeader();
-//            loadEquipmentHDR('');   
-//        }, error: function (ex) { }
-//    });
-//}
-
-//function GetEquipmentEntityAssignment(){
-//    $.ajax({
-//        before: AddLoader(),
-//        after: RemoveLoader(),
-//        url: '/Equipment/GetEquipmentEntityAssignment',
-//        contentType: 'application/json; charset=utf-8',
-//        dataType: 'json',
-//        type: 'GET',
-//        async: false,
-//        data: { 'startDate': startDate.val() },
-//        success: function (assignmentData) {
-//            if (assignmentData.IsValid) {
-//                for (var i = 0; i < assignmentData.data.length; i++) {
-//                    var assignedStr = '';
-//                    if (assignmentData.data[i].EQUIP_ENT_ID > 0) {
-
-//                        var assignedStr = '<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary" style="background-color:rgb(150, 166, 195);padding:1px 5px 1px 5px  !important;color:white" id="' + assignmentData.data[i].EQUIP_ID + '">' + assignmentData.data[i].UNIT_ID + '<div onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ')" class="btn btn-primary  btn-close" style=" margin-left: 4px; height: 13px;background-color: #e3dcdc;padding: 0px 1px 0px 1px !important;color: white;border-radius: 20px;margin-top: -3px;"></div></div></div>';
-//                        $("#entityHDR > tbody >  tr").find('input[value="' + assignmentData.data[i].ENT_ID + '"]').parent().find('.droppable').append(assignedStr);
-//                    }
-//                }
-//            }
-//        }, error: function (ex) { }
-//    });
-//}
-//<button type="button" onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ')" style="height:0px;width:0px;" class="btn float-end btn-danger btn-close"></button>
-
 $('#btnSearchEntity').click(function () {
     addEntityHeader();
 })
-
-
-
-//function loadAllEntityTemp() {
-//    $.ajax({
-//        before: AddLoader(),
-//        after: RemoveLoader(),
-//        url: '/Entity/GetEntityTemplate',
-//        contentType: 'application/json; charset=utf-8',
-//        dataType: 'json',
-//        type: 'GET',
-//        async: false,
-//        success: function (data) {
-//            if (data.IsValid) {
-//                var templateString = '';
-
-//                for (var i = 0; i < data.uniquePropName.length; i++) {
-//                    var propName = data.uniquePropName[i].Prop_name.trim();
-//                    templateString += '<div class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
-//                }
-
-//                var uniqueEntityType = "";
-//                uniqueEntityType += "<option value='0' >Select entity type</option>";
-//                for (var j = 0; j < data.uniqueEntityTemplates.length; j++) {
-//                    var entType = data.uniqueEntityTemplates[j].Ent_type;
-//                    uniqueEntityType += '<option value=' + entType + ' >' + entType + '</option>'
-//                }
-//                entityType.html(uniqueEntityType);
-
-//                $('#entityTemplateModelBody').html(templateString);
-//            }
-//        }, error: function (ex) { }
-//    });
-//}
-
 
 function addEntityColumn() {
     var tableHeader = '';
@@ -378,50 +305,60 @@ function addEntityColumn() {
 
 
 function addEntityHeader() {
-    // loadEntityHDR('');
-    addEntityColumn();
-    resizableTable();
-    $("#entityHDR tr").each(function (index) {
-        if (index !== 0) {
-            var row = $(this);
-            var isHide = true;
-            row.find('td').each(function () {
-                if ($(this).text().toLowerCase().indexOf($('#searchEntityStr').val().toLowerCase().trim()) != -1) {
-                    isHide = false;
-                    return;
-                }
-            })
-            if (isHide) {
-                row.hide();
-            }
-            else {
-                row.show();
-            }
+    var searchString = $('#searchEntityStr').val().toLowerCase().trim();
+    if (searchString != '') {
+        if (previousentitysearch == searchString) {
+            previousentitysearch = searchString;
+            loadEntityHDR(searchString, false);
+            return;
         }
-    });
+        previousentitysearch = searchString;
+        startIndexEntity = 0;
+        loadEntityHDR(searchString, true);
+    } else {
+        startIndexEntity = 0;
+        endIndexEntity = 20;
+        loadEntityHDR(searchString, false);
+    }
+    resizableTable();   
 }
 
 function addEquipmentHeader() {
-    // loadEquipmentHDR(''); //$('#searchEquipmentStr').val().trim()
-    addEquipmentColumn();
-    resizableTable();
-    $("#equipHDR tr").each(function (index) {
-        if (index !== 0) {
-            var row = $(this);
-            var isHide = true;
-            row.find('td').each(function () {
-                if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1) {
-                    isHide = false;
-                    return;
-                }
-            })
-            if (isHide) {
-                row.hide();
-            }
-            else {
-                row.show();
-            }
+    var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
+    if (searchString != '') {
+        if (previousequipsearch == searchString) {
+            previousequipsearch = searchString;
+            loadEquipmentHDR(searchString, false);
+            return;
         }
-    });
+        previousequipsearch = searchString;
+        startIndexEquip = 0;
+        loadEquipmentHDR(searchString, true);
+    } else {
+        startIndexEquip = 0;
+        endIndexEquip = 20;
+        loadEquipmentHDR(searchString, false);
+    }
+    //$('#searchEquipmentStr').val().trim()
+    //addEquipmentColumn();
+    resizableTable();
+    //$("#equipHDR tr").each(function (index) {
+    //    if (index !== 0) {
+    //        var row = $(this);
+    //        var isHide = true;
+    //        row.find('td').each(function () {
+    //            if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1) {
+    //                isHide = false;
+    //                return;
+    //            }
+    //        })
+    //        if (isHide) {
+    //            row.hide();
+    //        }
+    //        else {
+    //            row.show();
+    //        }
+    //    }
+    //});
 }
 

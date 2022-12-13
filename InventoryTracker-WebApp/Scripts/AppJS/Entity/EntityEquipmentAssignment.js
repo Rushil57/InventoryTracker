@@ -6,33 +6,26 @@ var startDate = $('.datepicker');
 
 $(document).ready(function () {
     loadAllEquipTemp();
-    loadEntityHDR('');
-    loadEquipmentHDR('');
+    loadEntityHDR('',false);
+    loadEquipmentHDR('',false);
     resizableTable();
     sortableTable();
 
 })
 
-function loadEntityHDR(searchString) {
-    if (searchString == '') {
-        //var tableHeader = '<th scope="col">Entity Type</th><th scope="col">Entity Name</th><th>Assigned</th>';
-        //$("#entityHDR > thead >  tr > th").remove();
-        //$("#entityHDR > thead >  tr").append(tableHeader);
-    } else {
-        var hdrdata = [];
-        $("#entityHDR th").each(function (index) {
-            var headerdata = "<th scope=\"col\">" + $(this).text() + "</th>";
-            if (hdrdata.indexOf(headerdata) == -1) {
-                hdrdata.push(headerdata);
-            }
-        });
-        //$("#entityHDR > thead >  tr > th").remove();
-        $("#entityHDR > thead >  tr").append(hdrdata.toLocaleString().replace(',', ''));
+function loadEntityHDR(searchString, searchflag) {
+    if (searchflag == true) {
+        entitysearchflag = true;
+        $("#entityHDR > tbody > tr").remove();
+    }
+    if (startIndexEntity == 0) {
+        entitysearchflag = false;
+        $("#entityHDR > tbody > tr").remove();
     }
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
-        url: '/Entity/GetEntityHeaders',
+        url: '/Entity/GetEntityHeaderfromEntityEquipment',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         type: 'GET',
@@ -92,12 +85,20 @@ function loadEntityHDR(searchString) {
 
 
 
-function loadEquipmentHDR(searchString) {
+function loadEquipmentHDR(searchString,searchflag) {
     //if (searchString == '') {
     //    var tableHeader = '<th scope="col">Equipment type</th><th scope="col">Vendor</th><th scope="col">Unit ID</th><th scope="col">Entity Assigned</th><th scope="col"></th>';
     //    $("#equipHDR > thead >  tr > th").remove();
     //    $("#equipHDR > thead >  tr").append(tableHeader);
     //}
+    if (searchflag == true) {
+        equipsearchflag = true;
+        $("#equipHDR > tbody > tr").remove();
+    }
+    if (startIndexEntity == 0) {
+        equipsearchflag = false;
+        $("#equipHDR > tbody > tr").remove();
+    }
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
@@ -180,28 +181,43 @@ function loadEquipmentHDR(searchString) {
 
 
 function addEquipmentHeader() {
-
-    //loadEquipmentHDR('');
-    addEquipmentColumn();
-    resizableTable();
-    $("#equipHDR tr").each(function (index) {
-        if (index !== 0) {
-            var row = $(this);
-            var isHide = true;
-            row.find('td').each(function () {
-                if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1) {
-                    isHide = false;
-                    return;
-                }
-            })
-            if (isHide) {
-                row.hide();
-            }
-            else {
-                row.show();
-            }
+    var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
+    if (searchString != '') {
+        if (previousequipsearch == searchString) {
+            previousequipsearch = searchString;
+            loadEquipmentHDR(searchString, false);
+            return;
         }
-    });
+        startIndexEquip = 0;
+        previousequipsearch = searchString;
+        loadEquipmentHDR(searchString, true);
+        return;
+    } else {
+        startIndexEquip = 0;
+        endIndexEquip = 20;
+        loadEquipmentHDR('', true);
+    }
+    // loadEquipmentHDR('');
+    //addEquipmentColumn();
+    resizableTable();
+    //$("#equipHDR tr").each(function (index) {
+    //    if (index !== 0) {
+    //        var row = $(this);
+    //        var isHide = true;
+    //        row.find('td').each(function () {
+    //            if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1) {
+    //                isHide = false;
+    //                return;
+    //            }
+    //        })
+    //        if (isHide) {
+    //            row.hide();
+    //        }
+    //        else {
+    //            row.show();
+    //        }
+    //    }
+    //});
 }
 
 function addEquipmentColumn() {
@@ -424,24 +440,19 @@ function addEntityColumn() {
 
 
 function addEntityHeader() {
-    // loadEntityHDR('');
-    addEntityColumn();
-    $("#entityHDR tr").each(function (index) {
-        if (index !== 0) {
-            var row = $(this);
-            var isHide = true;
-            row.find('td').each(function () {
-                if ($(this).text().toLowerCase().indexOf($('#searchEntityStr').val().toLowerCase().trim()) != -1 && $(this).css('display') != 'none') {
-                    isHide = false;
-                    return;
-                }
-            })
-            if (isHide) {
-                row.hide();
-            }
-            else {
-                row.show();
-            }
+    var searchString = $('#searchEntityStr').val().toLowerCase().trim();
+    if (searchString != '') {
+        if (previousentitysearch == searchString) {
+            previousentitysearch = searchString;
+            loadEntityHDR(searchString, false);
+            return;
         }
-    });
+        previousentitysearch = searchString;
+        startIndexEntity = 0;
+        loadEntityHDR(searchString, true);
+    } else {
+        startIndexEntity = 0;
+        endIndexEntity = 20;
+        loadEntityHDR(searchString, false);
+    }
 }

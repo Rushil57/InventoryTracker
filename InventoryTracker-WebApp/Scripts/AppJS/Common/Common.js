@@ -8,6 +8,10 @@ var startIndexEquip = 0;
 var endIndexEquip = 20;
 var startIndexEntity = 0;
 var endIndexEntity = 20;
+var entitysearchflag = false;
+var previousentitysearch = '';
+var equipsearchflag = false;
+var previousequipsearch = '';
 var currentUpdateAssignDate = '';
 
 var equipmentTemplate = $('#equipmentTemplate');
@@ -22,7 +26,7 @@ $(document).ready(function () {
     })
     $('#searchEntityStr').keydown(function (e) {
         if (e.keyCode == 13) {
-            addEntityHeader()
+            addEntityHeader();
         }
     })
 })
@@ -312,26 +316,21 @@ function addEntityColumn() {
 
 
 function addEntityHeader() {
-    loadEntityHDR('');
-    addEntityColumn();
-    $("#entityHDR tr").each(function (index) {
-        if (index !== 0) {
-            var row = $(this);
-            var isHide = true;
-            row.find('td').each(function () {
-                if ($(this).text().toLowerCase().indexOf($('#searchEntityStr').val().toLowerCase().trim()) != -1) {
-                    isHide = false;
-                    return;
-                }
-            })
-            if (isHide) {
-                row.hide();
-            }
-            else {
-                row.show();
-            }
+    var searchString = $('#searchEntityStr').val().toLowerCase().trim();
+    if (searchString != '') {
+        if (previousentitysearch == searchString) {
+            previousentitysearch = searchString;
+            loadEntityHDR(searchString, false);
+            return;
         }
-    });
+        previousentitysearch = searchString;
+        startIndexEntity = 0;
+        loadEntityHDR(searchString, true);
+    } else {
+        startIndexEntity = 0;
+        endIndexEntity = 20;
+        loadEntityHDR(searchString, false);
+    }
 }
 
 
@@ -494,13 +493,45 @@ function resetDeleteAssignmentModel() {
 function divEquipmentHDRLoad(element) {
     if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
         startIndexEquip = endIndexEquip;
-        endIndexEquip = endIndexEquip + 10;
-        loadEquipmentHDR('');
+        endIndexEquip = endIndexEquip + 20;
+        
+        var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
+        if (searchString != '') {
+            if (previousequipsearch == searchString) {
+                previousequipsearch = searchString;
+                loadEquipmentHDR(searchString, false);
+                return;
+            }
+            startIndexEquip = 0;
+            previousequipsearch = searchString;
+            loadEquipmentHDR(searchString, true);
+            return;
+        }
+        else {
+            loadEquipmentHDR('', false);
+        }
     }
 }
 function divEntityHDRLoad(element) {
     if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
         startIndexEntity = endIndexEntity;
+        endIndexEntity = endIndexEntity + 20;
+        
+            var searchString = $('#searchEntityStr').val().toLowerCase().trim();
+            if (searchString != '') {
+                if (previousentitysearch == searchString) {
+                    previousentitysearch = searchString;
+                    loadEntityHDR(searchString, false);
+                    return;
+                }
+                    startIndexEntity = 0;
+                previousentitysearch = searchString;
+                loadEntityHDR(searchString, true);
+                return;
+            }
+         else {
+            loadEntityHDR('', false);
+        }
         endIndexEntity = endIndexEntity + 10;
         loadEntityHDR($('#searchEntityStr').val());;
     }
