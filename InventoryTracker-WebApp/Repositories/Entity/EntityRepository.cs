@@ -20,11 +20,50 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 string query = string.Empty;
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    //query = "select distinct eh.* from EQUIPMENT_HDR as eh join Equipment_Dtl  as ed on eh.EQUIP_ID = ed.Equip_ID and ed.Eq_Value like '%" + searchString + "%' or eh.EQUIP_TYPE like '%" + searchString + "%' or eh.VENDOR  like '%" + searchString + "%' or eh.UNIT_ID  like '%" + searchString + "%'";
+                    query = $"Select * from (select Distinct eh.* from ENTITY_HDR as eh " +
+                        $" left join Entity_Dtl  as ed on eh.ENT_ID = ed.ENT_ID" +
+                        $" left join EQUIPMENT_ENTITY_ASSIGNMENT as eqea on eqea.ENT_ID = eh.ENT_ID" +
+                        $" left join EQUIPMENT_HDR as eq on eq.EQUIP_ID = eqea.EQUIP_ID" +
+                        $" where ed.Ent_Value like '%"+searchString+"%'" +
+                        $" or eh.ENT_TYPE like '%" +searchString+"%' " +
+                        $" or eh.ENT_NAME like '%"+searchString+"%' " +
+                        $" or eq.UNIT_ID  like '%"+searchString+ "%') t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 20 rows only";
                 }
                 else
                 {
-                    query = "Select * From  (Select Row_Number() Over (Order By [ENT_ID] ) As RowNum , [ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR]) t2 Where RowNum > "+ startIndex + "and RowNum <= " + endIndex;
+                    query = "Select * From  (Select [ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR]) t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 20 rows only";
+                }
+                entityHeaders = connection.Query<EntityHeader>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return entityHeaders;
+        }    
+        public List<EntityHeader> GetEntityHeaderfromEntityEquipment(string searchString,int startIndex,int endIndex)
+        {
+            List<EntityHeader> entityHeaders = new List<EntityHeader>();
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    query = $"Select * from (select Distinct eh.* from ENTITY_HDR as eh " +
+                        $" left join Entity_Dtl  as ed on eh.ENT_ID = ed.ENT_ID" +
+                        $" where ed.Ent_Value like '%"+searchString+"%'" +
+                        $" or eh.ENT_TYPE like '%" +searchString+"%' " +
+                        $" or eh.ENT_NAME like '%"+searchString+"%') t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 20 rows only";
+                }
+                else
+                {
+                    query = "Select * From  (Select [ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR]) t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 20 rows only";
                 }
                 entityHeaders = connection.Query<EntityHeader>(query).ToList();
             }

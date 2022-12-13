@@ -39,7 +39,7 @@ function loadEntityHDR(searchString) {
         dataType: 'json',
         type: 'GET',
         async: false,
-        data: { 'searchString': searchString, 'startIndex': startIndexEntity, 'endIndex': endIndexEntity },
+        data: { 'searchString': searchString, 'startIndex': 0, 'endIndex': endIndexEntity },
         success: function (data) {
             if (data.IsValid) {
                 var entityString = '';
@@ -47,7 +47,7 @@ function loadEntityHDR(searchString) {
                     entityString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null + ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
                     //entityString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null +    ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
                 }
-                if ($('#searchEntityStr').val() == '' && startIndexEntity == 1) {
+                if ($('#searchEntityStr').val() == '' && startIndexEntity == 0) {
                     $("#entityHDR > tbody >  tr").remove();
                 }
                 $("#entityHDR > tbody").append(entityString);

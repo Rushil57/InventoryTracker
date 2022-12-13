@@ -20,11 +20,49 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 string query = string.Empty;
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    query = "select distinct eh.* from EQUIPMENT_HDR as eh join Equipment_Dtl  as ed on eh.EQUIP_ID = ed.Equip_ID and ed.Eq_Value like '%" + searchString + "%' or eh.EQUIP_TYPE like '%" + searchString + "%' or eh.VENDOR  like '%" + searchString + "%' or eh.UNIT_ID  like '%" + searchString + "%'";
+                    query = $"Select * from (select distinct eh.* from EQUIPMENT_HDR as eqh " +
+                        $" join Equipment_Dtl  as ed on eqh.EQUIP_ID = ed.Equip_ID " +
+                        $" left join EQUIPMENT_ENTITY_ASSIGNMENT as eqea on eqea.EQUIP_ID = eqh.EQUIP_ID " +
+                        $" left join ENTITY_HDR as eh on eh.ENT_ID = eqea.ENT_ID " +
+                        $" where ed.Eq_Value like '%" + searchString + "%'" +
+                        $" or eqh.EQUIP_TYPE like '%" + searchString + "%'" +
+                        $" or eqh.VENDOR  like '%" + searchString + "%'" +
+                        $" or eqh.UNIT_ID  like '%" + searchString + "%'" +
+                        $" or eh.ENT_NAME = '%" + searchString + "%') t1 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 20 rows only";
                 }
                 else
                 {
-                    query = "Select * From  (Select Row_Number() Over (Order By [EQUIP_ID] ) As RowNum , [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2 Where RowNum > " + startRow + " and RowNum <= " + endRow;
+                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 20 rows only";
+                }
+                equipmentHeaders = connection.Query<EquipmentHeader>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return equipmentHeaders;
+        }
+        public List<EquipmentHeader> GetEquipmentHeadersfromEquipmentEntity(string searchString,int startRow,int endRow)
+        {
+            List<EquipmentHeader> equipmentHeaders = new List<EquipmentHeader>();
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    query = $"Select * from (select distinct eh.* from EQUIPMENT_HDR as eqh " +
+                        $" join Equipment_Dtl  as ed on eqh.EQUIP_ID = ed.Equip_ID " +
+                        $" where ed.Eq_Value like '%"+searchString+"%'" +
+                        $" or eqh.EQUIP_TYPE like '%"+searchString+"%'" +
+                        $" or eqh.VENDOR  like '%"+searchString+ "%'" +
+                        $" or eqh.UNIT_ID  like '%"+searchString+"%') t1 order by  CURRENT_TIMESTAMP offset "+startRow+" rows FETCH NEXT 20 rows only";
+                }
+                else
+                {
+                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 20 rows only";
                 }
                 equipmentHeaders = connection.Query<EquipmentHeader>(query).ToList();
             }

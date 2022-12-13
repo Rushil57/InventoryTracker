@@ -17,7 +17,7 @@ $(document).ready(function () {
             loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
         }
         else {
-            loadEquipmentHDR('');
+            loadEquipmentHDR('',false);
             addEquipmentHeader();
         }
         

@@ -46,6 +46,11 @@ namespace InventoryTracker_WebApp.Controllers
             List<EntityHeader> entityHeaders = _entityRepository.GetEntityHeaders(searchString,startIndex,endIndex);
             return JsonConvert.SerializeObject(new { IsValid = true, data = entityHeaders });
         }
+        public string GetEntityHeaderfromEntityEquipment(string searchString, int startIndex, int endIndex)
+        {
+            List<EntityHeader> entityHeaders = _entityRepository.GetEntityHeaderfromEntityEquipment(searchString,startIndex,endIndex);
+            return JsonConvert.SerializeObject(new { IsValid = true, data = entityHeaders });
+        }
 
         [HttpPost]
         public string SaveEntityTemplate(string entityTemplate)
