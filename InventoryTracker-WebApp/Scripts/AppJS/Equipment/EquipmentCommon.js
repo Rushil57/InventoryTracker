@@ -9,7 +9,7 @@ $(document).ready(function () {
     loadAllEquipTemp();
     //enabled();
     disabled()
-    $('.datepicker').datepicker({
+    $('#mainDate').datepicker({
         autoclose: true
     }).on('change', function (e) {
         currentDate = this.value;
