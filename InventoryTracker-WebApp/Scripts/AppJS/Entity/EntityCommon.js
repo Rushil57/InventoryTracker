@@ -5,7 +5,7 @@ var tblHDR = ' <th scope="col">Entity type</th> <th scope="col">Entity name</th>
 $(document).ready(function () {
     loadAllEntityTemp();
     disabled()
-    $('.datepicker').datepicker({
+    $('#mainDate').datepicker({
         autoclose: true
     }).on('change', function (e) {
         currentDate = this.value;
