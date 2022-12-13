@@ -20,7 +20,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 string query = string.Empty;
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    //query = "select distinct eh.* from EQUIPMENT_HDR as eh join Equipment_Dtl  as ed on eh.EQUIP_ID = ed.Equip_ID and ed.Eq_Value like '%" + searchString + "%' or eh.EQUIP_TYPE like '%" + searchString + "%' or eh.VENDOR  like '%" + searchString + "%' or eh.UNIT_ID  like '%" + searchString + "%'";
+                    query = "select distinct eh.* from EQUIPMENT_HDR as eh join Equipment_Dtl  as ed on eh.EQUIP_ID = ed.Equip_ID and ed.Eq_Value like '%" + searchString + "%' or eh.EQUIP_TYPE like '%" + searchString + "%' or eh.VENDOR  like '%" + searchString + "%' or eh.UNIT_ID  like '%" + searchString + "%'";
                 }
                 else
                 {

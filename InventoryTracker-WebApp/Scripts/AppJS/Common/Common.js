@@ -4,9 +4,9 @@ var deleteButton = $('#deleteTemplate');
 var entityType = $('#entityType');
 var entityTemplate = $('#entityTemplate');
 var equipTypeEle = $('#equipType');
-var startIndexEquip = 1;
+var startIndexEquip = 0;
 var endIndexEquip = 20;
-var startIndexEntity = 1;
+var startIndexEntity = 0;
 var endIndexEntity = 20;
 var currentUpdateAssignDate = '';
 

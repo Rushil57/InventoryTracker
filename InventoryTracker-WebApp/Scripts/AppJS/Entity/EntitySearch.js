@@ -55,7 +55,7 @@ function loadEntityHDR(searchString) {
                     $("#entityHDR > tbody > tr").find("td:eq(" + th + ")").remove();
                     tableHeadLength = tableHeadLength - 1;
                 }
-                if ($('#searchEntityStr').val() == '' && startIndexEntity == 1) {
+                if ($('#searchEntityStr').val() == '' && startIndexEntity == 0) {
                     $("#entityHDR > tbody >  tr").remove();
                 }
                 $("#entityHDR > tbody").append(entityString);
