@@ -306,17 +306,10 @@ function addEntityColumn() {
                         async: false,
                         data: { 'propName': $(this).attr('id') },
                         success: function (data) {
-                            var tableHeadLength = $("#entityHDR > thead > tr >  th").length
-                            for (var th = tableHeadLength; th >= 0;) {
-                                var headtext = $($("#entityHDR > thead > tr >  th")[th]).text();
-                                if (headtext == id) {
-                                    for (var i = 0; i < data.data.length; i++) {
+                                  for (var i = 0; i < data.data.length; i++) {
                                         $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Ent_Value);
                                     }
-                                    break;
-                                }
-                                th = th - 1;
-                            }
+                             
                         },
                         error: function (ex) { }
                     });

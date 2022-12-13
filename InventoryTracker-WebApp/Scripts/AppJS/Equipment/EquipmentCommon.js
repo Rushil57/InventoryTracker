@@ -127,39 +127,34 @@ function addEquipmentColumn() {
             var isPresent = true;
 
             var id = $(this).attr('id');
+            var th = 0;
             $("#equipHDR th").each(function (index) {
-
+                
                 if ($(this).text().toLowerCase() == id.toLowerCase()) {
                     isPresent = false;
                     $('#equipHDR tbody tr').each(function (ind, el) {
                         $('td', el).eq(index).show();
-                        $.ajax({
-                            url: '/Equipment/EquipmentValueByPropName',
-                            contentType: 'application/json; charset=utf-8',
-                            dataType: 'json',
-                            type: 'GET',
-                            async: false,
-                            data: { 'propName': $(this).attr('id') },
-                            success: function (data) {
+                        
+                    });
+                    $.ajax({
+                        url: '/Equipment/EquipmentValueByPropName',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        type: 'GET',
+                        async: false,
+                        data: { 'propName': id },
+                        success: function (data) {
+                            for (var i = 0; i < data.data.length; i++) {
 
-                                var tableHeadLength = $("#equipHDR > thead > tr >  th").length
-                                for (var th = tableHeadLength; th >= 0;) {
-                                    var headtext = $($("#equipHDR > thead > tr >  th")[th]).text();
-                                    if (headtext == id) {
-                                        for (var i = 0; i < data.data.length; i++) {
-
-                                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].Eq_Value);
-                                        }
-                                        break;
-                                    }
-                                    th = th - 1;
-                                }
-                            },
-                            error: function (ex) { }
-                        });
+                                $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].Eq_Value);
+                            }
+                        },
+                        error: function (ex) { }
                     });
                     $(this).show();
+                    return false;
                 }
+                th = th + 1;
             });
             if (isPresent) {
                 tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
