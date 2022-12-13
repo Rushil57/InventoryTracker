@@ -20,7 +20,7 @@ $(document).ready(function () {
             loadEquipmentHDR('');
             addEquipmentHeader();
         }
-        
+        currentUpdateAssignDate = currentDate;
     }).datepicker('setDate', new Date());
 })
 

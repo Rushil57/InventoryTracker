@@ -6,30 +6,12 @@
                 <h6 class="modal-title" id="deleteAssignmentLabel">Assignment Options</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="resetDeleteAssignmentModel()"></button>
             </div>
-            <div class="modal-body" style="height: 110px; overflow: auto;" id="deleteAssignmentModelBody">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="deleteAssignmentRadio" id="deleteAssignmentRadio1">
-                    <label class="form-check-label" for="deleteAssignmentRadio1">
-                        Remove
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="deleteAssignmentRadio" id="deleteAssignmentRadio2">
-                    <label class="form-check-label" for="deleteAssignmentRadio2">
-                        Update
-                    </label>
-                    <input type="text" class="updatepicker dropdown-control" style="display: inline; width: 25%; height:32px" readOnly />
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="deleteAssignmentRadio" id="deleteAssignmentRadio3" >
-                    <label class="form-check-label" for="deleteAssignmentRadio3">
-                        Cancel
-                    </label>
-                </div>
-            </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetDeleteAssignmentModel()">Close</button>
-                <button type="button" class="btn btn-primary" onclick="assignmentOption()">Save</button>
+                <button type="button" class="btn btn-primary" onclick="removeAssignmentOption()">Remove</button>
+                <button type="button" class="btn btn-primary" onclick="updateAssignmentOption()">Update</button>
+                <input type="text" class="updatepicker dropdown-control" style="display: inline; width: 25%; height:32px" readOnly />
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetDeleteAssignmentModel()">Cancel</button>
+
             </div>
         </div>
     </div>

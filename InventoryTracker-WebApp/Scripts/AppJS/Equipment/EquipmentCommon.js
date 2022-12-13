@@ -24,6 +24,7 @@ $(document).ready(function () {
             loadEntityHDR('');
             addEntityHeader();
         }
+        currentUpdateAssignDate = currentDate;
     }).datepicker('setDate', new Date());
 })
 
