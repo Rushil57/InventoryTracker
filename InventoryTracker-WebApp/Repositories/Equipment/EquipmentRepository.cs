@@ -290,26 +290,33 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
         }
 
-        public bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete)
+        public bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate)
         {
             var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
             try
             {
                 connection.Open();
                 string query = string.Empty;
-                if (isDelete == 0)
+                if (isDelete == 2)
                 {
-                    query = "INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] ([EQUIP_ID],[ENT_ID],[START_DATE],[END_DATE]) VALUES(" + equipID + "," + entityID + ",'" + startDate + "','" + startDate + "');";
+                    query = "UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [END_DATE] = '" + endDate + "' WHERE  EQUIP_ID = " + equipID + "and ENT_ID = " + entityID;
                 }
                 else
                 {
-                    query = "DELETE FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] WHERE EQUIP_ID = " + equipID + " and ENT_ID = " + entityID;
+                    if (isDelete == 0)
+                    {
+                        query = "INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] ([EQUIP_ID],[ENT_ID],[START_DATE],[END_DATE]) VALUES(" + equipID + "," + entityID + ",'" + startDate + "','" + endDate + "');";
+                    }
+                    else
+                    {
+                        query = "DELETE FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] WHERE EQUIP_ID = " + equipID + " and ENT_ID = " + entityID;
+                    }
+
+                    query += "UPDATE [dbo].[EQUIPMENT_HDR] SET [ASSIGNED] =(select isnull((select count(EQUIP_ENT_ID) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID =" + equipID + "),0)) WHERE  EQUIP_ID = " + equipID;
+
+                    query += "UPDATE [dbo].[ENTITY_HDR] SET [ASSIGNED] = (select isnull((select count(EQUIP_ENT_ID) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID =" + entityID + "),0)) WHERE  ENT_ID = " + entityID;
+
                 }
-
-                query += "UPDATE [dbo].[EQUIPMENT_HDR] SET [ASSIGNED] =(select isnull((select count(EQUIP_ENT_ID) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID =" + equipID + "),0)) WHERE  EQUIP_ID = " + equipID;
-
-                query += "UPDATE [dbo].[ENTITY_HDR] SET [ASSIGNED] = (select isnull((select count(EQUIP_ENT_ID) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID =" + entityID + "),0)) WHERE  ENT_ID = " + entityID;
-
                 connection.Query<bool>(query).ToList();
                 return true;
             }

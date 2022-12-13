@@ -803,6 +803,7 @@
     <Content Include="Views\Shared\_EntityCommonModel.cshtml" />
     <Content Include="Views\Entity\EntityEquipmentAssignment.cshtml" />
     <Content Include="Views\Entity\_EntityLeftSection.cshtml" />
+    <Content Include="Views\Shared\_DeleteAssignmentModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -15,7 +15,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         List<EquipmentDetail> GetEquipmentTemplateDetails(int equipID, string startDate);
 
         List<EntityHeader> GetEquipmentEntityAssignment(int equipID);
-        bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete);
+        bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate);
 
         List<EquipmentEntityAssignment> GetEquipmentEntityAssignment(string startDate);
     }

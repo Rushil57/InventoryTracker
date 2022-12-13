@@ -141,11 +141,11 @@ namespace InventoryTracker_WebApp.Controllers
         }
 
         [HttpPost]
-        public string SaveEquipmentEntityAssignment(int entityID, int equipID, string startDate,int isDelete)
+        public string SaveEquipmentEntityAssignment(int entityID, int equipID, string startDate,int isDelete,string endDate)
         {
             if (equipID > 0 && entityID > 0)
             {
-                bool isAssigned = _equipmentRepository.EquipmentEntityAssignment(entityID, equipID, startDate,isDelete);
+                bool isAssigned = _equipmentRepository.EquipmentEntityAssignment(entityID, equipID, startDate,isDelete,endDate);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = isAssigned });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });

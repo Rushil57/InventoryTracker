@@ -138,14 +138,13 @@ function addEquipmentColumn() {
                             contentType: 'application/json; charset=utf-8',
                             dataType: 'json',
                             type: 'GET',
-                            async: falsee,
+                            async: false,
                             data: { 'propName': $(this).attr('id') },
                             success: function (data) {
 
                                 var tableHeadLength = $("#equipHDR > thead > tr >  th").length
                                 for (var th = tableHeadLength; th >= 0;) {
                                     var headtext = $($("#equipHDR > thead > tr >  th")[th]).text();
-                                    console.log(headtext);
                                     if (headtext == id) {
                                         for (var i = 0; i < data.data.length; i++) {
 

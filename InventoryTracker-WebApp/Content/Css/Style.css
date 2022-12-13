@@ -121,3 +121,11 @@ td, th {
     font-weight: 700;
     margin-top: 2px;
 }
+
+
+.assignBtn {
+    background-color: rgb(150, 166, 195);
+    padding: 2px 2px 2px 2px !important;
+    color: white;
+    font-size: small;
+}

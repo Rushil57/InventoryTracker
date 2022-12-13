@@ -46,7 +46,6 @@ function loadEntityHDR(searchString) {
 
                     $("#entityHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td></td><tr>')
                     var tableHeadLength = $("#entityHDR > thead > tr >  th").length
-                    //   console.log(tableHeadLength);
                     for (var th = 0; th <= tableHeadLength;) {
                         if (th != tableHeadLength && th != 0) {
                             $("#entityHDR > tbody>tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find('td:last').after('<td></td>')
@@ -154,7 +153,7 @@ function loadEquipmentHDR(searchString) {
                         var totalAssignCount = $(assignElement[0]).text();
 
                         dropEquipID = $(this).parent().find("input").val();
-                        $(this).append('<div class="btn-group mt-1 ms-1 me-1" role="group"><div class="btn btn-primary" style="background-color:rgb(150, 166, 195);padding:1px 5px 1px 5px  !important;color:white" id="' + draggedEntityID + '">' + draggedElementName + '<div onclick="deleteAssignment(' + draggedEntityID + ',' + dropEquipID + ',this)" class="cls-remove-tag">X</div></div></div>')
+                        $(this).append('<div class="btn-group mt-1 ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEntityID + '">' + draggedElementName + '<div onclick="deleteAssignment(' + draggedEntityID + ',' + dropEquipID + ',this)" class="cls-remove-tag">X</div></div></div>')
 
                         assignElement.text(parseInt(totalAssignCount) + 1)
 
@@ -166,7 +165,7 @@ function loadEquipmentHDR(searchString) {
                             dataType: 'json',
                             type: 'POST',
                             async: false,
-                            data: JSON.stringify({ 'entityID': draggedEntityID, 'equipID': dropEquipID, 'startDate': startDate.val(), 'isDelete': 0 }),
+                            data: JSON.stringify({ 'entityID': draggedEntityID, 'equipID': dropEquipID, 'startDate': startDate.val(), 'isDelete': 0, 'endDate': '9999/01/01' }),
                             success: function (data) {
 
                             }, error: function (ex) { }
@@ -246,7 +245,6 @@ function addEquipmentColumn() {
                                 var tableHeadLength = $("#equipHDR > thead > tr >  th").length
                                 for (var th = tableHeadLength; th >= 0;) {
                                     var headtext = $($("#equipHDR > thead > tr >  th")[th]).text();
-                                    console.log(headtext);
                                     if (headtext == id) {
                                         for (var i = 0; i < data.data.length; i++) {
                                             $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Eq_Value);
@@ -359,7 +357,6 @@ function addEntityColumn() {
                                     var tableHeadLength = $("#entityHDR > thead > tr >  th").length
                                     for (var th = tableHeadLength; th >= 0;) {
                                         var headtext = $($("#entityHDR > thead > tr >  th")[th]).text();
-                                        //     console.log(headtext);
                                         if (headtext == id) {
                                             for (var i = 0; i < data.data.length; i++) {
                                                 $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('.assigned').next().text(data.data[i].Ent_Value);

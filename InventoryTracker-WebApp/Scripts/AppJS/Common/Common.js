@@ -15,6 +15,10 @@ var equipmentTemplate = $('#equipmentTemplate');
 var lastPlusRow = '<tr><td colspan = "3" ></td>  <td> <svg style ="cursor: pointer" xmlns="http://www.w3.org/2000/svg"  width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16"> <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" /> </svg> </td> </tr> ';
 
 $(document).ready(function () {
+    $('.updatepicker').datepicker({
+        autoclose: true
+    }).datepicker('setDate', new Date());
+
     $('#searchEquipmentStr').keydown(function (e) {
         if (e.keyCode == 13) {
             addEquipmentHeader();
@@ -262,7 +266,6 @@ function addEntityColumn() {
                 }
 
             });
-            debugger
             //tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
             if (isPresent) {
                 $.ajax({
@@ -286,7 +289,6 @@ function addEntityColumn() {
                 });
             }
         } else {
-            debugger
             var id = $(this).attr('id');
             $("#entityHDR th").each(function (index) {
 
@@ -422,11 +424,11 @@ function GetEquipmentEntityAssignment(isEntityEquip) {
                     var assignedStr = '';
                     if (assignmentData.data[i].EQUIP_ENT_ID > 0) {
                         if (isEntityEquip == 0) {
-                            var assignedStr = '<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary" style="background-color:rgb(150, 166, 195);padding:1px 5px 1px 5px  !important;color:white" id="' + assignmentData.data[i].EQUIP_ID + '">' + assignmentData.data[i].UNIT_ID + '<div onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ',this)" class="cls-remove-tag">X</div></div></div>';
+                            var assignedStr = '<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn"  id="' + assignmentData.data[i].EQUIP_ID + '">' + assignmentData.data[i].UNIT_ID + '<div onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ',this)" class="cls-remove-tag">X</div></div></div>';
                             $("#entityHDR > tbody >  tr").find('input[value="' + assignmentData.data[i].ENT_ID + '"]').parent().find('.droppable').append(assignedStr);
                         }
                         else {
-                            var assignedStr = '<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary" style="background-color:rgb(150, 166, 195);padding:1px 5px 1px 5px  !important;color:white" id="' + assignmentData.data[i].EQUIP_ID + '">' + assignmentData.data[i].ENT_NAME + '<div onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ',this)" class="cls-remove-tag">X</div></div></div>';
+                            var assignedStr = '<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + assignmentData.data[i].EQUIP_ID + '">' + assignmentData.data[i].ENT_NAME + '<div onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ',this)" class="cls-remove-tag">X</div></div></div>';
                             $("#equipHDR > tbody >  tr").find('input[value="' + assignmentData.data[i].EQUIP_ID + '"]').parent().find('.droppable').append(assignedStr);
                         }
                     }
@@ -436,36 +438,68 @@ function GetEquipmentEntityAssignment(isEntityEquip) {
     });
 }
 
-
+var deleteEntityID = 0;
+var deleteEquipID = 0;
+var deleteElement;
 function deleteAssignment(entityID, equipID, el) {
-
-    $.ajax({
-        before: AddLoader(),
-        after: RemoveLoader(),
-        url: '/Equipment/SaveEquipmentEntityAssignment',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        type: 'POST',
-        async: false,
-        data: JSON.stringify({ 'entityID': entityID, 'equipID': equipID, 'isDelete': 1 }),
-        success: function (data) {
-            //loadEntityHDR('');
-            //addEntityHeader();
-            //loadEquipmentHDR('');
-            //addEquipmentHeader();
-            var equipAssignElement = $("#equipHDR > tbody >  tr").find('input[value="' + equipID + '"]').parent().find('.assigned');
-            var totalAssignCount = $(equipAssignElement[0]).text();
-            equipAssignElement.text(parseInt(totalAssignCount) - 1)
-
-            var entityAssignElement = $("#entityHDR > tbody >  tr").find('input[value="' + entityID + '"]').parent().find('.assigned');
-            var totalAssignCount = $(entityAssignElement[0]).text();
-            entityAssignElement.text(parseInt(totalAssignCount) - 1)
-
-            $(el).parent().remove();
-        }, error: function (ex) { }
-    });
+    deleteAssignmentModel.modal('show');
+    deleteEntityID = entityID;
+    deleteEquipID = equipID;
+    deleteElement = el;
 }
 
+var deleteAssignmentModel = $('#deleteAssignment');
+function assignmentOption() {
+    if ($('#deleteAssignmentRadio1').is(':checked')) {
+        $.ajax({
+            before: AddLoader(),
+            after: RemoveLoader(),
+            url: '/Equipment/SaveEquipmentEntityAssignment',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            data: JSON.stringify({ 'entityID': deleteEntityID, 'equipID': deleteEquipID, 'isDelete': 1 }),
+            success: function (data) {
+                deleteAssignmentModel.modal('hide');
+                var equipAssignElement = $("#equipHDR > tbody >  tr").find('input[value="' + deleteEquipID + '"]').parent().find('.assigned');
+                var totalAssignCount = $(equipAssignElement[0]).text();
+                equipAssignElement.text(parseInt(totalAssignCount) - 1)
+
+                var entityAssignElement = $("#entityHDR > tbody >  tr").find('input[value="' + deleteEntityID + '"]').parent().find('.assigned');
+                var totalAssignCount = $(entityAssignElement[0]).text();
+                entityAssignElement.text(parseInt(totalAssignCount) - 1)
+
+                $(deleteElement).parent().remove();
+            }, error: function (ex) { }
+        });
+    }
+    else if ($('#deleteAssignmentRadio2').is(':checked')) {
+        $.ajax({
+            before: AddLoader(),
+            after: RemoveLoader(),
+            url: '/Equipment/SaveEquipmentEntityAssignment',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            data: JSON.stringify({ 'entityID': deleteEntityID, 'equipID': deleteEquipID, 'isDelete': 2, 'endDate': $('.updatepicker').val() }),
+            success: function (data) {
+                deleteAssignmentModel.modal('hide');
+            }, error: function (ex) { }
+        });
+
+    }
+    else {
+        deleteAssignmentModel.modal('hide');
+    }
+    resetDeleteAssignmentModel();
+
+}
+function resetDeleteAssignmentModel() {
+    $('.updatepicker').datepicker({ autoclose: true}).datepicker('setDate', new Date());
+    $('input[type="radio"]').prop('checked', false);
+}
 
 function divEquipmentHDRLoad(element) {
     if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {

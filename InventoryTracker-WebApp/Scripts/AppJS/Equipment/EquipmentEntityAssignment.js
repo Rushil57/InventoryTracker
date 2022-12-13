@@ -137,13 +137,11 @@ function loadEntityHDR(searchString) {
                     $("#entityHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td></td><tr>')
 
                     var tableHeadLength = $("#entityHDR > thead > tr >  th").length
-                 //   console.log(tableHeadLength);
                     for (var th = 0; th <= tableHeadLength;) {  
                         if (th != tableHeadLength && th != 0) {
                             $("#entityHDR > tbody>tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find('td:last').after('<td></td>')
                         }
                         var headtext = $($("#entityHDR > thead > tr >  th")[th]).text();
-                        console.log(headtext);
                         if (headtext == "Entity Name") {
                             $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").addClass("addEntity").text(data.data[i].ENT_NAME);
                         }
@@ -152,7 +150,6 @@ function loadEntityHDR(searchString) {
                         }
                         if (headtext == "\n                            ") {
                             $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").append('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
-                           // console.log(a);
                         }
                         th = th + 1;
                     }
@@ -168,7 +165,7 @@ function loadEntityHDR(searchString) {
                         var assignElement = $("#equipHDR > tbody >  tr").find('input[value="' + draggedEquipID + '"]').parent().find('.assigned');
                         var totalAssignCount = $(assignElement[0]).text();
                         dropEntityID = $(this).parent().find("input").val();
-                        $(this).append('<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary" style="background-color:rgb(150, 166, 195);padding:1px 5px 1px 5px  !important;color:white" id="' + draggedEquipID + '">' + draggedElementUnitID + '<div onclick="deleteAssignment(' + dropEntityID + ',' + draggedEquipID + ',this)" class="cls-remove-tag">X</div></div></div>');
+                        $(this).append('<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEquipID + '">' + draggedElementUnitID + '<div onclick="deleteAssignment(' + dropEntityID + ',' + draggedEquipID + ',this)" class="cls-remove-tag">X</div></div></div>');
                         assignElement.text(parseInt(totalAssignCount) + 1)
                         $.ajax({
                             before: AddLoader(),
@@ -178,7 +175,7 @@ function loadEntityHDR(searchString) {
                             dataType: 'json',
                             type: 'POST',
                             async: false,
-                            data: JSON.stringify({ 'entityID': dropEntityID, 'equipID': draggedEquipID, 'startDate': startDate.val(), 'isDelete': 0 }),
+                            data: JSON.stringify({ 'entityID': dropEntityID, 'equipID': draggedEquipID, 'startDate': startDate.val(), 'isDelete': 0, 'endDate': '9999/01/01' }),
                             success: function (data) {
                                 //loadEquipmentHDR('');
                             }, error: function (ex) { }
@@ -312,7 +309,6 @@ function addEntityColumn() {
                             var tableHeadLength = $("#entityHDR > thead > tr >  th").length
                             for (var th = tableHeadLength; th >= 0;) {
                                 var headtext = $($("#entityHDR > thead > tr >  th")[th]).text();
-                           //     console.log(headtext);
                                 if (headtext == id) {
                                     for (var i = 0; i < data.data.length; i++) {
                                         $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Ent_Value);
@@ -379,7 +375,6 @@ function addEntityColumn() {
 
             });
         }
-        console.log(hdrdata);
     })
     //  tableHeader += '<th scope="col">Equipment Assigned</th><th></th>';
     $("#entityHDR > thead >  tr > th").remove();
