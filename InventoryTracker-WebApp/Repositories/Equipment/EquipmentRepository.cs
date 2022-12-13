@@ -28,7 +28,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                         $" or eqh.EQUIP_TYPE like '%" + searchString + "%'" +
                         $" or eqh.VENDOR  like '%" + searchString + "%'" +
                         $" or eqh.UNIT_ID  like '%" + searchString + "%'" +
-                        $" or eh.ENT_NAME = '%" + searchString + "%') t1 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 20 rows only";
+                        $" or eh.ENT_NAME like '%" + searchString + "%') t1 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 20 rows only";
                 }
                 else
                 {

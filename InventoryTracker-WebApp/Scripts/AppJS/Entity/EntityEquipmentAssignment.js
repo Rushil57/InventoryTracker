@@ -189,6 +189,7 @@ function addEquipmentHeader() {
             return;
         }
         startIndexEquip = 0;
+        endIndexEquip = 20;
         previousequipsearch = searchString;
         loadEquipmentHDR(searchString, true);
         return;
@@ -369,7 +370,7 @@ function addEntityColumn() {
                                         var headtext = $($("#entityHDR > thead > tr >  th")[th]).text();
                                         if (headtext == id) {
                                             for (var i = 0; i < data.data.length; i++) {
-                                                $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('.assigned').next().text(data.data[i].Ent_Value);
+                                                $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].Ent_Value);
                                             }
                                             break;
                                         }
