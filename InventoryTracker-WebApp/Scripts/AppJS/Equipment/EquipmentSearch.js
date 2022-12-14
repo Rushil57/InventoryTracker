@@ -301,6 +301,9 @@ function saveHDRTemplateDtl() {
                     $('#equipHDR > tbody >  tr:last').trigger('click');
                     addEquipmentColumn();
                 }
+                else {
+                    alert(data.data)
+                }
             }, error: function (ex) { }
         });
     }

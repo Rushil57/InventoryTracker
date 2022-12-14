@@ -19,5 +19,6 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate);
 
         List<EquipmentEntityAssignment> GetEquipmentEntityAssignment(string startDate);
+        bool CheckDuplicateEquipmentHDR(EquipmentHeader equipmentHeader);
     }
 }

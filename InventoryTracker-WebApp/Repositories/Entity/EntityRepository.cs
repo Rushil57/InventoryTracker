@@ -277,7 +277,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 //var isInsert = connection.Query<int>(selectQuery).FirstOrDefault();
                 if (entityHDR.ENT_ID == 0)
                 {
-                    query += "INSERT INTO [dbo].[ENTITY_HDR] ([ENT_TYPE] ,[ENT_NAME]) OUTPUT Inserted.ENT_ID VALUES ('" + entityHDR.ENT_TYPE + "','" + entityHDR.ENT_NAME + "')";
+                    query += "INSERT INTO [dbo].[ENTITY_HDR] ([ENT_TYPE] ,[ENT_NAME]) OUTPUT Inserted.ENT_ID VALUES ('" + entityHDR.ENT_TYPE.Trim() + "','" + entityHDR.ENT_NAME.Trim() + "')";
                     var lastHDRID = connection.Query<int>(query).FirstOrDefault();
                     var detailInsertQuery = string.Empty;
                     if (entityDtl.Count > 0)
@@ -321,6 +321,28 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                     }
                 }
                 return true;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
+
+        public bool CheckDuplicateEntityHDR(EntityHeader entityHeader)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+
+                query = "SELECT count(*) FROM [dbo].[ENTITY_HDR] where [ENT_TYPE] = '" + entityHeader.ENT_TYPE + "' and [ENT_NAME] = '" + entityHeader.ENT_NAME + "'";
+                var totalCount  = connection.Query<int>(query).FirstOrDefault();
+                if (totalCount > 0 ) {
+                    return true;
+                }
+                return false;
             }
             catch (Exception e)
             {

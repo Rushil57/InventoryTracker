@@ -9,6 +9,7 @@ namespace InventoryTracker_WebApp.Domain.Entity
         List<EntityHeader> GetEntityHeaderfromEntityEquipment(string searchString, int startIndex, int endIndex);
         List<EntityTemplate> GetEntityTemplates(string entityType);
         bool SaveEntityTemplate(List<EntityTemplate> entityTemplate);
+        bool CheckDuplicateEntityHDR(EntityHeader entityHeader);
         bool DeleteEntityTemplates(string entityType);
         List<EntityDetail> GetEntityTemplateDetails(int entityID, string startDate);
         List<EntityDetail> EntityValueByPropName(string propName);

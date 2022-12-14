@@ -87,10 +87,15 @@ namespace InventoryTracker_WebApp.Controllers
             {
                 List<EquipmentHeader> equipmentHeaders = JsonConvert.DeserializeObject<List<EquipmentHeader>>(equipmentHDR);
                 List<EquipmentDetail> equipmentDtl = JsonConvert.DeserializeObject<List<EquipmentDetail>>(equipmentTmpDtl);
+                bool isDuplicate = _equipmentRepository.CheckDuplicateEquipmentHDR(equipmentHeaders[0]);
+                if (isDuplicate)
+                {
+                    return JsonConvert.SerializeObject(new { IsValid = false, data = "This equipment header is already exist." });
+                }
                 bool isInserted = _equipmentRepository.SaveEquipmentHDR(equipmentHeaders[0], equipmentDtl);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = true });
             }
-            return JsonConvert.SerializeObject(new { IsValid = false, data = false });
+            return JsonConvert.SerializeObject(new { IsValid = false });
         }
 
         [HttpGet]

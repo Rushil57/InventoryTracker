@@ -389,5 +389,28 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
             return equipmentEntityAssignments;
         }
+
+        public bool CheckDuplicateEquipmentHDR(EquipmentHeader equipmentHeader)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+
+                query = "SELECT count(*) FROM [dbo].[EQUIPMENT_HDR] where [EQUIP_TYPE] = '" + equipmentHeader.EQUIP_TYPE + "' and [VENDOR] = '" + equipmentHeader.VENDOR + "' and [UNIT_ID] = '" + equipmentHeader.UNIT_ID + "'";
+                var totalCount = connection.Query<int>(query).FirstOrDefault();
+                if (totalCount > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
     }
 }

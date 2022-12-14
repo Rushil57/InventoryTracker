@@ -390,6 +390,9 @@ function saveHDRTemplateDtl() {
                     $('#entityHDR > tbody >  tr:last').trigger('click');
                     addEntityColumn();
                 }
+                else {
+                    alert(data.data)
+                }
             }, error: function (ex) { }
         });
     }
