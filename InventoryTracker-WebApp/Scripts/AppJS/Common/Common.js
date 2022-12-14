@@ -471,6 +471,10 @@ function removeAssignmentOption() {
 }
 
 function updateAssignmentOption() {
+    if ($('.updatepicker').val() == '') {
+        alert('Please select date.');
+        return;
+    }
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
