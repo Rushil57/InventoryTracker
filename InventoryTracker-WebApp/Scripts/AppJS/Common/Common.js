@@ -532,5 +532,7 @@ function divEntityHDRLoad(element) {
          else {
             loadEntityHDR('', false);
         }
+        endIndexEntity = endIndexEntity + 10;
+        loadEntityHDR($('#searchEntityStr').val());;
     }
 }
