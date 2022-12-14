@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Index";
     ViewBag.Type = "Entity";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
 
 @Html.Partial("_EntityEquipmentIndex")
@@ -45,6 +46,6 @@
     </div>*@
 
 @section scripts{
-    <script src="~/Scripts/AppJS/Common/Common.js"></script>
-    <script src="~/Scripts/AppJS/Entity/Entity.js"></script>
+    <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Entity/Entity.js?v=@versionUpdate"></script>
 }

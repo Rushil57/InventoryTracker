@@ -145,7 +145,7 @@ function loadEntityHDR(searchString, searchflag) {
 
 function addEntityHeader() {
     startIndexEntity = 0;
-    endIndexEntity = 20;
+    endIndexEntity = 30;
     loadEntityHDR($('#searchEntityStr').val());
     addEntityColumn();
     $("#entityHDR tr").each(function (index) {

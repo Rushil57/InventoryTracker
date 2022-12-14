@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "EquipmentList";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
 
 <div class="row">
@@ -106,7 +107,7 @@
 @*Entity Model End*@
 
 @section scripts{
-    <script src="~/Scripts/AppJS/Common/Common.js"></script>
-    <script src="~/Scripts/AppJS/Equipment/EquipmentCommon.js"></script>
-    <script src="~/Scripts/AppJS/Equipment/EquipmentSearch.js"></script>
+    <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Equipment/EquipmentCommon.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Equipment/EquipmentSearch.js?v=@versionUpdate"></script>
 }

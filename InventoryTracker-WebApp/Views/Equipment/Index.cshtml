@@ -1,11 +1,12 @@
 ﻿@{
     ViewBag.Title = "Index";
     ViewBag.Type = "Equipment";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
 
 @Html.Partial("_EntityEquipmentIndex")
 
 @section scripts{
-    <script src="~/Scripts/AppJS/Common/Common.js"></script>
-    <script src="~/Scripts/AppJS/Equipment/Equipment.js"></script>
+    <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Equipment/Equipment.js?v=@versionUpdate"></script>
 }

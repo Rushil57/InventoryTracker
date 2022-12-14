@@ -5,9 +5,9 @@ var entityType = $('#entityType');
 var entityTemplate = $('#entityTemplate');
 var equipTypeEle = $('#equipType');
 var startIndexEquip = 0;
-var endIndexEquip = 20;
+var endIndexEquip = 30;
 var startIndexEntity = 0;
-var endIndexEntity = 20;
+var endIndexEntity = 30;
 var entitysearchflag = false;
 var previousentitysearch = '';
 var equipsearchflag = false;
@@ -328,7 +328,7 @@ function addEntityHeader() {
         loadEntityHDR(searchString, true);
     } else {
         startIndexEntity = 0;
-        endIndexEntity = 20;
+        endIndexEntity = 30;
         loadEntityHDR(searchString, false);
     }
 }
@@ -493,7 +493,7 @@ function resetDeleteAssignmentModel() {
 function divEquipmentHDRLoad(element) {
     if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
         startIndexEquip = endIndexEquip;
-        endIndexEquip = endIndexEquip + 20;
+        endIndexEquip = endIndexEquip + 30;
         
         var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
         if (searchString != '') {
@@ -514,8 +514,8 @@ function divEquipmentHDRLoad(element) {
 }
 function divEntityHDRLoad(element) {
     if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
-        startIndexEntity = endIndexEntity;
-        endIndexEntity = endIndexEntity + 20;
+        startIndexEntity = startIndexEntity;
+        endIndexEntity = endIndexEntity + 30;
         
             var searchString = $('#searchEntityStr').val().toLowerCase().trim();
             if (searchString != '') {
