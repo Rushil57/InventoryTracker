@@ -491,32 +491,35 @@ function resetDeleteAssignmentModel() {
 }
 
 function divEquipmentHDRLoad(element) {
-    if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
-        startIndexEquip = endIndexEquip;
-        endIndexEquip = endIndexEquip + 30;
-        
-        var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
-        if (searchString != '') {
-            if (previousequipsearch == searchString) {
+    if (element.scrollTop > 0) {
+        if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
+            startIndexEquip = endIndexEquip;
+            endIndexEquip = endIndexEquip + 30;
+
+            var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
+            if (searchString != '') {
+                if (previousequipsearch == searchString) {
+                    previousequipsearch = searchString;
+                    loadEquipmentHDR(searchString, false);
+                    return;
+                }
+                startIndexEquip = 0;
                 previousequipsearch = searchString;
-                loadEquipmentHDR(searchString, false);
+                loadEquipmentHDR(searchString, true);
                 return;
             }
-            startIndexEquip = 0;
-            previousequipsearch = searchString;
-            loadEquipmentHDR(searchString, true);
-            return;
-        }
-        else {
-            loadEquipmentHDR('', false);
+            else {
+                loadEquipmentHDR('', false);
+            }
         }
     }
 }
 function divEntityHDRLoad(element) {
-    if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
-        startIndexEntity = startIndexEntity;
-        endIndexEntity = endIndexEntity + 30;
-        
+    if (element.scrollTop > 0) {
+        if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
+            startIndexEntity = startIndexEntity;
+            endIndexEntity = endIndexEntity + 30;
+
             var searchString = $('#searchEntityStr').val().toLowerCase().trim();
             if (searchString != '') {
                 if (previousentitysearch == searchString) {
@@ -524,15 +527,16 @@ function divEntityHDRLoad(element) {
                     loadEntityHDR(searchString, false);
                     return;
                 }
-                    startIndexEntity = 0;
+                startIndexEntity = 0;
                 previousentitysearch = searchString;
                 loadEntityHDR(searchString, true);
                 return;
             }
-         else {
-            loadEntityHDR('', false);
+            else {
+                loadEntityHDR('', false);
+            }
+            endIndexEntity = endIndexEntity + 10;
+            loadEntityHDR($('#searchEntityStr').val());;
         }
-        endIndexEntity = endIndexEntity + 10;
-        loadEntityHDR($('#searchEntityStr').val());;
     }
 }
