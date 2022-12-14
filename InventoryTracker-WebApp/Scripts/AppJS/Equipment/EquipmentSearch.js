@@ -426,7 +426,7 @@ function showEntityDetails(element) {
 
                     var sDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
                     var eDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
-                    entityTemplateString += '<tr><td>' + data.data[i].Prop_Name + '</td><td>' + entityValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td><td>';
+                    entityTemplateString += '<tr><td>' + data.data[i].Prop_Name + '</td><td>' + entityValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
                 }
                 entityTemplateString += '</tbody></table>';
                 entityModelBody.html(entityTemplateString);
