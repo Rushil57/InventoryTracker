@@ -17,23 +17,23 @@ var entityTempDTL = $('#entityTempDTL');
 
 $(document).ready(function () {
     $('#selectedMenu').text($('#menuEquipSearch').text());
-//    //loadEquipmentHDR();
-//    loadAllEquipTemp();
-//    //enabled();
-//    disabled()
-//    $('.datepicker').datepicker({
-//        autoclose: true
-//    }).on('change', function (e) {
-//        currentDate = this.value;
-//        if (isLoadTime) {
-//            isLoadTime = false;
-//            return;
-//        }
-//        loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
-//    }).datepicker('setDate', new Date());
+    //    //loadEquipmentHDR();
+    //    loadAllEquipTemp();
+    //    //enabled();
+    //    disabled()
+    //    $('.datepicker').datepicker({
+    //        autoclose: true
+    //    }).on('change', function (e) {
+    //        currentDate = this.value;
+    //        if (isLoadTime) {
+    //            isLoadTime = false;
+    //            return;
+    //        }
+    //        loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
+    //    }).datepicker('setDate', new Date());
 })
 
-function loadEquipmentHDR(searchString,searchflag) {
+function loadEquipmentHDR(searchString, searchflag) {
     if (searchflag == true) {
         equipsearchflag = true;
         $("#equipHDR > tbody > tr").remove();
@@ -229,84 +229,84 @@ function saveHDRTemplateDtl() {
         alert(alertText + " !");
         return;
     }
-    //$('#equipHDR > tbody >  tr').each(function () {
-    //    if ($(this).find("td:eq(0)").text().trim().toLowerCase() == equipType.toLowerCase() && $(this).find("td:eq(1)").text().trim().toLowerCase() == vendor.toLowerCase() && $(this).find("td:eq(2)").text().trim().toLowerCase() == unitid.toLowerCase()) {
-    //        isExist = true;
-    //        return;
-    //    }
-    //})
-    //if (!isExist) {
-    var equipmentHDR = [];
-    equipmentHDR.push({
-        EQUIP_TYPE: equipType,
-        VENDOR: vendor,
-        UNIT_ID: unitid,
-        EQUIP_ID: equipmentHDRID.val()
+    $('#equipHDR > tbody >  tr').each(function () {
+        if ($(this).find("td:eq(0)").text().trim().toLowerCase() == equipType.toLowerCase() && $(this).find("td:eq(1)").text().trim().toLowerCase() == vendor.toLowerCase() && $(this).find("td:eq(2)").text().trim().toLowerCase() == unitid.toLowerCase()) {
+            isExist = true;
+            return;
+        }
     })
-
-    var equipmentTmpDtl = [];
-    var isStartGTEnd = false;
-    $("#tblTemplateDtl > tbody >  tr").each(function () {
-        var Equip_Dtl_ID = $(this).find('.equipDtlID').val();
-        var Equip_Temp_ID = $(this).find('.equipTmpID').val();
-        var firsttd = (typeof $(this).find("td:eq(1)").text() != 'undefined' && $(this).find("td:eq(1)").text().trim() != "") ? $(this).find("td:eq(1)").text() : $(this).find("td:eq(1) >  input").val();
-        var secondtd = (typeof $(this).find("td:eq(2)").text() != 'undefined' && $(this).find("td:eq(2)").text().trim() != '') ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) >  input").val();
-        var thirdtd = (typeof $(this).find("td:eq(3)").text() != 'undefined' && $(this).find("td:eq(3)").text().trim() != '') ? $(this).find("td:eq(3)").text() : $(this).find("td:eq(3) >  input").val();
-
-        $(this).find("td:eq(2) > input").css('background-color', 'white');
-        $(this).find("td:eq(3) > input").css('background-color', 'white');
-        if (secondtd == '' || secondtd == undefined) {
-            isStartGTEnd = true;
-            $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
-            return;
-        }
-        if (thirdtd == '' || thirdtd == undefined) {
-            isStartGTEnd = true;
-            $(this).find("td:eq(3)  > input").css('background-color', '#f5cece');
-            return;
-        }
-
-        if (new Date(secondtd) > new Date(thirdtd)) {
-            isStartGTEnd = true;
-            $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
-            return;
-        }
-
-        equipmentTmpDtl.push({
-            Equip_Dtl_ID: Equip_Dtl_ID,
-            Equip_Temp_ID: Equip_Temp_ID,
-            Eq_Value: firsttd,
-            Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
-            End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
+    if (!isExist) {
+        var equipmentHDR = [];
+        equipmentHDR.push({
+            EQUIP_TYPE: equipType,
+            VENDOR: vendor,
+            UNIT_ID: unitid,
+            EQUIP_ID: equipmentHDRID.val()
         })
-    });
 
-    if (isStartGTEnd) {
-        alert("Start date is greater than end date or date fields is empty.");
-        return;
-    }
+        var equipmentTmpDtl = [];
+        var isStartGTEnd = false;
+        $("#tblTemplateDtl > tbody >  tr").each(function () {
+            var Equip_Dtl_ID = $(this).find('.equipDtlID').val();
+            var Equip_Temp_ID = $(this).find('.equipTmpID').val();
+            var firsttd = (typeof $(this).find("td:eq(1)").text() != 'undefined' && $(this).find("td:eq(1)").text().trim() != "") ? $(this).find("td:eq(1)").text() : $(this).find("td:eq(1) >  input").val();
+            var secondtd = (typeof $(this).find("td:eq(2)").text() != 'undefined' && $(this).find("td:eq(2)").text().trim() != '') ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) >  input").val();
+            var thirdtd = (typeof $(this).find("td:eq(3)").text() != 'undefined' && $(this).find("td:eq(3)").text().trim() != '') ? $(this).find("td:eq(3)").text() : $(this).find("td:eq(3) >  input").val();
 
-    $.ajax({
-        before: AddLoader(),
-        after: RemoveLoader(),
-        url: '/Equipment/SaveEquipmentHDRTempData',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        type: 'POST',
-        async: false,
-        data: JSON.stringify({ 'equipmentHDR': JSON.stringify(equipmentHDR), 'equipmentTmpDtl': JSON.stringify(equipmentTmpDtl) }),
-        success: function (data) {
-            if (data.IsValid) {
-                loadEquipmentHDR($('#searchEquipmentStr').val());
-                $('#equipHDR > tbody >  tr:last').trigger('click');
-                addEquipmentColumn();
+            $(this).find("td:eq(2) > input").css('background-color', 'white');
+            $(this).find("td:eq(3) > input").css('background-color', 'white');
+            if (secondtd == '' || secondtd == undefined) {
+                isStartGTEnd = true;
+                $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
+                return;
             }
-        }, error: function (ex) { }
-    });
-    //}
-    //else {
-    //    alert('This equipment header is already exist.')
-    //}
+            if (thirdtd == '' || thirdtd == undefined) {
+                isStartGTEnd = true;
+                $(this).find("td:eq(3)  > input").css('background-color', '#f5cece');
+                return;
+            }
+
+            if (new Date(secondtd) > new Date(thirdtd)) {
+                isStartGTEnd = true;
+                $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
+                return;
+            }
+
+            equipmentTmpDtl.push({
+                Equip_Dtl_ID: Equip_Dtl_ID,
+                Equip_Temp_ID: Equip_Temp_ID,
+                Eq_Value: firsttd,
+                Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
+                End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
+            })
+        });
+
+        if (isStartGTEnd) {
+            alert("Start date is greater than end date or date fields is empty.");
+            return;
+        }
+
+        $.ajax({
+            before: AddLoader(),
+            after: RemoveLoader(),
+            url: '/Equipment/SaveEquipmentHDRTempData',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            data: JSON.stringify({ 'equipmentHDR': JSON.stringify(equipmentHDR), 'equipmentTmpDtl': JSON.stringify(equipmentTmpDtl) }),
+            success: function (data) {
+                if (data.IsValid) {
+                    loadEquipmentHDR($('#searchEquipmentStr').val());
+                    $('#equipHDR > tbody >  tr:last').trigger('click');
+                    addEquipmentColumn();
+                }
+            }, error: function (ex) { }
+        });
+    }
+    else {
+        alert('This equipment header is already exist.')
+    }
 }
 
 //$('#search').click(function () {
@@ -452,6 +452,7 @@ $('#deleteTemplate').click(function () {
                     if (data.IsValid) {
                         loadEquipmentHDR($('#searchEquipmentStr').val().trim());
                         addEquipmentColumn();
+                        $('#newTemplate').trigger('click')
                     }
                 }, error: function (ex) { }
             });

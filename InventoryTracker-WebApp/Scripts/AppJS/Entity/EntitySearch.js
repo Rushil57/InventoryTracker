@@ -14,20 +14,20 @@ var currentEntityName = '';
 var previousEquipmentElement = '';
 
 $(document).ready(function () {
-//    loadAllEntityTemp();
-//    disabled()
-//    $('.datepicker').datepicker({
-//        autoclose: true
-//    }).on('change', function (e) {
-//        currentDate = this.value;
-//        if (isLoadTime) {
-//            isLoadTime = false;
-//            return;
-//        }
-//        loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
-//    }).datepicker('setDate', new Date());
+    //    loadAllEntityTemp();
+    //    disabled()
+    //    $('.datepicker').datepicker({
+    //        autoclose: true
+    //    }).on('change', function (e) {
+    //        currentDate = this.value;
+    //        if (isLoadTime) {
+    //            isLoadTime = false;
+    //            return;
+    //        }
+    //        loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
+    //    }).datepicker('setDate', new Date());
     $('#selectedMenu').text($('#menuEntSearch').text());
-    
+
 })
 
 
@@ -319,83 +319,83 @@ function saveHDRTemplateDtl() {
         alert(alertText + " !");
         return;
     }
-    //$('#equipHDR > tbody >  tr').each(function () {
-    //    if ($(this).find("td:eq(0)").text().trim().toLowerCase() == equipType.toLowerCase() && $(this).find("td:eq(1)").text().trim().toLowerCase() == vendor.toLowerCase() && $(this).find("td:eq(2)").text().trim().toLowerCase() == unitid.toLowerCase()) {
-    //        isExist = true;
-    //        return;
-    //    }
-    //})
-    //if (!isExist) {
-    var entityHDR = [];
-    entityHDR.push({
-        ENT_TYPE: entityTypeVal,
-        ENT_NAME: entityNameVal,
-        ENT_ID: entityHDRID.val()
+    $('#entityHDR > tbody >  tr').each(function () {
+        if ($(this).find("td:eq(0)").text().trim().toLowerCase() == entityTypeVal.toLowerCase() && $(this).find("td:eq(1)").text().trim().toLowerCase() == entityNameVal.toLowerCase()) {
+            isExist = true;
+            return;
+        }
     })
-
-    var entityTmpDtl = [];
-    var isStartGTEnd = false;
-    $("#tblTemplateDtl > tbody >  tr").each(function () {
-        var Ent_Dtl_ID = $(this).find('.entityDtlID').val();
-        var Ent_Temp_ID = $(this).find('.entityTmpID').val();
-        var firsttd = (typeof $(this).find("td:eq(1)").text() != 'undefined' && $(this).find("td:eq(1)").text().trim() != "") ? $(this).find("td:eq(1)").text() : $(this).find("td:eq(1) >  input").val();
-        var secondtd = (typeof $(this).find("td:eq(2)").text() != 'undefined' && $(this).find("td:eq(2)").text().trim() != '') ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) >  input").val();
-        var thirdtd = (typeof $(this).find("td:eq(3)").text() != 'undefined' && $(this).find("td:eq(3)").text().trim() != '') ? $(this).find("td:eq(3)").text() : $(this).find("td:eq(3) >  input").val();
-
-        $(this).find("td:eq(2) > input").css('background-color', 'white');
-        $(this).find("td:eq(3) > input").css('background-color', 'white');
-        if (secondtd == '' || secondtd == undefined) {
-            isStartGTEnd = true;
-            $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
-            return;
-        }
-        if (thirdtd == '' || thirdtd == undefined) {
-            isStartGTEnd = true;
-            $(this).find("td:eq(3)  > input").css('background-color', '#f5cece');
-            return;
-        }
-
-        if (new Date(secondtd) > new Date(thirdtd)) {
-            isStartGTEnd = true;
-            $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
-            return;
-        }
-
-        entityTmpDtl.push({
-            Ent_Dtl_ID: Ent_Dtl_ID,
-            Ent_Temp_ID: Ent_Temp_ID,
-            Ent_Value: firsttd,
-            Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
-            End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
+    if (!isExist) {
+        var entityHDR = [];
+        entityHDR.push({
+            ENT_TYPE: entityTypeVal,
+            ENT_NAME: entityNameVal,
+            ENT_ID: entityHDRID.val()
         })
-    });
 
-    if (isStartGTEnd) {
-        alert("Start date is greater than end date or date fields is empty.");
-        return;
-    }
+        var entityTmpDtl = [];
+        var isStartGTEnd = false;
+        $("#tblTemplateDtl > tbody >  tr").each(function () {
+            var Ent_Dtl_ID = $(this).find('.entityDtlID').val();
+            var Ent_Temp_ID = $(this).find('.entityTmpID').val();
+            var firsttd = (typeof $(this).find("td:eq(1)").text() != 'undefined' && $(this).find("td:eq(1)").text().trim() != "") ? $(this).find("td:eq(1)").text() : $(this).find("td:eq(1) >  input").val();
+            var secondtd = (typeof $(this).find("td:eq(2)").text() != 'undefined' && $(this).find("td:eq(2)").text().trim() != '') ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) >  input").val();
+            var thirdtd = (typeof $(this).find("td:eq(3)").text() != 'undefined' && $(this).find("td:eq(3)").text().trim() != '') ? $(this).find("td:eq(3)").text() : $(this).find("td:eq(3) >  input").val();
 
-    $.ajax({
-        before: AddLoader(),
-        after: RemoveLoader(),
-        url: '/Entity/SaveEntityHDRTempData',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        type: 'POST',
-        async: false,
-        data: JSON.stringify({ 'entityHDR': JSON.stringify(entityHDR), 'entityTmpDtl': JSON.stringify(entityTmpDtl) }),
-        success: function (data) {
-            if (data.IsValid) {
-                loadEntityHDR($('#searchEntityStr').val(),true);
-                $('#entityHDR > tbody >  tr:last').trigger('click');
-                addEntityColumn();
+            $(this).find("td:eq(2) > input").css('background-color', 'white');
+            $(this).find("td:eq(3) > input").css('background-color', 'white');
+            if (secondtd == '' || secondtd == undefined) {
+                isStartGTEnd = true;
+                $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
+                return;
             }
-        }, error: function (ex) { }
-    });
-    //}
-    //else {
-    //    alert('This equipment header is already exist.')
-    //}
+            if (thirdtd == '' || thirdtd == undefined) {
+                isStartGTEnd = true;
+                $(this).find("td:eq(3)  > input").css('background-color', '#f5cece');
+                return;
+            }
+
+            if (new Date(secondtd) > new Date(thirdtd)) {
+                isStartGTEnd = true;
+                $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
+                return;
+            }
+
+            entityTmpDtl.push({
+                Ent_Dtl_ID: Ent_Dtl_ID,
+                Ent_Temp_ID: Ent_Temp_ID,
+                Ent_Value: firsttd,
+                Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
+                End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
+            })
+        });
+
+        if (isStartGTEnd) {
+            alert("Start date is greater than end date or date fields is empty.");
+            return;
+        }
+
+        $.ajax({
+            before: AddLoader(),
+            after: RemoveLoader(),
+            url: '/Entity/SaveEntityHDRTempData',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            async: false,
+            data: JSON.stringify({ 'entityHDR': JSON.stringify(entityHDR), 'entityTmpDtl': JSON.stringify(entityTmpDtl) }),
+            success: function (data) {
+                if (data.IsValid) {
+                    loadEntityHDR($('#searchEntityStr').val(), true);
+                    $('#entityHDR > tbody >  tr:last').trigger('click');
+                    addEntityColumn();
+                }
+            }, error: function (ex) { }
+        });
+    }
+    else {
+        alert('This entity header is already exist.')
+    }
 }
 
 
