@@ -13,7 +13,7 @@ var currentEntityType = 0;
 var currentEntityName = '';
 var previousEquipmentElement = '';
 
-//$(document).ready(function () {
+$(document).ready(function () {
 //    loadAllEntityTemp();
 //    disabled()
 //    $('.datepicker').datepicker({
@@ -26,7 +26,9 @@ var previousEquipmentElement = '';
 //        }
 //        loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
 //    }).datepicker('setDate', new Date());
-//})
+    $('#selectedMenu').text($('#menuEntSearch').text());
+    
+})
 
 
 function loadEntityHDR(searchString, searchflag) {

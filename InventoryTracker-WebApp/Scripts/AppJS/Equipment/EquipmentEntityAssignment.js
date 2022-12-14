@@ -21,6 +21,7 @@ $(document).ready(function () {
     loadEquipmentHDR('',false);
     resizableTable();
     sortableTable();
+    $('#selectedMenu').text($('#menuEntEquAss').text());
 })
 
 

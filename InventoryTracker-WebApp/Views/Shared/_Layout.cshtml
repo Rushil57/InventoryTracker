@@ -18,8 +18,9 @@
     <nav class="navbar navbar-expand-lg  fixed-top navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand ms-5" href="#">Inventory Tracker</a>
-
+            
             <div class="d-flex">
+                <div id="selectedMenu" class="mt-2" style="color:wheat"></div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -29,13 +30,13 @@
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 @*Home*@
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item" href="@Url.Action("Index","Entity")" id="EntityTemplates">Entity templates</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("Index","Equipment")">Equipment templates</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("EntitySearch","Entity")">Entity search</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("EquipmentSearch","Equipment")">Equipment search</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("EquipmentEntityAssignment","Equipment")">Equipment-Entity Assignment</a></li>
-                                <li><a class="dropdown-item" href="@Url.Action("EntityEquipmentAssignment","Entity")">Entity-Equipment Assignment</a></li>
+                            <ul class="dropdown-menu dropdown-menu-dark" id="menuList">
+                                <li><a class="dropdown-item" href="@Url.Action("Index","Entity")" id="menuEntTemp">Entity templates</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index","Equipment")" id="menuEquipTemp">Equipment templates</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("EntitySearch","Entity")" id="menuEntSearch">Entity search</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("EquipmentSearch","Equipment")" id="menuEquipSearch">Equipment search</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("EquipmentEntityAssignment","Equipment")" id="menuEntEquAss">Equipment-Entity Assignment</a></li>
+                                <li><a class="dropdown-item" id="menuEquEntAss" href="@Url.Action("EntityEquipmentAssignment","Entity")">Entity-Equipment Assignment</a></li>
                             </ul>
                         </li>
                     </ul>

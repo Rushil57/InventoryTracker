@@ -10,7 +10,7 @@ $(document).ready(function () {
     loadEquipmentHDR('',false);
     resizableTable();
     sortableTable();
-
+    $('#selectedMenu').text($('#menuEquEntAss').text());
 })
 
 function loadEntityHDR(searchString, searchflag) {

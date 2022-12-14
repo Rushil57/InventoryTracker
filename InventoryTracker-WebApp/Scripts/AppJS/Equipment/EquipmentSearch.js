@@ -15,7 +15,8 @@ var previousElement = '';
 var entityModelBody = $('#entityModelBody');
 var entityTempDTL = $('#entityTempDTL');
 
-//$(document).ready(function () {
+$(document).ready(function () {
+    $('#selectedMenu').text($('#menuEquipSearch').text());
 //    //loadEquipmentHDR();
 //    loadAllEquipTemp();
 //    //enabled();
@@ -30,7 +31,7 @@ var entityTempDTL = $('#entityTempDTL');
 //        }
 //        loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
 //    }).datepicker('setDate', new Date());
-//})
+})
 
 function loadEquipmentHDR(searchString,searchflag) {
     if (searchflag == true) {

@@ -1,8 +1,7 @@
 ﻿$(document).ready(function () {
     loadEntity();
+    $('#selectedMenu').text($('#menuEntTemp').text() );
 })
-
-
 function loadTemplate(entityType) {
     
     $.ajax({

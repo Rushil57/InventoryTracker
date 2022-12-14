@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     loadEquipment();
+    $('#selectedMenu').text($('#menuEquipTemp').text());
 })
 
 
