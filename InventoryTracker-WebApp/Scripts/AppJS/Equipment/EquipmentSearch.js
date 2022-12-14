@@ -32,11 +32,19 @@ var entityTempDTL = $('#entityTempDTL');
 //    }).datepicker('setDate', new Date());
 //})
 
-function loadEquipmentHDR(searchString) {
+function loadEquipmentHDR(searchString,searchflag) {
+    if (searchflag == true) {
+        equipsearchflag = true;
+        $("#equipHDR > tbody > tr").remove();
+    }
+    if (startIndexEntity == 0) {
+        equipsearchflag = false;
+        $("#equipHDR > tbody > tr").remove();
+    }
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
-        url: '/Equipment/GetEquipmentHeaders',
+        url: '/Equipment/GetEquipmentHeadersfromEquipmentEntity',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         type: 'GET',
