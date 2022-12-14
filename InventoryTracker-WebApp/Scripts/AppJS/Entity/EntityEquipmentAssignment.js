@@ -189,13 +189,13 @@ function addEquipmentHeader() {
             return;
         }
         startIndexEquip = 0;
-        endIndexEquip = 20;
+        endIndexEquip = 30;
         previousequipsearch = searchString;
         loadEquipmentHDR(searchString, true);
         return;
     } else {
         startIndexEquip = 0;
-        endIndexEquip = 20;
+        endIndexEquip = 30;
         loadEquipmentHDR('', true);
     }
     // loadEquipmentHDR('');
@@ -453,7 +453,7 @@ function addEntityHeader() {
         loadEntityHDR(searchString, true);
     } else {
         startIndexEntity = 0;
-        endIndexEntity = 20;
+        endIndexEntity = 30;
         loadEntityHDR(searchString, false);
     }
 }

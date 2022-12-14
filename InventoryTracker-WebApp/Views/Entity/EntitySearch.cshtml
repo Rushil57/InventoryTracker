@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "EntitySearch";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
 
 
@@ -120,8 +121,8 @@
 @*Entity Model End*@
 
 @section scripts{
-    <script src="~/Scripts/AppJS/Common/Common.js"></script>
-    <script src="~/Scripts/AppJS/Entity/EntityCommon.js"></script>
-    <script src="~/Scripts/AppJS/Entity/EntitySearch.js"></script>
+    <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Entity/EntityCommon.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Entity/EntitySearch.js?v=@versionUpdate"></script>
 }
 

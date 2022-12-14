@@ -318,7 +318,7 @@ function addEntityHeader() {
         loadEntityHDR(searchString, true);
     } else {
         startIndexEntity = 0;
-        endIndexEntity = 20;
+        endIndexEntity = 30;
         loadEntityHDR(searchString, false);
     }
     resizableTable();   
@@ -337,7 +337,7 @@ function addEquipmentHeader() {
         loadEquipmentHDR(searchString, true);
     } else {
         startIndexEquip = 0;
-        endIndexEquip = 20;
+        endIndexEquip = 30;
         loadEquipmentHDR(searchString, false);
     }
     //$('#searchEquipmentStr').val().trim()

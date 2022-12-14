@@ -28,11 +28,11 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                         $" or eqh.EQUIP_TYPE like '%" + searchString + "%'" +
                         $" or eqh.VENDOR  like '%" + searchString + "%'" +
                         $" or eqh.UNIT_ID  like '%" + searchString + "%'" +
-                        $" or eh.ENT_NAME like '%" + searchString + "%') t1 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 20 rows only";
+                        $" or eh.ENT_NAME like '%" + searchString + "%') t1 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
                 }
                 else
                 {
-                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 20 rows only";
+                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
                 }
                 equipmentHeaders = connection.Query<EquipmentHeader>(query).ToList();
             }
@@ -58,11 +58,11 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                         $" where ed.Eq_Value like '%"+searchString+"%'" +
                         $" or eqh.EQUIP_TYPE like '%"+searchString+"%'" +
                         $" or eqh.VENDOR  like '%"+searchString+ "%'" +
-                        $" or eqh.UNIT_ID  like '%"+searchString+"%') t1 order by  CURRENT_TIMESTAMP offset "+startRow+" rows FETCH NEXT 20 rows only";
+                        $" or eqh.UNIT_ID  like '%"+searchString+"%') t1 order by  CURRENT_TIMESTAMP offset "+startRow+" rows FETCH NEXT 30 rows only";
                 }
                 else
                 {
-                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 20 rows only";
+                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
                 }
                 equipmentHeaders = connection.Query<EquipmentHeader>(query).ToList();
             }

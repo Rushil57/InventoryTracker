@@ -27,11 +27,11 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                         $" where ed.Ent_Value like '%"+searchString+"%'" +
                         $" or eh.ENT_TYPE like '%" +searchString+"%' " +
                         $" or eh.ENT_NAME like '%"+searchString+"%' " +
-                        $" or eq.UNIT_ID  like '%"+searchString+ "%') t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 20 rows only";
+                        $" or eq.UNIT_ID  like '%"+searchString+ "%') t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 30 rows only";
                 }
                 else
                 {
-                    query = "Select * From  (Select [ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR]) t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 20 rows only";
+                    query = "Select * From  (Select [ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR]) t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 30 rows only";
                 }
                 entityHeaders = connection.Query<EntityHeader>(query).ToList();
             }
@@ -59,11 +59,11 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                         $" left join Entity_Dtl  as ed on eh.ENT_ID = ed.ENT_ID" +
                         $" where ed.Ent_Value like '%"+searchString+"%'" +
                         $" or eh.ENT_TYPE like '%" +searchString+"%' " +
-                        $" or eh.ENT_NAME like '%"+searchString+"%') t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 20 rows only";
+                        $" or eh.ENT_NAME like '%"+searchString+"%') t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 30 rows only";
                 }
                 else
                 {
-                    query = "Select * From  (Select [ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR]) t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 20 rows only";
+                    query = "Select * From  (Select [ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR]) t2 order by  CURRENT_TIMESTAMP offset "+ startIndex +" rows FETCH NEXT 30 rows only";
                 }
                 entityHeaders = connection.Query<EntityHeader>(query).ToList();
             }

@@ -1,6 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "EquipmentEntityAssignment";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 <div class="row">
@@ -48,7 +49,7 @@
 
 @section scripts{
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-    <script src="~/Scripts/AppJS/Common/Common.js"></script>
-    <script src="~/Scripts/AppJS/Equipment/EquipmentCommon.js"></script>
-    <script src="~/Scripts/AppJS/Equipment/EquipmentEntityAssignment.js"></script>
+    <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Equipment/EquipmentCommon.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Equipment/EquipmentEntityAssignment.js?v=@versionUpdate"></script>
 }

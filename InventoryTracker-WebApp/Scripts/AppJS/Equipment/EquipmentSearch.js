@@ -157,11 +157,11 @@ function addEquipmentHeader() {
         }
         previousequipsearch = searchString;
         startIndexEquip = 0;
-        endIndexEquip = 20;
+        endIndexEquip = 30;
         loadEquipmentHDR(searchString, true);
     } else {
         startIndexEquip = 0;
-        endIndexEquip = 20;
+        endIndexEquip = 30;
         loadEquipmentHDR(searchString, false);
     } //$('#searchEquipmentStr').val().trim()
     //addEquipmentColumn();
