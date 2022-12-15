@@ -87,10 +87,13 @@ namespace InventoryTracker_WebApp.Controllers
             {
                 List<EquipmentHeader> equipmentHeaders = JsonConvert.DeserializeObject<List<EquipmentHeader>>(equipmentHDR);
                 List<EquipmentDetail> equipmentDtl = JsonConvert.DeserializeObject<List<EquipmentDetail>>(equipmentTmpDtl);
-                bool isDuplicate = _equipmentRepository.CheckDuplicateEquipmentHDR(equipmentHeaders[0]);
-                if (isDuplicate)
+                if (equipmentHeaders[0].EQUIP_ID == 0)
                 {
-                    return JsonConvert.SerializeObject(new { IsValid = false, data = "This equipment header is already exist." });
+                    bool isDuplicate = _equipmentRepository.CheckDuplicateEquipmentHDR(equipmentHeaders[0]);
+                    if (isDuplicate)
+                    {
+                        return JsonConvert.SerializeObject(new { IsValid = false, data = "This equipment header is already exist." });
+                    }
                 }
                 bool isInserted = _equipmentRepository.SaveEquipmentHDR(equipmentHeaders[0], equipmentDtl);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = true });
@@ -115,7 +118,7 @@ namespace InventoryTracker_WebApp.Controllers
             if (equipID > 0 || !string.IsNullOrWhiteSpace(startDate))
             {
                 List<EquipmentDetail> equipmentTempDetails = _equipmentRepository.GetEquipmentTemplateDetails(equipID, startDate);
-                List<EntityHeader> entityHeaders = _equipmentRepository.GetEquipmentEntityAssignment(equipID);
+                List<EntityHeader> entityHeaders = _equipmentRepository.GetEquipmentEntityAssignmentBYEquipID(equipID);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTempDetails, entityHeaders = entityHeaders });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });

@@ -179,7 +179,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
                 if (entityID > 0 && !string.IsNullOrEmpty(startDate))
                 {
-                    query += " where Ent_ID =" + entityID + " and Start_Date = '" + startDate + "'";
+                    query += " where Ent_ID =" + entityID + " and Start_Date = '" + startDate + "' or End_Date >= '" + startDate + "'";
                 }
                 else if (entityID > 0)
                 {

@@ -154,7 +154,7 @@ function loadEquipmentHDR(searchString,searchflag) {
                         var totalAssignCount = $(assignElement[0]).text();
 
                         dropEquipID = $(this).parent().find("input").val();
-                        $(this).append('<div class="btn-group mt-1 ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEntityID + '" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + $('#mainDate').val() + ' End date : 01/01/9999">' + draggedElementName + '<div onclick="deleteAssignment(' + draggedEntityID + ',' + dropEquipID + ',this,\'' + $('#mainDate').val() +'\',\'01/01/9999\')"  class="cls-remove-tag">X</div></div></div>')
+                        $(this).append('<div class="btn-group mt-1 ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEntityID + '"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + $('#mainDate').val() + ' <br/> End date : 01/01/9999">' + draggedElementName + '<div onclick="deleteAssignment(' + draggedEntityID + ',' + dropEquipID + ',this,\'' + $('#mainDate').val() +'\',\'01/01/9999\')"  class="cls-remove-tag">X</div></div></div>')
                         $('[data-bs-toggle="tooltip"]').tooltip();
                         assignElement.text(parseInt(totalAssignCount) + 1)
 

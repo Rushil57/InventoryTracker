@@ -172,7 +172,7 @@ function loadEntityHDR(searchString,searchflag) {
                         var assignElement = $("#equipHDR > tbody >  tr").find('input[value="' + draggedEquipID + '"]').parent().find('.assigned');
                         var totalAssignCount = $(assignElement[0]).text();
                         dropEntityID = $(this).parent().find("input").val();
-                        $(this).append('<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEquipID + '" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + $('#mainDate').val() + ' End date : 01/01/9999">' + draggedElementUnitID + '<div onclick="deleteAssignment(' + dropEntityID + ',' + draggedEquipID + ',this,\'' + $('#mainDate').val()+'\',\'01/01/9999\')" class="cls-remove-tag">X</div></div></div>');
+                        $(this).append('<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEquipID + '" data-bs-html="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + $('#mainDate').val() + ' <br/> End date : 01/01/9999">' + draggedElementUnitID + '<div onclick="deleteAssignment(' + dropEntityID + ',' + draggedEquipID + ',this,\'' + $('#mainDate').val()+'\',\'01/01/9999\')" class="cls-remove-tag">X</div></div></div>');
                         assignElement.text(parseInt(totalAssignCount) + 1);
                         $('[data-bs-toggle="tooltip"]').tooltip();
                         $.ajax({

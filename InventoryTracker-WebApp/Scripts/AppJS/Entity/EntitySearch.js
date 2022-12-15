@@ -325,7 +325,7 @@ function saveHDRTemplateDtl() {
             return;
         }
     })
-    if (!isExist) {
+    if (isExist == false || entityHDRID.val() > 0) {
         var entityHDR = [];
         entityHDR.push({
             ENT_TYPE: entityTypeVal,

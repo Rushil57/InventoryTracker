@@ -235,7 +235,7 @@ function saveHDRTemplateDtl() {
             return;
         }
     })
-    if (!isExist) {
+    if (isExist == false || equipmentHDRID.val() > 0 ) {
         var equipmentHDR = [];
         equipmentHDR.push({
             EQUIP_TYPE: equipType,

@@ -123,10 +123,13 @@ namespace InventoryTracker_WebApp.Controllers
             {
                 List<EntityHeader> entityHeaders = JsonConvert.DeserializeObject<List<EntityHeader>>(entityHDR);
                 List<EntityDetail> entityDtl = JsonConvert.DeserializeObject<List<EntityDetail>>(entityTmpDtl);
-                bool isDuplicate = _entityRepository.CheckDuplicateEntityHDR(entityHeaders[0]);
-                if (isDuplicate)
+                if (entityHeaders[0].ENT_ID == 0)
                 {
-                    return JsonConvert.SerializeObject(new { IsValid = false, data = "This entity header is already exist." });
+                    bool isDuplicate = _entityRepository.CheckDuplicateEntityHDR(entityHeaders[0]);
+                    if (isDuplicate)
+                    {
+                        return JsonConvert.SerializeObject(new { IsValid = false, data = "This entity header is already exist." });
+                    }
                 }
                 bool isInserted = _entityRepository.SaveEntityHDR(entityHeaders[0], entityDtl);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = true });

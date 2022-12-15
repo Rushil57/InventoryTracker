@@ -268,7 +268,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 query += "SELECT [Equip_Dtl_ID] ,[Equip_ID] ,ed.[Equip_Temp_ID] ,et.Prop_Name ,[Eq_Value] ,[Start_Date] ,[End_Date],et.Datatype FROM [dbo].[Equipment_Dtl] as ed join [dbo].[Equipment_Template] as et on ed.Equip_Temp_ID = et.Equip_Temp_ID";
                 if (equipID > 0 && !string.IsNullOrEmpty(startDate))
                 {
-                    query += " where Equip_ID =" + equipID + " and Start_Date = '" + startDate + "'";
+                    query += " where Equip_ID =" + equipID + " and Start_Date = '" + startDate + "' or End_Date >= '" + startDate + "'";
                 }
                 else if (equipID > 0)
                 {
@@ -288,7 +288,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             return equipmentDetails;
         }
 
-        public List<EntityHeader> GetEquipmentEntityAssignment(int equipID)
+        public List<EntityHeader> GetEquipmentEntityAssignmentBYEquipID(int equipID)
         {
             List<EntityHeader> entityHeaders = new List<EntityHeader>();
             var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
@@ -337,7 +337,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 string query = string.Empty;
                 if (isDelete == 2)
                 {
-                    query = "UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [END_DATE] = '" + endDate + "' WHERE  EQUIP_ID = " + equipID + "and ENT_ID = " + entityID;
+                    query = "UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [Start_DATE] = '" + startDate + "',[END_DATE] = '" + endDate + "' WHERE  EQUIP_ID = " + equipID + "and ENT_ID = " + entityID;
                 }
                 else
                 {
@@ -374,11 +374,11 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 connection.Open();
                 string query = string.Empty;
 
-                query = "SELECT [EQUIP_ENT_ID] ,eea.[EQUIP_ID] ,eea.[ENT_ID],eh.UNIT_ID,enh.ENT_NAME,eea.START_DATE,eea.END_DATE  FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea join EQUIPMENT_HDR  as eh on eea.EQUIP_ID = eh.EQUIP_ID join ENTITY_HDR as enh on eea.ENT_ID = enh.ENT_ID";
+                query = "SELECT distinct [EQUIP_ENT_ID] ,eea.[EQUIP_ID] ,eea.[ENT_ID],eh.UNIT_ID,enh.ENT_NAME,eea.START_DATE,eea.END_DATE  FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea join EQUIPMENT_HDR  as eh on eea.EQUIP_ID = eh.EQUIP_ID join ENTITY_HDR as enh on eea.ENT_ID = enh.ENT_ID";
 
                 if (!string.IsNullOrEmpty(startDate))
                 {
-                    query += " and eea.Start_Date = '" + startDate + "'";
+                    query += " and eea.Start_Date = '" + startDate + "' or eea.End_Date >= '" + startDate + "'";
                 }
                 equipmentEntityAssignments = connection.Query<EquipmentEntityAssignment>(query).ToList();
             }
