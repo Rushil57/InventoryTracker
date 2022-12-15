@@ -268,7 +268,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 query += "SELECT [Equip_Dtl_ID] ,[Equip_ID] ,ed.[Equip_Temp_ID] ,et.Prop_Name ,[Eq_Value] ,[Start_Date] ,[End_Date],et.Datatype FROM [dbo].[Equipment_Dtl] as ed join [dbo].[Equipment_Template] as et on ed.Equip_Temp_ID = et.Equip_Temp_ID";
                 if (equipID > 0 && !string.IsNullOrEmpty(startDate))
                 {
-                    query += " where Equip_ID =" + equipID + " and Start_Date = '" + startDate + "' or End_Date >= '" + startDate + "'";
+                    query += " where Equip_ID =" + equipID + " and ('" + startDate + "' between Start_Date and End_Date)";
                 }
                 else if (equipID > 0)
                 {
@@ -378,7 +378,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
 
                 if (!string.IsNullOrEmpty(startDate))
                 {
-                    query += " and eea.Start_Date = '" + startDate + "' or eea.End_Date >= '" + startDate + "'";
+                    query += " and ('"+ startDate +"' between eea.Start_Date and eea.End_Date)";
                 }
                 equipmentEntityAssignments = connection.Query<EquipmentEntityAssignment>(query).ToList();
             }

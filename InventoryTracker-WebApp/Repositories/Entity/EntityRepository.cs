@@ -179,7 +179,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
                 if (entityID > 0 && !string.IsNullOrEmpty(startDate))
                 {
-                    query += " where Ent_ID =" + entityID + " and Start_Date = '" + startDate + "' or End_Date >= '" + startDate + "'";
+                    query += " where Ent_ID =" + entityID + " and ('" + startDate + "' between Start_Date and End_Date)";
                 }
                 else if (entityID > 0)
                 {
@@ -187,7 +187,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 }
                 else if (!string.IsNullOrEmpty(startDate))
                 {
-                    query += " where Start_Date = '" + startDate + "'";
+                    query += " where ('" + startDate + "' between Start_Date and End_Date)";
                 }
 
                 query += "order by et.Sequence";
