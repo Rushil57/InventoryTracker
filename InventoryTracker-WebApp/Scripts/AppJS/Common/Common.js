@@ -29,6 +29,7 @@ $(document).ready(function () {
             addEntityHeader();
         }
     })
+    
 })
 
 function updateRowIndex() {
@@ -418,16 +419,19 @@ function GetEquipmentEntityAssignment(isEntityEquip) {
                 for (var i = 0; i < assignmentData.data.length; i++) {
                     var assignedStr = '';
                     if (assignmentData.data[i].EQUIP_ENT_ID > 0) {
+                        var sDate = getFormattedDate(assignmentData.data[i].START_DATE);
+                        var eDate = getFormattedDate(assignmentData.data[i].END_DATE);
                         if (isEntityEquip == 0) {
-                            var assignedStr = '<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn"  id="' + assignmentData.data[i].EQUIP_ID + '">' + assignmentData.data[i].UNIT_ID + '<div onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ',this)" class="cls-remove-tag">X</div></div></div>';
+                            var assignedStr = '<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn"  id="' + assignmentData.data[i].EQUIP_ID + '" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + sDate + ' End date : ' + eDate + '">' + assignmentData.data[i].UNIT_ID + '<div onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ',this,\'' + sDate + '\',\'' + eDate + '\')"  class="cls-remove-tag">X</div></div></div>';
                             $("#entityHDR > tbody >  tr").find('input[value="' + assignmentData.data[i].ENT_ID + '"]').parent().find('.droppable').append(assignedStr);
                         }
                         else {
-                            var assignedStr = '<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + assignmentData.data[i].EQUIP_ID + '">' + assignmentData.data[i].ENT_NAME + '<div onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ',this)" class="cls-remove-tag">X</div></div></div>';
+                            var assignedStr = '<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + assignmentData.data[i].EQUIP_ID + '" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + sDate + ' End date : ' + eDate + '">' + assignmentData.data[i].ENT_NAME + '<div onclick="deleteAssignment(' + assignmentData.data[i].ENT_ID + ',' + assignmentData.data[i].EQUIP_ID + ',this,\'' + sDate + '\',\'' + eDate +'\')"  class="cls-remove-tag">X</div></div></div>';
                             $("#equipHDR > tbody >  tr").find('input[value="' + assignmentData.data[i].EQUIP_ID + '"]').parent().find('.droppable').append(assignedStr);
                         }
                     }
                 }
+                $('[data-bs-toggle="tooltip"]').tooltip()
             }
         }, error: function (ex) { }
     });
@@ -436,11 +440,18 @@ function GetEquipmentEntityAssignment(isEntityEquip) {
 var deleteEntityID = 0;
 var deleteEquipID = 0;
 var deleteElement;
-function deleteAssignment(entityID, equipID, el) {
+var deleteStartDate = '';
+var deleteEndDate = '';
+
+function deleteAssignment(entityID, equipID, el, startDate, endDate) {
+    $('#startDateLbl').text(startDate);
+    $('#endDateLbl').text(endDate);
     deleteAssignmentModel.modal('show');
     deleteEntityID = entityID;
     deleteEquipID = equipID;
     deleteElement = el;
+    deleteStartDate = startDate;
+    deleteEndDate = endDate;
     resetDeleteAssignmentModel();
 }
 
@@ -475,6 +486,7 @@ function updateAssignmentOption() {
         alert('Please select date.');
         return;
     }
+    var endDate = $('.updatepicker').val();
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
@@ -483,9 +495,11 @@ function updateAssignmentOption() {
         dataType: 'json',
         type: 'POST',
         async: false,
-        data: JSON.stringify({ 'entityID': deleteEntityID, 'equipID': deleteEquipID, 'isDelete': 2, 'endDate': $('.updatepicker').val() }),
+        data: JSON.stringify({ 'entityID': deleteEntityID, 'equipID': deleteEquipID, 'isDelete': 2, 'endDate': endDate }),
         success: function (data) {
             deleteAssignmentModel.modal('hide');
+            $(deleteElement).attr('onclick', "deleteAssignment(" + deleteEntityID + ", " + deleteEquipID + ", this, '" + deleteStartDate + "','" + endDate + "')");
+            $(deleteElement).parent().attr('data-bs-original-title', "Start date : " + deleteStartDate + " End date : " + endDate);
         }, error: function (ex) { }
     });
 }

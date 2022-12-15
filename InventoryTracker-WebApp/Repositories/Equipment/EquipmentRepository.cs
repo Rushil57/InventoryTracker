@@ -123,7 +123,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 {
                     if (template.Equip_Temp_ID == 0)
                     {
-                        query += "INSERT INTO [dbo].[Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype] ,[Sequence]) VALUES ('" + template.Equipment_Type.Trim() + " ','" + template.Prop_Name.Trim() + " ','" + template.Datatype + "' , " + template.Sequence + ");";
+                        query += "INSERT INTO [dbo].[Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype] ,[Sequence]) VALUES ('" + template.Equipment_Type.Trim() + "','" + template.Prop_Name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");";
                     }
                     else
                     {
@@ -374,7 +374,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 connection.Open();
                 string query = string.Empty;
 
-                query = "SELECT [EQUIP_ENT_ID] ,eea.[EQUIP_ID] ,eea.[ENT_ID],eh.UNIT_ID,enh.ENT_NAME  FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea join EQUIPMENT_HDR  as eh on eea.EQUIP_ID = eh.EQUIP_ID join ENTITY_HDR as enh on eea.ENT_ID = enh.ENT_ID";
+                query = "SELECT [EQUIP_ENT_ID] ,eea.[EQUIP_ID] ,eea.[ENT_ID],eh.UNIT_ID,enh.ENT_NAME,eea.START_DATE,eea.END_DATE  FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea join EQUIPMENT_HDR  as eh on eea.EQUIP_ID = eh.EQUIP_ID join ENTITY_HDR as enh on eea.ENT_ID = enh.ENT_ID";
 
                 if (!string.IsNullOrEmpty(startDate))
                 {

@@ -6,6 +6,21 @@
                 <h6 class="modal-title" id="deleteAssignmentLabel">Assignment Options</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="resetDeleteAssignmentModel()"></button>
             </div>
+            <div class="modal-body" style="height: 80px; overflow: auto;" id="entityTemplateModelBody">
+                <div class="row">
+                    <div class="col-5">
+                        <h6>
+                            <label>Start Date :</label>
+                            <label type="text" style="width:100px;" readonly id="startDateLbl"></label>
+                        </h6>
+                    </div>
+                    <div class="col-5">
+                        <h6>
+                            <label>End Date :</label> <label style="width: 100px;" type="text" readonly id="endDateLbl"></label>
+                        </h6>
+                    </div>
+                </div>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetDeleteAssignmentModel()">Cancel</button>
                 <button type="button" class="btn btn-primary" onclick="removeAssignmentOption()">Remove</button>

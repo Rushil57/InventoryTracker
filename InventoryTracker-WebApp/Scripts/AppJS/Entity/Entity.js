@@ -2,8 +2,11 @@
     loadEntity();
     $('#selectedMenu').text($('#menuEntTemp').text() );
 })
-function loadTemplate(entityType) {
-    
+function loadTemplate(entityType, currentLI) {
+    $("#ul > li").removeClass('cls-selected-li');
+    if (currentLI != undefined) {
+        $(currentLI).addClass('cls-selected-li');
+    }
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
@@ -43,12 +46,12 @@ function loadEntity() {
             if (data.IsValid) {
                 var entityString = '';
                 for (var i = 0; i < data.uniqueEntityTemplates.length; i++) {
-                    entityString += '<li class="list-group-item entity" onclick="loadTemplate(\'' + data.uniqueEntityTemplates[i].Ent_type + '\')">' + data.uniqueEntityTemplates[i].Ent_type + '</li>';
+                    entityString += '<li class="list-group-item entity" onclick="loadTemplate(\'' + data.uniqueEntityTemplates[i].Ent_type + '\',this)">' + data.uniqueEntityTemplates[i].Ent_type + '</li>';
                 }
                 $("#ul > li").remove();
                 $("#ul").append(entityString);
                 if (data.uniqueEntityTemplates.length > 0) {
-                    loadTemplate(data.uniqueEntityTemplates[0].Ent_type);
+                    loadTemplate(data.uniqueEntityTemplates[0].Ent_type, $("#ul > li:eq(0)"));
                 }
                 else {
                     loadTemplate('');
@@ -69,15 +72,15 @@ function saveTemplate() {
     }
 
     var data = [];
-    var entityType = elementTemplateName.text() != '' ? elementTemplateName.text() : entityTypeVal;
+    var entityType = elementTemplateName.text().trim() != '' ? elementTemplateName.text().trim() : entityTypeVal;
 
     $("#tblTemplate > tbody >  tr ").each(function () {
         data.push({
             Ent_temp_id: typeof $(this).find("input[type=hidden]").val() != 'undefined' ? $(this).find("input[type=hidden]").val() : 0,
             Ent_type: entityType,
-            Prop_name: $(this).find("td:eq(0)").text() != '' ? $(this).find("td:eq(0)").text() : $(this).find("td:eq(0) > input").val(),
-            Datatype: $(this).find("td:eq(1) > label").text() != '' ? $(this).find("td:eq(1) > label").text()  : $(this).find("td:eq(1) #dataType").val(),
-            Sequence: $(this).find("td:eq(2)").text() != '' ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) > input").val()
+            Prop_name: $(this).find("td:eq(0)").text().trim() != '' ? $(this).find("td:eq(0)").text().trim() : $(this).find("td:eq(0) > input").val(),
+            Datatype: $(this).find("td:eq(1) > label").text().trim() != '' ? $(this).find("td:eq(1) > label").text().trim()  : $(this).find("td:eq(1) #dataType").val(),
+            Sequence: $(this).find("td:eq(2)").text().trim() != '' ? $(this).find("td:eq(2)").text().trim() : $(this).find("td:eq(2) > input").val()
         });
     })
     data.pop();
@@ -111,7 +114,7 @@ function saveTemplate() {
                 if (data.IsValid && data.data) {
                     alert('Template save successfully.')
                     loadEntity();
-                    loadTemplate(entityType);
+                    loadTemplate(entityType, $("#ul > li:eq(0)"));
                 }
             }, error: function (ex) { }
         });

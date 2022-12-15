@@ -5,7 +5,12 @@
 
 
 
-function loadTemplate(equipmentType) {
+function loadTemplate(equipmentType, currentLI) {
+    $("#ul > li").removeClass('cls-selected-li');
+    if (currentLI != undefined) {
+        $(currentLI).addClass('cls-selected-li');
+    }
+   
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
@@ -46,12 +51,12 @@ function loadEquipment() {
             if (data.IsValid) {
                 var equipmentString = '';
                 for (var i = 0; i < data.uniqueEquipmentTemplates.length; i++) {
-                    equipmentString += '<li class="list-group-item entity" onclick="loadTemplate(\'' + data.uniqueEquipmentTemplates[i].Equipment_Type + '\')">' + data.uniqueEquipmentTemplates[i].Equipment_Type + '</li>';
+                    equipmentString += '<li class="list-group-item entity" onclick="loadTemplate(\'' + data.uniqueEquipmentTemplates[i].Equipment_Type + '\',this)">' + data.uniqueEquipmentTemplates[i].Equipment_Type + '</li>';
                 }
                 $("#ul > li").remove();
                 $("#ul").append(equipmentString);
                 if (data.data.length > 0) {
-                    loadTemplate(data.data[0].Equipment_Type);
+                    loadTemplate(data.data[0].Equipment_Type, $("#ul > li:eq(0)"));
                 }
                 else {
                     loadTemplate('');
@@ -75,9 +80,9 @@ function saveTemplate() {
     $("#tblTemplate > tbody >  tr ").each(function () {
         data.push({
             Equip_Temp_ID: typeof $(this).find("input[type=hidden]").val() != 'undefined' ? $(this).find("input[type=hidden]").val() : 0,
-            Prop_Name: $(this).find("td:eq(0)").text() != '' ? $(this).find("td:eq(0)").text() : $(this).find("td:eq(0) > input").val(),
-            Datatype: $(this).find("td:eq(1) > label").text() != '' ? $(this).find("td:eq(1) > label").text() : $(this).find("td:eq(1) #dataType").val(),
-            Sequence: $(this).find("td:eq(2)").text() != '' ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) > input").val(),
+            Prop_Name: $(this).find("td:eq(0)").text().trim() != '' ? $(this).find("td:eq(0)").text().trim() : $(this).find("td:eq(0) > input").val(),
+            Datatype: $(this).find("td:eq(1) > label").text().trim() != '' ? $(this).find("td:eq(1) > label").text().trim() : $(this).find("td:eq(1) #dataType").val(),
+            Sequence: $(this).find("td:eq(2)").text().trim() != '' ? $(this).find("td:eq(2)").text().trim() : $(this).find("td:eq(2) > input").val(),
             Equipment_Type: equipmentType
         });
     })
@@ -111,7 +116,7 @@ function saveTemplate() {
                 if (data.IsValid && data.data) {
                     alert('Template save successfully.')
                     loadEquipment();
-                    loadTemplate(equipmentType);
+                    loadTemplate(equipmentType ,$("#ul > li:eq(0)"));
                 }
             }, error: function (ex) {
             }

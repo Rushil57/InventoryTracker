@@ -129,7 +129,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 {
                     if (template.Ent_temp_id == 0)
                     {
-                        query += "INSERT INTO [dbo].[Entity_Template]([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES ('" + template.Ent_type.Trim() + " ','" + template.Prop_name.Trim() + " ','" + template.Datatype + "' , " + template.Sequence + ");";
+                        query += "INSERT INTO [dbo].[Entity_Template]([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES ('" + template.Ent_type.Trim() + "','" + template.Prop_name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");";
                     }
                     else
                     {
