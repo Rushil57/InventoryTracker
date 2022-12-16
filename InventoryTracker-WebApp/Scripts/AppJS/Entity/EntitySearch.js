@@ -484,3 +484,21 @@ $('#entityType').change(function () {
         }, error: function (ex) { }
     });
 })
+
+function exportData() {
+    $.ajax({
+        before: AddLoader(),
+        after: RemoveLoader(),
+        url: '/Entity/Export',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: 'GET',
+        async: false,
+        data: { 'startDate': $('#mainDate').val() },
+        success: function (data) {
+            if (data.IsValid) {
+                
+            }
+        }, error: function (ex) { }
+    });
+}

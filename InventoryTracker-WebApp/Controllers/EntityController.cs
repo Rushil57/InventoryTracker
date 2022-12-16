@@ -1,8 +1,12 @@
 ﻿using InventoryTracker_WebApp.Domain.Entity;
 using InventoryTracker_WebApp.Models;
+using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Web.Mvc;
 
 namespace InventoryTracker_WebApp.Controllers
@@ -14,6 +18,8 @@ namespace InventoryTracker_WebApp.Controllers
         {
             this._entityRepository = entityRepository;
         }
+
+        #region Entity Template
         public ActionResult Index()
         {
             return View();
@@ -87,6 +93,7 @@ namespace InventoryTracker_WebApp.Controllers
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
         }
 
+        #endregion
 
         #region Entity Search
 
@@ -143,6 +150,52 @@ namespace InventoryTracker_WebApp.Controllers
         public ActionResult EntityEquipmentAssignment()
         {
             return View();
+        }
+        #endregion
+
+        #region Entity Export - Import
+
+        public bool Export(string startDate)
+        {
+            try
+            {
+                var entity = _entityRepository.ExportEntity(startDate);
+
+                Application application = new Application();
+                Workbook workbook = application.Workbooks.Add(Missing.Value);
+                Worksheet worksheet = workbook.ActiveSheet;
+                worksheet.Cells[1,2] = "Start Date:";
+                worksheet.Cells[1,3] = startDate;
+                string path = AppDomain.CurrentDomain.BaseDirectory.ToString() + @"ExcelFiles\Entity-"+DateTime.Now.ToShortDateString() +"-"+ DateTime.Now.Ticks + ".xls";
+                int i = 2;
+
+                foreach (var e in entity)
+                {
+                    int j = 1;
+                    foreach (var item in e)
+                    {
+                        if (i == 2)
+                        {
+                            worksheet.Cells[i, j] = item.Key;
+                        }
+                        else
+                        {
+                            worksheet.Cells[i,j] = item.Value;
+                        }
+                        j++;
+                    }
+                    i++;
+                }
+
+                workbook.SaveAs(path);
+                workbook.Close();
+                Marshal.ReleaseComObject(workbook);
+            }
+            catch(Exception e)
+            {
+
+            }
+            return true;
         }
         #endregion
     }
