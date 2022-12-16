@@ -10,7 +10,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
 {
     public class EquipmentRepository : IEquipmentRepository
     {
-        public List<EquipmentHeader> GetEquipmentHeaders(string searchString,int startRow,int endRow)
+        public List<EquipmentHeader> GetEquipmentHeaders(string searchString, int startRow, int endRow)
         {
             List<EquipmentHeader> equipmentHeaders = new List<EquipmentHeader>();
             var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
@@ -43,7 +43,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
             return equipmentHeaders;
         }
-        public List<EquipmentHeader> GetEquipmentHeadersfromEquipmentEntity(string searchString,int startRow,int endRow)
+        public List<EquipmentHeader> GetEquipmentHeadersfromEquipmentEntity(string searchString, int startRow, int endRow, string startDate)
         {
             List<EquipmentHeader> equipmentHeaders = new List<EquipmentHeader>();
             var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
@@ -53,16 +53,30 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 string query = string.Empty;
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    query = $"Select * from (select distinct eqh.* from EQUIPMENT_HDR as eqh " +
-                        $" left join Equipment_Dtl  as ed on eqh.EQUIP_ID = ed.Equip_ID " +
-                        $" where ed.Eq_Value like '%"+searchString+"%'" +
-                        $" or eqh.EQUIP_TYPE like '%"+searchString+"%'" +
-                        $" or eqh.VENDOR  like '%"+searchString+ "%'" +
-                        $" or eqh.UNIT_ID  like '%"+searchString+"%') t1 order by  CURRENT_TIMESTAMP offset "+startRow+" rows FETCH NEXT 30 rows only";
+                    query = $"Select * from (select distinct eqh.* ";
+
+                    if (!string.IsNullOrEmpty(startDate))
+                    {
+                        query += ", (SELECT count(*) FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea where eea.EQUIP_ID = eqh.[EQUIP_ID] and ('" + startDate + "' between eea.Start_Date and eea.End_Date)) as [Active] ";
+                    }
+
+                    query += "from EQUIPMENT_HDR as eqh " +
+                    $" left join Equipment_Dtl  as ed on eqh.EQUIP_ID = ed.Equip_ID " +
+                    $" where ed.Eq_Value like '%" + searchString + "%'" +
+                    $" or eqh.EQUIP_TYPE like '%" + searchString + "%'" +
+                    $" or eqh.VENDOR  like '%" + searchString + "%'" +
+                    $" or eqh.UNIT_ID  like '%" + searchString + "%') t1 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
                 }
                 else
                 {
-                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
+                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] ";
+
+                    if (!string.IsNullOrEmpty(startDate))
+                    {
+                        query += ", (SELECT count(*) FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea where eea.EQUIP_ID = eh.[EQUIP_ID] and ('" + startDate + "' between eea.Start_Date and eea.End_Date)) as [Active] ";
+                    }
+                    query += "From [dbo].[EQUIPMENT_HDR] as eh) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
+
                 }
                 equipmentHeaders = connection.Query<EquipmentHeader>(query).ToList();
             }
@@ -378,7 +392,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
 
                 if (!string.IsNullOrEmpty(startDate))
                 {
-                    query += " and ('"+ startDate +"' between eea.Start_Date and eea.End_Date)";
+                    query += " and ('" + startDate + "' between eea.Start_Date and eea.End_Date)";
                 }
                 equipmentEntityAssignments = connection.Query<EquipmentEntityAssignment>(query).ToList();
             }

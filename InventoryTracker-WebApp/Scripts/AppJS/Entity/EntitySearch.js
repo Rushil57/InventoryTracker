@@ -27,7 +27,7 @@ $(document).ready(function () {
     //        loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
     //    }).datepicker('setDate', new Date());
     $('#selectedMenu').text($('#menuEntSearch').text());
-
+    $('#entityActive').remove();
 })
 
 

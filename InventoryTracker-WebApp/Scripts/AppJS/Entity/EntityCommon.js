@@ -19,6 +19,7 @@ $(document).ready(function () {
         else {
             loadEquipmentHDR('',false);
             addEquipmentHeader();
+            loadEntityHDR($('#searchEntityStr').val().toLowerCase().trim(), true)
         }
         currentUpdateAssignDate = currentDate;
     }).datepicker('setDate', new Date());

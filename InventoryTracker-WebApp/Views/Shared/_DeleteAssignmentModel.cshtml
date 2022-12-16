@@ -6,38 +6,45 @@
                 <h6 class="modal-title" id="deleteAssignmentLabel">Assignment Options</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="resetDeleteAssignmentModel()"></button>
             </div>
-            <div class="modal-body" style="height:130px; overflow: auto;" id="entityTemplateModelBody">
+            <div class="modal-body" style="height:200px; overflow: auto;" id="entityTemplateModelBody">
                 <div class="row">
-                    <div class="col-5">
+                    <div class="col-7">
                         <h6>
-                            <label>Start Date :</label>
+                            <label>Current Start Date:</label>&nbsp;
                             <label type="text" style="width:100px;" readonly id="startDateLbl"></label>
                         </h6>
                     </div>
-                    <div class="col-5">
+                    <div class="col-7">
                         <h6>
-                            <label>End Date :</label> <label style="width: 100px;" type="text" readonly id="endDateLbl"></label>
+                            <label>Current End Date:</label>&nbsp; <label style="width: 100px;" type="text" readonly id="endDateLbl"></label>
                         </h6>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-5">
                         <h6>
-                            <label>Start Date :</label><input type="text" class="updateStartDatepicker dropdown-control" style="display: inline; width: 60%; height:32px" readOnly />
-                            </h6>
+                            <label>Start Date:</label> &nbsp;<input type="text" class="updateStartDatepicker dropdown-control" style="display: inline; width: 60%; height:32px" readOnly />
+                        </h6>
                     </div>
                     <div class="col-5">
                         <h6>
-                            <label>End Date :</label><input type="text" class="updateEndDatepicker dropdown-control" style="display: inline; width:60%; height:32px" readOnly />
+                            <label>End Date:</label> &nbsp;<input type="text" class="updateEndDatepicker dropdown-control" style="display: inline; width:60%; height:32px" readOnly />
                         </h6>
                     </div>
+                </div>
+
+                <div class="row" style="padding-top:10px;">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary" onclick="updateAssignmentOption()">Update Start/End Dates</button>
+                    </div>
+                    <div class="col-md-3"></div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetDeleteAssignmentModel()">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="removeAssignmentOption()">Remove</button>
-                <button type="button" class="btn btn-primary" onclick="updateAssignmentOption()">Update</button>
-
+                <button type="button" class="btn btn-primary" onclick="removeAssignmentOption()">Remove Entire Row</button>
             </div>
         </div>
     </div>

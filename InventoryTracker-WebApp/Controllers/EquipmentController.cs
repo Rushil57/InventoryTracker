@@ -45,9 +45,9 @@ namespace InventoryTracker_WebApp.Controllers
             List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeaders(searchString, startIndex, endIndex).ToList();
             return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentHeaders });
         }
-        public string GetEquipmentHeadersfromEquipmentEntity(string searchString,int startIndex , int endIndex)
+        public string GetEquipmentHeadersfromEquipmentEntity(string searchString,int startIndex , int endIndex,string startDate)
         {
-            List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeadersfromEquipmentEntity(searchString, startIndex, endIndex).ToList();
+            List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeadersfromEquipmentEntity(searchString, startIndex, endIndex,startDate).ToList();
             return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentHeaders });
         }
 

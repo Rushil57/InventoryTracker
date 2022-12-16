@@ -6,8 +6,8 @@ var startDate = $('.datepicker');
 
 $(document).ready(function () {
     loadAllEquipTemp();
-    loadEntityHDR('',false);
-    loadEquipmentHDR('',false);
+    loadEntityHDR('', false);
+    loadEquipmentHDR('', false);
     resizableTable();
     sortableTable();
     $('#selectedMenu').text($('#menuEquEntAss').text());
@@ -30,7 +30,7 @@ function loadEntityHDR(searchString, searchflag) {
         dataType: 'json',
         type: 'GET',
         async: false,
-        data: { 'searchString': searchString, 'startIndex': startIndexEntity, 'endIndex': endIndexEntity },
+        data: { 'searchString': searchString, 'startIndex': startIndexEntity, 'endIndex': endIndexEntity, 'startDate': $('#mainDate').val() },
         success: function (data) {
             if (data.IsValid) {
                 var entityString = '';
@@ -50,6 +50,9 @@ function loadEntityHDR(searchString, searchflag) {
                             $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].ENT_NAME);
                         } if (headtext == "Assigned") {
                             $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").addClass("assigned").text(data.data[i].ASSIGNED);
+                        }
+                        if (headtext == "Active") {
+                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").addClass('active').text(data.data[i].Active);
                         }
                         th = th + 1;
                     }
@@ -85,7 +88,7 @@ function loadEntityHDR(searchString, searchflag) {
 
 
 
-function loadEquipmentHDR(searchString,searchflag) {
+function loadEquipmentHDR(searchString, searchflag) {
     //if (searchString == '') {
     //    var tableHeader = '<th scope="col">Equipment type</th><th scope="col">Vendor</th><th scope="col">Unit ID</th><th scope="col">Entity Assigned</th><th scope="col"></th>';
     //    $("#equipHDR > thead >  tr > th").remove();
@@ -154,9 +157,14 @@ function loadEquipmentHDR(searchString,searchflag) {
                         var totalAssignCount = $(assignElement[0]).text();
 
                         dropEquipID = $(this).parent().find("input").val();
-                        $(this).append('<div class="btn-group mt-1 ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEntityID + '"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + $('#mainDate').val() + ' <br/> End date : 01/01/9999">' + draggedElementName + '<div onclick="deleteAssignment(' + draggedEntityID + ',' + dropEquipID + ',this,\'' + $('#mainDate').val() +'\',\'01/01/9999\')"  class="cls-remove-tag">X</div></div></div>')
+                        $(this).append('<div class="btn-group mt-1 ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEntityID + '"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + $('#mainDate').val() + ' <br/> End date : 01/01/9999">' + draggedElementName + '<div onclick="deleteAssignment(' + draggedEntityID + ',' + dropEquipID + ',this,\'' + $('#mainDate').val() + '\',\'01/01/9999\')"  class="cls-remove-tag">X</div></div></div>')
                         $('[data-bs-toggle="tooltip"]').tooltip();
-                        assignElement.text(parseInt(totalAssignCount) + 1)
+                        assignElement.text(parseInt(totalAssignCount) + 1);
+
+
+                        var entityActive = $("#entityHDR > tbody >  tr").find('input[value="' + draggedEntityID + '"]').parent().find('.active');
+                        var entityActiveCount = $(entityActive[0]).text();
+                        entityActive.text(parseInt(entityActiveCount) + 1);
 
                         $.ajax({
                             before: AddLoader(),

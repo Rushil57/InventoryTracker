@@ -17,6 +17,7 @@ var entityTempDTL = $('#entityTempDTL');
 
 $(document).ready(function () {
     $('#selectedMenu').text($('#menuEquipSearch').text());
+    $('#equipActive').remove();
     //    //loadEquipmentHDR();
     //    loadAllEquipTemp();
     //    //enabled();

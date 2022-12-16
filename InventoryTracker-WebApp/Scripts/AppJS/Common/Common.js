@@ -476,6 +476,14 @@ function removeAssignmentOption() {
             var totalAssignCount = $(entityAssignElement[0]).text();
             entityAssignElement.text(parseInt(totalAssignCount) - 1)
 
+            var equipActive = $("#equipHDR > tbody >  tr").find('input[value="' + deleteEquipID + '"]').parent().find('.active');
+            var equipActiveCount = $(equipActive[0]).text();
+            equipActive.text(parseInt(equipActiveCount) - 1);
+
+            var entityActive = $("#entityHDR > tbody >  tr").find('input[value="' + deleteEntityID + '"]').parent().find('.active');
+            var entityActiveCount = $(entityActive[0]).text();
+            entityActive.text(parseInt(entityActiveCount) - 1);
+
             $(deleteElement).parent().remove();
         }, error: function (ex) { }
     });
