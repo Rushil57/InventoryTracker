@@ -39,7 +39,7 @@ function loadEquipmentHDR(searchString, searchflag) {
         equipsearchflag = true;
         $("#equipHDR > tbody > tr").remove();
     }
-    if (startIndexEntity == 0) {
+    if (startIndexEquip == 0) {
         equipsearchflag = false;
         $("#equipHDR > tbody > tr").remove();
     }
@@ -67,9 +67,6 @@ function loadEquipmentHDR(searchString, searchflag) {
                     $($("#equipHDR > thead > tr >  th")[th]).remove();
                     $("#equipHDR > tbody > tr").find("td:eq(" + th + ")").remove();
                     tableHeadLength = tableHeadLength - 1;
-                }
-                if ($('#searchEquipmentStr').val() == '' && startIndexEquip == 0) {
-                    $("#equipHDR > tbody >  tr").remove();
                 }
                 $("#equipHDR > tbody").append(equipmentString);
                 if (isaddEquipmentColumn) {

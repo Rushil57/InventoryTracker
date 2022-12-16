@@ -64,9 +64,6 @@ function loadEntityHDR(searchString, searchflag) {
                     $("#entityHDR > tbody > tr").find("td:eq(" + th + ")").remove();
                     tableHeadLength = tableHeadLength - 1;
                 }
-                if (startIndexEntity == 0) {
-                    $("#entityHDR > tbody >  tr").remove();
-                }
                 $("#entityHDR > tbody").append(entityString);
                 if (isaddEntityColumn) {
                     addEntityColumn();

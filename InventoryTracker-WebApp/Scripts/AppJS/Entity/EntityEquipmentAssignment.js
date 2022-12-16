@@ -98,7 +98,7 @@ function loadEquipmentHDR(searchString, searchflag) {
         equipsearchflag = true;
         $("#equipHDR > tbody > tr").remove();
     }
-    if (startIndexEntity == 0) {
+    if (startIndexEquip == 0) {
         equipsearchflag = false;
         $("#equipHDR > tbody > tr").remove();
     }

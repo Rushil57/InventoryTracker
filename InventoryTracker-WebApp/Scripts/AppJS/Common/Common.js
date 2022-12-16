@@ -549,7 +549,7 @@ function divEquipmentHDRLoad(element) {
 function divEntityHDRLoad(element) {
     if (element.scrollTop > 0) {
         if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
-            startIndexEntity = startIndexEntity;
+            startIndexEntity = endIndexEntity;
             endIndexEntity = endIndexEntity + 30;
 
             var searchString = $('#searchEntityStr').val().toLowerCase().trim();
@@ -567,8 +567,6 @@ function divEntityHDRLoad(element) {
             else {
                 loadEntityHDR('', false);
             }
-            endIndexEntity = endIndexEntity + 10;
-            loadEntityHDR($('#searchEntityStr').val());;
         }
     }
 }
