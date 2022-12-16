@@ -28,6 +28,7 @@ $(document).ready(function () {
     //    }).datepicker('setDate', new Date());
     $('#selectedMenu').text($('#menuEntSearch').text());
     $('#entityActive').remove();
+    loadEntityHDR('', false);
 })
 
 
