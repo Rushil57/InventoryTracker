@@ -517,6 +517,8 @@ function importEntity() {
             processData: false,
             success: function (data) {
                 alert('Data updated successfully.')
+            },
+            error: function (e1, e2, e3) {
             }
         });
     }
