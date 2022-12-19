@@ -133,3 +133,10 @@ td, th {
     background: #96a6c3;
     color:white;
 }
+
+.cls-section-icons {
+    border: 2px solid;
+    padding-bottom: 1px;
+    margin-left: 6px;
+    border-radius: 4px;
+}
