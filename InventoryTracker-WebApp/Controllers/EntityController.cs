@@ -4,6 +4,7 @@ using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -155,8 +156,9 @@ namespace InventoryTracker_WebApp.Controllers
 
         #region Entity Export - Import
 
-        public bool Export(string startDate)
+        public FileResult Export(string startDate)
         {
+            string path = string.Empty;
             try
             {
                 var entity = _entityRepository.ExportEntity(startDate);
@@ -166,9 +168,16 @@ namespace InventoryTracker_WebApp.Controllers
                 Worksheet worksheet = workbook.ActiveSheet;
                 worksheet.Cells[1,2] = "Start Date:";
                 worksheet.Cells[1,3] = startDate;
-                string path = AppDomain.CurrentDomain.BaseDirectory.ToString() + @"ExcelFiles\Entity-"+DateTime.Now.ToShortDateString() +"-"+ DateTime.Now.Ticks + ".xls";
+                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
                 int i = 2;
 
+                DirectoryInfo di = new DirectoryInfo(path);
+
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+                path += @"\Entity.xls";
                 foreach (var e in entity)
                 {
                     int j = 1;
@@ -195,7 +204,8 @@ namespace InventoryTracker_WebApp.Controllers
             {
 
             }
-            return true;
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "Entity.xlsx");
         }
         #endregion
     }
