@@ -1,0 +1,19 @@
+﻿@*Modal Start*@
+<div class="modal fade" id="importEntity" tabindex="-1" aria-labelledby="importEntityLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="importEntityLabel">Import Entity</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="height: 70px; overflow: auto;" id="importEntityModelBody">
+                <input type="file" id="entityFile" class="form-control" id="inputGroupFile">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="importEntity()">Import</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Model End*@

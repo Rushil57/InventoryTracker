@@ -16,6 +16,7 @@ namespace InventoryTracker_WebApp.Domain.Entity
         List<EquipmentHeader> GetEntityEquipmentAssignment(int entityID);
         bool DeleteEntityHeader(int entityID);
         bool SaveEntityHDR(EntityHeader entityHDR, List<EntityDetail> entityDtl);
-        List<dynamic> ExportEntity(string startDate);
+        List<dynamic> ExportEntity(string startDate,string searchString);
+        bool UpdateTemplateDetails(string startDate,List<string> columnHeader, List<string> values);
     }
 }

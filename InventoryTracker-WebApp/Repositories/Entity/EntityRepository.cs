@@ -364,7 +364,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             finally { connection.Close(); }
         }
 
-        public List<dynamic> ExportEntity(string startDate)
+        public List<dynamic> ExportEntity(string startDate, string searchString)
         {
             List<dynamic> entities = new List<dynamic>();
             var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
@@ -373,9 +373,35 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 connection.Open();
                 var query = string.Empty;
 
-                query = "DECLARE  @columns NVARCHAR(MAX) = ''; SELECT @columns += QUOTENAME(prop_name) + ',' FROM (select distinct prop_name from Entity_Template) s	 ORDER BY  prop_name;PRINT @columns; SET @columns = LEFT(@columns, LEN(@columns) - 1); PRINT @columns; DECLARE @query varchar(max); set @query = 'SELECT * FROM   ( select eh.ENT_ID ,eh.ENT_NAME ,et.Prop_name,ed.Ent_Value from ENTITY_HDR eh inner join Entity_Dtl ed on ed.Ent_ID = eh.ENT_ID inner join Entity_Template et ON ed.Ent_temp_id = et.Ent_temp_id ) t  PIVOT( max(Ent_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
+                query = "DECLARE  @columns NVARCHAR(MAX) = ''; SELECT @columns += QUOTENAME(prop_name) + ',' FROM (select distinct prop_name from Entity_Template) s	 ORDER BY  prop_name;PRINT @columns; SET @columns = LEFT(@columns, LEN(@columns) - 1); PRINT @columns; DECLARE @query varchar(max); set @query = 'SELECT * FROM   ( select eh.ENT_ID ,eh.ENT_NAME ,et.Prop_name,ed.Ent_Value from ENTITY_HDR eh inner join Entity_Dtl ed on ed.Ent_ID = eh.ENT_ID inner join Entity_Template et ON ed.Ent_temp_id = et.Ent_temp_id ";
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    query += "and  eh.ENT_NAME like ''%"+searchString+"%'' or Prop_name like ''%"+searchString+"%''";
+                }
+                query += ") t  PIVOT( max(Ent_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
                 entities = connection.Query<dynamic>(query).ToList();
                 return entities;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
+
+        public bool UpdateTemplateDetails(string startDate, List<string> columnHeader, List<string> values)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+                for (int i = 2; i < columnHeader.Count; i++)
+                {
+                    query += "UPDATE [dbo].[Entity_Dtl] SET  [Ent_Value] = '" + values[i] + "' WHERE Ent_ID = " + values[0] + " and Ent_Temp_ID = (select top 1 [Ent_temp_id] FROM  [dbo].[Entity_Template] where [Ent_type] = (SELECT top 1 [ENT_TYPE] FROM [dbo].[ENTITY_HDR] where ENT_NAME = '" + values[1] + "') and [Prop_name] = '" + columnHeader[i] + "');"; //and Start_Date = " + startDate + "
+                }
+                var isUpdated = connection.Query<bool>(query).FirstOrDefault();
+                return isUpdated;
             }
             catch (Exception e)
             {

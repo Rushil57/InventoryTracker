@@ -486,5 +486,53 @@ $('#entityType').change(function () {
 })
 
 function exportData() {
-    window.location = "/Entity/Export?startDate=" + $('#mainDate').val();
+    window.location = "/Entity/Export?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim();
 }
+
+function importData() {
+    $("#entityFile").val('');
+    $('#importEntity').modal('show');
+}
+
+function importEntity() {
+    if ($('#entityFile').val().trim() == '') {
+        alert('Please select file.')
+        return;
+    }
+    else {
+        var fileUpload = $("#entityFile").get(0);
+        var files = fileUpload.files;
+        var formData = new FormData();
+
+        formData.append("file", files[0]);
+
+        $.ajax({
+            before: AddLoader(),
+            after: RemoveLoader(),
+            type: "POST",
+            url: '/Entity/Import',
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                alert('Data updated successfully.')
+            }
+        });
+    }
+
+    setTimeout(function () {
+        alert('Data updated successfully.')
+        $('#importEntity').modal('hide');
+        loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
+    },6000)
+    
+}
+
+$("#entityFile").change(function () {
+    var fileExtension = ['xls', 'xlsx', 'csv'];
+    if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+        alert("Only formats are allowed : " + fileExtension.join(', '));
+        $(this).val('');
+    }
+});
