@@ -565,21 +565,15 @@ function importExcel() {
             type: "POST",
             url: '/Equipment/Import',
             data: formData,
-            dataType: 'json',
             contentType: false,
             processData: false,
             success: function (data) {
                 alert('Data updated successfully.')
+                $('#import').modal('hide');
+                loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
             },
             error: function (e1, e2, e3) {
             }
         });
     }
-
-    setTimeout(function () {
-        alert('Data updated successfully.')
-        $('#import').modal('hide');
-        loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
-    }, 6000)
-
 }

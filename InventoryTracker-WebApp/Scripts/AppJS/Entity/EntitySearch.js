@@ -507,21 +507,16 @@ function importExcel() {
             type: "POST",
             url: '/Entity/Import',
             data: formData,
-            dataType: 'json',
             contentType: false,
             processData: false,
             success: function (data) {
                 alert('Data updated successfully.')
+                $('#import').modal('hide');
+                loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
             },
             error: function (e1, e2, e3) {
             }
         });
     }
-
-    setTimeout(function () {
-        alert('Data updated successfully.')
-        $('#import').modal('hide');
-        loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
-    },6000)
     
 }
