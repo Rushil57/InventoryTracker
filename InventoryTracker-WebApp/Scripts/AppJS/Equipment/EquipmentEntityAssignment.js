@@ -384,7 +384,7 @@ function exportData() {
             headerCol += $(this).text() + ',';
         }
     });
-    window.location = "/Equipment/EquipmentEntityAssignExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEquipmentStr').val().trim() + "&columns=" + headerCol;
+    window.location = "/Equipment/EquipmentEntityAssignExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim() + "&columns=" + headerCol;
 }
 
 
