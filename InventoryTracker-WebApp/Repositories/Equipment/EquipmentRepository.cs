@@ -503,5 +503,41 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             }
             finally { connection.Close(); }
         }
+
+        public List<EquipmentHeader> GetAllEquipmentHeaders()
+        {
+            List<EquipmentHeader> equipmentHeaders = new List<EquipmentHeader>();
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                string query = "select EQUIP_ID, UNIT_ID from EQUIPMENT_HDR";
+                equipmentHeaders = connection.Query<EquipmentHeader>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return equipmentHeaders;
+        }
+
+        public List<EquipmentEntityAssignment> GetAllEquipment_Entity_AssignmentByDate(string startDate)
+        {
+            List<EquipmentEntityAssignment> equipmentEntityAssignment = new List<EquipmentEntityAssignment>();
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                string query = "select * from EQUIPMENT_ENTITY_ASSIGNMENT where ('" + startDate + "' between Start_Date and End_Date)";
+                equipmentEntityAssignment = connection.Query<EquipmentEntityAssignment>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return equipmentEntityAssignment;
+        }
     }
 }

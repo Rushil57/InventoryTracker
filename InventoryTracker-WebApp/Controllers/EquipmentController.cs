@@ -341,6 +341,8 @@ namespace InventoryTracker_WebApp.Controllers
                     columns = columns.Substring(0, columns.Length - 1);
                 }
                 var equipment = _equipmentRepository.ExportEquipmentEntityAssign(startDate, searchString,columns);
+                var equipmentHdr = _equipmentRepository.GetAllEquipmentHeaders();
+                var equipment_ent_assignment = _equipmentRepository.GetAllEquipment_Entity_AssignmentByDate(startDate);
 
                 Worksheet worksheet = workbook.ActiveSheet;
                 worksheet.Cells[1, 2] = "Start Date:";

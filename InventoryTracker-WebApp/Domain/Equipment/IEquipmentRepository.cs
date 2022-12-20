@@ -24,5 +24,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         List<dynamic> ExportEquipment(string startDate, string searchString);
         List<dynamic> ExportEquipmentEntityAssign(string startDate, string searchString,string columns);
         bool UpdateTemplateDetails(string startDate, List<string> columnHeader, List<string> values);
+        List<EquipmentHeader> GetAllEquipmentHeaders();
+        List<EquipmentEntityAssignment> GetAllEquipment_Entity_AssignmentByDate(string startDate);
     }
 }
