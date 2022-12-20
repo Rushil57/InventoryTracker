@@ -6,3 +6,5 @@
 *.wsuo
 /InventoryTracker-WebApp/obj/Release
 /InventoryTracker-WebApp/Properties/PublishProfiles
+/InventoryTracker-WebApp/bin
+/packages

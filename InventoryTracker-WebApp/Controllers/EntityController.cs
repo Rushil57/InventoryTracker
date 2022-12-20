@@ -173,12 +173,7 @@ namespace InventoryTracker_WebApp.Controllers
                 path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
                 int i = 2;
 
-                DirectoryInfo di = new DirectoryInfo(path);
-
-                foreach (FileInfo file in di.GetFiles())
-                {
-                    file.Delete();
-                }
+                
                 path += @"\Entity-" + DateTime.Now.Ticks + ".xlsx";
                 foreach (var e in entity)
                 {
@@ -202,6 +197,7 @@ namespace InventoryTracker_WebApp.Controllers
                 worksheet.get_Range("A1", "XFD1").Locked = true;
                 worksheet.get_Range("A2", "XFD2").Locked = true;
                 worksheet.get_Range("A3", "A1048576").Locked = true;
+                worksheet.get_Range("B3", "B1048576").Locked = true;
                 worksheet.Protect();
                 workbook.SaveAs(path);
             }
@@ -215,6 +211,10 @@ namespace InventoryTracker_WebApp.Controllers
                 Marshal.ReleaseComObject(workbook);
             }
             byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "Entity.xlsx");
         }
 
@@ -224,12 +224,7 @@ namespace InventoryTracker_WebApp.Controllers
             var fileExt = Path.GetExtension(file.FileName);
             string path = string.Empty;
             path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
-            DirectoryInfo di = new DirectoryInfo(path);
-
-            foreach (FileInfo f in di.GetFiles())
-            {
-                f.Delete();
-            }
+            
             path += @"\ImportEntity" + DateTime.Now.Ticks + ".xlsx";
             file.SaveAs(path);
             Application oExcel = new Application();
@@ -298,6 +293,10 @@ namespace InventoryTracker_WebApp.Controllers
             finally
             {
                 workbook.Close();
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
             }
         }
         #endregion
