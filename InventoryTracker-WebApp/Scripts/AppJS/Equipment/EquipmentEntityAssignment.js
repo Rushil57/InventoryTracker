@@ -412,6 +412,7 @@ function importExcel() {
             success: function (data) {
                 alert('Data updated successfully.')
                 $('#importExcel').modal('hide');
+                loadEntityHDR('', false);
             },
             error: function (e1, e2, e3) {
             }
