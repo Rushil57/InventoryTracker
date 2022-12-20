@@ -411,7 +411,7 @@ function importExcel() {
             processData: false,
             success: function (data) {
                 alert('Data updated successfully.')
-                $('#import').modal('hide');
+                $('#importExcel').modal('hide');
             },
             error: function (e1, e2, e3) {
             }

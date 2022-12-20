@@ -574,7 +574,7 @@ function divEntityHDRLoad(element) {
 
 function importData() {
     $("#file").val('');
-    $('#import').modal('show');
+    $('#importExcel').modal('show');
 }
 
 $("#file").change(function () {

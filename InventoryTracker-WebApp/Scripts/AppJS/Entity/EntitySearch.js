@@ -512,7 +512,7 @@ function importExcel() {
             processData: false,
             success: function (data) {
                 alert('Data updated successfully.')
-                $('#import').modal('hide');
+                $('#importExcel').modal('hide');
                 loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
             },
             error: function (e1, e2, e3) {
