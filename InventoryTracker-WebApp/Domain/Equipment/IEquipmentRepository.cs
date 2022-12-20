@@ -22,6 +22,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         bool CheckDuplicateEquipmentHDR(EquipmentHeader equipmentHeader);
 
         List<dynamic> ExportEquipment(string startDate, string searchString);
+        List<dynamic> ExportEquipmentEntityAssign(string startDate, string searchString,string columns);
         bool UpdateTemplateDetails(string startDate, List<string> columnHeader, List<string> values);
     }
 }

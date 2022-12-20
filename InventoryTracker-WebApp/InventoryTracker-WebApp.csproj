@@ -341,6 +341,7 @@
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker.standalone.css.map" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker3.css.map" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker3.standalone.css.map" />
+    <Content Include="ExcelFiles\Entity.xlsx" />
     <None Include="Scripts\jquery-3.6.1.intellisense.js" />
     <Content Include="Scripts\datatables-responsive\dataTables.responsive.js" />
     <Content Include="Scripts\datatables-responsive\dataTables.responsive.min.js" />
@@ -831,10 +832,10 @@
     <Content Include="Views\Entity\_EntityLeftSection.cshtml" />
     <Content Include="Views\Shared\_DeleteAssignmentModel.cshtml" />
     <Content Include="Views\Shared\_ImportModel.cshtml" />
+    <Content Include="Views\Shared\_SearchScreenButtons.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ExcelFiles\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

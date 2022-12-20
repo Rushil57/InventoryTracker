@@ -18,7 +18,7 @@ $(document).ready(function () {
     //    }).datepicker('setDate', new Date());
     loadAllEntityTemp();
     loadEntityHDR('', false);
-    loadEquipmentHDR('',false);
+    loadEquipmentHDR('', false);
     resizableTable();
     sortableTable();
     $('#selectedMenu').text($('#menuEntEquAss').text());
@@ -45,17 +45,17 @@ function loadEquipmentHDR(searchString, searchflag) {
             if (data.IsValid) {
                 //var equipmentString = '';
                 for (var i = 0; i < data.data.length; i++) {
-                  //  equipmentString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td class="assigned">' + data.data[i].ASSIGNED + '</td></tr>';
+                    //  equipmentString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td class="assigned">' + data.data[i].ASSIGNED + '</td></tr>';
 
                     $("#equipHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td ></td><tr>')
 
                     var tableHeadLength = $("#equipHDR > thead > tr >  th").length
                     for (var th = 0; th <= tableHeadLength;) {
-                        if (th != tableHeadLength && th !=0) {
+                        if (th != tableHeadLength && th != 0) {
                             $("#equipHDR > tbody>tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find('td:last').after('<td></td>')
                         }
                         var headtext = $($("#equipHDR > thead > tr >  th")[th]).text();
-                        if (headtext =="Equip. type") {
+                        if (headtext == "Equip. type") {
                             $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].EQUIP_TYPE);
                         }
                         if (headtext == "Vendor") {
@@ -72,11 +72,11 @@ function loadEquipmentHDR(searchString, searchflag) {
                         if (headtext == "Active") {
                             $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").addClass('active').text(data.data[i].Active);
                         }
-                        th = th+1;
+                        th = th + 1;
                     }
                 }
                 //$("#equipHDR > tbody >  tr").remove();
-              // $("#equipHDR > tbody").append(equipmentString);
+                // $("#equipHDR > tbody").append(equipmentString);
                 $("#equipHDR > tbody >  tr").draggable({
                     helper: 'clone',
                     start: function (e, ui) {
@@ -115,17 +115,17 @@ function loadEquipmentHDR(searchString, searchflag) {
                 //if (isaddEquipmentColumn) {
                 //    addEquipmentColumn();
                 //}
-                
+
             }
         }, error: function (ex) { }
     });
 }
 
 
-function loadEntityHDR(searchString,searchflag) {
-    if (searchflag == true) {  
+function loadEntityHDR(searchString, searchflag) {
+    if (searchflag == true) {
         $("#entityHDR > tbody > tr").remove();
-    } 
+    }
     if (startIndexEntity == 0) {
         $("#entityHDR > tbody > tr").remove();
     }
@@ -142,12 +142,12 @@ function loadEntityHDR(searchString,searchflag) {
             if (data.IsValid) {
                 var entityString = '';
                 for (var i = 0; i < data.data.length; i++) {
-                  //  entityString += '<tr><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td class="addEntity">' + data.data[i].ENT_NAME + '</td><td class="droppable"></td><td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg></td></tr>';
+                    //  entityString += '<tr><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td class="addEntity">' + data.data[i].ENT_NAME + '</td><td class="droppable"></td><td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg></td></tr>';
 
                     $("#entityHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td></td><tr>')
 
                     var tableHeadLength = $("#entityHDR > thead > tr >  th").length
-                    for (var th = 0; th <= tableHeadLength;) {  
+                    for (var th = 0; th <= tableHeadLength;) {
                         if (th != tableHeadLength && th != 0) {
                             $("#entityHDR > tbody>tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find('td:last').after('<td></td>')
                         }
@@ -175,7 +175,7 @@ function loadEntityHDR(searchString,searchflag) {
                         var assignElement = $("#equipHDR > tbody >  tr").find('input[value="' + draggedEquipID + '"]').parent().find('.assigned');
                         var totalAssignCount = $(assignElement[0]).text();
                         dropEntityID = $(this).parent().find("input").val();
-                        $(this).append('<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEquipID + '" data-bs-html="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + $('#mainDate').val() + ' <br/> End date : 01/01/9999">' + draggedElementUnitID + '<div onclick="deleteAssignment(' + dropEntityID + ',' + draggedEquipID + ',this,\'' + $('#mainDate').val() +'\',\'01/01/9999\')" class="cls-remove-tag"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg></div></div></div>');
+                        $(this).append('<div class="btn-group ms-1 me-1" role="group"><div class="btn btn-primary assignBtn" id="' + draggedEquipID + '" data-bs-html="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Start date : ' + $('#mainDate').val() + ' <br/> End date : 01/01/9999">' + draggedElementUnitID + '<div onclick="deleteAssignment(' + dropEntityID + ',' + draggedEquipID + ',this,\'' + $('#mainDate').val() + '\',\'01/01/9999\')" class="cls-remove-tag"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16"><path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/></svg></div></div></div>');
                         assignElement.text(parseInt(totalAssignCount) + 1);
 
                         var equipActive = $("#equipHDR > tbody >  tr").find('input[value="' + draggedEquipID + '"]').parent().find('.active');
@@ -244,10 +244,10 @@ function addEntityColumn() {
                         async: false,
                         data: { 'propName': $(this).attr('id') },
                         success: function (data) {
-                                  for (var i = 0; i < data.data.length; i++) {
-                                        $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Ent_Value);
-                                    }
-                             
+                            for (var i = 0; i < data.data.length; i++) {
+                                $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Ent_Value);
+                            }
+
                         },
                         error: function (ex) { }
                     });
@@ -331,7 +331,7 @@ function addEntityHeader() {
         endIndexEntity = 30;
         loadEntityHDR(searchString, false);
     }
-    resizableTable();   
+    resizableTable();
 }
 
 function addEquipmentHeader() {
@@ -373,3 +373,48 @@ function addEquipmentHeader() {
     //});
 }
 
+
+function exportData() {
+    var headerCol = '';
+    $('#entityHDR > thead > tr > th').each(function () {
+        if ($(this).text() == "Entity Name" || $(this).text() == "Equipment Assigned" || $(this).text() == "\n                            ") {
+
+        }
+        else {
+            headerCol += $(this).text() + ',';
+        }
+    });
+    window.location = "/Equipment/EquipmentEntityAssignExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEquipmentStr').val().trim() + "&columns=" + headerCol;
+}
+
+
+
+function importExcel() {
+    if ($('#file').val().trim() == '') {
+        alert('Please select file.')
+        return;
+    }
+    else {
+        var fileUpload = $("#file").get(0);
+        var files = fileUpload.files;
+        var formData = new FormData();
+
+        formData.append("file", files[0]);
+
+        $.ajax({
+            before: AddLoader(),
+            after: RemoveLoader(),
+            type: "POST",
+            url: '/Equipment/EquipmentEntityAssignImport',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                alert('Data updated successfully.')
+                $('#import').modal('hide');
+            },
+            error: function (e1, e2, e3) {
+            }
+        });
+    }
+}

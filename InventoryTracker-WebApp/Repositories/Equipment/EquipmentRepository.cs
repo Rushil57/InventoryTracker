@@ -472,5 +472,36 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             }
             finally { connection.Close(); }
         }
+
+        public List<dynamic> ExportEquipmentEntityAssign(string startDate, string searchString, string columns)
+        {
+            List<dynamic> entities = new List<dynamic>();
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+                if (string.IsNullOrEmpty(columns))
+                {
+                    query = " select distinct eh.ENT_ID ,eh.ENT_NAME  from ENTITY_HDR eh left join Entity_Dtl ed on ed.Ent_ID = eh.ENT_ID left join Entity_Template et ON ed.Ent_temp_id = et.Ent_temp_id";
+                }
+                else
+                {
+                    query = "DECLARE  @columns NVARCHAR(MAX) = ''; SELECT @columns += '" + columns + "';PRINT @columns; DECLARE @query varchar(max); set @query = 'SELECT * FROM   ( select eh.ENT_ID ,eh.ENT_NAME ,et.Prop_name,ed.Ent_Value from ENTITY_HDR eh left join Entity_Dtl ed on ed.Ent_ID = eh.ENT_ID left join Entity_Template et ON ed.Ent_temp_id = et.Ent_temp_id";
+                    if (!string.IsNullOrEmpty(searchString))
+                    {
+                        query += "and  eh.ENT_NAME like ''%" + searchString + "%'' or Prop_name like ''%" + searchString + "%''";
+                    }
+                    query += ") t  PIVOT( max(Ent_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
+                }
+                entities = connection.Query<dynamic>(query).ToList();
+                return entities;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
     }
 }

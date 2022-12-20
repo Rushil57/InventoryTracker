@@ -191,6 +191,10 @@ namespace InventoryTracker_WebApp.Controllers
                         }
                         j++;
                     }
+                    if (i == 2)
+                    {
+                        i++;
+                    }
                     i++;
                 }
                 worksheet.Cells.Locked = false;

@@ -29,6 +29,7 @@ $(document).ready(function () {
     $('#selectedMenu').text($('#menuEntSearch').text());
     $('#entityActive').remove();
     loadEntityHDR('', false);
+    $('.bi-database').attr('onclick', 'showEntityModel()');
 })
 
 
