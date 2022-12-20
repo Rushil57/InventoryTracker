@@ -487,7 +487,9 @@ $('#entityType').change(function () {
 })
 
 function exportData() {
+    AddLoader();
     window.location = "/Entity/Export?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim();
+    RemoveLoader();
 }
 
 function importExcel() {

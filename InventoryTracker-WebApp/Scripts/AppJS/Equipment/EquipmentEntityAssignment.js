@@ -384,7 +384,9 @@ function exportData() {
             headerCol += $(this).text() + ',';
         }
     });
+    AddLoader()
     window.location = "/Equipment/EquipmentEntityAssignExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim() + "&columns=" + headerCol;
+    RemoveLoader()
 }
 
 

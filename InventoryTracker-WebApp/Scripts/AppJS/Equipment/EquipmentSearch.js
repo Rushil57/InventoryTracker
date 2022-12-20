@@ -544,7 +544,9 @@ $('#equipType').change(function () {
 
 
 function exportData() {
+    AddLoader();
     window.location = "/Equipment/Export?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEquipmentStr').val().trim();
+    RemoveLoader();
 }
 
 function importExcel() {
