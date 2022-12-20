@@ -486,7 +486,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                     query = " select distinct eh.ENT_ID ,eh.ENT_NAME  from ENTITY_HDR eh left join Entity_Dtl ed on ed.Ent_ID = eh.ENT_ID left join Entity_Template et ON ed.Ent_temp_id = et.Ent_temp_id";
                     if (!string.IsNullOrEmpty(searchString))
                     {
-                        query += " where  eh.ENT_NAME like '%" + searchString + "%' or Prop_name like '%" + searchString + "%'";
+                        query += " where  eh.ENT_NAME like '%" + searchString + "%' or ed.Ent_Value like '%" + searchString + "%'";
                     }
                 }
                 else
@@ -494,7 +494,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                     query = "DECLARE  @columns NVARCHAR(MAX) = ''; SELECT @columns += '" + columns + "';PRINT @columns; DECLARE @query varchar(max); set @query = 'SELECT * FROM   ( select eh.ENT_ID ,eh.ENT_NAME ,et.Prop_name,ed.Ent_Value from ENTITY_HDR eh left join Entity_Dtl ed on ed.Ent_ID = eh.ENT_ID left join Entity_Template et ON ed.Ent_temp_id = et.Ent_temp_id";
                     if (!string.IsNullOrEmpty(searchString))
                     {
-                        query += " where  eh.ENT_NAME like ''%" + searchString + "%'' or Prop_name like ''%" + searchString + "%''";
+                        query += " where  eh.ENT_NAME like ''%" + searchString + "%'' or ed.Ent_Value like ''%" + searchString + "%''";
                     }
                     query += ") t  PIVOT( max(Ent_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
                 }
