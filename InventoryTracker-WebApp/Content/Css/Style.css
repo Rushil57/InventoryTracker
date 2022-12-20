@@ -112,14 +112,13 @@ td, th {
 }
 .cls-remove-tag {
     background-color: #e3dcdc;
-    color: #666161;
-    border-radius: 20px;
+    color: #363131;
+    border-radius: 7px;
     float: right;
-    padding: 0px 7px 0px 7px;
+    padding: 1px 4px 2px 4px;
     margin-left: 5px;
     font-size: 12px;
     font-weight: 700;
-    margin-top: 2px;
 }
 
 
