@@ -48,14 +48,14 @@ namespace InventoryTracker_WebApp.Controllers
             }).ToList();
             return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTemplates, uniqueEquipmentTemplates = uniqueEquipmentTemplates, uniquePropName = uniquePropName });
         }
-        public string GetEquipmentHeaders(string searchString,int startIndex , int endIndex)
+        public string GetEquipmentHeaders(string searchString, int startIndex, int endIndex)
         {
             List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeaders(searchString, startIndex, endIndex).ToList();
             return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentHeaders });
         }
-        public string GetEquipmentHeadersfromEquipmentEntity(string searchString,int startIndex , int endIndex,string startDate)
+        public string GetEquipmentHeadersfromEquipmentEntity(string searchString, int startIndex, int endIndex, string startDate)
         {
-            List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeadersfromEquipmentEntity(searchString, startIndex, endIndex,startDate).ToList();
+            List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeadersfromEquipmentEntity(searchString, startIndex, endIndex, startDate).ToList();
             return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentHeaders });
         }
 
@@ -157,18 +157,18 @@ namespace InventoryTracker_WebApp.Controllers
         {
             if (!string.IsNullOrEmpty(startDate))
             {
-                var data  = _equipmentRepository.GetEquipmentEntityAssignment(startDate);
+                var data = _equipmentRepository.GetEquipmentEntityAssignment(startDate);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = data });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
         }
 
         [HttpPost]
-        public string SaveEquipmentEntityAssignment(int entityID, int equipID, string startDate,int isDelete,string endDate)
+        public string SaveEquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate)
         {
             if (equipID > 0 && entityID > 0)
             {
-                bool isAssigned = _equipmentRepository.EquipmentEntityAssignment(entityID, equipID, startDate,isDelete,endDate);
+                bool isAssigned = _equipmentRepository.EquipmentEntityAssignment(entityID, equipID, startDate, isDelete, endDate);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = isAssigned });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
@@ -329,7 +329,7 @@ namespace InventoryTracker_WebApp.Controllers
 
         #region Equipment Entity Assign Export - Import
 
-        public FileResult EquipmentEntityAssignExport(string startDate, string searchString,string columns)
+        public FileResult EquipmentEntityAssignExport(string startDate, string searchString, string columns)
         {
             string path = string.Empty;
             Application application = new Application();
@@ -340,7 +340,7 @@ namespace InventoryTracker_WebApp.Controllers
                 {
                     columns = columns.Substring(0, columns.Length - 1);
                 }
-                var equipment = _equipmentRepository.ExportEquipmentEntityAssign(startDate, searchString,columns);
+                var equipment = _equipmentRepository.ExportEquipmentEntityAssign(startDate, searchString, columns);
                 var equipmentHdr = _equipmentRepository.GetAllEquipmentHeaders();
                 var equipment_ent_assignment = _equipmentRepository.GetAllEquipment_Entity_AssignmentByDate(startDate);
 
@@ -355,6 +355,7 @@ namespace InventoryTracker_WebApp.Controllers
                 foreach (var e in equipment)
                 {
                     int j = 1;
+                    int equipmentID = 0;
                     foreach (var item in e)
                     {
                         if (i == 2)
@@ -367,10 +368,20 @@ namespace InventoryTracker_WebApp.Controllers
                             worksheet.Cells[i, j] = item.Value;
                         }
                         j++;
+                        if (item.Key == "ENT_ID")
+                        {
+                            equipmentID = item.Value;
+                        }
                     }
-                    if (i==2)
+                    if (i == 2)
                     {
                         i++;
+                    }
+                    var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == equipmentID).Select(x => x.EQUIP_ID).ToList();
+                    foreach (var equipID in equipIDList)
+                    {
+                        worksheet.Cells[i, j] = equipmentHdr.Where(x => x.EQUIP_ID == equipID).Select(x => x.UNIT_ID).FirstOrDefault() ;
+                        j++;
                     }
                     i++;
                 }
