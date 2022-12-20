@@ -426,5 +426,51 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             }
             finally { connection.Close(); }
         }
+
+        public List<dynamic> ExportEquipment(string startDate, string searchString)
+        {
+            List<dynamic> equipments = new List<dynamic>();
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+
+                query = "DECLARE  @columns NVARCHAR(MAX) = ''; SELECT @columns += QUOTENAME(prop_name) + ',' FROM (select distinct prop_name from Equipment_Template) s	 ORDER BY  prop_name;PRINT @columns; SET @columns = LEFT(@columns, LEN(@columns) - 1); PRINT @columns; DECLARE @query varchar(max); set @query = 'SELECT * FROM   ( select eh.[EQUIP_ID] ,eh.[EQUIP_TYPE],eh.[VENDOR],eh.[UNIT_ID],et.Prop_name,ed.[Eq_Value] from [EQUIPMENT_HDR] eh inner join Equipment_Dtl ed on ed.[Equip_ID] = eh.[EQUIP_ID] inner join Equipment_Template et ON ed.[Equip_Temp_ID] = et.[Equip_Temp_ID]";
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    query += "and  eh.EQUIP_TYPE like ''%" + searchString + "%'' or Prop_name like ''%" + searchString + "%'' or VENDOR like ''%" + searchString + "%'' or UNIT_ID like ''%" + searchString + "%''";
+                }
+                query += ") t  PIVOT( max(Eq_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
+                equipments = connection.Query<dynamic>(query).ToList();
+                return equipments;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
+
+        public bool UpdateTemplateDetails(string startDate, List<string> columnHeader, List<string> values)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+                for (int i = 2; i < columnHeader.Count; i++)
+                {
+                    query += "UPDATE [dbo].[Equipment_Dtl] SET  [Eq_Value] = '" + values[i] + "' WHERE [Equip_ID] = " + values[0] + " and [Equip_Temp_ID] = (select top 1 Equip_Temp_ID FROM  [dbo].[Equipment_Template] where [Equipment_Type] ='" + values[1] + "' and [Prop_name] = '" + columnHeader[i] + "');"; //and Start_Date = " + startDate + "
+                }
+                var isUpdated = connection.Query<bool>(query).FirstOrDefault();
+                return isUpdated;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
     }
 }

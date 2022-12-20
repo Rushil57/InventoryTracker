@@ -570,3 +570,17 @@ function divEntityHDRLoad(element) {
         }
     }
 }
+
+
+function importData() {
+    $("#file").val('');
+    $('#import').modal('show');
+}
+
+$("#file").change(function () {
+    var fileExtension = ['xls', 'xlsx', 'csv'];
+    if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+        alert("Only formats are allowed : " + fileExtension.join(', '));
+        $(this).val('');
+    }
+});

@@ -541,3 +541,45 @@ $('#equipType').change(function () {
         }, error: function (ex) { }
     });
 })
+
+
+function exportData() {
+    window.location = "/Equipment/Export?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEquipmentStr').val().trim();
+}
+
+function importExcel() {
+    if ($('#file').val().trim() == '') {
+        alert('Please select file.')
+        return;
+    }
+    else {
+        var fileUpload = $("#file").get(0);
+        var files = fileUpload.files;
+        var formData = new FormData();
+
+        formData.append("file", files[0]);
+
+        $.ajax({
+            before: AddLoader(),
+            after: RemoveLoader(),
+            type: "POST",
+            url: '/Equipment/Import',
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                alert('Data updated successfully.')
+            },
+            error: function (e1, e2, e3) {
+            }
+        });
+    }
+
+    setTimeout(function () {
+        alert('Data updated successfully.')
+        $('#import').modal('hide');
+        loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
+    }, 6000)
+
+}
