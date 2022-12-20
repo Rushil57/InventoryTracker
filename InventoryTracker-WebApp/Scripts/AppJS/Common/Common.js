@@ -29,7 +29,7 @@ $(document).ready(function () {
             addEntityHeader();
         }
     })
-    
+    $('#import , #property , #export').tooltip();
 })
 
 function updateRowIndex() {
