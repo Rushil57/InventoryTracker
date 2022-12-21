@@ -409,7 +409,7 @@ namespace InventoryTracker_WebApp.Controllers
                 }
                 worksheet.Cells.Locked = false;
                 worksheet.get_Range("A1", "XFD1").Locked = true;
-                //worksheet.get_Range("A2", "XFD2").Locked = true;
+                worksheet.get_Range("A2", "B2").Locked = true;
                 worksheet.get_Range("A3", "A1048576").Locked = true;
                 worksheet.get_Range("B3", "B1048576").Locked = true;
                 worksheet.Columns.AutoFit();
