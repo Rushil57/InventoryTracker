@@ -1,0 +1,32 @@
+﻿@*Modal Start*@
+<div class="modal fade" id="summary" tabindex="-1" aria-labelledby="summaryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="summaryLabel">Summary</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="height: 140px; overflow: auto;" id="summaryBody">
+                <h6>
+                    <label>
+                        How many new pieces of equipment have been assigned:
+                    </label>&nbsp;<label id="excelTotalNewAssign"></label>
+                    <label>
+                        How many new pieces of equipment have been removed:
+                    </label>&nbsp;<label id="excelTotalRemove"></label>
+                    <label>
+                        How many new pieces of equipment have > 1 assignment:
+                    </label>&nbsp;<label id="gtOneAssign"></label>
+                    <label>
+                        How many total recorded loaded:
+                    </label>&nbsp;<label id="totalRecords"></label>
+                    <label>How many records have invalid equipment units: </label>&nbsp;<label id="invalidRecords"></label>
+                </h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Model End*@ 

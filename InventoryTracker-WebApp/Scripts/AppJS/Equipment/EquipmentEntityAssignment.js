@@ -412,9 +412,18 @@ function importExcel() {
             contentType: false,
             processData: false,
             success: function (data) {
-                alert('Data updated successfully.')
-                $('#importExcel').modal('hide');
-                loadEntityHDR('', false);
+                var newData = JSON.parse(data);
+                if (newData.IsValid) {
+                    alert('Data updated successfully.')
+                    $('#importExcel').modal('hide');
+                    loadEntityHDR('', false);
+                    $('#excelTotalNewAssign').text(newData.excelTotalNewAssign);
+                    $('#excelTotalRemove').text(newData.excelTotalRemove);
+                    $('#gtOneAssign').text(newData.gtOneAssign)
+                    $('#totalRecords').text(newData.totalRecords)
+                    $('#invalidRecords').text(newData.excelInvalidUnitIDCount + " [" + newData.excelInvalidUnitID + "]")
+                    $('#summary').modal('show');
+                }
             },
             error: function (e1, e2, e3) {
             }

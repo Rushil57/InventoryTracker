@@ -5,6 +5,7 @@ using System;
 using Dapper;
 using System.Linq;
 using InventoryTracker_WebApp.Domain.Equipment;
+using System.Web.UI.WebControls;
 
 namespace InventoryTracker_WebApp.Repositories.Equipment
 {
@@ -508,7 +509,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
         }
 
-        public List<EquipmentHeader> GetAllEquipmentHeaders()
+        public List<EquipmentHeader> GetAllEquipmentHeaders(string unitID = null)
         {
             List<EquipmentHeader> equipmentHeaders = new List<EquipmentHeader>();
             var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
@@ -516,6 +517,10 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             {
                 connection.Open();
                 string query = "select EQUIP_ID, UNIT_ID from EQUIPMENT_HDR";
+                if (!string.IsNullOrEmpty(unitID))
+                {
+                    query += " where UNIT_ID = '" + unitID + "'";
+                }
                 equipmentHeaders = connection.Query<EquipmentHeader>(query).ToList();
             }
             catch (Exception e)
@@ -544,21 +549,31 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             return equipmentEntityAssignment;
         }
 
-        public bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values)
+        public bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values, out string totalNewAssigned, out int totalRemoved, out string invalidUnitID)
         {
             var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
             var date = Convert.ToDateTime(startDate).ToString("MM/d/yyyy").Replace("-", "/");
             try
             {
-                var distValues  = values.Distinct().ToList();
+                var distValues = values.Distinct().ToList();
+                int removed = 0;
                 connection.Open();
                 var query = string.Empty;
+                string newInvalidUID = string.Empty;
                 var firstIndexOfUnitID = columnHeader.IndexOf("Unit ID");
+                query = "Declare @equipIDList varchar(max)=''";
                 for (int i = firstIndexOfUnitID; i < distValues.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(distValues[i]))
                     {
-                        query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + distValues[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + distValues[i] + "'))  = 0 INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT]([EQUIP_ID],[ENT_ID],[START_DATE],[END_DATE])VALUES((select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + distValues[i] + "')," + distValues[0] + ",'" + date + "','01/01/9999') ";
+                        if (GetAllEquipmentHeaders(distValues[i]).Count == 0)
+                        {
+                            newInvalidUID += distValues[i] + ",";
+                        }
+                        else
+                        {
+                            query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + distValues[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + distValues[i] + "'))  = 0 BEGIN SET @equipIDList += CONVERT(varchar(100), (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + distValues[i] + "')) + ','; INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT]([EQUIP_ID],[ENT_ID],[START_DATE],[END_DATE]) VALUES((select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + distValues[i] + "')," + distValues[0] + ",'" + date + "','01/01/9999') END ";
+                        }
                     }
                 }
                 var queryForUpdate = "select UNIT_ID  from (SELECT * from [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] where ENT_ID = " + distValues[0] + "  and ('" + date + "' between Start_Date and End_Date)) as eea left join EQUIPMENT_HDR as eh on eh.EQUIP_ID = eea.EQUIP_ID";
@@ -568,14 +583,19 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                     if (!distValues.Contains(unitID))
                     {
                         query += "  UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [END_DATE] = '" + date + "' WHERE ENT_ID = " + distValues[0] + " and EQUIP_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + unitID + "')  and ('" + date + "' between Start_Date and End_Date) ";
+                        removed++;
                     }
                 }
+                totalRemoved = removed;
+                totalNewAssigned = "";
+                invalidUnitID = newInvalidUID;
                 if (!string.IsNullOrEmpty(query))
                 {
-                    var isUpdated = connection.Query<bool>(query).FirstOrDefault();
-                    return isUpdated;
+                    query += "select @equipIDList;";
+                    var isUpdated = connection.Query<string>(query).ToList();
+                    totalNewAssigned = isUpdated[0];
+                    return true;
                 }
-
                 return false;
             }
             catch (Exception e)
