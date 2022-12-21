@@ -529,7 +529,7 @@ namespace InventoryTracker_WebApp.Controllers
                     if (!string.IsNullOrEmpty(excelTotalAssign))
                     {
                         var totalAssignment = excelTotalAssign.Substring(0, excelTotalAssign.Length - 1).Split(',');
-                        gtOneAssign = excelTotalAssign.GroupBy(x => x).Where(g => g.Count() > 1).Count() > 0 ? excelTotalAssign.GroupBy(x => x).Where(g => g.Count() > 1).Count() - 1 : 0;
+                        gtOneAssign = excelTotalAssign.Split(',').GroupBy(x => x).Where(g => g.Count() > 1).Count();
                         excelTotalNewAssign = totalAssignment.Count();
                     }
                     if (!string.IsNullOrEmpty(excelInvalidUnitID))
