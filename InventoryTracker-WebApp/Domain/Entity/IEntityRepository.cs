@@ -18,5 +18,9 @@ namespace InventoryTracker_WebApp.Domain.Entity
         bool SaveEntityHDR(EntityHeader entityHDR, List<EntityDetail> entityDtl);
         List<dynamic> ExportEntity(string startDate,string searchString);
         bool UpdateTemplateDetails(string startDate,List<string> columnHeader, List<string> values);
+
+        List<dynamic> ExportEntityEquipmentAssign(string startDate, string searchString, string columns);
+        List<EntityHeader> GetAllEntityHeaders();
+        bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values);
     }
 }

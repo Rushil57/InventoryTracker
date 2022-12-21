@@ -11,6 +11,7 @@ $(document).ready(function () {
     resizableTable();
     sortableTable();
     $('#selectedMenu').text($('#menuEquEntAss').text());
+    $('.bi-database').attr('onclick', 'showEquipModel()');
 })
 
 function loadEntityHDR(searchString, searchflag) {
@@ -463,5 +464,55 @@ function addEntityHeader() {
         startIndexEntity = 0;
         endIndexEntity = 30;
         loadEntityHDR(searchString, false);
+    }
+}
+
+
+
+function exportData() {
+    var headerCol = '';
+    $('#equipHDR > thead > tr > th').each(function () {
+        if ($(this).text() == "Equipment type" || $(this).text() == "Vendor" || $(this).text() == "Unit ID" || $(this).text() == "Entity Assigned" || $(this).text() == "") {
+
+        }
+        else {
+            headerCol += $(this).text() + ',';
+        }
+    });
+    AddLoader()
+    window.location = "/Entity/EntityEquipmentAssignExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEquipmentStr').val().trim() + "&columns=" + headerCol;
+    RemoveLoader()
+}
+
+
+
+function importExcel() {
+    if ($('#file').val().trim() == '') {
+        alert('Please select file.')
+        return;
+    }
+    else {
+        var fileUpload = $("#file").get(0);
+        var files = fileUpload.files;
+        var formData = new FormData();
+
+        formData.append("file", files[0]);
+
+        $.ajax({
+            before: AddLoader(),
+            after: RemoveLoader(),
+            type: "POST",
+            url: '/Entity/EntityEquipmentAssignImport',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                alert('Data updated successfully.')
+                $('#importExcel').modal('hide');
+                loadEquipmentHDR('', false);
+            },
+            error: function (e1, e2, e3) {
+            }
+        });
     }
 }

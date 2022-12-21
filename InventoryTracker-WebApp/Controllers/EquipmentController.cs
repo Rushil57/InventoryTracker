@@ -340,7 +340,7 @@ namespace InventoryTracker_WebApp.Controllers
                 {
                     columns = columns.Substring(0, columns.Length - 1);
                 }
-                var equipment = _equipmentRepository.ExportEquipmentEntityAssign(startDate, searchString, columns);
+                var entities = _equipmentRepository.ExportEquipmentEntityAssign(startDate, searchString, columns);
                 var equipmentHdr = _equipmentRepository.GetAllEquipmentHeaders();
                 var equipment_ent_assignment = _equipmentRepository.GetAllEquipment_Entity_AssignmentByDate(startDate);
 
@@ -352,10 +352,10 @@ namespace InventoryTracker_WebApp.Controllers
 
 
                 path += @"\EquipmentEntityAssignExport-" + DateTime.Now.Ticks + ".xlsx";
-                foreach (var e in equipment)
+                foreach (var e in entities)
                 {
                     int j = 1;
-                    int equipmentID = 0;
+                    int entID = 0;
                     foreach (var item in e)
                     {
                         if (i == 2)
@@ -370,14 +370,14 @@ namespace InventoryTracker_WebApp.Controllers
                         j++;
                         if (item.Key == "ENT_ID")
                         {
-                            equipmentID = item.Value;
+                            entID = item.Value;
                         }
                     }
                     if (i == 2)
                     {
                         i++;
                     }
-                    var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == equipmentID).Select(x => x.EQUIP_ID).ToList();
+                    var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entID).Select(x => x.EQUIP_ID).ToList();
                     foreach (var equipID in equipIDList)
                     {
                         worksheet.Cells[i, j] = equipmentHdr.Where(x => x.EQUIP_ID == equipID).Select(x => x.UNIT_ID).FirstOrDefault() ;
@@ -418,7 +418,7 @@ namespace InventoryTracker_WebApp.Controllers
             string path = string.Empty;
             path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
 
-            path += @"\ImportEquipment" + DateTime.Now.Ticks + ".xlsx";
+            path += @"\EquipmentEntityAssignImport" + DateTime.Now.Ticks + ".xlsx";
             file.SaveAs(path);
             Application oExcel = new Application();
             Workbook workbook = oExcel.Workbooks.Open(path);

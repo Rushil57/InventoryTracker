@@ -409,5 +409,99 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             finally { connection.Close(); }
         }
+
+        public List<dynamic> ExportEntityEquipmentAssign(string startDate, string searchString, string columns)
+        {
+            List<dynamic> equipments = new List<dynamic>();
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+                if (string.IsNullOrEmpty(columns))
+                {
+                    query = " select distinct eh.EQUIP_ID ,eh.EQUIP_TYPE,eh.VENDOR,eh.UNIT_ID  from EQUIPMENT_HDR eh left join Equipment_Dtl ed on ed.Equip_ID = eh.EQUIP_ID left join Equipment_Template et ON ed.Equip_Temp_ID = et.Equip_Temp_ID";
+                    if (!string.IsNullOrEmpty(searchString))
+                    {
+                        query += " where  eh.EQUIP_TYPE like '%" + searchString + "%' or eh.VENDOR like '%" + searchString + "%' or eh.UNIT_ID like '%" + searchString + "%' or  ed.Eq_Value like '%" + searchString + "%'";
+                    }
+                }
+                else
+                {
+                    query = "DECLARE  @columns NVARCHAR(MAX) = ''; SELECT @columns '" + columns + "' ; PRINT @columns; DECLARE @query varchar(max); set @query = 'SELECT * FROM   ( select eh.[EQUIP_ID] ,eh.[EQUIP_TYPE],eh.[VENDOR],eh.[UNIT_ID],et.Prop_name,ed.[Eq_Value] from [EQUIPMENT_HDR] eh inner join Equipment_Dtl ed on ed.[Equip_ID] = eh.[EQUIP_ID] inner join Equipment_Template et ON ed.[Equip_Temp_ID] = et.[Equip_Temp_ID]";
+                    if (!string.IsNullOrEmpty(searchString))
+                    {
+                        query += " where  eh.EQUIP_TYPE like '%" + searchString + "%' or eh.VENDOR like '%" + searchString + "%' or eh.UNIT_ID like '%" + searchString + "%' or  ed.Eq_Value like '%" + searchString + "%'";
+                    }
+                    query += ") t  PIVOT( max(Eq_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
+                }
+                equipments = connection.Query<dynamic>(query).ToList();
+                return equipments;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
+
+        public List<EntityHeader> GetAllEntityHeaders()
+        {
+            List<EntityHeader> entityHeaders = new List<EntityHeader>();
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            try
+            {
+                connection.Open();
+                string query = "select ENT_ID,ENT_TYPE,ENT_NAME from ENTITY_HDR";
+                entityHeaders = connection.Query<EntityHeader>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return entityHeaders;
+        }
+
+        public bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var date = Convert.ToDateTime(startDate).ToString("MM/d/yyyy").Replace("-", "/");
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+                var firstIndexOfUnitID = columnHeader.IndexOf("Entity Name");
+                for (int i = firstIndexOfUnitID; i < values.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(values[i]))
+                    {
+                        query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID = " + values[0] + " and ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + values[i] + "'))  = 0 INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT]([ENT_ID],[EQUIP_ID],[START_DATE],[END_DATE])VALUES((select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + values[i] + "')," + values[0] + ",'" + date + "','01/01/9999') ";
+                    }
+                }
+                var queryForUpdate = "select ENT_NAME  from (SELECT * from [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] where EQUIP_ID = " + values[0] + "  and ('" + date + "' between Start_Date and End_Date)) as eea left join ENTITY_HDR as eh on eh.ENT_ID = eea.ENT_ID";
+                var entityNames = connection.Query<string>(queryForUpdate).ToList();
+                foreach (var entityName in entityNames)
+                {
+                    if (!values.Contains(entityName))
+                    {
+                        query += "  UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [END_DATE] = '" + date + "' WHERE EQUIP_ID = " + values[0] + " and ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + entityName + "')  and ('" + date + "' between Start_Date and End_Date) ";
+                    }
+                }
+                if (!string.IsNullOrEmpty(query))
+                {
+                    var isUpdated = connection.Query<bool>(query).FirstOrDefault();
+                    return isUpdated;
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
+
     }
 }

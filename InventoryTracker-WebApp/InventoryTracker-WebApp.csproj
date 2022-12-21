@@ -833,6 +833,7 @@
     <Content Include="Views\Shared\_DeleteAssignmentModel.cshtml" />
     <Content Include="Views\Shared\_ImportModel.cshtml" />
     <Content Include="Views\Shared\_SearchScreenButtons.cshtml" />
+    <Content Include="Views\Shared\_AssignmentButtons.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
