@@ -188,6 +188,9 @@ namespace InventoryTracker_WebApp.Controllers
                         {
                             worksheet.Cells[i, j] = item.Key;
                             worksheet.Cells[i+1, j] = item.Value;
+                            worksheet.Cells[i, j].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                            worksheet.Cells[i, j].EntireRow.Font.Bold = true;
+                            worksheet.Cells[i, j].Borders.LineStyle = XlLineStyle.xlContinuous;
                         }
                         else
                         {
@@ -206,6 +209,16 @@ namespace InventoryTracker_WebApp.Controllers
                 worksheet.get_Range("A2", "XFD2").Locked = true;
                 worksheet.get_Range("A3", "A1048576").Locked = true;
                 worksheet.get_Range("B3", "B1048576").Locked = true;
+
+                worksheet.Columns.AutoFit();
+                worksheet.get_Range("A1", "XFD1").Borders.LineStyle = XlLineStyle.xlContinuous;
+                worksheet.get_Range("A2", "XFD2").Borders.LineStyle = XlLineStyle.xlContinuous;
+                worksheet.get_Range("A3", "A1048576").Borders.LineStyle = XlLineStyle.xlContinuous;
+                worksheet.get_Range("B3", "B1048576").Borders.LineStyle = XlLineStyle.xlContinuous;
+                worksheet.get_Range("A1", "XFD1").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                worksheet.get_Range("A2", "XFD2").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                worksheet.get_Range("A3", "A1048576").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                worksheet.get_Range("B3", "B1048576").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
                 worksheet.Protect();
                 workbook.SaveAs(path);
             }
