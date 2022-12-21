@@ -354,11 +354,17 @@ namespace InventoryTracker_WebApp.Controllers
             Workbook workbook = application.Workbooks.Add(Missing.Value);
             try
             {
+                var columnsValue = string.Empty;
                 if (!string.IsNullOrEmpty(columns))
                 {
                     columns = columns.Substring(0, columns.Length - 1);
+                    foreach (var col in columns.Split(',').Select(x => "[" + x + "]").ToList())
+                    {
+                        columnsValue += col + ",";
+                    }
+                    columnsValue = columnsValue.Substring(0, columnsValue.Length - 1);
                 }
-                var entities = _equipmentRepository.ExportEquipmentEntityAssign(startDate, searchString, columns);
+                var entities = _equipmentRepository.ExportEquipmentEntityAssign(startDate, searchString, columnsValue);
                 var equipmentHdr = _equipmentRepository.GetAllEquipmentHeaders();
                 var equipment_ent_assignment = _equipmentRepository.GetAllEquipment_Entity_AssignmentByDate(startDate);
 

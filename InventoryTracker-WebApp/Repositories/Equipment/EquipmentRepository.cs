@@ -550,23 +550,24 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             var date = Convert.ToDateTime(startDate).ToString("MM/d/yyyy").Replace("-", "/");
             try
             {
+                var distValues  = values.Distinct().ToList();
                 connection.Open();
                 var query = string.Empty;
                 var firstIndexOfUnitID = columnHeader.IndexOf("Unit ID");
-                for (int i = firstIndexOfUnitID; i < values.Count; i++)
+                for (int i = firstIndexOfUnitID; i < distValues.Count; i++)
                 {
-                    if (!string.IsNullOrEmpty(values[i]))
+                    if (!string.IsNullOrEmpty(distValues[i]))
                     {
-                        query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + values[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i] + "'))  = 0 INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT]([EQUIP_ID],[ENT_ID],[START_DATE],[END_DATE])VALUES((select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i] + "')," + values[0] + ",'" + date + "','01/01/9999') ";
+                        query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + distValues[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + distValues[i] + "'))  = 0 INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT]([EQUIP_ID],[ENT_ID],[START_DATE],[END_DATE])VALUES((select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + distValues[i] + "')," + distValues[0] + ",'" + date + "','01/01/9999') ";
                     }
                 }
-                var queryForUpdate = "select UNIT_ID  from (SELECT * from [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] where ENT_ID = " + values[0] + "  and ('" + date + "' between Start_Date and End_Date)) as eea left join EQUIPMENT_HDR as eh on eh.EQUIP_ID = eea.EQUIP_ID";
+                var queryForUpdate = "select UNIT_ID  from (SELECT * from [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] where ENT_ID = " + distValues[0] + "  and ('" + date + "' between Start_Date and End_Date)) as eea left join EQUIPMENT_HDR as eh on eh.EQUIP_ID = eea.EQUIP_ID";
                 var unitIDs = connection.Query<string>(queryForUpdate).ToList();
                 foreach (var unitID in unitIDs)
                 {
-                    if (!values.Contains(unitID))
+                    if (!distValues.Contains(unitID))
                     {
-                        query += "  UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [END_DATE] = '" + date + "' WHERE ENT_ID = " + values[0] + " and EQUIP_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + unitID + "')  and ('" + date + "' between Start_Date and End_Date) ";
+                        query += "  UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [END_DATE] = '" + date + "' WHERE ENT_ID = " + distValues[0] + " and EQUIP_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + unitID + "')  and ('" + date + "' between Start_Date and End_Date) ";
                     }
                 }
                 if (!string.IsNullOrEmpty(query))
