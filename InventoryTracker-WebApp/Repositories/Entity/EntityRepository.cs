@@ -376,7 +376,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 query = "DECLARE  @columns NVARCHAR(MAX) = ''; SELECT @columns += QUOTENAME(prop_name) + ',' FROM (select distinct prop_name from Entity_Template) s	 ORDER BY  prop_name;PRINT @columns; SET @columns = LEFT(@columns, LEN(@columns) - 1); PRINT @columns; DECLARE @query varchar(max); set @query = 'SELECT * FROM   ( select eh.ENT_ID ,eh.ENT_NAME ,et.Prop_name,ed.Ent_Value from ENTITY_HDR eh inner join Entity_Dtl ed on ed.Ent_ID = eh.ENT_ID inner join Entity_Template et ON ed.Ent_temp_id = et.Ent_temp_id ";
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    query += "and  eh.ENT_NAME like ''%"+searchString+"%'' or Prop_name like ''%"+searchString+"%''";
+                    query += "and  eh.ENT_NAME like ''%" + searchString + "%'' or Prop_name like ''%" + searchString + "%''";
                 }
                 query += ") t  PIVOT( max(Ent_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
                 entities = connection.Query<dynamic>(query).ToList();
@@ -445,7 +445,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             finally { connection.Close(); }
         }
 
-        public List<EntityHeader> GetAllEntityHeaders()
+        public List<EntityHeader> GetAllEntityHeaders(string entityName = null)
         {
             List<EntityHeader> entityHeaders = new List<EntityHeader>();
             var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
@@ -453,6 +453,10 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             {
                 connection.Open();
                 string query = "select ENT_ID,ENT_TYPE,ENT_NAME from ENTITY_HDR";
+                if (!string.IsNullOrEmpty(entityName))
+                {
+                    query += " where ENT_NAME='" + entityName + "'";
+                }
                 entityHeaders = connection.Query<EntityHeader>(query).ToList();
             }
             catch (Exception e)
@@ -463,21 +467,31 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             return entityHeaders;
         }
 
-        public bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values)
+        public bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName)
         {
             var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
             var date = Convert.ToDateTime(startDate).ToString("MM/d/yyyy").Replace("-", "/");
             try
             {
                 var distValues = values.Distinct().ToList();
+                int removed = 0;
                 connection.Open();
+                string newInvalidEntity = string.Empty;
                 var query = string.Empty;
+                query = "Declare @entIDList varchar(max)=''";
                 var firstIndexOfUnitID = columnHeader.IndexOf("Entity Name");
                 for (int i = firstIndexOfUnitID; i < distValues.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(distValues[i]))
                     {
-                        query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID = " + distValues[0] + " and ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + distValues[i] + "'))  = 0 INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT]([ENT_ID],[EQUIP_ID],[START_DATE],[END_DATE])VALUES((select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + distValues[i] + "')," + distValues[0] + ",'" + date + "','01/01/9999') ";
+                        if (GetAllEntityHeaders(distValues[i]).Count == 0)
+                        {
+                            newInvalidEntity += distValues[i] + ",";
+                        }
+                        else
+                        {
+                            query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID = " + distValues[0] + " and ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + distValues[i] + "'))  = 0 BEGIN SET @entIDList += CONVERT(varchar(100), (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + distValues[i] + "')) + ','; INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT]([ENT_ID],[EQUIP_ID],[START_DATE],[END_DATE])VALUES((select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + distValues[i] + "')," + distValues[0] + ",'" + date + "','01/01/9999') END ";
+                        }
                     }
                 }
                 var queryForUpdate = "select ENT_NAME  from (SELECT * from [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] where EQUIP_ID = " + distValues[0] + "  and ('" + date + "' between Start_Date and End_Date)) as eea left join ENTITY_HDR as eh on eh.ENT_ID = eea.ENT_ID";
@@ -487,12 +501,18 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                     if (!distValues.Contains(entityName))
                     {
                         query += "  UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [END_DATE] = '" + date + "' WHERE EQUIP_ID = " + distValues[0] + " and ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + entityName + "')  and ('" + date + "' between Start_Date and End_Date) ";
+                        removed++;
                     }
                 }
+                totalRemoved = removed;
+                totalNewAssigned = "";
+                invalidEntityName = newInvalidEntity;
                 if (!string.IsNullOrEmpty(query))
                 {
-                    var isUpdated = connection.Query<bool>(query).FirstOrDefault();
-                    return isUpdated;
+                    query += "select @entIDList;";
+                    var isUpdated = connection.Query<string>(query).ToList();
+                    totalNewAssigned = isUpdated[0];
+                    return true;
                 }
 
                 return false;

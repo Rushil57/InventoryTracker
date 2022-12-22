@@ -20,7 +20,7 @@ namespace InventoryTracker_WebApp.Domain.Entity
         bool UpdateTemplateDetails(string startDate,List<string> columnHeader, List<string> values);
 
         List<dynamic> ExportEntityEquipmentAssign(string startDate, string searchString, string columns);
-        List<EntityHeader> GetAllEntityHeaders();
-        bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values);
+        List<EntityHeader> GetAllEntityHeaders(string entityName = null);
+        bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName);
     }
 }

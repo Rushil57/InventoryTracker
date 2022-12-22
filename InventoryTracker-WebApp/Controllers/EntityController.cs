@@ -426,7 +426,7 @@ namespace InventoryTracker_WebApp.Controllers
         }
 
         [HttpPost]
-        public void EntityEquipmentAssignImport(HttpPostedFileBase file)
+        public string EntityEquipmentAssignImport(HttpPostedFileBase file)
         {
             var fileExt = Path.GetExtension(file.FileName);
             string path = string.Empty;
@@ -436,6 +436,15 @@ namespace InventoryTracker_WebApp.Controllers
             file.SaveAs(path);
             Application oExcel = new Application();
             Workbook workbook = oExcel.Workbooks.Open(path);
+            string excelTotalAssign = string.Empty;
+            string excelInvalidEntityName = string.Empty;
+
+            int excelTotalRemove = 0;
+            int totalRecords = 0;
+            int excelTotalNewAssign = 0;
+            int gtOneAssign = 0;
+            int excelInvalidEntCount = 0;
+
             try
             {
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
@@ -453,12 +462,13 @@ namespace InventoryTracker_WebApp.Controllers
                     for (int i = 2; i < wks.Rows.Count; i++)
                     {
                         var headerCellValue = ((Range)wks.Cells[i, 1]).Value;
-                        if (headerCellValue.ToString() == null)
+                        if (headerCellValue == null)
                         {
                             break;
                         }
                         else
                         {
+                            totalRecords = i - 2;
                             List<string> values = new List<string>();
                             for (int j = 1; j < wks.Columns.Count; j++)
                             {
@@ -486,16 +496,30 @@ namespace InventoryTracker_WebApp.Controllers
                             }
                             if (i != 2)
                             {
-                                bool isUpdated = _entityRepository.UpdateInsertEQUENTASS(startDate.ToShortDateString(), columnHeader, values);
+                                var isUpdated = _entityRepository.UpdateInsertEQUENTASS(startDate.ToShortDateString(), columnHeader, values, out string totalNewAssigned, out int totalRemoved, out string invalidEntName);
+                                excelTotalAssign += totalNewAssigned;
+                                excelTotalRemove = excelTotalRemove + totalRemoved;
+                                excelInvalidEntityName += invalidEntName;
                             }
                         }
                     }
-
-                    workbook.Close();
+                    if (!string.IsNullOrEmpty(excelTotalAssign))
+                    {
+                        var totalAssignment = excelTotalAssign.Substring(0, excelTotalAssign.Length - 1).Split(',');
+                        gtOneAssign = excelTotalAssign.Split(',').GroupBy(x => x).Where(g => g.Count() > 1).Count();
+                        excelTotalNewAssign = totalAssignment.Count();
+                    }
+                    if (!string.IsNullOrEmpty(excelInvalidEntityName))
+                    {
+                        excelInvalidEntityName = excelInvalidEntityName.Substring(0, excelInvalidEntityName.Length - 1);
+                        excelInvalidEntCount = excelInvalidEntityName.Split(',').Count();
+                    }
                 }
+                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidEntityName = excelInvalidEntityName, excelInvalidEntCount = excelInvalidEntCount });
             }
             catch (Exception e)
             {
+                throw;
             }
             finally
             {
