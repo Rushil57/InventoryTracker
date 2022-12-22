@@ -512,6 +512,7 @@ function importExcel() {
                     alert('Data updated successfully.')
                     $('#importExcel').modal('hide');
                     loadEquipmentHDR('', false);
+                    loadEntityHDR('', false);
                     $('#excelTotalNewAssign').text(newData.excelTotalNewAssign);
                     $('#excelTotalRemove').text(newData.excelTotalRemove);
                     $('#gtOneAssign').text(newData.gtOneAssign)
