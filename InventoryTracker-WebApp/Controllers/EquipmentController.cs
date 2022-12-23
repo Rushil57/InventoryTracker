@@ -380,12 +380,13 @@ namespace InventoryTracker_WebApp.Controllers
                     {
                         i++;
                     }
+                    sl.SetColumnStyle(j, j + 200, sLStyle);
                     var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entID).Select(x => x.EQUIP_ID).ToList();
                     foreach (var equipID in equipIDList)
                     {
                         sl.SetCellValue(i, j,equipmentHdr.Where(x => x.EQUIP_ID == equipID).Select(x => x.UNIT_ID).FirstOrDefault());
                         sl.SetCellValue(2, j, "Unit ID");
-                        sl.SetColumnStyle(j, j + 200, sLStyle);
+                       
                         j++;
                     }
                     i++;
