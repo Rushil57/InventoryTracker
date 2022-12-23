@@ -1,4 +1,5 @@
-﻿using InventoryTracker_WebApp.Domain.Entity;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using InventoryTracker_WebApp.Domain.Entity;
 using InventoryTracker_WebApp.Domain.Equipment;
 using InventoryTracker_WebApp.Models;
 using Newtonsoft.Json;
@@ -168,18 +169,54 @@ namespace InventoryTracker_WebApp.Controllers
 
                 SLStyle sLStyle = new SLStyle();
                 sLStyle.Protection.Locked = false;
+
+                sLStyle.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.White, System.Drawing.Color.White);
+
+                sLStyle.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.LeftBorder.Color = System.Drawing.Color.Black;
+
+                sLStyle.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.RightBorder.Color = System.Drawing.Color.Black;
+
+                sLStyle.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.BottomBorder.Color = System.Drawing.Color.Black;
+
+                sLStyle.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.TopBorder.Color = System.Drawing.Color.Black;
+                sLStyle.Font.Bold = false;
+
                 SLSheetProtection sp = new SLSheetProtection();
                 sp.AllowEditObjects = true;
+                SLStyle sLStyleColor = new SLStyle();
+                sLStyleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGray, System.Drawing.Color.LightGray);
+
+                sLStyleColor.Font.Bold = true;
+
+                sLStyleColor.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.LeftBorder.Color = System.Drawing.Color.Black;
+
+                sLStyleColor.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.RightBorder.Color = System.Drawing.Color.Black;
+
+                sLStyleColor.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.BottomBorder.Color = System.Drawing.Color.Black;
+
+                sLStyleColor.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.TopBorder.Color = System.Drawing.Color.Black;
 
                 sl.SetCellValue(1, 2, "Start Date:");
                 sl.SetCellValue(1, 3, startDate);
 
                 int i = 2;
-
+                sl.SetRowStyle(1, sLStyleColor);
+                sl.SetRowStyle(i + 1, sLStyleColor);
+                sl.AutoFitColumn(1);
+                int j = 0;
                 foreach (var e in entity)
                 {
-                    int j = 1;
-
+                    j = 1;
+                    sl.SetRowStyle(i, sLStyleColor);
+                    sl.AutoFitColumn(j);
                     foreach (var item in e)
                     {
                         if (i == 2)
@@ -188,6 +225,7 @@ namespace InventoryTracker_WebApp.Controllers
                             sl.SetCellValue((i + 1), j, item.Value == null ? "" : item.Value.ToString());
                             if (j != 1 && j != 2)
                             {
+                                sl.RemoveCellStyle((i + 1), j);
                                 sl.SetCellStyle((i + 1), j, sLStyle);
                             }
                         }
@@ -196,6 +234,7 @@ namespace InventoryTracker_WebApp.Controllers
                             sl.SetCellValue(i, j, item.Value == null ? "" : item.Value.ToString());
                             if (j != 1 && j != 2)
                             {
+                                sl.RemoveCellStyle(i, j);
                                 sl.SetCellStyle(i, j, sLStyle);
                             }
                         }
@@ -207,7 +246,7 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                     i++;
                 }
-                sl.RemoveRowStyle(2);
+                sl.AutoFitColumn(1, j);
                 sl.ProtectWorksheet(sp);
                 sl.SaveAs(ms);
             }
@@ -322,26 +361,71 @@ namespace InventoryTracker_WebApp.Controllers
 
                 SLStyle sLStyle = new SLStyle();
                 sLStyle.Protection.Locked = false;
+                sLStyle.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.White, System.Drawing.Color.White);
+
+                sLStyle.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.LeftBorder.Color = System.Drawing.Color.Black;
+
+                sLStyle.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.RightBorder.Color = System.Drawing.Color.Black;
+
+                sLStyle.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.BottomBorder.Color = System.Drawing.Color.Black;
+
+                sLStyle.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.TopBorder.Color = System.Drawing.Color.Black;
+                sLStyle.Font.Bold = false;
+
+
                 SLSheetProtection sp = new SLSheetProtection();
                 sp.AllowEditObjects = true;
+
+                SLStyle sLStyleColor = new SLStyle();
+                sLStyleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGray, System.Drawing.Color.LightGray);
+
+                sLStyleColor.Font.Bold = true;
+
+                sLStyleColor.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.LeftBorder.Color = System.Drawing.Color.Black;
+
+                sLStyleColor.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.RightBorder.Color = System.Drawing.Color.Black;
+
+                sLStyleColor.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.BottomBorder.Color = System.Drawing.Color.Black;
+
+                sLStyleColor.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.TopBorder.Color = System.Drawing.Color.Black;
+
 
                 sl.SetCellValue(1, 2, "Start Date:");
                 sl.SetCellValue(1, 3, startDate);
 
                 int i = 2;
+
+                sl.SetColumnStyle(1, sLStyleColor);
+                sl.SetColumnStyle(i + 1, sLStyleColor);
+                sl.AutoFitColumn(1);
+                int j = 0;
+
                 foreach (var e in equipments)
                 {
-                    int j = 1;
+                    j = 1;
                     int equipmentID = 0;
+                    sl.SetColumnStyle(i, sLStyleColor);
+                    sl.AutoFitColumn(j);
+
                     foreach (var item in e)
                     {
                         if (i == 2)
                         {
+                            sl.RemoveCellStyle((i + 1), j);
                             sl.SetCellValue(i, j, item.Key);
                             sl.SetCellValue((i + 1), j, item.Value == null ? "" : item.Value.ToString());
                         }
                         else
                         {
+                            sl.RemoveCellStyle(i, j);
                             sl.SetCellValue(i, j, item.Value == null ? "" : item.Value.ToString());
                         }
                         j++;
@@ -365,6 +449,9 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                     i++;
                 }
+                sl.AutoFitColumn(1, j);
+                sLStyleColor.Protection.Locked = true;
+                sl.SetRowStyle(1, sLStyleColor);
                 sl.ProtectWorksheet(sp);
                 sl.SaveAs(ms);
             }
@@ -403,7 +490,7 @@ namespace InventoryTracker_WebApp.Controllers
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
                         var startDate = (sheet.GetCellValueAsDateTime(1, 3));
 
-                        for (int i = 2; i <=  stats.EndRowIndex; i++)
+                        for (int i = 2; i <= stats.EndRowIndex; i++)
                         {
                             var headerCellValue = (sheet.GetCellValueAsString(i, 1));
                             if (headerCellValue == null)
