@@ -570,9 +570,12 @@ function importExcel() {
             contentType: false,
             processData: false,
             success: function (data) {
-                alert('Data updated successfully.')
-                $('#importExcel').modal('hide');
-                loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
+                var newData = JSON.parse(data);
+                alert(newData.data);
+                if (newData.IsValid) {
+                    $('#importExcel').modal('hide');
+                    loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
+                }
             },
             error: function (e1, e2, e3) {
             }

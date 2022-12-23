@@ -1,14 +1,12 @@
 ﻿using InventoryTracker_WebApp.Domain.Entity;
 using InventoryTracker_WebApp.Domain.Equipment;
 using InventoryTracker_WebApp.Models;
-using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
+using SpreadsheetLight;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
 
@@ -19,7 +17,7 @@ namespace InventoryTracker_WebApp.Controllers
         private readonly IEntityRepository _entityRepository;
         private readonly IEquipmentRepository _equipmentRepository;
 
-        public EntityController(IEntityRepository entityRepository,IEquipmentRepository equipmentRepository)
+        public EntityController(IEntityRepository entityRepository, IEquipmentRepository equipmentRepository)
         {
             this._entityRepository = entityRepository;
             this._equipmentRepository = equipmentRepository;
@@ -161,40 +159,45 @@ namespace InventoryTracker_WebApp.Controllers
 
         #region Entity Export - Import
 
-        public FileResult Export(string startDate,string searchString)
+        public FileResult Export(string startDate, string searchString)
         {
-            string path = string.Empty;
-            Application application = new Application();
-            Workbook workbook = application.Workbooks.Add(Missing.Value);
-            try
+            MemoryStream ms = new MemoryStream();
+            using (SLDocument sl = new SLDocument())
             {
-                var entity = _entityRepository.ExportEntity(startDate,searchString);
+                var entity = _entityRepository.ExportEntity(startDate, searchString);
 
-                
-                Worksheet worksheet = workbook.ActiveSheet;
-                worksheet.Cells[1, 2] = "Start Date:";
-                worksheet.Cells[1, 3] = startDate;
-                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+                SLStyle sLStyle = new SLStyle();
+                sLStyle.Protection.Locked = false;
+                SLSheetProtection sp = new SLSheetProtection();
+                sp.AllowEditObjects = true;
+
+                sl.SetCellValue(1, 2, "Start Date:");
+                sl.SetCellValue(1, 3, startDate);
+
                 int i = 2;
 
-                
-                path += @"\Entity-" + DateTime.Now.Ticks + ".xlsx";
                 foreach (var e in entity)
                 {
                     int j = 1;
+
                     foreach (var item in e)
                     {
                         if (i == 2)
                         {
-                            worksheet.Cells[i, j] = item.Key;
-                            worksheet.Cells[i+1, j] = item.Value;
-                            worksheet.Cells[i, j].Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                            worksheet.Cells[i, j].EntireRow.Font.Bold = true;
-                            worksheet.Cells[i, j].Borders.LineStyle = XlLineStyle.xlContinuous;
+                            sl.SetCellValue(i, j, item.Key);
+                            sl.SetCellValue((i + 1), j, item.Value == null ? "" : item.Value.ToString());
+                            if (j != 1 && j != 2)
+                            {
+                                sl.SetCellStyle((i + 1), j, sLStyle);
+                            }
                         }
                         else
                         {
-                            worksheet.Cells[i, j] = item.Value;
+                            sl.SetCellValue(i, j, item.Value == null ? "" : item.Value.ToString());
+                            if (j != 1 && j != 2)
+                            {
+                                sl.SetCellStyle(i, j, sLStyle);
+                            }
                         }
                         j++;
                     }
@@ -204,116 +207,88 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                     i++;
                 }
-                worksheet.Cells.Locked = false;
-                worksheet.get_Range("A1", "XFD1").Locked = true;
-                worksheet.get_Range("A2", "XFD2").Locked = true;
-                worksheet.get_Range("A3", "A1048576").Locked = true;
-                worksheet.get_Range("B3", "B1048576").Locked = true;
+                sl.RemoveRowStyle(2);
+                sl.ProtectWorksheet(sp);
+                sl.SaveAs(ms);
+            }
+            ms.Position = 0;
 
-                worksheet.Columns.AutoFit();
-                worksheet.get_Range("A1", "XFD1").Borders.LineStyle = XlLineStyle.xlContinuous;
-                worksheet.get_Range("A2", "XFD2").Borders.LineStyle = XlLineStyle.xlContinuous;
-                worksheet.get_Range("A3", "A1048576").Borders.LineStyle = XlLineStyle.xlContinuous;
-                worksheet.get_Range("B3", "B1048576").Borders.LineStyle = XlLineStyle.xlContinuous;
-                worksheet.get_Range("A1", "XFD1").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                worksheet.get_Range("A2", "XFD2").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                worksheet.get_Range("A3", "A1048576").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                worksheet.get_Range("B3", "B1048576").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                worksheet.Protect();
-                workbook.SaveAs(path);
-            }
-            catch (Exception e)
-            {
-
-            }
-            finally
-            {
-                workbook.Close();
-                Marshal.ReleaseComObject(workbook);
-            }
-            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
-            }
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "Entity.xlsx");
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Entity.xlsx");
         }
 
         [HttpPost]
-        public void Import(HttpPostedFileBase file)
+        public string Import(HttpPostedFileBase file)
         {
-            var fileExt = Path.GetExtension(file.FileName);
             string path = string.Empty;
-            path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
-            
-            path += @"\ImportEntity" + DateTime.Now.Ticks + ".xlsx";
-            file.SaveAs(path);
-            Application oExcel = new Application();
-            Workbook workbook = oExcel.Workbooks.Open(path);
             try
             {
+                var fileExt = Path.GetExtension(file.FileName);
+                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+                path += @"\ImportEntity" + DateTime.Now.Ticks + ".xlsx";
+                file.SaveAs(path);
+
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
                 {
-                   
-                    string ExcelWorkbookname = workbook.Name;
-                    int worksheetcount = workbook.Worksheets.Count;
-
-                    Worksheet wks = (Worksheet)workbook.Worksheets[1];
-                    string firstworksheetname = wks.Name;
                     List<string> columnHeader = new List<string>();
-                    var startDate = ((Range)wks.Cells[1, 3]).Value;
-                    startDate = Convert.ToDateTime(startDate);
-
-                    for (int i = 2; i < wks.Rows.Count; i++)
+                    using (SLDocument sl = new SLDocument())
                     {
-                        var headerCellValue = ((Range)wks.Cells[i, 1]).Value;
-                        if (headerCellValue.ToString() == null)
+                        FileStream fs = new FileStream(path, FileMode.Open);
+                        SLDocument sheet = new SLDocument(fs);
+                        var startDate = (sheet.GetCellValueAsDateTime(1, 3));
+                        SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
+                        for (int i = 2; i <= stats.EndRowIndex; i++)
                         {
-                            break;
-                        }
-                        else
-                        {
-                            List<string> values = new List<string>();
-                            for (int j = 1; j < wks.Columns.Count; j++)
+                            var headerCellValue = (sheet.GetCellValueAsString(i, 1));
+                            if (headerCellValue.ToString() == null)
                             {
-                                var cellValue = ((Range)wks.Cells[i, j]).Value;
-                                if (i == 2)
+                                break;
+                            }
+                            else
+                            {
+                                List<string> values = new List<string>();
+                                for (int j = 1; j <= stats.EndColumnIndex; j++)
                                 {
-                                    if (cellValue != null)
+                                    var cellValue = (sheet.GetCellValueAsString(i, j));
+                                    if (i == 2)
                                     {
-                                        columnHeader.Add(cellValue);
+                                        if (cellValue != null)
+                                        {
+                                            columnHeader.Add(cellValue);
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
                                     }
                                     else
                                     {
-                                        break;
+                                        if (columnHeader.Count < j)
+                                        {
+                                            break;
+                                        }
+                                        var valueOFCell = cellValue == null ? "" : cellValue.ToString();
+                                        values.Add(valueOFCell);
                                     }
                                 }
-                                else
+                                if (i != 2)
                                 {
-                                    if (columnHeader.Count < j)
-                                    {
-                                        break;
-                                    }
-                                    var valueOFCell = cellValue == null ? "" : cellValue.ToString();
-                                    values.Add(valueOFCell);
+                                    bool isUpdated = _entityRepository.UpdateTemplateDetails(startDate.ToShortDateString(), columnHeader, values);
                                 }
-                            }
-                            if (i != 2)
-                            {
-                                bool isUpdated = _entityRepository.UpdateTemplateDetails(startDate.ToShortDateString(), columnHeader, values);
                             }
                         }
+
+                        fs.Close();
                     }
-                   
-                    workbook.Close();
+                    return JsonConvert.SerializeObject(new { IsValid = true, data = "File imported successfully." });
                 }
+                return JsonConvert.SerializeObject(new { IsValid = false, data = "Issue occured when file is imported." });
             }
             catch (Exception e)
             {
+                return JsonConvert.SerializeObject(new { IsValid = false, data = "Issue occured when file is imported." });
             }
             finally
             {
-                workbook.Close();
                 if (System.IO.File.Exists(path))
                 {
                     System.IO.File.Delete(path);
@@ -327,10 +302,8 @@ namespace InventoryTracker_WebApp.Controllers
 
         public FileResult EntityEquipmentAssignExport(string startDate, string searchString, string columns)
         {
-            string path = string.Empty;
-            Application application = new Application();
-            Workbook workbook = application.Workbooks.Add(Missing.Value);
-            try
+            MemoryStream ms = new MemoryStream();
+            using (SLDocument sl = new SLDocument())
             {
                 var columnsValue = string.Empty;
                 if (!string.IsNullOrEmpty(columns))
@@ -346,14 +319,16 @@ namespace InventoryTracker_WebApp.Controllers
                 var entityHdr = _entityRepository.GetAllEntityHeaders();
                 var equipment_ent_assignment = _equipmentRepository.GetAllEquipment_Entity_AssignmentByDate(startDate);
 
-                Worksheet worksheet = workbook.ActiveSheet;
-                worksheet.Cells[1, 2] = "Start Date:";
-                worksheet.Cells[1, 3] = startDate;
-                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+
+                SLStyle sLStyle = new SLStyle();
+                sLStyle.Protection.Locked = false;
+                SLSheetProtection sp = new SLSheetProtection();
+                sp.AllowEditObjects = true;
+
+                sl.SetCellValue(1, 2, "Start Date:");
+                sl.SetCellValue(1, 3, startDate);
+
                 int i = 2;
-
-
-                path += @"\EntityEquipmentAssignExport-" + DateTime.Now.Ticks + ".xlsx";
                 foreach (var e in equipments)
                 {
                     int j = 1;
@@ -362,12 +337,12 @@ namespace InventoryTracker_WebApp.Controllers
                     {
                         if (i == 2)
                         {
-                            worksheet.Cells[i, j] = item.Key;
-                            worksheet.Cells[i + 1, j] = item.Value;
+                            sl.SetCellValue(i, j, item.Key);
+                            sl.SetCellValue((i + 1), j, item.Value == null ? "" : item.Value.ToString());
                         }
                         else
                         {
-                            worksheet.Cells[i, j] = item.Value;
+                            sl.SetCellValue(i, j, item.Value == null ? "" : item.Value.ToString());
                         }
                         j++;
                         if (item.Key == "EQUIP_ID")
@@ -382,47 +357,19 @@ namespace InventoryTracker_WebApp.Controllers
                     var entIDList = equipment_ent_assignment.Where(x => x.EQUIP_ID == equipmentID).Select(x => x.ENT_ID).ToList();
                     foreach (var entityID in entIDList)
                     {
-                        worksheet.Cells[i, j] = entityHdr.Where(x => x.ENT_ID == entityID).Select(x => x.ENT_NAME).FirstOrDefault();
-                        worksheet.Cells[2, j] = "Entity Name";
+                        sl.SetCellValue(i, j, entityHdr.Where(x => x.ENT_ID == entityID).Select(x => x.ENT_NAME).FirstOrDefault());
+                        sl.SetCellValue(2, j, "Entity Name");
+                        sl.SetColumnStyle(j, j + 200, sLStyle);
                         j++;
                     }
                     i++;
                 }
-                worksheet.Cells.Locked = false;
-                worksheet.get_Range("A1", "XFD1").Locked = true;
-                worksheet.get_Range("A2", "D2").Locked = true;
-                worksheet.get_Range("A3", "A1048576").Locked = true;
-                worksheet.get_Range("B3", "B1048576").Locked = true;
-
-                worksheet.Columns.AutoFit();
-                worksheet.get_Range("A1", "XFD1").Borders.LineStyle = XlLineStyle.xlContinuous;
-                worksheet.get_Range("A2", "XFD2").Borders.LineStyle = XlLineStyle.xlContinuous;
-                worksheet.get_Range("A3", "A1048576").Borders.LineStyle = XlLineStyle.xlContinuous;
-                worksheet.get_Range("B3", "B1048576").Borders.LineStyle = XlLineStyle.xlContinuous;
-                worksheet.get_Range("A1", "XFD1").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                worksheet.get_Range("A2", "XFD2").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                worksheet.get_Range("A3", "A1048576").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                worksheet.get_Range("B3", "B1048576").Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                worksheet.Protect();
-                workbook.SaveAs(path);
-
-
+                sl.ProtectWorksheet(sp);
+                sl.SaveAs(ms);
             }
-            catch (Exception e)
-            {
+            ms.Position = 0;
 
-            }
-            finally
-            {
-                workbook.Close();
-                Marshal.ReleaseComObject(workbook);
-            }
-            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
-            }
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, "EntityEquipmentAssignExport.xlsx");
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EntityEquipmentAssignExport.xlsx");
         }
 
         [HttpPost]
@@ -430,15 +377,8 @@ namespace InventoryTracker_WebApp.Controllers
         {
             var fileExt = Path.GetExtension(file.FileName);
             string path = string.Empty;
-            path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
-
-            path += @"\EntityEquipmentAssignImport" + DateTime.Now.Ticks + ".xlsx";
-            file.SaveAs(path);
-            Application oExcel = new Application();
-            Workbook workbook = oExcel.Workbooks.Open(path);
             string excelTotalAssign = string.Empty;
             string excelInvalidEntityName = string.Empty;
-
             int excelTotalRemove = 0;
             int totalRecords = 0;
             int excelTotalNewAssign = 0;
@@ -447,72 +387,77 @@ namespace InventoryTracker_WebApp.Controllers
 
             try
             {
+                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+                path += @"\EntityEquipmentAssignImport" + DateTime.Now.Ticks + ".xlsx";
+                file.SaveAs(path);
+
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
                 {
-
-                    string ExcelWorkbookname = workbook.Name;
-                    int worksheetcount = workbook.Worksheets.Count;
-
-                    Worksheet wks = (Worksheet)workbook.Worksheets[1];
-                    string firstworksheetname = wks.Name;
                     List<string> columnHeader = new List<string>();
-                    var startDate = ((Range)wks.Cells[1, 3]).Value;
-                    startDate = Convert.ToDateTime(startDate);
-
-                    for (int i = 2; i < wks.Rows.Count; i++)
+                    using (SLDocument sl = new SLDocument())
                     {
-                        var headerCellValue = ((Range)wks.Cells[i, 1]).Value;
-                        if (headerCellValue == null)
+                        FileStream fs = new FileStream(path, FileMode.Open);
+                        SLDocument sheet = new SLDocument(fs);
+
+                        SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
+                        var startDate = (sheet.GetCellValueAsDateTime(1, 3));
+
+                        for (int i = 2; i <=  stats.EndRowIndex; i++)
                         {
-                            break;
-                        }
-                        else
-                        {
-                            totalRecords = i - 2;
-                            List<string> values = new List<string>();
-                            for (int j = 1; j < wks.Columns.Count; j++)
+                            var headerCellValue = (sheet.GetCellValueAsString(i, 1));
+                            if (headerCellValue == null)
                             {
-                                var cellValue = ((Range)wks.Cells[i, j]).Value;
-                                if (i == 2)
+                                break;
+                            }
+                            else
+                            {
+                                totalRecords = i - 2;
+                                List<string> values = new List<string>();
+                                for (int j = 1; j <= stats.EndColumnIndex; j++)
                                 {
-                                    if (cellValue != null)
+                                    var cellValue = (sheet.GetCellValueAsString(i, j));
+                                    if (i == 2)
                                     {
-                                        columnHeader.Add(cellValue);
+                                        if (cellValue != null)
+                                        {
+                                            columnHeader.Add(cellValue);
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
                                     }
                                     else
                                     {
-                                        break;
+                                        if (columnHeader.Count < j)
+                                        {
+                                            break;
+                                        }
+                                        var valueOFCell = cellValue == null ? "" : cellValue.ToString();
+                                        values.Add(valueOFCell);
                                     }
                                 }
-                                else
+                                if (i != 2)
                                 {
-                                    if (columnHeader.Count < j)
-                                    {
-                                        break;
-                                    }
-                                    var valueOFCell = cellValue == null ? "" : cellValue.ToString();
-                                    values.Add(valueOFCell);
+                                    var isUpdated = _entityRepository.UpdateInsertEQUENTASS(startDate.ToShortDateString(), columnHeader, values, out string totalNewAssigned, out int totalRemoved, out string invalidEntName);
+                                    excelTotalAssign += totalNewAssigned;
+                                    excelTotalRemove = excelTotalRemove + totalRemoved;
+                                    excelInvalidEntityName += invalidEntName;
                                 }
-                            }
-                            if (i != 2)
-                            {
-                                var isUpdated = _entityRepository.UpdateInsertEQUENTASS(startDate.ToShortDateString(), columnHeader, values, out string totalNewAssigned, out int totalRemoved, out string invalidEntName);
-                                excelTotalAssign += totalNewAssigned;
-                                excelTotalRemove = excelTotalRemove + totalRemoved;
-                                excelInvalidEntityName += invalidEntName;
                             }
                         }
-                    }
-                    if (!string.IsNullOrEmpty(excelTotalAssign))
-                    {
-                        var totalAssignment = excelTotalAssign.Substring(0, excelTotalAssign.Length - 1).Split(',');
-                        gtOneAssign = excelTotalAssign.Split(',').GroupBy(x => x).Where(g => g.Count() > 1).Count();
-                        excelTotalNewAssign = totalAssignment.Count();
-                    }
-                    if (!string.IsNullOrEmpty(excelInvalidEntityName))
-                    {
-                        excelInvalidEntityName = excelInvalidEntityName.Substring(0, excelInvalidEntityName.Length - 1);
-                        excelInvalidEntCount = excelInvalidEntityName.Split(',').Count();
+                        if (!string.IsNullOrEmpty(excelTotalAssign))
+                        {
+                            var totalAssignment = excelTotalAssign.Substring(0, excelTotalAssign.Length - 1).Split(',');
+                            gtOneAssign = excelTotalAssign.Split(',').GroupBy(x => x).Where(g => g.Count() > 1).Count();
+                            excelTotalNewAssign = totalAssignment.Count();
+                        }
+                        if (!string.IsNullOrEmpty(excelInvalidEntityName))
+                        {
+                            excelInvalidEntityName = excelInvalidEntityName.Substring(0, excelInvalidEntityName.Length - 1);
+                            excelInvalidEntCount = excelInvalidEntityName.Split(',').Count();
+                        }
+                        fs.Close();
                     }
                 }
                 return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidEntityName = excelInvalidEntityName, excelInvalidEntCount = excelInvalidEntCount });
@@ -523,7 +468,6 @@ namespace InventoryTracker_WebApp.Controllers
             }
             finally
             {
-                workbook.Close();
                 if (System.IO.File.Exists(path))
                 {
                     System.IO.File.Delete(path);
