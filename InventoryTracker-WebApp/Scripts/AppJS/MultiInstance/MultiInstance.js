@@ -30,6 +30,8 @@ $(document).ready(function () {
             return;
         }
         $.ajax({
+            before: AddLoader(),
+            complete: RemoveLoader(),
             url: 'Login/HomeRequestAccess?email=' + email + '&instance_name=' + selectedInstance,
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -115,14 +117,8 @@ $(document).ready(function () {
         if (selectedInstance != null && selectedInstance != "") {
             //alert(selectedInstance);
             $.ajax({
-                beforeSend: function () {
-                    //AddLoader();
-                },
-                complete: function () {
-                    //setTimeout(function () {
-                    //    RemoveLoader();
-                    //}, 500);
-                },
+                before: AddLoader(),
+                complete: RemoveLoader(),
                 url: 'MultiInstance/DeleteInstance?email=' + email + '&instanceName=' + selectedInstance,
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -165,14 +161,8 @@ function GetAllInstance() {
     var email = $("#hdnEmail").val();
     selectedInstance = '';
     $.ajax({
-        beforeSend: function () {
-            /*AddLoader();*/
-        },
-        complete: function () {
-            //setTimeout(function () {
-            //    RemoveLoader();
-            //}, 500);
-        },
+        before: AddLoader(),
+        complete: RemoveLoader(),
         url: 'MultiInstance/GetAllInstance?email=' + email,
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -213,14 +203,8 @@ $(document).on('click', '.cancel-modal', function () {
 
 function AddNewInstance(instanceName, instanceNotes) {
     $.ajax({
-        beforeSend: function () {
-            //AddLoader();
-        },
-        complete: function () {
-            //setTimeout(function () {
-            //    RemoveLoader();
-            //}, 500);
-        },
+        before: AddLoader(),
+        complete: RemoveLoader(),
         url: 'MultiInstance/AddNewInstanceName?instanceName=' + instanceName + '&instanceNotes=' + instanceNotes,
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',

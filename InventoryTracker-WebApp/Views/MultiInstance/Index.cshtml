@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="~/Content/Css/LoginIndex.css" />
 </head>
 <body>
+    @Html.Partial("_Loader")
     <div class="multi-instance-container" style="margin-top:-50px" id="multi-instance-container">
         <div>
             <button class="btn btn-primary backBtn btn-lg float-start" type="button" id="btnBack">&laquo;</button>
@@ -33,7 +34,7 @@
                     <div class="col-md-7 float-end">
                         <div class="headerLabel">Instances</div>
                         <div class="all-instance-list">
-                            <ul id="instanceUL" class="sortableList  overflow-auto" ></ul>
+                            <ul id="instanceUL" class="sortableList  overflow-auto"></ul>
                         </div>
                         <div class="all-instance-actions">
                             <div class="float-start">
@@ -75,6 +76,6 @@
     </div>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/AppJS/Common/Common.js"></script>
     <script src="~/Scripts/AppJs/MultiInstance/MultiInstance.js?v=@versionUpdate"></script>
-
 </body>

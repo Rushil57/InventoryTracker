@@ -34,6 +34,7 @@
 
         #multi-instance-container .all-instance-list ul li.active {
             background-color: #79d2e4;
+            color :blue;
         }
 
 #multi-instance-container .all-instance-list li {

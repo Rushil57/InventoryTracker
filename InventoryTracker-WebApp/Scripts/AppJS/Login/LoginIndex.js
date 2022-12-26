@@ -12,6 +12,8 @@
         }
 
         $.ajax({
+            before: AddLoader(),
+            complete: RemoveLoader(),
             url: '/Login/IsValidRequestAccess',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -67,6 +69,8 @@
     });
     function AddNewUser(userName) {
         $.ajax({
+            before: AddLoader(),
+            complete: RemoveLoader(),
             url: 'Login/CreateNewUser?userName=' + userName,
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -120,6 +124,8 @@
             return;
         }
         $.ajax({
+            before: AddLoader(),
+            complete: RemoveLoader(),
             url: 'Login/ResetPassword?UserEmail=' + userid,
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',

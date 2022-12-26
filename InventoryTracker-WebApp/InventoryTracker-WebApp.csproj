@@ -867,6 +867,7 @@
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\MultiInstance\Index.cshtml" />
     <Content Include="Views\MultiInstance\_CreateInstance.cshtml" />
+    <Content Include="Views\Shared\_Loader.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
