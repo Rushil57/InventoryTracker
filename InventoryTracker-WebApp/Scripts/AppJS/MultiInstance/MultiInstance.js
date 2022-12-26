@@ -44,7 +44,7 @@ $(document).ready(function () {
                     return;
                 }
                 sessionStorage.clear();
-                sessionStorage.setItem("flash-current-request", JSON.stringify(data.Data));
+                sessionStorage.setItem("it-current-request", JSON.stringify(data.Data));
                 window.location.href = '/Entity';
             },
             error: function (err) {
@@ -90,6 +90,13 @@ $(document).ready(function () {
                 if ($("#txtcreateNewInstance_Name").siblings("span").hasClass('d-none')) {
                     $("#txtcreateNewInstance_Name").siblings("span").removeClass('d-none')
                     $("#txtcreateNewInstance_Name").siblings("span").text('This Instance already exist');
+                }
+                return;
+            }
+            if (val.toLowerCase() == 'it_main') {
+                if ($("#txtcreateNewInstance_Name").siblings("span").hasClass('d-none')) {
+                    $("#txtcreateNewInstance_Name").siblings("span").removeClass('d-none')
+                    $("#txtcreateNewInstance_Name").siblings("span").text('This is Main Instance. User not allow to create it !');
                 }
                 return;
             }

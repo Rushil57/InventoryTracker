@@ -104,7 +104,7 @@ namespace InventoryTracker_WebApp.Controllers
                 string subject = "Login Credentials for Inventory Tracker System";
                 string bodyString = $@"<p>Hello {userName},<p>
                     <br>
-                    {(flag == true ? "<p>Welcome to Flash System.<p>" : "<p>Your Password has been Reset.</p>")}
+                    {(flag == true ? "<p>Welcome to Inventory Tracker System.<p>" : "<p>Your Password has been Reset.</p>")}
                     
                     <p>Your Login Credentials are mentioned below.<p>
                    
@@ -112,7 +112,7 @@ namespace InventoryTracker_WebApp.Controllers
                     <p>Password: {Password}<p>
                     <br>
                     <p>Thanks & Regards,</p>
-                    <p>Flash System</p>";
+                    <p>Inventory Tracker</p>";
                 return _adminRepository.SendEmail(bodyString, userName, subject);
             }
             catch (Exception ex)
