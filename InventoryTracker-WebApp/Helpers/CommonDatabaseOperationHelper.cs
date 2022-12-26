@@ -20,8 +20,8 @@ namespace InventoryTracker_WebApp.Helpers
                 if (string.IsNullOrEmpty(query))
                     return noOfRecords;
 
-                var con = CreateMasterConnection();
-                //var con = CreateConnection();
+                //var con = CreateMasterConnection();
+                var con = CreateConnection();
                 con.Open();
                 noOfRecords = con.Execute(query, Params, commandTimeout: 250);
                 con.Close();

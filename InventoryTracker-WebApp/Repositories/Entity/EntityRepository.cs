@@ -13,7 +13,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         public List<EntityHeader> GetEntityHeaders(string searchString, int startIndex, int endIndex)
         {
             List<EntityHeader> entityHeaders = new List<EntityHeader>();
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -48,7 +48,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         public List<EntityHeader> GetEntityHeaderfromEntityEquipment(string searchString, int startIndex, int endIndex, string startDate)
         {
             List<EntityHeader> entityHeaders = new List<EntityHeader>();
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -93,7 +93,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         public List<EntityTemplate> GetEntityTemplates(string entityType)
         {
             List<EntityTemplate> entityTemplates = new List<EntityTemplate>();
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -121,7 +121,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
         public bool SaveEntityTemplate(List<EntityTemplate> entityTemplate)
         {
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -161,7 +161,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
         public bool DeleteEntityTemplates(string entityType)
         {
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -182,7 +182,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         public List<EntityDetail> GetEntityTemplateDetails(int entityID, string startDate)
         {
             List<EntityDetail> entityDetailList = new List<EntityDetail>();
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -216,7 +216,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         public List<EntityDetail> EntityValueByPropName(string propName)
         {
             List<EntityDetail> entityDetailList = new List<EntityDetail>();
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -237,7 +237,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         public List<EquipmentHeader> GetEntityEquipmentAssignment(int entityID)
         {
             List<EquipmentHeader> equipmentHeaderList = new List<EquipmentHeader>();
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -255,7 +255,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
         public bool DeleteEntityHeader(int entityID)
         {
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -278,7 +278,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
         public bool SaveEntityHDR(EntityHeader entityHDR, List<EntityDetail> entityDtl)
         {
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -343,7 +343,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
         public bool CheckDuplicateEntityHDR(EntityHeader entityHeader)
         {
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -367,7 +367,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         public List<dynamic> ExportEntity(string startDate, string searchString)
         {
             List<dynamic> entities = new List<dynamic>();
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -391,7 +391,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
         public bool UpdateTemplateDetails(string startDate, List<string> columnHeader, List<string> values)
         {
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -413,7 +413,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         public List<dynamic> ExportEntityEquipmentAssign(string startDate, string searchString, string columns)
         {
             List<dynamic> equipments = new List<dynamic>();
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -448,7 +448,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         public List<EntityHeader> GetAllEntityHeaders(string entityName = null)
         {
             List<EntityHeader> entityHeaders = new List<EntityHeader>();
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
@@ -469,7 +469,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
         public bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName)
         {
-            var connection = CommonDatabaseOperationHelper.CreateMasterConnection();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
             var date = Convert.ToDateTime(startDate).ToString("MM/d/yyyy").Replace("-", "/");
             try
             {

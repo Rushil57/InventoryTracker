@@ -145,5 +145,31 @@ namespace InventoryTracker_WebApp.Controllers
             }
         }
 
+        public string HomeRequestAccess(string email, string instance_name)
+        {
+            try
+            {
+                var session = HttpContext.Session;
+                session["instance_name"] = instance_name;
+                var result = _loginRepository.IsValidRequestAccessByInstance(email, instance_name);
+                if (result.Count > 0)
+                {
+                    session["UserId"] = result[0].ID;
+                    session["Email"] = email;
+                    session["instance_name"] = instance_name;
+                    return JsonConvert.SerializeObject(new { IsValid = true, Data = result[0] });
+                }
+                else
+                {
+                    return JsonConvert.SerializeObject(new { IsValid = false, Data = "" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { IsValid = false, data = ex.Message });
+            }
+        }
+
+
     }
 }

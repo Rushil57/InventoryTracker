@@ -43,7 +43,7 @@ $(document).ready(function () {
                 }
                 sessionStorage.clear();
                 sessionStorage.setItem("flash-current-request", JSON.stringify(data.Data));
-                window.location.href = '/Reports';
+                window.location.href = '/Entity';
             },
             error: function (err) {
                 alert('Something went wrong');
