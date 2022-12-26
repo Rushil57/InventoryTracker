@@ -13,7 +13,7 @@
     <nav class="navbar navbar-expand-lg  fixed-top navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand ms-5" href="#">Inventory Tracker</a>
-
+            <div class="text-white">Instance: <a href="@Url.Action("Index","MultiInstance")" title="Click to change instance">@HttpContext.Current.Session["instance_name"]</a></div>
             <div class="d-flex">
                 <div id="selectedMenu" class="mt-2" style="color:wheat"></div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
