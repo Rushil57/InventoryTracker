@@ -1,0 +1,93 @@
+﻿
+.multi-instance-container {
+    background-color: #000;
+    color: #fff;
+    height: 100%;
+}
+
+#multi-instance-container .multi-instance-content {
+    padding-top: 5%;
+}
+
+#multi-instance-container .all-instance-list ul {
+    border-color: white;
+    border-style: groove;
+    border-width: thin;
+    margin: 10px;
+    height: 500px;
+    padding: 20px;
+    position: relative;
+    max-height: 500px;
+    background-color: white;
+    /*overflow-y: scroll;*/
+}
+
+    #multi-instance-container .all-instance-list ul li {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+
+        #multi-instance-container .all-instance-list ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        #multi-instance-container .all-instance-list ul li.active {
+            background-color: #79d2e4;
+        }
+
+#multi-instance-container .all-instance-list li {
+    color: #000;
+    font-weight: 500;
+    font-size: 12px;
+    cursor: pointer;
+    width: 100%;
+    padding-top: 5px;
+    background-color: #eee;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    padding: 5px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#multi-instance-container #btnCreateInstance {
+    margin-left: 10px;
+}
+
+#multi-instance-container #btnInstanceLoad {
+    margin-right: 10px;
+}
+
+#multi-instance-container .headerLabel {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+#multi-instance-container #txtInstance_Notes {
+    background-color: white;
+    margin-top: 10px;
+}
+
+#multi-instance-container .backBtn {
+    font-size: 30px;
+    margin: 5px;
+    border-radius: 50%;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+#multi-instance-container .delete-icon {
+    font-size: 16px;
+}
+
+#multi-instance-container .div_delete_instance-enabled {
+    color: red;
+}
+
+#multi-instance-container .div-default-instance {
+    color: blue !important;
+}

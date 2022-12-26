@@ -227,6 +227,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Css\LoginIndex.css" />
+    <Content Include="Content\Css\MultiInstance.css" />
     <Content Include="Content\Css\Style.css" />
     <Content Include="Content\Img\user.png" />
     <Content Include="favicon.ico" />
@@ -243,6 +244,7 @@
     <Content Include="Scripts\AppJS\Equipment\EquipmentEntityAssignment.js" />
     <Content Include="Scripts\AppJS\Equipment\EquipmentSearch.js" />
     <Content Include="Scripts\AppJS\Login\LoginIndex.js" />
+    <Content Include="Scripts\AppJS\MultiInstance\MultiInstance.js" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker.css" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker.min.css" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker.standalone.css" />
@@ -864,6 +866,7 @@
     <Content Include="Views\Shared\_SummaryModel.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\MultiInstance\Index.cshtml" />
+    <Content Include="Views\MultiInstance\_CreateInstance.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
