@@ -1,0 +1,92 @@
+﻿body {
+    background-color: #000;
+    height: 75%;
+    width:90%;
+}
+a{
+    text-decoration:none;
+}
+.login-container {
+    background-color: #000;
+    color: #fff;
+    height: 100%;
+    padding-top: 10%;
+}
+
+    .login-container img {
+        width: 300px;
+    }
+
+    .login-container h6 {
+        font-family: Castellar;
+        font-size: 45px;
+        margin-top: 100px;
+    }
+
+    .login-container h5 {
+        font-family: Castellar;
+        font-size: 62px;
+        margin-top: 100px;
+    }
+
+    .login-container #txtRequestAccessEmail {
+        border-radius: 5px;
+        width: 500px;
+        padding: 5px;
+        font-size: 16px;
+        color: #000;
+    }
+
+    .login-container #txtRequestAccessPassword {
+        border-radius: 5px;
+        width: 500px;
+        padding: 5px;
+        font-size: 16px;
+        color: #000;
+    }
+
+    .login-container #oldPassword {
+        border-radius: 5px;
+        width: 500px;
+        padding: 5px;
+        font-size: 16px;
+        color: #000;
+    }
+
+    .login-container #newPassword {
+        border-radius: 5px;
+        width: 500px;
+        padding: 5px;
+        font-size: 16px;
+        color: #000;
+    }
+
+    .login-container #confirmPassword {
+        border-radius: 5px;
+        width: 500px;
+        padding: 5px;
+        font-size: 16px;
+        color: #000;
+    }
+
+    .login-container #btnRequestAccess {
+        border-radius: 5px;
+        width: 100px;
+        padding: 5px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #1f9adf;
+    }
+
+    .login-container #btnResetPassword {
+        border-radius: 5px;
+        width: 150px;
+        padding: 5px;
+        font-size: 14px;
+        color: #fff;
+        background-color: #1f9adf;
+    }
+
+    .login-container .inputArea {
+        padding-left: 150px;
+    }

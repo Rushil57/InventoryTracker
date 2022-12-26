@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "";
+    ViewBag.Title = "Login";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
+}
+<head>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Content/Css/Style.css">
+    <link rel="stylesheet" href="~/Content/Css/LoginIndex.css" />
+
+</head>
+<body>
+    <div class="login-container">
+        <div class="row">
+            <div class="col-7 inputArea">
+                <form>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h6>Inventory Tracker</h6>
+                            <div class="col-md-12">
+                                @Html.TextBox("txtRequestAccessEmail", "", new { @name = "txtRequestAccessEmail", @id = "txtRequestAccessEmail", @placeholder = "Email" })
+
+                            </div>
+                            <div class="col-md-12">
+                                @Html.Password("txtRequestAccessPassword", "", new { @name = "txtRequestAccessPassword", @id = "txtRequestAccessPassword", @placeholder = "Password" })
+                            </div>
+                            <div class="col-md-12">
+                                <a href="#" id="ForgotPassword" style="color: #1F9ADF; font-size: 16px;">Forgot Password?</a>
+                                <button type="button" id="btnRequestAccess" style="margin-left:40px;margin-top:20px;" class="btn btn-primary">GO</button>
+                            </div>
+                            <div class="col-md-12" style="margin-top: 10px;">
+                                <a href="#" id="NewUser" style="color: #1F9ADF; font-size: 16px;">New User?</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-5">
+                <img src="../Content/Img/user.png" alt="user">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="viewUserPassword">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modeltitle"></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label style="margin-top:6px;">Email</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input class="form-control" placeholder="" id="txtaddNewUserName" value="" />
+                            <span class="d-none text-danger">This field is required</span>
+                            <input type="hidden" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary create">Create</button>
+                    <button type="button" class="btn btn-primary forgot-password" style="width: 145px !important;">Reset Password</button>
+                    <button type="button" class="btn btn-danger cancel-modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/AppJS/Login/LoginIndex.js?v=@versionUpdate"></script>
+</body>
