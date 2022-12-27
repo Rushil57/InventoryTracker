@@ -16,7 +16,7 @@ namespace InventoryTracker_WebApp.Repositories.Login
 
                 string query = $"SELECT u.Id, u.User_email,u.Reset_password,u.Password FROM UserDetail u WHERE u.User_email=@Email";
 
-                DataTable dt = CommonDatabaseOperationHelper.Get(query, new { @Email = email });
+                DataTable dt = CommonDatabaseOperationHelper.Get_Master(query, new { @Email = email });
                 if (dt.Rows.Count > 0)
                 {
                     var firstRow = dt.Rows[0];

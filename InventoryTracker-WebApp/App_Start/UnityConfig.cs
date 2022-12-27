@@ -3,12 +3,14 @@ using InventoryTracker_WebApp.Domain.Entity;
 using InventoryTracker_WebApp.Domain.Equipment;
 using InventoryTracker_WebApp.Domain.Login;
 using InventoryTracker_WebApp.Domain.MultiInstance;
+using InventoryTracker_WebApp.Domain.UserDefination;
 using InventoryTracker_WebApp.Domain.UserMaster;
 using InventoryTracker_WebApp.Repositories.Admin;
 using InventoryTracker_WebApp.Repositories.Entity;
 using InventoryTracker_WebApp.Repositories.Equipment;
 using InventoryTracker_WebApp.Repositories.Login;
 using InventoryTracker_WebApp.Repositories.MultiInstance;
+using InventoryTracker_WebApp.Repositories.UserDefination;
 using InventoryTracker_WebApp.Repositories.UserMaster;
 using System.Web.Mvc;
 using Unity;
@@ -28,6 +30,7 @@ namespace InventoryTracker_WebApp
             container.RegisterType<IAdminRepository,AdminRepository>();
             container.RegisterType<IUserMasterRepository,UserMasterRepository>();
             container.RegisterType<IMultiInstanceRepository,MultiInstanceRepository>();
+            container.RegisterType<IUserDefinationRepository, UserDefinationRepository>();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }

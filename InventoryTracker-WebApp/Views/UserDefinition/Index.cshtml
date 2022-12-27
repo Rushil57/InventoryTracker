@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "User Definition";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
+}
+<link href="~/Content/Css/UserDefination.css" rel="stylesheet" />
+
+<div id="user-defination">
+    <main class="container-fluid">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6 class="text-center">Admins</h6>
+                        <div class="user-defination-blocks table-responsive">
+                            <table id="admin-panel" class="table table-borderless"></table>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6"><h6 class="text-center">Managers</h6></div>
+                            <div class="col-md-6"><h6 class="text-center">Other Users</h6></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 user-defination-blocks table-responsive">
+                                <table id="user-relation-table" class="table table-borderless">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="all-users-list table-responsive">
+                    <input type="text" id="txtSearchEmailUserDefination" onkeyup="SearchEmailUserDefination()" placeholder="Search here...">
+                    <table class="table table-borderless"></table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/AppJs/Common/Common.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJs/UserDefination/UserDefination.js?v=@versionUpdate"></script>
+}

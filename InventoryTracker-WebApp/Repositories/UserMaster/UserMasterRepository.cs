@@ -1,6 +1,7 @@
 ﻿using InventoryTracker_WebApp.Domain.UserMaster;
 using InventoryTracker_WebApp.Helpers;
 using InventoryTracker_WebApp.Models;
+using Newtonsoft.Json;
 using System;
 using System.Data;
 using System.Web;
@@ -156,6 +157,41 @@ namespace InventoryTracker_WebApp.Repositories.UserMaster
                 return responseModel;
             }
         }
+        public string GetAllUsers()
+        {
+            try
+            {
+                string query = $"SELECT * FROM USERS";
+                DataTable dt = CommonDatabaseOperationHelper.Get(query);
+                return JsonConvert.SerializeObject(dt);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
 
+        public bool DeleteUser(int id)
+        {
+            try
+            {
+                var query = $"select USER_EMAIL from USERS where ID=@Id";
+                var deleteEmail = CommonDatabaseOperationHelper.Scalar(query, new { @Id = id });
+                var currentInstance = HttpContext.Current.Session["instance_name"].ToString();
+                query = $"DELETE FROM MASTER_USER where user_email= @DeleteEmail and instance_name= @CurrentInstance";
+                CommonDatabaseOperationHelper.InsertUpdateDelete_Master(query, new { @DeleteEmail = deleteEmail, @CurrentInstance = currentInstance });
+                
+                query = $"DELETE FROM [USER_RELATION] WHERE [PARENT_USER_ID] = @Id OR [CHILD_USER_ID] = @Id; ";
+                query += $"DELETE FROM USERROLES WHERE USER_ID = @Id; ";
+                query += $"DELETE FROM USERS WHERE ID = @Id; ";
+                CommonDatabaseOperationHelper.InsertUpdateDelete(query, new { @Id = id});
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

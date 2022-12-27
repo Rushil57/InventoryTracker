@@ -179,11 +179,14 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MultiInstanceController.cs" />
     <Compile Include="Controllers\ResetPasswordController.cs" />
+    <Compile Include="Controllers\UserDefinitionController.cs" />
+    <Compile Include="Controllers\UserMasterController.cs" />
     <Compile Include="Domain\Admin\IAdminRepository.cs" />
     <Compile Include="Domain\Entity\IEntityRepository.cs" />
     <Compile Include="Domain\Equipment\IEquipmentRepository.cs" />
     <Compile Include="Domain\IBaseRepository.cs" />
     <Compile Include="Domain\Login\ILoginRepository.cs" />
+    <Compile Include="Domain\UserDefination\IUserDefinationRepository.cs" />
     <Compile Include="Domain\UserMaster\IUserMasterRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -208,6 +211,7 @@
     <Compile Include="Repositories\Login\LoginRepository.cs" />
     <Compile Include="Domain\MultiInstance\IMultiInstanceRepository.cs" />
     <Compile Include="Repositories\MultiInstance\MultiInstanceRepository.cs" />
+    <Compile Include="Repositories\UserDefination\UserDefinationRepository.cs" />
     <Compile Include="Repositories\UserMaster\UserMasterRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -231,6 +235,8 @@
     <Content Include="Content\Css\MultiInstance.css" />
     <Content Include="Content\Css\ResetPassword.css" />
     <Content Include="Content\Css\Style.css" />
+    <Content Include="Content\Css\UserDefination.css" />
+    <Content Include="Content\Css\UserMaster.css" />
     <Content Include="Content\Img\user.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -248,6 +254,8 @@
     <Content Include="Scripts\AppJS\Login\LoginIndex.js" />
     <Content Include="Scripts\AppJS\MultiInstance\MultiInstance.js" />
     <Content Include="Scripts\AppJS\ResetPassword\ResetPassword.js" />
+    <Content Include="Scripts\AppJS\UserDefination\UserDefination.js" />
+    <Content Include="Scripts\AppJS\UserMaster\UserMaster.js" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker.css" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker.min.css" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker.standalone.css" />
@@ -872,6 +880,9 @@
     <Content Include="Views\MultiInstance\_CreateInstance.cshtml" />
     <Content Include="Views\Shared\_Loader.cshtml" />
     <Content Include="Views\ResetPassword\Index.cshtml" />
+    <Content Include="Views\UserMaster\Index.cshtml" />
+    <Content Include="Views\UserMaster\_AddNewUser.cshtml" />
+    <Content Include="Views\UserDefinition\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

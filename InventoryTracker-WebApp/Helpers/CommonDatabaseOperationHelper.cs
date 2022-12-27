@@ -64,8 +64,8 @@ namespace InventoryTracker_WebApp.Helpers
                 if (string.IsNullOrEmpty(query))
                     return dt;
 
-                //var con = CreateConnection();
-                var con = CreateMasterConnection();
+                var con = CreateConnection();
+                //var con = CreateMasterConnection();
                 con.Open();
                 dt.Load(con.ExecuteReader(query, Params, commandTimeout: 250));
                 con.Close();

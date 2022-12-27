@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "User Master";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
+}
+<link href="~/Content/Css/UserMaster.css" rel="stylesheet" />
+<div id="user-master">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="all-users-list">
+                <input type="text" id="txtSearchEmailUserMaster" placeholder="Search here...">
+                <ul class="sortableList" id="users"></ul>
+                <div class="all-users-list-actions">
+                    <button class="btn btn-primary" type="button">Add</button>
+                    <button class="btn btn-danger" type="button">Remove</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    @{
+        Html.RenderPartial("_AddNewUser");
+    }
+</div>
+<div class="modal" tabindex="-1" role="dialog" id="deleteConfirmationUser">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold" id="deleteConfirmationTitle">Delete Confirmation</h5>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="deleteConfirmationId" />
+                Are you sure you want to delete the user?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning">Cancel</button>
+                <button type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="ResetPasswordUser">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold" id="deleteConfirmationTitle">Message</h5>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" value="" id="ResetPasswordUserId" />
+                Do you want to reset password for this user?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default">Cancel</button>
+                <button type="button" class="btn btn-primary">Reset Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/AppJs/Common/Common.js"></script>
+    <script src="~/Scripts/AppJs/UserMaster/UserMaster.js"></script>
+}

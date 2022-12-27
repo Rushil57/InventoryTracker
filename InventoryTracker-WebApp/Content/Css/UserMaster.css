@@ -1,0 +1,96 @@
+﻿body {
+    height: 100%;
+}
+
+#user-master .all-users-list ul {
+    border-color: #000;
+    border-style: groove;
+    border-width: thin;
+    margin: 10px;
+    height: 500px;
+    padding: 20px;
+    position: relative;
+}
+
+    #user-master .all-users-list ul li {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+
+        #user-master .all-users-list ul li:last-child {
+            margin-bottom: 0;
+        }
+
+#user-master .all-users-list li {
+    color: #000;
+    font-weight: 500;
+    font-size: 12px;
+    cursor: pointer;
+    width: 100%;
+    padding-top: 5px;
+    background-color: #eee;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    padding: 5px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#user-master .all-users-list-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 10px;
+}
+
+#user-master .all-users-list ul {
+    border-color: #000;
+    border-style: groove;
+    border-width: thin;
+    margin: 10px;
+    height: 500px;
+    padding: 20px;
+    position: relative;
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+    #user-master .all-users-list ul li {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+
+        #user-master .all-users-list ul li:last-child {
+            margin-bottom: 0;
+        }
+
+        #user-master .all-users-list ul li.active {
+            background-color: #79d2e4;
+        }
+
+#user-master .all-users-list input[type="radio"] {
+    opacity: 0.01;
+    z-index: 100;
+}
+
+#user-master .all-users-list label {
+    color: #000;
+    font-weight: 500;
+    font-size: 12px;
+    cursor: pointer;
+    width: 100%;
+    padding-top: 5px;
+}
+
+#user-master input#txtSearchEmailUserMaster {
+    width: 100%;
+    margin-left: 7px;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: solid 1px #ccc;
+}
