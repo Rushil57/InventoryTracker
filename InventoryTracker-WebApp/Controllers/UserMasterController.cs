@@ -1,11 +1,13 @@
 ﻿using InventoryTracker_WebApp.Domain.Admin;
 using InventoryTracker_WebApp.Domain.UserMaster;
+using InventoryTracker_WebApp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Web.Mvc;
 
 namespace InventoryTracker_WebApp.Controllers
 {
+    [SessionTimeout]
     public class UserMasterController : Controller
     {
         private IUserMasterRepository _userMasterRepository;

@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using InventoryTracker_WebApp.Domain.Entity;
 using InventoryTracker_WebApp.Domain.Equipment;
+using InventoryTracker_WebApp.Helpers;
 using InventoryTracker_WebApp.Models;
 using Newtonsoft.Json;
 using SpreadsheetLight;
@@ -13,6 +14,7 @@ using System.Web.Mvc;
 
 namespace InventoryTracker_WebApp.Controllers
 {
+    [SessionTimeout]
     public class EntityController : Controller
     {
         private readonly IEntityRepository _entityRepository;

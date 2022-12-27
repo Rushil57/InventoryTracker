@@ -238,6 +238,8 @@
     <Content Include="Content\Css\UserDefination.css" />
     <Content Include="Content\Css\UserMaster.css" />
     <Content Include="Content\Img\user.png" />
+    <Content Include="DBScripts\InventoryTracker_Master.sql" />
+    <Content Include="DBScripts\IT_Main.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />

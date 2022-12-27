@@ -30,7 +30,12 @@ namespace InventoryTracker_WebApp.Repositories.MultiInstance
         {
             try
             {
-                CommonDatabaseOperationHelper.ExecuteStoreProcedure_Master("SP_CopyDatabase_UsingBackup", new { @TargetDatabaseName = instanceName, @InstanceNote = instanceNotes, @BackupPath = WebConfigurationManager.AppSettings["BackupPath_for_CopyDB"] });
+                string backupPath = WebConfigurationManager.AppSettings["BackupPath_for_CopyDB"];
+                if (!System.IO.Directory.Exists(backupPath))
+                {
+                    System.IO.Directory.CreateDirectory(backupPath);
+                }
+                CommonDatabaseOperationHelper.ExecuteStoreProcedure_Master("SP_CopyDatabase_UsingBackup", new { @TargetDatabaseName = instanceName, @InstanceNote = instanceNotes, @BackupPath = backupPath });
                 InsertDefaultUser(instanceName);
                 DeleteBackupFiles();
                 return "Instance created Successfully";

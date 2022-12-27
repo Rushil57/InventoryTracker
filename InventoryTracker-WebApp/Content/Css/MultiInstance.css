@@ -74,11 +74,11 @@
 }
 
 #multi-instance-container .backBtn {
-    font-size: 30px;
+    font-size: 20px;
     margin: 5px;
     border-radius: 50%;
     padding-top: 5px !important;
-    padding-bottom: 5px !important;
+    /*padding-bottom: 5px !important;*/
 }
 
 #multi-instance-container .delete-icon {

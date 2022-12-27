@@ -27,6 +27,7 @@ namespace InventoryTracker_WebApp.Helpers
                     }
                     else
                     {
+                        return;
                     }
                 }
             }

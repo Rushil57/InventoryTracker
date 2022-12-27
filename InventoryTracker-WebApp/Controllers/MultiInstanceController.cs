@@ -1,10 +1,12 @@
 ﻿using InventoryTracker_WebApp.Domain.MultiInstance;
+using InventoryTracker_WebApp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Web.Mvc;
 
 namespace InventoryTracker_WebApp.Controllers
 {
+    [SessionTimeout]
     public class MultiInstanceController : Controller
     {
         private readonly IMultiInstanceRepository _multiInstanceRepository;

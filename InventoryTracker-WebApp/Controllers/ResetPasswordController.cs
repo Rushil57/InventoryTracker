@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace InventoryTracker_WebApp.Controllers
 {
+    [SessionTimeout]
     public class ResetPasswordController : Controller
     {
         private IUserMasterRepository _userMasterRepository;

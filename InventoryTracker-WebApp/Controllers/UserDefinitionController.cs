@@ -1,10 +1,12 @@
 ﻿using InventoryTracker_WebApp.Domain.UserDefination;
+using InventoryTracker_WebApp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Web.Mvc;
 
 namespace InventoryTracker_WebApp.Controllers
 {
+    [SessionTimeout]
     public class UserDefinitionController : Controller
     {
         private IUserDefinationRepository _userDefinationRepository;
