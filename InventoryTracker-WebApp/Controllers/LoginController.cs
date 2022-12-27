@@ -170,6 +170,12 @@ namespace InventoryTracker_WebApp.Controllers
             }
         }
 
-
+        [HttpGet]
+        public ActionResult Signout()
+        {
+            Session["instance_name"] = null;
+            HttpContext.Session.Abandon();
+            return RedirectToAction("Index", "Login");
+        }
     }
 }

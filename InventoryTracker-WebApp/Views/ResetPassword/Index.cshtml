@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "ResetPassword";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
+}
+<link href="~/Content/Css/ResetPassword.css" rel="stylesheet" />
+<div id="reset-password">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Reset Password</h2>
+                    @if (!Convert.ToBoolean(@HttpContext.Current.Session["ResetPassword"]))
+                    {
+                        <div class="form-group mt-1 mb-1">
+                            <input class="form-control" type="password" name="oldPassword" id="oldPassword" value="" placeholder="Enter Old Password" />
+                            <span id="oldpassworderror" style="color:red;"></span>
+                        </div>
+                    }
+                    <div class="form-group mt-1 mb-1">
+                        <input class="form-control" type="password" name="newPassword" id="newPassword" value="" placeholder="Enter New Password" />
+                        <span id="newpassworderror" style="color:red;"></span>
+                    </div>
+
+                    <div class="form-group mt-1 me-1">
+                        <input class="form-control" type="password" name="confirmPassword" id="confirmPassword" value="" placeholder="Enter Confirm Password" />
+                        <span id="confirmpassworderror" style="color:red;"></span>
+                    </div>
+                    <div class="form-group mt-1 me-1" style="justify-content:space-evenly;">
+
+                        <button class="btn btn-danger" type="submit" id="btnCancel">Cancel</button>
+                        <button class="btn btn-primary" style="margin-left: 125px;" type="submit" id="btnResetPassword">Update</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+
+@section scripts {
+    <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJs/ResetPassword/ResetPassword.js?v=@versionUpdate"></script>
+}
+

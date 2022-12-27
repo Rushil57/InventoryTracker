@@ -119,5 +119,43 @@ namespace InventoryTracker_WebApp.Repositories.UserMaster
                 return responseModel;
             }
         }
+        
+        public ResponseModel ChangePassword(string newPassword, string oldPassword)
+        {
+            ResponseModel responseModel = new ResponseModel();
+
+            try
+            {
+                var userId = Convert.ToString(HttpContext.Current.Session["Email"]);
+                string query1 = $"SELECT u.id,u.password FROM UserDetail u WHERE u.user_email=@UserId ORDER BY u.id";
+                DataTable dt = CommonDatabaseOperationHelper.Get_Master(query1, new { @UserId = userId });
+                if (dt.Rows.Count > 0)
+                {
+                    var cmpPassword = dt.Rows[0]["Password"];
+                    cmpPassword = Helper.DecryptString(Convert.ToString(cmpPassword));
+                    if (cmpPassword.Equals(oldPassword))
+                    {
+                        newPassword = Helper.EncryptString(newPassword);
+                        var query = $"UPDATE UserDetail SET password =@Password, reset_password = 0 Where user_email= @UserId";
+                        CommonDatabaseOperationHelper.InsertUpdateDelete_Master(query, new { @Password = newPassword, @UserId = userId });
+                        responseModel.Status = true;
+                        responseModel.Message = "Password Changed Successfully.";
+                    }
+                    else
+                    {
+                        responseModel.Status = false;
+                        responseModel.Message = "Old Password is Invalid.";
+                    }
+                }
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                responseModel.Status = false;
+                responseModel.Message = ex.Message;
+                return responseModel;
+            }
+        }
+
     }
 }
