@@ -39,20 +39,6 @@ namespace InventoryTracker_WebApp.Repositories.UserDefination
             }
         }
 
-        public string GetAllUsers()
-        {
-            try
-            {
-                string query = $"SELECT * FROM USERS";
-                DataTable dt = CommonDatabaseOperationHelper.Get(query);
-                return JsonConvert.SerializeObject(dt);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public string GetAdminUsers()
         {
             try

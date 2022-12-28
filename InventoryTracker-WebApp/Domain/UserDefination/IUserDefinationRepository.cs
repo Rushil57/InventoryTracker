@@ -2,7 +2,6 @@
 {
     public interface IUserDefinationRepository
     {
-        string GetAllUsers();
         string GetAdminUsers();
         string GetManagerUsers();
         string GetOtherUsers();

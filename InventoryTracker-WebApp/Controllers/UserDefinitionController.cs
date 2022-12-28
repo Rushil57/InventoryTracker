@@ -1,4 +1,5 @@
 ﻿using InventoryTracker_WebApp.Domain.UserDefination;
+using InventoryTracker_WebApp.Domain.UserMaster;
 using InventoryTracker_WebApp.Helpers;
 using Newtonsoft.Json;
 using System;
@@ -10,9 +11,12 @@ namespace InventoryTracker_WebApp.Controllers
     public class UserDefinitionController : Controller
     {
         private IUserDefinationRepository _userDefinationRepository;
-        public UserDefinitionController(IUserDefinationRepository adminRepository)
+        private readonly IUserMasterRepository _userMasterRepository;
+
+        public UserDefinitionController(IUserDefinationRepository adminRepository,IUserMasterRepository userMasterRepository)
         {
             _userDefinationRepository = adminRepository;
+            this._userMasterRepository = userMasterRepository;
         }
         public ActionResult Index()
         {
@@ -38,7 +42,7 @@ namespace InventoryTracker_WebApp.Controllers
         {
             try
             {
-                var allUsers = _userDefinationRepository.GetAllUsers();
+                var allUsers = _userMasterRepository.GetAllUsers();
                 var adminUsers = _userDefinationRepository.GetAdminUsers();
                 var managerUsers = _userDefinationRepository.GetManagerUsers();
                 var otherUsers = _userDefinationRepository.GetOtherUsers();
