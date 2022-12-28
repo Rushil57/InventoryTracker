@@ -40,7 +40,7 @@ $(document).ready(function () {
             data: {},
             success: function (data) {
                 if (!data.IsValid) {
-                    alert('Invalid Email : ' + email);
+                    alert('Invalid Email: ' + email);
                     return;
                 }
                 sessionStorage.clear();

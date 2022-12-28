@@ -147,41 +147,47 @@ function loadEquipmentHDR(searchString, searchflag) {
 //    equipmentTemplate.modal('hide');
 //}
 function addEquipmentHeader() {
-    var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
-    if (searchString != '') {
-        if (previousequipsearch == searchString) {
-            previousequipsearch = searchString;
-            loadEquipmentHDR(searchString, false);
-            return;
-        }
-        previousequipsearch = searchString;
-        startIndexEquip = 0;
-        endIndexEquip = 30;
-        loadEquipmentHDR(searchString, true);
-    } else {
-        startIndexEquip = 0;
-        endIndexEquip = 30;
-        loadEquipmentHDR(searchString, false);
-    } //$('#searchEquipmentStr').val().trim()
-    //addEquipmentColumn();
-    //$("#equipHDR tr").each(function (index) {
-    //    if (index !== 0) {
-    //        var row = $(this);
-    //        var isHide = true;
-    //        row.find('td').each(function () {
-    //            if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1 && $(this).css('display') != 'none') {
-    //                isHide = false;
-    //                return;
-    //            }
-    //        })
-    //        if (isHide) {
-    //            row.hide();
-    //        }
-    //        else {
-    //            row.show();
-    //        }
+    //var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
+    //if (searchString != '') {
+    //    if (previousequipsearch == searchString) {
+    //        previousequipsearch = searchString;
+    //        loadEquipmentHDR(searchString, false);
+    //        return;
     //    }
-    //});
+    //    previousequipsearch = searchString;
+    //    startIndexEquip = 0;
+    //    endIndexEquip = 30;
+    //    loadEquipmentHDR(searchString, true);
+    //} else {
+    //    startIndexEquip = 0;
+    //    endIndexEquip = 30;
+    //    loadEquipmentHDR(searchString, false);
+    //}
+
+    startIndexEquip = 0;
+    endIndexEquip = 30;
+    loadEquipmentHDR($('#searchEquipmentStr').val());
+    addEquipmentColumn();
+    //$('#searchEquipmentStr').val().trim()
+    //addEquipmentColumn();
+    $("#equipHDR tr").each(function (index) {
+        if (index !== 0) {
+            var row = $(this);
+            var isHide = true;
+            row.find('td').each(function () {
+                if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1 && $(this).css('display') != 'none') {
+                    isHide = false;
+                    return;
+                }
+            })
+            if (isHide) {
+                row.hide();
+            }
+            else {
+                row.show();
+            }
+        }
+    });
 }
 
 

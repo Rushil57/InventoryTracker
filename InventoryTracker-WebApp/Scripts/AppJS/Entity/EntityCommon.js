@@ -7,7 +7,7 @@ $(document).ready(function () {
     disabled()
     $('#mainDate').datepicker({
         autoclose: true
-    }).on('change', function (e) {
+    }).on('changeDate changeMonth changeYear', function (e) {
         currentDate = this.value;
         if (isLoadTime) {
             isLoadTime = false;
