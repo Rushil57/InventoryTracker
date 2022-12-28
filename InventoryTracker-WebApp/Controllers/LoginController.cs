@@ -1,6 +1,7 @@
 ﻿using InventoryTracker_WebApp.Domain.Admin;
 using InventoryTracker_WebApp.Domain.Login;
 using InventoryTracker_WebApp.Domain.UserMaster;
+using InventoryTracker_WebApp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Web.Mvc;
@@ -70,7 +71,7 @@ namespace InventoryTracker_WebApp.Controllers
                         {
                             if (result.Status)
                             {
-                                SendEmail(userName, result.Data, true);
+                                Helper.SendEmail(userName, result.Data, true,_adminRepository);
                             }
 
                         }
@@ -97,29 +98,6 @@ namespace InventoryTracker_WebApp.Controllers
                 return JsonConvert.SerializeObject(new { IsValid = false, data = ex.Message, Message = result2 });
             }
         }
-        public string SendEmail(string userName, string Password, bool flag)
-        {
-            try
-            {
-                string subject = "Login Credentials for Inventory Tracker System";
-                string bodyString = $@"<p>Hello {userName},<p>
-                    <br>
-                    {(flag == true ? "<p>Welcome to Inventory Tracker System.<p>" : "<p>Your Password has been Reset.</p>")}
-                    
-                    <p>Your Login Credentials are mentioned below.<p>
-                   
-                    <p>UserName: {userName}<p>
-                    <p>Password: {Password}<p>
-                    <br>
-                    <p>Thanks & Regards,</p>
-                    <p>Inventory Tracker</p>";
-                return _adminRepository.SendEmail(bodyString, userName, subject);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
         public string ResetPassword(string userEmail)
         {
             try
@@ -130,7 +108,7 @@ namespace InventoryTracker_WebApp.Controllers
                     var result = _userMasterRepository.ResetPassword(userEmail);
                     if (result.Status)
                     {
-                        SendEmail(userEmail, result.Message, false);
+                        Helper.SendEmail(userEmail, result.Message, false,_adminRepository);
                     }
                     return JsonConvert.SerializeObject(new { IsValid = result.Status, Data = "", Message = "Password Reset Successful. Login credentials are sent to registered email address." });
                 }

@@ -51,7 +51,7 @@ namespace InventoryTracker_WebApp.Controllers
                     {
                         if (result.Data)
                         {
-                            SendEmail(userName, result.Message, true);
+                            Helper.SendEmail(userName, result.Message, true,_adminRepository);
                         }
 
                     }
@@ -98,7 +98,7 @@ namespace InventoryTracker_WebApp.Controllers
                 var result = _userMasterRepository.ResetPassword(UserEmail);
                 if (result.Status)
                 {
-                    SendEmail(UserEmail, result.Message, false);
+                    Helper.SendEmail(UserEmail, result.Message, false,_adminRepository);
                 }
                 return JsonConvert.SerializeObject(new { IsValid = result.Status, Data = "", Message = "Password Reset Successful." });
             }
@@ -107,30 +107,5 @@ namespace InventoryTracker_WebApp.Controllers
                 return JsonConvert.SerializeObject(new { IsValid = false, data = ex.Message, Message = "Something went wrong. Please try again after some time." });
             }
         }
-
-        public string SendEmail(string userName, string Password, bool flag)
-        {
-            try
-            {
-                string subject = "Login Credentials for Inventory Tracker System";
-                string bodyString = $@"<p>Hello {userName},<p>
-                    <br>
-                    {(flag == true ? "<p>Welcome to Inventory Tracker System.<p>" : "<p>Your Password has been Reset.</p>")}
-                    
-                    <p>Your Login Credentials are mentioned below.<p>
-                   
-                    <p>UserName: {userName}<p>
-                    <p>Password: {Password}<p>
-                    <br>
-                    <p>Thanks & Regards,</p>
-                    <p>Inventory Tracker</p>";
-                return _adminRepository.SendEmail(bodyString, userName, subject);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InventoryTracker_WebApp.Domain.Admin;
+using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -70,6 +71,30 @@ namespace InventoryTracker_WebApp.Helpers
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#$!@*";
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public static string SendEmail(string userName, string Password, bool flag,IAdminRepository adminRepository)
+        {
+            try
+            {
+                string subject = "Login Credentials for Inventory Tracker System";
+                string bodyString = $@"<p>Hello {userName},<p>
+                    <br>
+                    {(flag == true ? "<p>Welcome to Inventory Tracker System.<p>" : "<p>Your Password has been Reset.</p>")}
+                    
+                    <p>Your Login Credentials are mentioned below.<p>
+                   
+                    <p>UserName: {userName}<p>
+                    <p>Password: {Password}<p>
+                    <br>
+                    <p>Thanks & Regards,</p>
+                    <p>Inventory Tracker</p>";
+                return adminRepository.SendEmail(bodyString, userName, subject);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }
