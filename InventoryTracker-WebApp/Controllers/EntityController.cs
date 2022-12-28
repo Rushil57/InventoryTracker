@@ -405,8 +405,8 @@ namespace InventoryTracker_WebApp.Controllers
 
                 int i = 2;
 
-                sl.SetColumnStyle(1, sLStyleColor);
-                sl.SetColumnStyle(i + 1, sLStyleColor);
+                sl.SetColumnStyle(1,4, sLStyleColor);
+                //sl.SetColumnStyle(i + 1, sLStyleColor);
                 sl.AutoFitColumn(1);
                 int j = 0;
 
@@ -414,7 +414,7 @@ namespace InventoryTracker_WebApp.Controllers
                 {
                     j = 1;
                     int equipmentID = 0;
-                    sl.SetColumnStyle(i, sLStyleColor);
+                    //sl.SetColumnStyle(i, sLStyleColor);
                     sl.AutoFitColumn(j);
 
                     foreach (var item in e)

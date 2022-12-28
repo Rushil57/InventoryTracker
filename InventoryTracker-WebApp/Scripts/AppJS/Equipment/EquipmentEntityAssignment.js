@@ -418,12 +418,16 @@ function importExcel() {
                     $('#importExcel').modal('hide');
                     loadEntityHDR('', false);
                     loadEquipmentHDR('', false);
-                    $('#summaryBody').html(' <h6><label>How many new pieces of equipment have been assigned: </label>&nbsp;<label id="excelTotalNewAssign"></label> <label>How many new pieces of equipment have been removed: </label>&nbsp;<label id="excelTotalRemove"></label><label>How many new pieces of equipment have > 1 assignment: </label>&nbsp;<label id="gtOneAssign"></label><label>How many total recorded loaded:</label>&nbsp;<label id="totalRecords"></label><label>How many records have invalid equipment units: </label>&nbsp;<label id="invalidRecords"></label></h6>');
+                    $('#summaryBody').html(' <h6><label>How many new pieces of equipment have been assigned: </label>&nbsp;<label id="excelTotalNewAssign"></label><br/> <label>How many new pieces of equipment have been removed: </label>&nbsp;<label id="excelTotalRemove"></label><br/><label>How many new pieces of equipment have > 1 assignment: </label>&nbsp;<label id="gtOneAssign"></label><br/><label>How many total record loaded:</label>&nbsp;<label id="totalRecords"></label><br/><label>How many records have invalid equipment units: </label>&nbsp;<label id="invalidRecords"></label></h6>');
                     $('#excelTotalNewAssign').text(newData.excelTotalNewAssign);
                     $('#excelTotalRemove').text(newData.excelTotalRemove);
                     $('#gtOneAssign').text(newData.gtOneAssign)
                     $('#totalRecords').text(newData.totalRecords)
-                    $('#invalidRecords').text(newData.excelInvalidUnitIDCount + " [" + newData.excelInvalidUnitID + "]")
+                    var invalidRecordText = newData.excelInvalidUnitIDCount;
+                    if (newData.excelInvalidUnitIDCount > 0) {
+                        invalidRecordText += " [" + newData.excelInvalidUnitID + "]";
+                    }
+                    $('#invalidRecords').text(invalidRecordText)
                     $('#summary').modal('show');
                 }
             },

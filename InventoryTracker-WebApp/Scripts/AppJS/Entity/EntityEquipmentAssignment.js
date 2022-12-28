@@ -513,12 +513,16 @@ function importExcel() {
                     $('#importExcel').modal('hide');
                     loadEquipmentHDR('', false);
                     loadEntityHDR('', false);
-                    $('#summaryBody').html(' <h6><label>How many new pieces of entity have been assigned: </label>&nbsp;<label id="excelTotalNewAssign"></label> <label>How many new pieces of entity have been removed: </label>&nbsp;<label id="excelTotalRemove"></label><label>How many new pieces of entity have > 1 assignment: </label>&nbsp;<label id="gtOneAssign"></label><label>How many total recorded loaded:</label>&nbsp;<label id="totalRecords"></label><label>How many records have invalid entity units: </label>&nbsp;<label id="invalidRecords"></label></h6>');
+                    $('#summaryBody').html(' <h6><label>How many new pieces of entity have been assigned: </label>&nbsp;<label id="excelTotalNewAssign"></label><br/> <label>How many new pieces of entity have been removed: </label>&nbsp;<label id="excelTotalRemove"></label><br/><label>How many new pieces of entity have > 1 assignment: </label>&nbsp;<label id="gtOneAssign"></label><br/><label>How many total record loaded:</label>&nbsp;<label id="totalRecords"></label><br/><label>How many records have invalid entity units: </label>&nbsp;<label id="invalidRecords"></label></h6>');
                     $('#excelTotalNewAssign').text(newData.excelTotalNewAssign);
                     $('#excelTotalRemove').text(newData.excelTotalRemove);
                     $('#gtOneAssign').text(newData.gtOneAssign)
                     $('#totalRecords').text(newData.totalRecords)
-                    $('#invalidRecords').text(newData.excelInvalidEntCount + " [" + newData.excelInvalidEntityName + "]")
+                    var invalidRecordText = newData.excelInvalidEntCount;
+                    if (newData.excelInvalidEntCount > 0) {
+                        invalidRecordText += " [" + newData.excelInvalidEntityName + "]";
+                    }
+                    $('#invalidRecords').text(invalidRecordText);
                     $('#summary').modal('show');
                 }
             },
