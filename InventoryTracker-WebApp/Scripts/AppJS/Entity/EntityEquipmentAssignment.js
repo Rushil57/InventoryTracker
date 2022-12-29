@@ -11,7 +11,7 @@ $(document).ready(function () {
     resizableTable();
     sortableTable();
     $('#selectedMenu').text($('#menuEquEntAss').text());
-    $('.bi-database').attr('onclick', 'showEquipModel()');
+    $('#property').attr('onclick', 'showEquipModel()');
 })
 
 function loadEntityHDR(searchString, searchflag) {

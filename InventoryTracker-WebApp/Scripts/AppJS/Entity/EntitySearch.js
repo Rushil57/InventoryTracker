@@ -50,7 +50,7 @@ function loadEntityHDR(searchString, searchflag) {
         dataType: 'json',
         type: 'GET',
         async: false,
-        data: { 'searchString': searchString, 'startIndex': 0, 'endIndex': endIndexEntity },
+        data: { 'searchString': searchString, 'startIndex': startIndexEntity, 'endIndex': endIndexEntity },
         success: function (data) {
             if (data.IsValid) {
                 var entityString = '';
