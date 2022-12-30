@@ -106,7 +106,7 @@ $(document).ready(function () {
     });
     $(document).on('click', '#btnBack', function () {
         sessionStorage.clear();
-        $.ajax('Login/Logout');
+        $.ajax('Login/Signout');
         window.location = "/Login";
     });
     $(document).on('click', '#deleteConfirmation button.btn-danger', function () {
