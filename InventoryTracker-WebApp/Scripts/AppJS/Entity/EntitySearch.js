@@ -203,7 +203,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
 
                     var eqValue = '';
                     if (data.data[i].Datatype.toLowerCase() == 'hyperlink') {
-                        eqValue = '<a href="' + data.data[i].Ent_Value + '" target="_blank">' + data.data[i].Ent_Value + '</a>'
+                        eqValue = '<a href="https://' + data.data[i].Ent_Value + '" target="_blank">' + data.data[i].Ent_Value + '</a>'
                     }
                     else {
                         eqValue = data.data[i].Ent_Value;

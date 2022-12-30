@@ -374,7 +374,7 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
 
                     var eqValue = '';
                     if (data.data[i].Datatype.toLowerCase() == 'hyperlink') {
-                        eqValue = '<a href="' + data.data[i].Eq_Value + '" target="_blank">' + data.data[i].Eq_Value + '</a>'
+                        eqValue = '<a href="http://' + data.data[i].Eq_Value + '" target="_blank">' + data.data[i].Eq_Value + '</a>'
                     }
                     else {
                         eqValue = data.data[i].Eq_Value;
