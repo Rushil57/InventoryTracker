@@ -562,7 +562,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 string newInvalidUID = string.Empty;
                 var firstIndexOfUnitID = columnHeader.IndexOf("Unit ID");
                 query = "Declare @equipIDList varchar(max)=''";
-                for (int i = firstIndexOfUnitID -1 ; i < distValues.Count; i++)
+                for (int i = firstIndexOfUnitID; i < distValues.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(distValues[i]))
                     {

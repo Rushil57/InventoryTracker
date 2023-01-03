@@ -480,7 +480,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 var query = string.Empty;
                 query = "Declare @entIDList varchar(max)=''";
                 var firstIndexOfUnitID = columnHeader.IndexOf("Entity Name");
-                for (int i = firstIndexOfUnitID-1; i < distValues.Count; i++)
+                for (int i = firstIndexOfUnitID; i < distValues.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(distValues[i]))
                     {
