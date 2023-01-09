@@ -175,7 +175,6 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Controllers\EntityController.cs" />
     <Compile Include="Controllers\EquipmentController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MultiInstanceController.cs" />
     <Compile Include="Controllers\ResetPasswordController.cs" />
@@ -857,7 +856,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Entity\Index.cshtml" />
     <Content Include="Scripts\README.md" />
     <Content Include="Scripts\popper.min.js.map" />
