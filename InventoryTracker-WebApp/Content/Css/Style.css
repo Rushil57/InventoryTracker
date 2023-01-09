@@ -139,3 +139,12 @@ td, th {
     margin-left: 6px;
     border-radius: 4px;
 }
+
+.textBox-BackColor {
+   background-color: #fbcaca !important;
+}
+
+.lightGreenCls
+{
+    background-color : lightgreen !important;
+}

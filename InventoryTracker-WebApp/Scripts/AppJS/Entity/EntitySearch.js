@@ -218,7 +218,13 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                 for (var i = 0; i < data.equipmentHeaders.length; i++) {
                     var sDate = data.equipmentHeaders[i].START_DATE == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.equipmentHeaders[i].START_DATE);
                     var eDate = data.equipmentHeaders[i].END_DATE == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.equipmentHeaders[i].END_DATE);
-                    equipmentHeadersString += '<tr  style="cursor:pointer" onclick= showEquipmentDetails(this)><input type="hidden" value="' + data.equipmentHeaders[i].EQUIP_ID + '" /><td>' + data.equipmentHeaders[i].EQUIP_TYPE + '</td><td>' + sDate + '</td><td>' + eDate + '</td></tr>';
+                    var mainDate = $('#mainDate').val();
+                    var lightGreenClass = "";
+
+                    if (new Date(mainDate) >= new Date(sDate) && new Date(mainDate) <= new Date(eDate)) {
+                        lightGreenClass = "lightGreenCls";
+                    }
+                    equipmentHeadersString += '<tr  style="cursor:pointer" onclick= showEquipmentDetails(this) class="' + lightGreenClass +'"><input type="hidden" value="' + data.equipmentHeaders[i].EQUIP_ID + '" /><td>' + data.equipmentHeaders[i].EQUIP_TYPE + '</td><td>' + sDate + '</td><td>' + eDate + '</td></tr>';
                 }
                 $("#tblEquipmentHistory > tbody >  tr").remove();
                 $("#tblEquipmentHistory > tbody").append(equipmentHeadersString);

@@ -240,7 +240,7 @@ function saveHDRTemplateDtl() {
             return;
         }
     })
-    if (isExist == false || equipmentHDRID.val() > 0 ) {
+    if (isExist == false || equipmentHDRID.val() > 0) {
         var equipmentHDR = [];
         equipmentHDR.push({
             EQUIP_TYPE: equipType,
@@ -389,7 +389,14 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
                 for (var i = 0; i < data.entityHeaders.length; i++) {
                     var sDate = data.entityHeaders[i].START_DATE == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.entityHeaders[i].START_DATE);
                     var eDate = data.entityHeaders[i].END_DATE == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.entityHeaders[i].END_DATE);
-                    entityHeadersString += '<tr  style="cursor:pointer" onclick= showEntityDetails(this)><input type="hidden" value="' + data.entityHeaders[i].ENT_ID + '" /><td>' + data.entityHeaders[i].ENT_NAME + '</td><td>' + sDate + '</td><td>' + eDate + '</td></tr>';
+                    var mainDate = $('#mainDate').val();
+                    var lightGreenClass = "";
+
+                    if (new Date(mainDate) >= new Date(sDate) && new Date(mainDate) <= new Date(eDate)) {
+                        lightGreenClass = "lightGreenCls";
+                    }
+
+                    entityHeadersString += '<tr  style="cursor:pointer" onclick= showEntityDetails(this) class="' + lightGreenClass + '"><input type="hidden" value="' + data.entityHeaders[i].ENT_ID + '" /><td>' + data.entityHeaders[i].ENT_NAME + '</td><td>' + sDate + '</td><td>' + eDate + '</td></tr>';
                 }
                 $("#tblEntityHistory > tbody >  tr").remove();
                 $("#tblEntityHistory > tbody").append(entityHeadersString);

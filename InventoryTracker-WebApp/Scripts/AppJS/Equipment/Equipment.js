@@ -130,7 +130,7 @@ function saveTemplate() {
 
 $('#newTemplate').click(function () {
     loadTemplate('');
-    elementTemplateName.append('<input class="dropdown-control" type="text" id="templateName" />');
+    elementTemplateName.append('<input class="dropdown-control textBox-BackColor" type="text" id="templateName" />');
     addCursorFunc();
 })
 
