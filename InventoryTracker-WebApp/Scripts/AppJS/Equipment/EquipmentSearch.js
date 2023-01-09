@@ -573,25 +573,52 @@ function importExcel() {
         var formData = new FormData();
 
         formData.append("file", files[0]);
-
-        $.ajax({
-            before: AddLoader(),
-            after: RemoveLoader(),
-            type: "POST",
-            url: '/Equipment/Import',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                var newData = JSON.parse(data);
-                alert(newData.data);
-                if (newData.IsValid) {
-                    $('#importExcel').modal('hide');
-                    loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
-                }
-            },
-            error: function (e1, e2, e3) {
+        if (isBulkImport) {
+            if (currentEquipID <= 0) {
+                alert('Please select equipment and try again!');
+                return;
             }
-        });
+            formData.append("equipmentID", currentEquipID);
+            $.ajax({
+                before: AddLoader(),
+                after: RemoveLoader(),
+                type: "POST",
+                url: '/Equipment/BulkImport',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    var newData = JSON.parse(data);
+                    alert(newData.data);
+                    if (newData.IsValid) {
+                        $('#importExcel').modal('hide');
+                        loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
+                    }
+                },
+                error: function (e1, e2, e3) {
+                }
+            });
+        }
+        else {
+            $.ajax({
+                before: AddLoader(),
+                after: RemoveLoader(),
+                type: "POST",
+                url: '/Equipment/Import',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    var newData = JSON.parse(data);
+                    alert(newData.data);
+                    if (newData.IsValid) {
+                        $('#importExcel').modal('hide');
+                        loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
+                    }
+                },
+                error: function (e1, e2, e3) {
+                }
+            });
+        }
     }
 }

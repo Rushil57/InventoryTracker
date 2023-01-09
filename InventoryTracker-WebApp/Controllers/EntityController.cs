@@ -338,6 +338,98 @@ namespace InventoryTracker_WebApp.Controllers
         }
         #endregion
 
+        #region Bulk Import
+
+        [HttpPost]
+        public string BulkImport(HttpPostedFileBase file, int entityID)
+        {
+            string path = string.Empty;
+            try
+            {
+                var fileExt = Path.GetExtension(file.FileName);
+                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+                path += @"\BulkImportEntity" + DateTime.Now.Ticks + ".xlsx";
+                file.SaveAs(path);
+
+                if ((fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv") && entityID > 0)
+                {
+                    List<string> columnHeader = new List<string>();
+                    using (SLDocument sl = new SLDocument())
+                    {
+                        FileStream fs = new FileStream(path, FileMode.Open);
+                        SLDocument sheet = new SLDocument(fs);
+
+                        SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
+                        for (int i = 1; i <= stats.EndRowIndex; i++)
+                        {
+                            var headerCellValue = (sheet.GetCellValueAsString(i, 1));
+                            if (headerCellValue.ToString() == null)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                List<string> values = new List<string>();
+                                for (int j = 2; j <= stats.EndColumnIndex; j++)
+                                {
+                                    var cellValue = (sheet.GetCellValueAsString(i, j));
+                                    if (i == 1)
+                                    {
+                                        if (cellValue != null)
+                                        {
+                                            columnHeader.Add(cellValue);
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (columnHeader.Count < j - 2)
+                                        {
+                                            break;
+                                        }
+                                        var valueOFCell = "";
+                                        if (columnHeader[j - 2] == "Start Date" || columnHeader[j - 2] == "End Date")
+                                        {
+                                            var cellValueOfDateTime = (sheet.GetCellValueAsDateTime(i, j));
+                                            valueOFCell = cellValueOfDateTime.ToShortDateString().ToString();
+                                        }
+                                        else
+                                        {
+                                            valueOFCell = cellValue == null ? "" : cellValue.ToString();
+                                        }
+                                        values.Add(valueOFCell);
+                                    }
+                                }
+                                if (i != 1)
+                                {
+                                    bool isInserted = _entityRepository.InsertTemplateDetails(columnHeader, values, entityID);
+                                }
+                            }
+                        }
+
+                        fs.Close();
+                    }
+                    return JsonConvert.SerializeObject(new { IsValid = true, data = "File imported successfully." });
+                }
+                return JsonConvert.SerializeObject(new { IsValid = false, data = "Issue occured when file is imported." });
+            }
+            catch (Exception e)
+            {
+                return JsonConvert.SerializeObject(new { IsValid = false, data = "Issue occured when file is imported." });
+            }
+            finally
+            {
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+            }
+        }
+
+        #endregion
 
         #region Entity  Equipment Assign Export - Import
 

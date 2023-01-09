@@ -509,26 +509,52 @@ function importExcel() {
         var formData = new FormData();
 
         formData.append("file", files[0]);
-
-        $.ajax({
-            before: AddLoader(),
-            after: RemoveLoader(),
-            type: "POST",
-            url: '/Entity/Import',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                var newData = JSON.parse(data);
-                alert(newData.data);
-                if (newData.IsValid) {
-                    $('#importExcel').modal('hide');
-                    loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
-                }
-            },
-            error: function (e1, e2, e3) {
+        if (isBulkImport) {
+            if (currentEntityID <= 0) {
+                alert('Please select entity and try again!');
+                return;
             }
-        });
+            formData.append("entityID", currentEntityID);
+            $.ajax({
+                before: AddLoader(),
+                after: RemoveLoader(),
+                type: "POST",
+                url: '/Entity/BulkImport',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    var newData = JSON.parse(data);
+                    alert(newData.data);
+                    if (newData.IsValid) {
+                        $('#importExcel').modal('hide');
+                        loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
+                    }
+                },
+                error: function (e1, e2, e3) {
+                }
+            });
+        } else {
+            $.ajax({
+                before: AddLoader(),
+                after: RemoveLoader(),
+                type: "POST",
+                url: '/Entity/Import',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    var newData = JSON.parse(data);
+                    alert(newData.data);
+                    if (newData.IsValid) {
+                        $('#importExcel').modal('hide');
+                        loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
+                    }
+                },
+                error: function (e1, e2, e3) {
+                }
+            });
+        }
     }
     
 }

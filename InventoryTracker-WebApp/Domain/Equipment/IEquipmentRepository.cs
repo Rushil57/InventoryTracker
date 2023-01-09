@@ -27,5 +27,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values, out string totalNewAssigned, out int totalRemoved, out string invalidUnitID);
         List<EquipmentHeader> GetAllEquipmentHeaders(string unitID=null);
         List<EquipmentEntityAssignment> GetAllEquipment_Entity_AssignmentByDate(string startDate);
+
+        bool InsertTemplateDetails(List<string> columnHeader, List<string> values, int equipmentID);
     }
 }

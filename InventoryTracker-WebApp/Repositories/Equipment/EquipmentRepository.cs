@@ -604,5 +604,27 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             }
             finally { connection.Close(); }
         }
+
+
+        public bool InsertTemplateDetails(List<string> columnHeader, List<string> values, int equipmentID)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+                for (int i = 0; i < columnHeader.Count; i = i + 3)
+                {
+                    query += "INSERT INTO [Equipment_Dtl] ([Equip_ID],[Equip_Temp_ID],[Eq_Value],[Start_Date],[End_Date]) VALUES(" + equipmentID + ",(SELECT [Equip_Temp_ID] FROM [Equipment_Template] Where [Prop_name] ='" + columnHeader[i] + "' and [Equipment_Type]=(SELECT [EQUIP_TYPE] FROM [EQUIPMENT_HDR] Where [EQUIP_ID] = " + equipmentID + ") ),'" + values[i].Replace("'", "\'\'") + "','" + values[i + 1] + "','" + values[i + 2] + "')";
+                }
+                var isInserted = connection.Query<bool>(query).FirstOrDefault();
+                return isInserted;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
     }
 }

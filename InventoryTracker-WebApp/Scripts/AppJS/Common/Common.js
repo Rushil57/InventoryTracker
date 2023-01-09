@@ -29,7 +29,7 @@ $(document).ready(function () {
             addEntityHeader();
         }
     })
-    $('#import , #property , #export').tooltip();
+    $('#import , #property , #export , #bulkImport').tooltip();
 })
 
 function updateRowIndex() {
@@ -571,11 +571,17 @@ function divEntityHDRLoad(element) {
 }
 
 
+var isBulkImport = false;
 function importData() {
     $("#file").val('');
     $('#importExcel').modal('show');
+    isBulkImport = false;
 }
-
+function importBulkData() {
+    $("#file").val('');
+    $('#importExcel').modal('show');
+    isBulkImport = true;
+}
 $("#file").change(function () {
     var fileExtension = ['xls', 'xlsx', 'csv'];
     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {

@@ -409,7 +409,27 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             finally { connection.Close(); }
         }
-
+        public bool InsertTemplateDetails(List<string> columnHeader, List<string> values,int entityID)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+                for (int i = 0; i < columnHeader.Count; i = i + 3)
+                {
+                    query += "INSERT INTO [Entity_Dtl]([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES("+entityID+ ",(SELECT [Ent_temp_id] FROM [Entity_Template] Where [Prop_name] ='" + columnHeader[i] + "' and Ent_type=(SELECT [ENT_TYPE] FROM [ENTITY_HDR] Where [ENT_ID] = "+entityID+") ),'" + values[i].Replace("'","\'\'") + "','" + values[i+1] + "','" + values[i+2] +"')"; 
+                }
+                var isInserted = connection.Query<bool>(query).FirstOrDefault();
+                return isInserted;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
+        
         public List<dynamic> ExportEntityEquipmentAssign(string startDate, string searchString, string columns)
         {
             List<dynamic> equipments = new List<dynamic>();
