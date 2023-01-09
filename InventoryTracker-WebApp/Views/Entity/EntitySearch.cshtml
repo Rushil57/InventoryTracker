@@ -6,22 +6,7 @@
 
 <div class="row">
     <div class="col-md-4 ms-5">
-        <!--<h6>Entity Search : <input type="text" id="searchEntityStr" class="dropdown-control" style="width:45%;height:32px" />&nbsp;<button type="button" class="btn btn-primary" id="search" style="padding: 3px 12px 4px 11px;">Search</button></h6>
-        <div class="border border-color min-vh-70 overflow-auto">
-            <div>
-                <table class="table" id="entityHDR">
-                    <thead style="background-color: #4472c4; color: white; ">
-                        <tr>
-                            <th scope="col">Entity type</th>
-                            <th scope="col">Entity name</th>-->
-        @*<th scope="col">Assigned</th>*@
-        <!--</tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>-->
+       
         @Html.Partial("_EntityLeftSection")
         @Html.Partial("_SearchScreenButtons")
         
@@ -79,23 +64,6 @@
 
 @*Modal Start*@
 @Html.Partial("_EntityCommonModel")
-<!--<div class="modal fade" id="entityTemplate" tabindex="-1" aria-labelledby="entityTemplateLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="entityTemplateLabel">Entity property name</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="height: 275px; overflow: auto;" id="modelBody">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="addEntityHeader()">Add</button>
-            </div>
-        </div>
-    </div>
-</div>-->
 @*Model End
 
     Entity Modal Start*@
