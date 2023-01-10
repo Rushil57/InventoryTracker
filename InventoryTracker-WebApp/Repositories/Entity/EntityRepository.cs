@@ -409,16 +409,21 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             finally { connection.Close(); }
         }
-        public bool InsertTemplateDetails(List<string> columnHeader, List<string> values, int entityID)
+        public bool InsertTemplateDetails(List<string> columnHeader, List<string> values)
         {
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
                 var query = string.Empty;
-                for (int i = 0; i < columnHeader.Count; i = i + 3)
+                query = "declare @ENTID int = 0; declare @ENTTempID int = 0; IF ((select count(ENT_ID) from ENTITY_HDR where ENT_TYPE = '" + values[0] + "' and ENT_NAME ='" + values[1] + "'))  = 0  BEGIN INSERT INTO [ENTITY_HDR] ([ENT_TYPE],[ENT_NAME],[ASSIGNED]) Values ('" + values[0].Trim() + "','" + values[1].Trim() + "',0) End SET @ENTID = (select top 1 ENT_ID from ENTITY_HDR where ENT_TYPE = '" + values[0] + "' and ENT_NAME ='" + values[1] + "')";
+                for (int i = 2; i < columnHeader.Count; i = i + 3)
                 {
-                    query += "INSERT INTO [Entity_Dtl]([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES(" + entityID + ",(SELECT [Ent_temp_id] FROM [Entity_Template] Where [Prop_name] ='" + columnHeader[i] + "' and Ent_type=(SELECT [ENT_TYPE] FROM [ENTITY_HDR] Where [ENT_ID] = " + entityID + ") ),'" + values[i].Replace("'", "\'\'") + "','" + values[i + 1] + "','" + values[i + 2] + "')";
+                    var sDate = values[i + 1];
+                    var startDate = Convert.ToDateTime(sDate).Year + "-" + Convert.ToDateTime(sDate).Month + "-" + Convert.ToDateTime(sDate).Day;
+                    var eDate = values[i + 2];
+                    var endDate = Convert.ToDateTime(eDate).Year + "-" + Convert.ToDateTime(eDate).Month + "-" + Convert.ToDateTime(eDate).Day;
+                    query += "SET @ENTTempID = (select top 1 Ent_temp_id from Entity_Template where ENT_TYPE = '" + values[0] + "' and Prop_name= '" + columnHeader[i] + "')IF ((select count(Ent_Dtl_ID) from Entity_Dtl where Ent_ID = @ENTID and Ent_Temp_ID = @ENTTempID and Ent_Value = '" + values[i] + "'))  = 0  BEGIN  INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (@ENTID,@ENTTempID,'" + values[i].Trim() + "','" + startDate +"','" + endDate +"')End SET @ENTTempID = 0;";
                 }
                 var isInserted = connection.Query<bool>(query).FirstOrDefault();
                 return isInserted;
@@ -562,6 +567,33 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 }
                 var isInserted = connection.Query<bool>(query).FirstOrDefault();
                 return true;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
+
+        public string IsValidEntityTemplate(List<string> columnHeader,string entityType)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string columnHeaderVal = string.Empty;
+                for (int i = 2; i < columnHeader.Count; i= i+3)
+                {
+                    var query = string.Empty;
+                    query += "Declare @isValidColum bit = 1; IF ((SELECT COUNT(*) FROM Entity_Template WHERE Ent_type = '"+entityType+"' AND [Prop_name] ='" + columnHeader[i] + "'))  = 0 BEGIN SET @isValidColum = 0; End select @isValidColum;";
+                    bool isValidEntity =  connection.Query<bool>(query).FirstOrDefault();
+                    if (!isValidEntity)
+                    {
+                        columnHeaderVal = columnHeader[i];
+                        break;
+                    }
+                }
+                return columnHeaderVal;
             }
             catch (Exception e)
             {

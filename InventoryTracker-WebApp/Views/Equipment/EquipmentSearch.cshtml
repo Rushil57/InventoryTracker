@@ -12,17 +12,38 @@
     <div class="col-md-7">
         <h6>
             <input type="hidden" id="equipHDRID" value="0" />
-            Unit ID: <b id="unitID"><input type="text" class="dropdown-control" style="display:inline;width:20%" id="uID" disabled /> </b> &nbsp;
-            <select name='equipType' class='dropdown-control' style="display:inline;width:27%" id='equipType' disabled></select>
-            <input type="text" class="dropdown-control" style="display:inline;width:20%" placeholder="Vendor" id="vendor" disabled />
-            <input type="text" class="datepicker dropdown-control" style="display:inline;width:18%" id="mainDate" />
+            <select name='equipType' class='dropdown-control textBox-BackColor' style="display:inline;width:27%" id='equipType' disabled></select>
+            
+            <input type="text" class="datepicker dropdown-control float-end" style="display:inline;width:18%" id="mainDate" />
         </h6>
+        <div class="border border-color min-vh-18 overflow-auto mb-2">
+            <div class="mr-2 ml-2 ">
+                <table class="table" id="tblTempHDR">
+                    <thead style="background-color: #4472c4; color: white; ">
+                        <tr>
+                            <th scope="col" width="250px">Property Name</th>
+                            <th scope="col">Data Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Unit ID</td>
+                            <td><b id="unitID"><input type="text" class="dropdown-control textBox-BackColor" style="display:inline;width:40%" id="uID" disabled /> </b> </td>
+                        </tr>
+                        <tr>
+                            <td>Vendor</td>
+                            <td><input type="text" class="dropdown-control textBox-BackColor" style="display:inline;width:40%" id="vendor" disabled /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <div class="border border-color min-vh-50 overflow-auto">
             <div class="mr-2 ml-2 ">
                 <table class="table" id="tblTemplateDtl">
                     <thead style="background-color: #4472c4; color: white; ">
                         <tr>
-                            <th scope="col">Property Name</th>
+                            <th scope="col" width="250px">Property Name</th>
                             <th scope="col">Data Value</th>
                             <th scope="col">Start Date</th>
                             <th scope="col">End Date</th>

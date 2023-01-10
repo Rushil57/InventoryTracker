@@ -369,7 +369,7 @@ namespace InventoryTracker_WebApp.Controllers
         #region Bulk Import
 
         [HttpPost]
-        public string BulkImport(HttpPostedFileBase file, int equipmentID)
+        public string BulkImport(HttpPostedFileBase file)
         {
             string path = string.Empty;
             try
@@ -379,7 +379,7 @@ namespace InventoryTracker_WebApp.Controllers
                 path += @"\BulkImportEquipment" + DateTime.Now.Ticks + ".xlsx";
                 file.SaveAs(path);
 
-                if ((fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv") && equipmentID > 0)
+                if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
                 {
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
@@ -398,12 +398,12 @@ namespace InventoryTracker_WebApp.Controllers
                             else
                             {
                                 List<string> values = new List<string>();
-                                for (int j = 2; j <= stats.EndColumnIndex; j++)
+                                for (int j = 1; j <= stats.EndColumnIndex; j++)
                                 {
                                     var cellValue = (sheet.GetCellValueAsString(i, j));
                                     if (i == 1)
                                     {
-                                        if (cellValue != null)
+                                        if (!string.IsNullOrEmpty(cellValue))
                                         {
                                             columnHeader.Add(cellValue);
                                         }
@@ -414,12 +414,12 @@ namespace InventoryTracker_WebApp.Controllers
                                     }
                                     else
                                     {
-                                        if (columnHeader.Count < j - 2)
+                                        if (columnHeader.Count < j)
                                         {
                                             break;
                                         }
                                         var valueOFCell = "";
-                                        if (columnHeader[j - 2] == "Start Date" || columnHeader[j - 2] == "End Date")
+                                        if (columnHeader[j - 1] == "Start Date" || columnHeader[j - 1] == "End Date")
                                         {
                                             var cellValueOfDateTime = (sheet.GetCellValueAsDateTime(i, j));
                                             valueOFCell = cellValueOfDateTime.ToShortDateString().ToString();
@@ -433,8 +433,16 @@ namespace InventoryTracker_WebApp.Controllers
                                 }
                                 if (i != 1)
                                 {
-                                    bool isInserted = _equipmentRepository.InsertTemplateDetails(columnHeader, values, equipmentID);
-                                    
+                                    string invalidColumnHeader = _equipmentRepository.IsValidEquipmentTemplate(columnHeader, values[0]);
+                                    if (!string.IsNullOrEmpty(invalidColumnHeader))
+                                    {
+                                        fs.Close();
+                                        return JsonConvert.SerializeObject(new { IsValid = false, data = "Error message: " + invalidColumnHeader + " template not found for Equipment Type: " + values[0] });
+                                    }
+                                    else
+                                    {
+                                        bool isInserted = _equipmentRepository.InsertTemplateDetails(columnHeader, values);
+                                    }
                                 }
                             }
                         }

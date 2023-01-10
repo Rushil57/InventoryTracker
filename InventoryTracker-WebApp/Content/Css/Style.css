@@ -26,6 +26,14 @@
     height: 20vh !important;
 }
 
+.min-vh-12 {
+    min-height: 12vh !important;
+    height: 12vh !important;
+}
+.min-vh-18 {
+    min-height: 18vh !important;
+    height: 18vh !important;
+}
 .border-color {
     --bs-border-opacity: 1;
     border-color: #4472c4 !important;

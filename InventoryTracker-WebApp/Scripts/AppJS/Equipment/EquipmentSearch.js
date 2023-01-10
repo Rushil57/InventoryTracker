@@ -39,6 +39,7 @@ function loadEquipmentHDR(searchString, searchflag) {
     if (searchflag == true) {
         equipsearchflag = true;
         $("#equipHDR > tbody > tr").remove();
+        startIndexEquip = 0;
     }
     if (startIndexEquip == 0) {
         equipsearchflag = false;
@@ -302,7 +303,7 @@ function saveHDRTemplateDtl() {
             data: JSON.stringify({ 'equipmentHDR': JSON.stringify(equipmentHDR), 'equipmentTmpDtl': JSON.stringify(equipmentTmpDtl) }),
             success: function (data) {
                 if (data.IsValid) {
-                    loadEquipmentHDR($('#searchEquipmentStr').val());
+                    loadEquipmentHDR($('#searchEquipmentStr').val(),true);
                     $('#equipHDR > tbody >  tr:last').trigger('click');
                     addEquipmentColumn();
                 }
@@ -351,7 +352,7 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
     }
     var date = (typeof startDate != 'undefined' && startDate != null) ? startDate : currentDate;
     unitidEle.val(unitID);
-    equipTypeEle.val(equipmentType);
+    equipTypeEle.val(equipmentType.toUpperCase());
     vendorEle.val(vendor);
     equipmentHDRID.val(equipID);
     disabled();
@@ -465,7 +466,7 @@ $('#deleteTemplate').click(function () {
                 data: JSON.stringify({ 'equipID': $(previousElement).find('input[type="hidden"]').val() }),
                 success: function (data) {
                     if (data.IsValid) {
-                        loadEquipmentHDR($('#searchEquipmentStr').val().trim());
+                        loadEquipmentHDR($('#searchEquipmentStr').val().trim(),true);
                         addEquipmentColumn();
                         $('#newTemplate').trigger('click')
                     }
@@ -574,11 +575,7 @@ function importExcel() {
 
         formData.append("file", files[0]);
         if (isBulkImport) {
-            if (currentEquipID <= 0) {
-                alert('Please select equipment and try again!');
-                return;
-            }
-            formData.append("equipmentID", currentEquipID);
+            
             $.ajax({
                 before: AddLoader(),
                 after: RemoveLoader(),
@@ -592,7 +589,7 @@ function importExcel() {
                     alert(newData.data);
                     if (newData.IsValid) {
                         $('#importExcel').modal('hide');
-                        loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
+                        loadEquipmentHDR('', false);
                     }
                 },
                 error: function (e1, e2, e3) {

@@ -6,25 +6,41 @@
 
 <div class="row">
     <div class="col-md-4 ms-5">
-       
+
         @Html.Partial("_EntityLeftSection")
         @Html.Partial("_SearchScreenButtons")
-        
+
     </div>
     <div class="col-md-7">
         <h6>
             <input type="hidden" id="entityHDRID" value="0" />
-            <select name='entityType' class='dropdown-control' style="display:inline;width:27%" id='entityType' disabled></select> &nbsp;
-            Entity Name:
-            <input type="text" class="dropdown-control" style="display:inline;width:20%" placeholder="Entity Name" id="entityName" disabled />
-            <input type="text" class="datepicker dropdown-control" style="display:inline;width:18%"  id="mainDate" />
+            <select name='entityType' class='dropdown-control textBox-BackColor' style="display:inline;width:27%" id='entityType' disabled></select> 
+            <input type="text" class="datepicker dropdown-control float-end" style="display:inline;width:18%" id="mainDate" />
         </h6>
+        <div class="border border-color min-vh-12 overflow-auto mb-2">
+            <div class="mr-2 ml-2">
+                <table class="table" id="tblTempHDR">
+                    <thead style="background-color: #4472c4; color: white; ">
+                        <tr>
+                            <th scope="col" width="250px">Property Name</th>
+                            <th scope="col">Data Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Entity Name</td>
+                            <td><input type="text" class="dropdown-control textBox-BackColor" style="display:inline;width:40%" id="entityName" disabled /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <div class="border border-color min-vh-50 overflow-auto">
             <div class="mr-2 ml-2 ">
                 <table class="table" id="tblTemplateDtl">
                     <thead style="background-color: #4472c4; color: white; ">
                         <tr>
-                            <th scope="col">Property Name</th>
+                            <th scope="col"  width="250px">Property Name</th>
                             <th scope="col">Data Value</th>
                             <th scope="col">Start Date</th>
                             <th scope="col">End Date</th>

@@ -606,19 +606,53 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
         }
 
 
-        public bool InsertTemplateDetails(List<string> columnHeader, List<string> values, int equipmentID)
+        public bool InsertTemplateDetails(List<string> columnHeader, List<string> values)
         {
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
                 var query = string.Empty;
-                for (int i = 0; i < columnHeader.Count; i = i + 3)
+                query = "declare @EQUIPID int = 0; declare @EQUIPTempID int = 0; IF ((select count(EQUIP_ID) from EQUIPMENT_HDR where EQUIP_TYPE = '" + values[0] + "' and [VENDOR] ='" + values[1] + "' and [UNIT_ID] = '"+values[2]+"'))  = 0  BEGIN INSERT INTO EQUIPMENT_HDR(EQUIP_TYPE,VENDOR,UNIT_ID,ASSIGNED) Values ('" + values[0].Trim() + "','" + values[1].Trim() + "','" + values[2].Trim() + "',0) End SET @EQUIPID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where EQUIP_TYPE = '" + values[0] + "' and VENDOR ='" + values[1] + "'and UNIT_ID ='" + values[2] + "')";
+
+                for (int i = 3; i < columnHeader.Count; i = i + 3)
                 {
-                    query += "INSERT INTO [Equipment_Dtl] ([Equip_ID],[Equip_Temp_ID],[Eq_Value],[Start_Date],[End_Date]) VALUES(" + equipmentID + ",(SELECT [Equip_Temp_ID] FROM [Equipment_Template] Where [Prop_name] ='" + columnHeader[i] + "' and [Equipment_Type]=(SELECT [EQUIP_TYPE] FROM [EQUIPMENT_HDR] Where [EQUIP_ID] = " + equipmentID + ") ),'" + values[i].Replace("'", "\'\'") + "','" + values[i + 1] + "','" + values[i + 2] + "')";
+                    var sDate = values[i + 1];
+                    var startDate = Convert.ToDateTime(sDate).Year + "-" + Convert.ToDateTime(sDate).Month + "-" + Convert.ToDateTime(sDate).Day;
+                    var eDate = values[i + 2];
+                    var endDate = Convert.ToDateTime(eDate).Year + "-" + Convert.ToDateTime(eDate).Month + "-" + Convert.ToDateTime(eDate).Day;
+                    query += "SET @EQUIPTempID = (select top 1 Equip_Temp_ID from Equipment_Template where Equipment_Type = '" + values[0] + "' and Prop_Name= '" + columnHeader[i] + "') IF ((select count(Equip_Dtl_ID) from Equipment_Dtl where Equip_ID = @EQUIPID and Equip_Temp_ID = @EQUIPTempID and Eq_Value = '" + values[i] + "'))  = 0  BEGIN  INSERT INTO [Equipment_Dtl]([Equip_ID],[Equip_Temp_ID],[Eq_Value],[Start_Date],[End_Date]) VALUES (@EQUIPID,@EQUIPTempID,'" + values[i].Trim() + "','" + startDate + "','" + endDate + "') End SET @EQUIPTempID = 0;";
                 }
                 var isInserted = connection.Query<bool>(query).FirstOrDefault();
                 return isInserted;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
+
+
+        public string IsValidEquipmentTemplate(List<string> columnHeader, string equipmentType)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string columnHeaderVal = string.Empty;
+                for (int i = 3; i < columnHeader.Count; i = i + 3)
+                {
+                    var query = string.Empty;
+                    query += "Declare @isValidColum bit = 1; IF ((SELECT COUNT(*) FROM Equipment_Template WHERE [Equipment_Type] = '" + equipmentType + "' AND [Prop_name] ='" + columnHeader[i] + "'))  = 0 BEGIN SET @isValidColum = 0; End select @isValidColum;";
+                    bool isValidEquip = connection.Query<bool>(query).FirstOrDefault();
+                    if (!isValidEquip)
+                    {
+                        columnHeaderVal = columnHeader[i];
+                        break;
+                    }
+                }
+                return columnHeaderVal;
             }
             catch (Exception e)
             {

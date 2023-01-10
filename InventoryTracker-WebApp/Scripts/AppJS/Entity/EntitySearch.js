@@ -37,6 +37,7 @@ function loadEntityHDR(searchString, searchflag) {
     if (searchflag == true) {
         entitysearchflag = true;
         $("#entityHDR > tbody > tr").remove();
+        startIndexEntity = 0;
     }
     if (startIndexEntity == 0) {
         entitysearchflag = false;
@@ -181,7 +182,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
         return;
     }
     var date = (typeof startDate != 'undefined' && startDate != null) ? startDate : currentDate;
-    entityType.val(entityTypeVal);
+    entityType.val(entityTypeVal.toUpperCase());
     entityName.val(entityNameVal);
     entityHDRID.val(entityID);
     disabled();
@@ -391,7 +392,7 @@ function saveHDRTemplateDtl() {
             data: JSON.stringify({ 'entityHDR': JSON.stringify(entityHDR), 'entityTmpDtl': JSON.stringify(entityTmpDtl) }),
             success: function (data) {
                 if (data.IsValid) {
-                    loadEntityHDR($('#searchEntityStr').val(), true);
+                    loadEntityHDR($('#searchEntityStr').val().trim(), true);
                     $('#entityHDR > tbody >  tr:last').trigger('click');
                     addEntityColumn();
                 }
@@ -510,11 +511,6 @@ function importExcel() {
 
         formData.append("file", files[0]);
         if (isBulkImport) {
-            if (currentEntityID <= 0) {
-                alert('Please select entity and try again!');
-                return;
-            }
-            formData.append("entityID", currentEntityID);
             $.ajax({
                 before: AddLoader(),
                 after: RemoveLoader(),
@@ -528,7 +524,7 @@ function importExcel() {
                     alert(newData.data);
                     if (newData.IsValid) {
                         $('#importExcel').modal('hide');
-                        loadTemplateDetails(currentEntityID, currentEntityType, currentEntityName, currentDate)
+                        loadEntityHDR('', false);
                     }
                 },
                 error: function (e1, e2, e3) {

@@ -149,7 +149,7 @@ function loadAllEntityTemp() {
                 uniqueEntityType += "<option value='0' >Select entity type</option>";
                 for (var j = 0; j < data.uniqueEntityTemplates.length; j++) {
                     var entType = data.uniqueEntityTemplates[j].Ent_type;
-                    uniqueEntityType += '<option value=' + entType + ' >' + entType + '</option>'
+                    uniqueEntityType += '<option value=' + entType.toUpperCase() + ' >' + entType + '</option>'
                 }
                 entityType.html(uniqueEntityType);
 
@@ -185,7 +185,7 @@ function loadAllEquipTemp() {
                 uniqueEquipType += "<option value='0' >Select equipment type</option>";
                 for (var j = 0; j < data.uniqueEquipmentTemplates.length; j++) {
                     var equipType = data.uniqueEquipmentTemplates[j].Equipment_Type;
-                    uniqueEquipType += '<option value=' + equipType + ' >' + equipType + '</option>'
+                    uniqueEquipType += '<option value=' + equipType.toUpperCase() + ' >' + equipType + '</option>'
                 }
                 equipTypeEle.html(uniqueEquipType);
                 $('#equipmentTemplateModelBody').html(templateString);

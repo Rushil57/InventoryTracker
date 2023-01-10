@@ -23,8 +23,8 @@ namespace InventoryTracker_WebApp.Domain.Entity
         List<EntityHeader> GetAllEntityHeaders(string entityName = null);
         bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName);
 
-        bool InsertTemplateDetails(List<string> columnHeader, List<string> values, int entityID);
-
+        bool InsertTemplateDetails(List<string> columnHeader, List<string> values);
+        string IsValidEntityTemplate(List<string> columnHeader, string entityType);
         bool InsertTemplate(List<string> columnHeader, List<string> values, bool isEntity);
     }
 }

@@ -28,6 +28,8 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         List<EquipmentHeader> GetAllEquipmentHeaders(string unitID=null);
         List<EquipmentEntityAssignment> GetAllEquipment_Entity_AssignmentByDate(string startDate);
 
-        bool InsertTemplateDetails(List<string> columnHeader, List<string> values, int equipmentID);
+        bool InsertTemplateDetails(List<string> columnHeader, List<string> values);
+        string IsValidEquipmentTemplate(List<string> columnHeader, string equipmentType);
+
     }
 }
