@@ -559,11 +559,11 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 var query = string.Empty;
                 if (isEntity)
                 {
-                    query += "IF ((SELECT COUNT(*) FROM [Entity_Template] WHERE [Ent_type] = '"+ values[0] + "' AND [Prop_name] ='"+ values[1] + "'))  = 0 BEGIN INSERT INTO [Entity_Template] ([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES('" + values[0] + "','" + values[1] + "','" + values[2] + "'," + values[3] + ") END";
+                    query += "IF ((SELECT COUNT(*) FROM [Entity_Template] WHERE [Ent_type] = '"+ values[0] + "' AND [Prop_name] ='"+ values[1] + "'))  = 0 BEGIN INSERT INTO [Entity_Template] ([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES('" + values[0].Trim() + "','" + values[1].Trim() + "','" + values[2].Trim() + "'," + values[3] + ") END";
                 }
                 else
                 {
-                    query += "IF ((SELECT COUNT(*) FROM Equipment_Template WHERE Equipment_Type = '"+ values[0] + "' AND [Prop_name] ='"+values[1]+"'))  = 0 BEGIN INSERT INTO [Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype],[Sequence]) VALUES('" + values[0] + "','" + values[1] + "','" + values[2] + "'," + values[3] + ") END";
+                    query += "IF ((SELECT COUNT(*) FROM Equipment_Template WHERE Equipment_Type = '"+ values[0] + "' AND [Prop_name] ='"+values[1]+"'))  = 0 BEGIN INSERT INTO [Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype],[Sequence]) VALUES('" + values[0].Trim() + "','" + values[1].Trim() + "','" + values[2].Trim() + "'," + values[3] + ") END";
                 }
                 var isInserted = connection.Query<bool>(query).FirstOrDefault();
                 return true;
