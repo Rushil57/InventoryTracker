@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     loadEntity();
-    $('#selectedMenu').text($('#menuEntTemp').text() );
+    $('#selectedMenu').text($('#menuEntTemp').text());
 })
 function loadTemplate(entityType, currentLI) {
     $("#ul > li").removeClass('cls-selected-li');
@@ -29,7 +29,7 @@ function loadTemplate(entityType, currentLI) {
                 $(".bi-trash , .bi-plus").click('');
                 $(".bi-trash , .bi-plus").css('cursor', 'default');
             }
-        }, error: function (ex) {  }
+        }, error: function (ex) { }
     });
 }
 
@@ -79,7 +79,7 @@ function saveTemplate() {
             Ent_temp_id: typeof $(this).find("input[type=hidden]").val() != 'undefined' ? $(this).find("input[type=hidden]").val() : 0,
             Ent_type: entityType,
             Prop_name: $(this).find("td:eq(0)").text().trim() != '' ? $(this).find("td:eq(0)").text().trim() : $(this).find("td:eq(0) > input").val(),
-            Datatype: $(this).find("td:eq(1) > label").text().trim() != '' ? $(this).find("td:eq(1) > label").text().trim()  : $(this).find("td:eq(1) #dataType").val(),
+            Datatype: $(this).find("td:eq(1) > label").text().trim() != '' ? $(this).find("td:eq(1) > label").text().trim() : $(this).find("td:eq(1) #dataType").val(),
             Sequence: $(this).find("td:eq(2)").text().trim() != '' ? $(this).find("td:eq(2)").text().trim() : $(this).find("td:eq(2) > input").val()
         });
     })
@@ -89,14 +89,13 @@ function saveTemplate() {
         return;
     }
     var isDuplicate = false;
-    if (entityTypeVal != undefined)
-    {
+    if (entityTypeVal != undefined) {
         $('#ul >  li').each(function () {
             if ($(this).text().trim().toLowerCase() == entityTypeVal.trim().toLowerCase()) {
-                
+
                 isDuplicate = true;
                 return;
-            } 
+            }
         })
     }
     disableSortable();
@@ -153,7 +152,7 @@ deleteButton.click(function () {
                     alert('Entity and template deleted successfully.')
                     loadEntity();
                 }
-            }, error: function (ex) {  }
+            }, error: function (ex) { }
         });
     }
 })
@@ -161,3 +160,15 @@ deleteButton.click(function () {
 $('#editTemplate').click(function () {
     editTemplate('Entity.');
 })
+
+
+
+function importExcel() {
+    if ($('#file').val().trim() == '') {
+        alert('Please select file.')
+        return;
+    }
+    else {
+        BulkImportTemplate(true);
+    }
+}

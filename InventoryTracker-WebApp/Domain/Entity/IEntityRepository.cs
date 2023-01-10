@@ -25,5 +25,6 @@ namespace InventoryTracker_WebApp.Domain.Entity
 
         bool InsertTemplateDetails(List<string> columnHeader, List<string> values, int entityID);
 
+        bool InsertTemplate(List<string> columnHeader, List<string> values, bool isEntity);
     }
 }

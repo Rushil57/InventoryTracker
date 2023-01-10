@@ -163,3 +163,14 @@ deleteButton.click(function () {
 $('#editTemplate').click(function () {
     editTemplate('Equipment.');
 })
+
+
+function importExcel() {
+    if ($('#file').val().trim() == '') {
+        alert('Please select file.')
+        return;
+    }
+    else {
+        BulkImportTemplate(false);
+    }
+}

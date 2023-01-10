@@ -589,3 +589,36 @@ $("#file").change(function () {
         $(this).val('');
     }
 });
+
+function BulkImportTemplate(isEntity) {
+    var fileUpload = $("#file").get(0);
+    var files = fileUpload.files;
+    var formData = new FormData();
+
+    formData.append("file", files[0]);
+    formData.append("isEntity", isEntity);
+    $.ajax({
+        before: AddLoader(),
+        after: RemoveLoader(),
+        type: "POST",
+        url: '/Entity/BulkImportTemplate',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            var newData = JSON.parse(data);
+            alert(newData.data);
+            if (newData.IsValid) {
+                $('#importExcel').modal('hide');
+                if (isEntity) {
+                    loadEntity();
+                }
+                else {
+                    loadEquipment();
+                }
+            }
+        },
+        error: function (e1, e2, e3) {
+        }
+    });
+}

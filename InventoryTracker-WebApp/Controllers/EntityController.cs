@@ -653,5 +653,91 @@ namespace InventoryTracker_WebApp.Controllers
             }
         }
         #endregion
+
+
+        #region Bulk Import Template
+
+        [HttpPost]
+        public string BulkImportTemplate(HttpPostedFileBase file,bool isEntity)
+        {
+            string path = string.Empty;
+            try
+            {
+                var fileExt = Path.GetExtension(file.FileName);
+                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+                path += @"\BulkImportTemplate" + DateTime.Now.Ticks + ".xlsx";
+                file.SaveAs(path);
+
+                if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
+                {
+                    List<string> columnHeader = new List<string>();
+                    using (SLDocument sl = new SLDocument())
+                    {
+                        FileStream fs = new FileStream(path, FileMode.Open);
+                        SLDocument sheet = new SLDocument(fs);
+
+                        SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
+                        for (int i = 1; i <= stats.EndRowIndex; i++)
+                        {
+                            var headerCellValue = (sheet.GetCellValueAsString(i, 1));
+                            if (headerCellValue.ToString() == null)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                List<string> values = new List<string>();
+                                for (int j = 1; j <= stats.EndColumnIndex; j++)
+                                {
+                                    var cellValue = (sheet.GetCellValueAsString(i, j));
+                                    if (i == 1)
+                                    {
+                                        if (cellValue != null)
+                                        {
+                                            columnHeader.Add(cellValue);
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (columnHeader.Count < j)
+                                        {
+                                            break;
+                                        }
+                                        var valueOFCell = "";
+                                        valueOFCell = cellValue == null ? "" : cellValue.ToString();
+                                        values.Add(valueOFCell);
+                                    }
+                                }
+                                if (i != 1)
+                                {
+                                    bool isInserted = _entityRepository.InsertTemplate(columnHeader, values,isEntity);
+                                }
+                            }
+                        }
+
+                        fs.Close();
+                    }
+                    return JsonConvert.SerializeObject(new { IsValid = true, data = "File imported successfully." });
+                }
+                return JsonConvert.SerializeObject(new { IsValid = false, data = "Issue occured when file is imported." });
+            }
+            catch (Exception e)
+            {
+                return JsonConvert.SerializeObject(new { IsValid = false, data = "Issue occured when file is imported." });
+            }
+            finally
+            {
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+            }
+        }
+
+        #endregion
     }
 }
