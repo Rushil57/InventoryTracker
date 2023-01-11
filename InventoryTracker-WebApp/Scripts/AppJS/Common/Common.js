@@ -29,9 +29,19 @@ $(document).ready(function () {
             addEntityHeader();
         }
     })
-    $('#import , #property , #export , #bulkImport ,#sampleFile').tooltip();
-})
+    $('#import , #property , #export ,#sampleFile').tooltip();
 
+    var popover = new bootstrap.Popover(document.querySelector('#bulkImport'), {
+        container: 'body',
+        html: true,
+        content: document.getElementById('mypopover-content'),
+    })
+    
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+})
 function updateRowIndex() {
     var j = 1;
     $('#tblTemplate > tbody > tr').each(function () {
@@ -581,6 +591,7 @@ function importBulkData() {
     $("#file").val('');
     $('#importExcel').modal('show');
     isBulkImport = true;
+    $("#bulkImport").popover('hide');
 }
 $("#file").change(function () {
     var fileExtension = ['xls', 'xlsx', 'csv'];

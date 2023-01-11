@@ -175,5 +175,6 @@ function importExcel() {
 }
 
 function sampleFileDownload() {
+    $("#bulkImport").popover('hide');
     window.location.href = '/ExcelFiles/Entity_Template.xlsx';
 }

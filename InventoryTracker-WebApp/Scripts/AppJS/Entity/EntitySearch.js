@@ -558,5 +558,6 @@ function importExcel() {
 }
 
 function sampleFileDownload() {
+    $("#bulkImport").popover('hide');
     window.location.href = '/ExcelFiles/Entity_Bulk_Import.xlsx';
 }

@@ -180,3 +180,7 @@ td, th {
 {
     background-color : lightgreen !important;
 }
+
+.aTagColor {
+    color: #4472c4;
+}
