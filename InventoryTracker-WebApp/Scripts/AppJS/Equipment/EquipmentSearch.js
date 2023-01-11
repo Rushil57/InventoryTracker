@@ -14,6 +14,8 @@ var currentVendor = '';
 var previousElement = '';
 var entityModelBody = $('#entityModelBody');
 var entityTempDTL = $('#entityTempDTL');
+var vendorLblEle = $('#vendorLbl');
+var unitidLblEle = $('#uIDLbl');
 
 $(document).ready(function () {
     $('#selectedMenu').text($('#menuEquipSearch').text());
@@ -198,6 +200,15 @@ $('#newTemplate').click(function () {
     equipTypeEle.val(0).addClass('textBox-BackColor');
     vendorEle.val("").addClass('textBox-BackColor');
     equipmentHDRID.val(0);
+
+    unitidLblEle.attr('hidden', true);
+    unitidLblEle.text('');
+    unitidEle.attr('hidden', false);
+    vendorLblEle.attr('hidden', true);
+    vendorLblEle.text('');
+    vendorEle.attr('hidden', false);
+
+
     var todayDate = (new Date()).toLocaleDateString().split('T')[0];
     $("#tblTemplateDtl > tbody >  tr").remove();
     $('.datepicker').datepicker({
@@ -326,6 +337,14 @@ $('#editTemplate').click(function () {
     unitidEle.addClass('textBox-BackColor');
     equipTypeEle.addClass('textBox-BackColor');
     vendorEle.addClass('textBox-BackColor');
+
+    unitidLblEle.attr('hidden', true);
+    unitidLblEle.text('');
+    unitidEle.attr('hidden', false);
+    vendorLblEle.attr('hidden', true);
+    vendorLblEle.text('');
+    vendorEle.attr('hidden', false);
+
     disabled();
     $("#tblTemplateDtl > tbody >  tr").each(function () {
         var firsttd = $(this).find("td:eq(1)");
@@ -343,9 +362,9 @@ $('#editTemplate').click(function () {
 
 
 function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, element) {
-    unitidEle.removeClass('textBox-BackColor');
+    unitidEle.removeClass('textBox-BackColor').attr('hidden', true);;
     equipTypeEle.removeClass('textBox-BackColor');
-    vendorEle.removeClass('textBox-BackColor');
+    vendorEle.removeClass('textBox-BackColor').attr('hidden', true);;
     if (element != undefined) {
         $(previousElement).css('background-color', 'white').css('color', 'black');
         $(element).css('background-color', '#96a6c3').css('color', 'white');
@@ -359,6 +378,10 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
     equipTypeEle.val(equipmentType.toUpperCase());
     vendorEle.val(vendor);
     equipmentHDRID.val(equipID);
+    unitidLblEle.text(unitID);
+    unitidLblEle.attr('hidden', false);
+    vendorLblEle.text(vendor);
+    vendorLblEle.attr('hidden', false);
     disabled();
 
     //$(element).find('td:eq(0)').text()
