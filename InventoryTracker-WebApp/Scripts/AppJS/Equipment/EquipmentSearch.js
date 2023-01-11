@@ -194,9 +194,9 @@ function addEquipmentHeader() {
 
 $('#newTemplate').click(function () {
     enabled();
-    unitidEle.val("");
-    equipTypeEle.val(0);
-    vendorEle.val("");
+    unitidEle.val("").addClass('textBox-BackColor');
+    equipTypeEle.val(0).addClass('textBox-BackColor');
+    vendorEle.val("").addClass('textBox-BackColor');
     equipmentHDRID.val(0);
     var todayDate = (new Date()).toLocaleDateString().split('T')[0];
     $("#tblTemplateDtl > tbody >  tr").remove();
@@ -323,7 +323,9 @@ function saveHDRTemplateDtl() {
 //})
 
 $('#editTemplate').click(function () {
-
+    unitidEle.addClass('textBox-BackColor');
+    equipTypeEle.addClass('textBox-BackColor');
+    vendorEle.addClass('textBox-BackColor');
     disabled();
     $("#tblTemplateDtl > tbody >  tr").each(function () {
         var firsttd = $(this).find("td:eq(1)");
@@ -341,7 +343,9 @@ $('#editTemplate').click(function () {
 
 
 function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, element) {
-
+    unitidEle.removeClass('textBox-BackColor');
+    equipTypeEle.removeClass('textBox-BackColor');
+    vendorEle.removeClass('textBox-BackColor');
     if (element != undefined) {
         $(previousElement).css('background-color', 'white').css('color', 'black');
         $(element).css('background-color', '#96a6c3').css('color', 'white');

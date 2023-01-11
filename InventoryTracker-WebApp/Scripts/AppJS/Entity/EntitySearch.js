@@ -172,7 +172,8 @@ function addEntityHeader() {
 
 
 function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, element) {
-
+    entityType.removeClass('textBox-BackColor');
+    entityName.removeClass('textBox-BackColor');
     if (element != undefined) {
         $(previousElement).css('background-color', 'white').css('color', 'black');
         $(element).css('background-color', '#96a6c3').css('color', 'white');
@@ -242,7 +243,8 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
 
 
 $('#editTemplate').click(function () {
-
+    entityType.addClass('textBox-BackColor');
+    entityName.addClass('textBox-BackColor');
     disabled();
     $("#tblTemplateDtl > tbody >  tr").each(function () {
         var firsttd = $(this).find("td:eq(1)");
@@ -292,8 +294,8 @@ $('#deleteTemplate').click(function () {
 
 $('#newTemplate').click(function () {
     enabled();
-    entityType.val(0);
-    entityName.val("");
+    entityType.val(0).addClass('textBox-BackColor');
+    entityName.val("").addClass('textBox-BackColor');
     entityHDRID.val(0);
     var todayDate = (new Date()).toLocaleDateString().split('T')[0];
     $("#tblTemplateDtl > tbody >  tr").remove();
