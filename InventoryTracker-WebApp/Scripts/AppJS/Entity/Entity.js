@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     loadEntity();
     $('#selectedMenu').text($('#menuEntTemp').text());
+    $('#tblTemplateHDR > tbody').append('<tr><td>Entity Name</td><td>String</td></tr>')
 })
 function loadTemplate(entityType, currentLI) {
     $("#ul > li").removeClass('cls-selected-li');

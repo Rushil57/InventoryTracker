@@ -27,12 +27,26 @@
     </div>
     <div class="col-md-8">
         <h6>@ViewBag.Type Type: <b id="templateName"></b></h6>
-        <div class="border border-color min-vh-75 overflow-auto">
+        <div class="border border-color min-vh-12 overflow-hidden">
+            <div class="mr-2 ml-2 ">
+                <table class="table" id="tblTemplateHDR">
+                    <thead style="background-color: #4472c4; color: white; ">
+                        <tr>
+                            <th scope="col" width="250px">Property Name</th>
+                            <th scope="col">Data Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="border border-color min-vh-60 overflow-auto mt-2">
             <div class="mr-2 ml-2 ">
                 <table class="table" id="tblTemplate">
                     <thead style="background-color: #4472c4; color: white; ">
                         <tr>
-                            <th scope="col">Property Name</th>
+                            <th scope="col" width="250px">Property Name</th>
                             <th scope="col">Data Type</th>
                             <th scope="col">Sequence</th>
                             <th scope="col"></th>

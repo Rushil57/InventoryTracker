@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     loadEquipment();
     $('#selectedMenu').text($('#menuEquipTemp').text());
+    $('#tblTemplateHDR > tbody').append('<tr><td>Unit ID</td><td>String</td></tr><tr><td>Vendor</td><td>String</td></tr>')
 })
 
 
