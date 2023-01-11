@@ -619,3 +619,7 @@ function importExcel() {
         }
     }
 }
+
+function sampleFileDownload() {
+    window.location.href = '/ExcelFiles/Equipment_Bulk_Import.xlsx';
+}

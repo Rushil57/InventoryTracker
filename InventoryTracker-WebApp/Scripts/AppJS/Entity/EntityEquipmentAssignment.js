@@ -508,6 +508,9 @@ function importExcel() {
             processData: false,
             success: function (data) {
                 var newData = JSON.parse(data);
+                if (newData.data != '') {
+                    alert(newData.data);
+                }
                 if (newData.IsValid) {
                     alert('Data updated successfully.')
                     $('#importExcel').modal('hide');

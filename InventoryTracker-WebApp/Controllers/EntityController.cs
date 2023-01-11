@@ -344,6 +344,7 @@ namespace InventoryTracker_WebApp.Controllers
         public string BulkImport(HttpPostedFileBase file)
         {
             string path = string.Empty;
+            bool isValidColHDR = true;
             try
             {
                 var fileExt = Path.GetExtension(file.FileName);
@@ -391,7 +392,7 @@ namespace InventoryTracker_WebApp.Controllers
                                             break;
                                         }
                                         var valueOFCell = "";
-                                        if (columnHeader[j-1] == "Start Date" || columnHeader[j-1] == "End Date")
+                                        if (columnHeader[j - 1] == "Start Date" || columnHeader[j - 1] == "End Date")
                                         {
                                             var cellValueOfDateTime = (sheet.GetCellValueAsDateTime(i, j));
                                             valueOFCell = cellValueOfDateTime.ToShortDateString().ToString();
@@ -409,11 +410,30 @@ namespace InventoryTracker_WebApp.Controllers
                                     if (!string.IsNullOrEmpty(invalidColumnHeader))
                                     {
                                         fs.Close();
-                                        return JsonConvert.SerializeObject(new { IsValid = false, data = "Error message: "+ invalidColumnHeader + " template not found for Entity Type: " + values[0] });
+                                        return JsonConvert.SerializeObject(new { IsValid = false, data = "Error message: " + invalidColumnHeader + " template not found for Entity Type: " + values[0] });
                                     }
                                     else
                                     {
                                         bool isInserted = _entityRepository.InsertTemplateDetails(columnHeader, values);
+                                    }
+                                }
+                                else
+                                {
+                                    if (columnHeader[0].Trim().ToString().ToLower() != "entity type" || columnHeader[1].Trim().ToString().ToLower() != "entity name")
+                                    {
+                                        isValidColHDR = false;
+                                    }
+                                    for (int colHDR = 2; colHDR < columnHeader.Count; colHDR = colHDR + 3)
+                                    {
+                                        if (string.IsNullOrEmpty(columnHeader[colHDR].Trim().ToString().ToLower()) || columnHeader[colHDR + 1].Trim().ToString().ToLower() != "start date" || columnHeader[colHDR + 2].Trim().ToString().ToLower() != "end date")
+                                        {
+                                            isValidColHDR = false;
+                                        }
+                                    }
+                                    if (!isValidColHDR)
+                                    {
+                                        fs.Close();
+                                        return JsonConvert.SerializeObject(new { IsValid = false, data = "This excel file is not valid for Entity bulk import. Please view sample file!" });
                                     }
                                 }
                             }
@@ -540,6 +560,7 @@ namespace InventoryTracker_WebApp.Controllers
 
                     sl.SetColumnStyle(j, j + 200, sLStyle);
                     var entIDList = equipment_ent_assignment.Where(x => x.EQUIP_ID == equipmentID).Select(x => x.ENT_ID).ToList();
+                    sl.SetCellValue(2, j, "Entity Name");
                     foreach (var entityID in entIDList)
                     {
                         sl.SetCellValue(i, j, entityHdr.Where(x => x.ENT_ID == entityID).Select(x => x.ENT_NAME).FirstOrDefault());
@@ -571,6 +592,7 @@ namespace InventoryTracker_WebApp.Controllers
             int excelTotalNewAssign = 0;
             int gtOneAssign = 0;
             int excelInvalidEntCount = 0;
+            bool isValidColHDR = true;
 
             try
             {
@@ -605,7 +627,7 @@ namespace InventoryTracker_WebApp.Controllers
                                     var cellValue = (sheet.GetCellValueAsString(i, j));
                                     if (i == 2)
                                     {
-                                        if (cellValue != null)
+                                        if (!string.IsNullOrEmpty(cellValue))
                                         {
                                             columnHeader.Add(cellValue);
                                         }
@@ -631,6 +653,26 @@ namespace InventoryTracker_WebApp.Controllers
                                     excelTotalRemove = excelTotalRemove + totalRemoved;
                                     excelInvalidEntityName += invalidEntName;
                                 }
+                                else
+                                {
+                                    if (columnHeader[0].Trim().ToString().ToLower() != "equip_id" || columnHeader[1].Trim().ToString().ToLower() != "equip_type" || columnHeader[2].Trim().ToString().ToLower() != "vendor" || columnHeader[3].Trim().ToString().ToLower() != "unit_id" || columnHeader.Count == 4)
+                                    {
+                                        isValidColHDR = false;
+                                    }
+
+                                    for (int colHDR = 4; colHDR < columnHeader.Count;colHDR++)
+                                    {
+                                        if (columnHeader[colHDR].Trim().ToString().ToLower() != "entity name")
+                                        {
+                                            isValidColHDR = false;
+                                        }
+                                    }
+                                    if (!isValidColHDR)
+                                    {
+                                        fs.Close();
+                                        return JsonConvert.SerializeObject(new { IsValid = false, data = "This excel file is not valid for Entity Equipment assign import. Please view sample file!" });
+                                    }
+                                }
                             }
                         }
                         if (!string.IsNullOrEmpty(excelTotalAssign))
@@ -647,7 +689,7 @@ namespace InventoryTracker_WebApp.Controllers
                         fs.Close();
                     }
                 }
-                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidEntityName = excelInvalidEntityName, excelInvalidEntCount = excelInvalidEntCount });
+                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidEntityName = excelInvalidEntityName, excelInvalidEntCount = excelInvalidEntCount,data="" });
             }
             catch (Exception e)
             {
@@ -667,7 +709,7 @@ namespace InventoryTracker_WebApp.Controllers
         #region Bulk Import Template
 
         [HttpPost]
-        public string BulkImportTemplate(HttpPostedFileBase file,bool isEntity)
+        public string BulkImportTemplate(HttpPostedFileBase file, bool isEntity)
         {
             string path = string.Empty;
             try
@@ -723,7 +765,26 @@ namespace InventoryTracker_WebApp.Controllers
                                 }
                                 if (i != 1)
                                 {
-                                    bool isInserted = _entityRepository.InsertTemplate(columnHeader, values,isEntity);
+                                    bool isInserted = _entityRepository.InsertTemplate(columnHeader, values, isEntity);
+                                }
+                                else
+                                {
+                                    if (isEntity)
+                                    {
+                                        if ((columnHeader[0].Trim().ToString().ToLower() != "entitytype") || (columnHeader[1].Trim().ToString().ToLower() != "property") || (columnHeader[2].Trim().ToString().ToLower() != "datatype") || (columnHeader[3].Trim().ToString().ToLower() != "seqance"))
+                                        {
+                                            fs.Close();
+                                            return JsonConvert.SerializeObject(new { IsValid = false, data = "This excel file is not valid for Entity. Please view sample file!" });
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if ((columnHeader[0].Trim().ToString().ToLower() != "equipmenttype") || (columnHeader[1].Trim().ToString().ToLower() != "property") || (columnHeader[2].Trim().ToString().ToLower() != "datatype") || (columnHeader[3].Trim().ToString().ToLower() != "seqance"))
+                                        {
+                                            fs.Close();
+                                            return JsonConvert.SerializeObject(new { IsValid = false, data = "This excel file is not valid for Equipment. Please view sample file!" });
+                                        }
+                                    }
                                 }
                             }
                         }

@@ -174,3 +174,8 @@ function importExcel() {
         BulkImportTemplate(false);
     }
 }
+
+
+function sampleFileDownload() {
+    window.location.href = '/ExcelFiles/Equipment_Template.xlsx';
+}

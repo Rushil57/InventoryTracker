@@ -372,6 +372,7 @@ namespace InventoryTracker_WebApp.Controllers
         public string BulkImport(HttpPostedFileBase file)
         {
             string path = string.Empty;
+            bool isValidColHDR = true;
             try
             {
                 var fileExt = Path.GetExtension(file.FileName);
@@ -442,6 +443,25 @@ namespace InventoryTracker_WebApp.Controllers
                                     else
                                     {
                                         bool isInserted = _equipmentRepository.InsertTemplateDetails(columnHeader, values);
+                                    }
+                                }
+                                else
+                                {
+                                    if (columnHeader[0].Trim().ToString().ToLower() != "equipment type" || columnHeader[1].Trim().ToString().ToLower() != "vendor" || columnHeader[2].Trim().ToString().ToLower() != "unit id")
+                                    {
+                                        isValidColHDR = false;
+                                    }
+                                    for (int colHDR = 3; colHDR < columnHeader.Count; colHDR = colHDR + 3)
+                                    {
+                                        if (string.IsNullOrEmpty(columnHeader[colHDR].Trim().ToString().ToLower()) || columnHeader[colHDR + 1].Trim().ToString().ToLower() != "start date" || columnHeader[colHDR + 2].Trim().ToString().ToLower() != "end date")
+                                        {
+                                            isValidColHDR = false;
+                                        }
+                                    }
+                                    if (!isValidColHDR)
+                                    {
+                                        fs.Close();
+                                        return JsonConvert.SerializeObject(new { IsValid = false, data = "This excel file is not valid for Equipment bulk import. Please view sample file!" });
                                     }
                                 }
                             }
@@ -565,6 +585,7 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                     sl.SetColumnStyle(j, j + 200, sLStyle);
                     var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entID).Select(x => x.EQUIP_ID).ToList();
+                    sl.SetCellValue(2, j, "Unit ID");
                     foreach (var equipID in equipIDList)
                     {
                         sl.SetCellValue(i, j, equipmentHdr.Where(x => x.EQUIP_ID == equipID).Select(x => x.UNIT_ID).FirstOrDefault());
@@ -598,6 +619,7 @@ namespace InventoryTracker_WebApp.Controllers
             int excelTotalNewAssign = 0;
             int gtOneAssign = 0;
             int excelInvalidUnitIDCount = 0;
+            bool isValidColHDR = true;
 
             try
             {
@@ -632,7 +654,7 @@ namespace InventoryTracker_WebApp.Controllers
                                     var cellValue = (sheet.GetCellValueAsString(i, j));
                                     if (i == 2)
                                     {
-                                        if (cellValue != null)
+                                        if (!string.IsNullOrEmpty(cellValue))
                                         {
                                             columnHeader.Add(cellValue);
                                         }
@@ -658,6 +680,25 @@ namespace InventoryTracker_WebApp.Controllers
                                     excelTotalRemove = excelTotalRemove + totalRemoved;
                                     excelInvalidUnitID += invalidUnitID;
                                 }
+                                else
+                                {
+                                    if (columnHeader[0].Trim().ToString().ToLower() != "ent_id" || columnHeader[1].Trim().ToString().ToLower() != "ent_name" || columnHeader.Count == 2)
+                                    {
+                                        isValidColHDR = false;
+                                    }
+                                    for (int colHDR = 2; colHDR < columnHeader.Count; colHDR++)
+                                    {
+                                        if (columnHeader[colHDR].Trim().ToString().ToLower() != "unit id")
+                                        {
+                                            isValidColHDR = false;
+                                        }
+                                    }
+                                    if (!isValidColHDR)
+                                    {
+                                        fs.Close();
+                                        return JsonConvert.SerializeObject(new { IsValid = false, data = "This excel file is not valid for Equipment Entity assign import. Please view sample file!" });
+                                    }
+                                }
                             }
                         }
                         if (!string.IsNullOrEmpty(excelTotalAssign))
@@ -674,7 +715,7 @@ namespace InventoryTracker_WebApp.Controllers
                         fs.Close();
                     }
                 }
-                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidUnitID = excelInvalidUnitID, excelInvalidUnitIDCount = excelInvalidUnitIDCount });
+                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidUnitID = excelInvalidUnitID, excelInvalidUnitIDCount = excelInvalidUnitIDCount, data = "" });
             }
             catch (Exception e)
             {

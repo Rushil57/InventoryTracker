@@ -554,3 +554,7 @@ function importExcel() {
     }
     
 }
+
+function sampleFileDownload() {
+    window.location.href = '/ExcelFiles/Entity_Bulk_Import.xlsx';
+}
