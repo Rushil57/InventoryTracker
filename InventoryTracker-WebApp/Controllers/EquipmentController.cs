@@ -456,6 +456,7 @@ namespace InventoryTracker_WebApp.Controllers
                                         if (string.IsNullOrEmpty(columnHeader[colHDR].Trim().ToString().ToLower()) || columnHeader[colHDR + 1].Trim().ToString().ToLower() != "start date" || columnHeader[colHDR + 2].Trim().ToString().ToLower() != "end date")
                                         {
                                             isValidColHDR = false;
+                                            break;
                                         }
                                     }
                                     if (!isValidColHDR)
