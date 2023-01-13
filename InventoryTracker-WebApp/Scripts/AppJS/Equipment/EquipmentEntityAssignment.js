@@ -6,6 +6,8 @@ var startDate = $('.datepicker');
 var tblHDR = '<th scope="col">Entity Name</th>';
 var dropDownVal = '';
 var ccEntityID = 0;
+var equipmentModelBody = $('#equipmentModelBody');
+var equipmentTempDTL = $('#equipmentTempDTL');
 
 $(document).ready(function () {
     //    loadAllEquipTemp();
@@ -454,7 +456,36 @@ $('#prevYear').click(function () {
 function onChangeYear() {
     $('#currentYear').text($('.ui-datepicker-year:first').text());
     $(".ui-state-default").on("mouseenter", function () {
-        //alert($(this).text())
+        var equipmentID = $($(this)[0].outerHTML).attr('equipmentid');
+        if (equipmentID != undefined) {
+
+            $.ajax({
+                before: AddLoader(),
+                after: RemoveLoader(),
+                url: '/Equipment/GetEquipmentTemplateDetails',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'GET',
+                async: false,
+                data: { 'equipID': equipmentID },
+                success: function (data) {
+                    if (data.IsValid) {
+                        var equipmentTemplateString = '';
+                        equipmentTemplateString += '<table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+
+                        for (var i = 0; i < data.data.length; i++) {
+                            var equipmentValue = data.data[i].Eq_Value.trim();
+                            var sDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
+                            var eDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
+                            equipmentTemplateString += '<tr><td>' + data.data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
+                        }
+                        equipmentTemplateString += '</tbody></table>';
+                        equipmentModelBody.html(equipmentTemplateString);
+                        equipmentTempDTL.modal('show');
+                    }
+                }, error: function (ex) { }
+            });
+        }
     });
     getEquipmentEntityAssignmentByYear(ccEntityID);
 }
@@ -516,7 +547,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                         var currDate = new Date(currYear, currMonth, currDay);
                         if (new Date(newData.data[i].START_DATE) <= currDate && new Date(newData.data[i].END_DATE) >= currDate) {
                             if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
-                                $(this).children().css('background-color', '\'#' + newData.data[i].RendomColor + '\'')
+                                $(this).children().css('background-color', '\'#' + newData.data[i].RendomColor + '\'').attr('equipmentID', newData.data[i].EQUIP_ID);;
                             }
                             else {
                                 $(this).children().css('border', '2px solid black')

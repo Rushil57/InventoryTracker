@@ -14,7 +14,7 @@
     <div class="col-md-7">
         <h6>
             <input type="hidden" id="entityHDRID" value="0" />
-            <select name='entityType' class='dropdown-control' style="display:inline;width:27%" id='entityType' disabled></select> 
+            <select name='entityType' class='dropdown-control' style="display:inline;width:27%" id='entityType' disabled></select>
             <input type="text" class="datepicker dropdown-control float-end" style="display:inline;width:18%" id="mainDate" />
         </h6>
         <div class="border border-color min-vh-10 overflow-hidden mb-2">
@@ -43,7 +43,7 @@
                 <table class="table" id="tblTemplateDtl">
                     <thead style="background-color: #4472c4; color: white; ">
                         <tr>
-                            <th scope="col"  width="250px">Property Name</th>
+                            <th scope="col" width="250px">Property Name</th>
                             <th scope="col">Data Value</th>
                             <th scope="col">Start Date</th>
                             <th scope="col">End Date</th>
@@ -83,25 +83,10 @@
 
 @*Modal Start*@
 @Html.Partial("_EntityCommonModel")
-@*Model End
+@Html.Partial("_EquipmentTemplateDetail")
+@*Model End*@
 
-    Entity Modal Start*@
-<div class="modal fade" id="equipmentTempDTL" tabindex="-1" aria-labelledby="equipmentTempDTLLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="equipmentTempDTLLabel">Equipment Details</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="height: 275px; overflow: auto;" id="equipmentModelBody">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-@*Entity Model End*@
+   
 
 @Html.Partial("_ImportModel")
 @section scripts{

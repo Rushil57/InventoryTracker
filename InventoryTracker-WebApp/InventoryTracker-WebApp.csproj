@@ -889,6 +889,7 @@
     <Content Include="Views\UserMaster\_AddNewUser.cshtml" />
     <Content Include="Views\UserDefinition\Index.cshtml" />
     <Content Include="Views\Shared\_CalendarControlModel.cshtml" />
+    <Content Include="Views\Shared\_EquipmentTemplateDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
