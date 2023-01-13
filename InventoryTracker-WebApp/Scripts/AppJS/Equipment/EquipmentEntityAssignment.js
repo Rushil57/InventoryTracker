@@ -457,6 +457,7 @@ function onChangeYear() {
     $('#currentYear').text($('.ui-datepicker-year:first').text());
     $(".ui-state-default").on("mouseenter", function () {
         var equipmentID = $($(this)[0].outerHTML).attr('equipmentid');
+        var unitID = $($(this)[0].outerHTML).attr('unitID');
         if (equipmentID != undefined) {
 
             $.ajax({
@@ -471,7 +472,7 @@ function onChangeYear() {
                 success: function (data) {
                     if (data.IsValid) {
                         var equipmentTemplateString = '';
-                        equipmentTemplateString += '<table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+                        equipmentTemplateString += '<div class="col-7"><h6> <label>Current Equipment ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
 
                         for (var i = 0; i < data.data.length; i++) {
                             var equipmentValue = data.data[i].Eq_Value.trim();
@@ -506,6 +507,7 @@ function openCC(entityName, entityID) {
         //beforeShowDay: colorize,
         onSelect: function (date) {
             //alert($(this).val())
+            //deleteAssignment(entityID, $(el).attr('equipmentid'), el, null, null)
             getEquipmentEntityAssignmentByYear(entityID)
         }
     });
@@ -547,7 +549,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                         var currDate = new Date(currYear, currMonth, currDay);
                         if (new Date(newData.data[i].START_DATE) <= currDate && new Date(newData.data[i].END_DATE) >= currDate) {
                             if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
-                                $(this).children().css('background-color', '\'#' + newData.data[i].RendomColor + '\'').attr('equipmentID', newData.data[i].EQUIP_ID);;
+                                $(this).children().css('background-color', '\'#' + newData.data[i].RendomColor + '\'').attr('equipmentID', newData.data[i].EQUIP_ID).attr('unitID', newData.data[i].UNIT_ID);
                             }
                             else {
                                 $(this).children().css('border', '2px solid black')
