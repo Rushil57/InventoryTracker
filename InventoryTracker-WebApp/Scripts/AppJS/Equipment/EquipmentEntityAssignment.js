@@ -5,6 +5,7 @@ var draggedElementUnitID = '';
 var startDate = $('.datepicker');
 var tblHDR = '<th scope="col">Entity Name</th>';
 var dropDownVal = '';
+var ccEntityID = 0;
 
 $(document).ready(function () {
     //    loadAllEquipTemp();
@@ -442,8 +443,24 @@ function importExcel() {
     }
 }
 
-function openCC(entityName, entityID) {
+$('#nextYear').click(function () {
+    $('.ui-icon-circle-triangle-e').trigger('click');
+    setTimeout(onChangeYear(), 500)
+});
+$('#prevYear').click(function () {
+    $('.ui-icon-circle-triangle-w').trigger('click')
+    setTimeout(onChangeYear(), 500)
+});
+function onChangeYear() {
+    $('#currentYear').text($('.ui-datepicker-year:first').text());
+    $(".ui-state-default").on("mouseenter", function () {
+        //alert($(this).text())
+    });
+    getEquipmentEntityAssignmentByYear(ccEntityID);
+}
 
+function openCC(entityName, entityID) {
+    ccEntityID = entityID;
     $('.selectDrpDown').html(uniqueEquipType).find('option:first').text('No Filter');
     if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
         var datepicker = $.fn.datepicker.noConflict();
@@ -455,7 +472,7 @@ function openCC(entityName, entityID) {
         changeMonth: false,
         changeYear: false,
         stepMonths: 12,
-        beforeShowDay: colorize,
+        //beforeShowDay: colorize,
         onSelect: function (date) {
             //alert($(this).val())
         }
@@ -464,29 +481,12 @@ function openCC(entityName, entityID) {
     $('.ui-datepicker').addClass('ccStyle')
     setTimeout(onChangeYear(), 500)
 
-    function colorize(date) {
-        if ((date.getMonth() + 1) != 3) return [true, ""];
-        if (date.getDate() < 18) return [true, "notcool"];
+    //function colorize(date) {
+    //    if ((date.getMonth() + 1) != 3) return [true, ""];
+    //    if (date.getDate() < 18) return [true, "notcool"];
 
-        return [true, "cool"];
-    }
-
-    function onChangeYear() {
-        $('#currentYear').text($('.ui-datepicker-year:first').text());
-        $(".ui-state-default").on("mouseenter", function () {
-            //alert($(this).text())
-        });
-        getEquipmentEntityAssignmentByYear(entityID);
-    }
-
-    $('#nextYear').click(function () {
-        $('.ui-icon-circle-triangle-e').trigger('click');
-        setTimeout(onChangeYear(), 500)
-    });
-    $('#prevYear').click(function () {
-        $('.ui-icon-circle-triangle-w').trigger('click')
-        setTimeout(onChangeYear(), 500)
-    });
+    //    return [true, "cool"];
+    //}
 
     $('#ccEntityName').text(entityName);
     getEquipmentEntityAssignmentByYear(entityID);
