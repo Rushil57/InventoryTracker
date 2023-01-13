@@ -528,8 +528,14 @@ function updateAssignmentOption() {
 }
 
 function resetDeleteAssignmentModel() {
-    $('.updateEndDatepicker').datepicker({ autoclose: true }).datepicker('setDate', deleteEndDate);
-    $('.updateStartDatepicker').datepicker({ autoclose: true }).datepicker('setDate', deleteStartDate);
+    if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
+        $('.updateEndDatepicker').datepicker({ autoclose: true }).datepicker('setDate', deleteEndDate);
+        $('.updateStartDatepicker').datepicker({ autoclose: true }).datepicker('setDate', deleteStartDate);
+    }
+    else {
+        $('.updateEndDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', deleteEndDate);
+        $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', deleteStartDate);
+    }
 }
 
 function divEquipmentHDRLoad(element) {
