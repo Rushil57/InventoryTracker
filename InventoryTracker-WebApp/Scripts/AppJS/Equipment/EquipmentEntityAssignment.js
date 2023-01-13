@@ -472,7 +472,7 @@ function onChangeYear() {
                 success: function (data) {
                     if (data.IsValid) {
                         var equipmentTemplateString = '';
-                        equipmentTemplateString += '<div class="col-7"><h6> <label>Current Equipment ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+                        equipmentTemplateString += '<div class="col-7"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
 
                         for (var i = 0; i < data.data.length; i++) {
                             var equipmentValue = data.data[i].Eq_Value.trim();
