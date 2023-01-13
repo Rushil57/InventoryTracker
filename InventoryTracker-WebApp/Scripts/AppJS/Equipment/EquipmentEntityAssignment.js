@@ -489,7 +489,6 @@ function openCC(entityName, entityID) {
     //}
 
     $('#ccEntityName').text(entityName);
-    getEquipmentEntityAssignmentByYear(entityID);
     $('#calendarControlModel').modal('show');
 }
 
