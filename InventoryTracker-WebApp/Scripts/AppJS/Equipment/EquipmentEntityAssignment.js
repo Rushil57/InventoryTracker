@@ -4,6 +4,8 @@ var dropEntityID = 0;
 var draggedElementUnitID = '';
 var startDate = $('.datepicker');
 var tblHDR = '<th scope="col">Entity Name</th>';
+var dropDownVal = '';
+
 $(document).ready(function () {
     //    loadAllEquipTemp();
     //    $('.datepicker').datepicker({
@@ -159,7 +161,7 @@ function loadEntityHDR(searchString, searchflag) {
                             $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").addClass("droppable");
                         }
                         if (headtext == "\n                            ") {
-                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").append('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
+                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").append('<svg onclick="openCC(\'' + data.data[i].ENT_NAME + '\',' + data.data[i].ENT_ID + ')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
                         }
                         th = th + 1;
                     }
@@ -438,4 +440,107 @@ function importExcel() {
             }
         });
     }
+}
+
+function openCC(entityName, entityID) {
+
+    $('.selectDrpDown').html(uniqueEquipType).find('option:first').text('No Filter');
+    if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
+        var datepicker = $.fn.datepicker.noConflict();
+        $.fn.bootstrapDP = datepicker;
+    }
+
+    $("#monthsDatePicker").datepicker({
+        numberOfMonths: [3, 4],
+        changeMonth: false,
+        changeYear: false,
+        stepMonths: 12,
+        beforeShowDay: colorize,
+        onSelect: function (date) {
+            //alert($(this).val())
+        }
+    });
+
+    $('.ui-datepicker').addClass('ccStyle')
+    setTimeout(onChangeYear(), 500)
+
+    function colorize(date) {
+        if ((date.getMonth() + 1) != 3) return [true, ""];
+        if (date.getDate() < 18) return [true, "notcool"];
+
+        return [true, "cool"];
+    }
+
+    function onChangeYear() {
+        $('#currentYear').text($('.ui-datepicker-year:first').text());
+        $(".ui-state-default").on("mouseenter", function () {
+            //alert($(this).text())
+        });
+        getEquipmentEntityAssignmentByYear(entityID);
+    }
+
+    $('#nextYear').click(function () {
+        $('.ui-icon-circle-triangle-e').trigger('click');
+        setTimeout(onChangeYear(), 500)
+    });
+    $('#prevYear').click(function () {
+        $('.ui-icon-circle-triangle-w').trigger('click')
+        setTimeout(onChangeYear(), 500)
+    });
+
+    $('#ccEntityName').text(entityName);
+    getEquipmentEntityAssignmentByYear(entityID);
+    $('#calendarControlModel').modal('show');
+}
+
+function getEquipmentEntityAssignmentByYear(entityID) {
+    var year = $('#currentYear').text();
+    $.ajax({
+        before: AddLoader(),
+        after: RemoveLoader(),
+        type: "GET",
+        url: '/Equipment/GetEquipmentEntityAssignmentByYear?year=' + year + '&entityID=' + entityID,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            var newData = JSON.parse(data);
+            if (newData.IsValid) {
+                var legendStr = '';
+                for (var i = 0; i < newData.data.length; i++) {
+                    legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>'
+                }
+                $('#tblLegend > tbody > tr').remove();
+                $('#tblLegend > tbody').append(legendStr);
+                filterFunction(dropDownVal)
+            }
+        },
+        error: function (e1, e2, e3) {
+        }
+    });
+}
+
+
+$('.selectDrpDown').change(function () {
+    dropDownVal = $(this).val();
+    filterFunction(dropDownVal);
+})
+
+function filterFunction(dropDownVal) {
+    $("#tblLegend tr").each(function (index) {
+        var row = $(this);
+
+        if (dropDownVal == 0) {
+            row.show();
+        }
+        else {
+            if (index !== 0) {
+                if (row.find('td:last').text().toLowerCase() != dropDownVal.toLowerCase().trim()) {
+                    row.hide();
+                }
+                else {
+                    row.show();
+                }
+            }
+        }
+    });
 }

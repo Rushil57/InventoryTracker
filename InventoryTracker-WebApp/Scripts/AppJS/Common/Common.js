@@ -13,6 +13,7 @@ var previousentitysearch = '';
 var equipsearchflag = false;
 var previousequipsearch = '';
 var currentUpdateAssignDate = '';
+var uniqueEquipType = "";
 
 var equipmentTemplate = $('#equipmentTemplate');
 
@@ -170,7 +171,6 @@ function loadAllEntityTemp() {
 }
 
 
-
 function loadAllEquipTemp() {
     //var equipType = [];
     $.ajax({
@@ -191,7 +191,7 @@ function loadAllEquipTemp() {
                     templateString += '<div class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
                 }
                 //$.unique(equipType);
-                var uniqueEquipType = "";
+                uniqueEquipType = "";
                 uniqueEquipType += "<option value='0' >Select equipment type</option>";
                 for (var j = 0; j < data.uniqueEquipmentTemplates.length; j++) {
                     var equipType = data.uniqueEquipmentTemplates[j].Equipment_Type;

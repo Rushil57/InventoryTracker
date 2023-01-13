@@ -17,13 +17,14 @@ namespace InventoryTracker_WebApp.Controllers
     public class EquipmentController : Controller
     {
         private readonly IEquipmentRepository _equipmentRepository;
+        private Random rnd = new Random();
 
         public EquipmentController(IEquipmentRepository equipmentRepository)
         {
             this._equipmentRepository = equipmentRepository;
         }
 
-        #region Equipment Temolate
+        #region Equipment Template
         public ActionResult Index()
         {
             return View();
@@ -730,6 +731,21 @@ namespace InventoryTracker_WebApp.Controllers
                 }
             }
         }
+        #endregion
+
+        #region Equipment Calender Control
+        public string GetEquipmentEntityAssignmentByYear(string year,int entityID)
+        {
+            if (!string.IsNullOrEmpty(year))
+            {
+                var data = _equipmentRepository.GetEquipmentEntityAssignmentByYear(year, entityID);
+                data.ForEach(x => x.RendomColor = System.Drawing.Color.FromArgb
+                (rnd.Next(0,256), rnd.Next(0,256), rnd.Next(0,256)).Name.ToString());
+                return JsonConvert.SerializeObject(new { IsValid = true, data = data });
+            }
+            return JsonConvert.SerializeObject(new { IsValid = false, data = false });
+        }
+
         #endregion
     }
 }

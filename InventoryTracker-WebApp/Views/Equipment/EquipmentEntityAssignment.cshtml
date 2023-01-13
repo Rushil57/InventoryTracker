@@ -4,6 +4,7 @@
     var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="~/Content/Css/EquipmentEntityAssignment.css">
 <div class="row">
     <div class="col-md-4 ms-5">
         @Html.Partial("_EquipmentLeftSection")
@@ -44,6 +45,7 @@
 @Html.Partial("_DeleteAssignmentModel")
 @Html.Partial("_ImportModel")
 @Html.Partial("_SummaryModel")
+@Html.Partial("_CalendarControlModel")
 @*Model End*@
 
 @section scripts{

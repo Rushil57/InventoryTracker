@@ -1,6 +1,12 @@
 ﻿body {
 }
 
+
+.min-vh-112 {
+    min-height: 112vh !important;
+    height: 112vh !important;
+}
+
 .min-vh-75 {
     min-height: 75vh !important;
     height: 75vh !important;

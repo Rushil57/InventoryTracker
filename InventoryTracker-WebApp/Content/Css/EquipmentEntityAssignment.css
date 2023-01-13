@@ -1,0 +1,53 @@
+﻿body {
+}
+.ui-corner-all {
+    display: none
+}
+
+.ccStyle {
+    width: 55em !important;
+}
+
+.modelContentStyle {
+    width: 1250px !important;
+    margin-left: -200px;
+}
+
+.arrowStyle{
+    cursor:pointer
+}
+
+.selectDrpDown{
+    width:200px;
+}
+.yearStyle {
+    font-weight: bold;
+    font-size: medium;
+    
+}
+.entityNameStyle {
+    font-weight: bold;
+    font-size: medium;
+    margin-left:250px;
+}
+.legendStyle {
+    font-weight: bold;
+    font-size: medium;
+    margin-left: 100px;
+}
+.mainModelStyle {
+    padding-right: 350px;
+}
+
+
+.cool a.ui-state-default {
+    background-color: #e3ad88;
+    background-image: none;
+    border: 2px solid black;
+}
+
+.notcool a.ui-state-default {
+    background-color: #4472c4;
+    background-image: none;
+    color: white;
+}

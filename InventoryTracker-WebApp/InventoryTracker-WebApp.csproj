@@ -230,6 +230,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\Css\EquipmentEntityAssignment.css" />
     <Content Include="Content\Css\LoginIndex.css" />
     <Content Include="Content\Css\MultiInstance.css" />
     <Content Include="Content\Css\ResetPassword.css" />
@@ -887,6 +888,7 @@
     <Content Include="Views\UserMaster\Index.cshtml" />
     <Content Include="Views\UserMaster\_AddNewUser.cshtml" />
     <Content Include="Views\UserDefinition\Index.cshtml" />
+    <Content Include="Views\Shared\_CalendarControlModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

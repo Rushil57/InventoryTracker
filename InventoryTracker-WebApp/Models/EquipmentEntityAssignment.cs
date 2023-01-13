@@ -11,5 +11,8 @@ namespace InventoryTracker_WebApp.Models
         public DateTime START_DATE { get; set; }
         public DateTime END_DATE { get; set; }
         public string ENT_NAME { get; set; }
+        public string EQUIP_TYPE { get; set; }
+
+        public string RendomColor { get; set; }
     }
 }
