@@ -466,7 +466,7 @@ function openCC(entityName, entityID) {
         var datepicker = $.fn.datepicker.noConflict();
         $.fn.bootstrapDP = datepicker;
     }
-
+    $("#monthsDatePicker").datepicker("destroy");
     $("#monthsDatePicker").datepicker({
         numberOfMonths: [3, 4],
         changeMonth: false,
@@ -475,6 +475,7 @@ function openCC(entityName, entityID) {
         //beforeShowDay: colorize,
         onSelect: function (date) {
             //alert($(this).val())
+            getEquipmentEntityAssignmentByYear(entityID)
         }
     });
 
@@ -506,7 +507,22 @@ function getEquipmentEntityAssignmentByYear(entityID) {
             if (newData.IsValid) {
                 var legendStr = '';
                 for (var i = 0; i < newData.data.length; i++) {
-                    legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>'
+                    legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+
+                    $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
+                        var currMonth = $(this).attr('data-month');
+                        var currYear = $(this).attr('data-year');
+                        var currDay = $(this).text()
+                        var currDate = new Date(currYear, currMonth, currDay);
+                        if (new Date(newData.data[i].START_DATE) <= currDate && new Date(newData.data[i].END_DATE) >= currDate) {
+                            if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
+                                $(this).children().css('background-color', '\'#' + newData.data[i].RendomColor + '\'')
+                            }
+                            else {
+                                $(this).children().css('border', '2px solid black')
+                            }
+                        }
+                    })
                 }
                 $('#tblLegend > tbody > tr').remove();
                 $('#tblLegend > tbody').append(legendStr);
