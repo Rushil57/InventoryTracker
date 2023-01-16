@@ -524,6 +524,9 @@ function updateAssignmentOption() {
             deleteAssignmentModel.modal('hide');
             $(deleteElement).attr('onclick', "deleteAssignment(" + deleteEntityID + ", " + deleteEquipID + ", this, '" + deleteStartDate + "','" + endDate + "')");
             $(deleteElement).parent().attr('data-bs-original-title', "Start date: " + startDate + " <br/> End date: " + endDate);
+            if ($('#calendarControlModel').is(":visible")) {
+                //setTimeout(onChangeYear(), 500);
+            }
         }, error: function (ex) { }
     });
 }

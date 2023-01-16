@@ -8,7 +8,9 @@ var dropDownVal = '';
 var ccEntityID = 0;
 var equipmentModelBody = $('#equipmentModelBody');
 var equipmentTempDTL = $('#equipmentTempDTL');
-
+var gbl_selected_td;
+var dataArray = [];
+var preservedColor = [];
 $(document).ready(function () {
     //    loadAllEquipTemp();
     //    $('.datepicker').datepicker({
@@ -22,12 +24,14 @@ $(document).ready(function () {
     //        //loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
     //    }).datepicker('setDate', new Date());
     loadAllEntityTemp();
+    $(".ui-state-default").on("mouseleave", function () { $('#DivToShow').hide(); });
     loadEntityHDR('', false);
     loadEquipmentHDR('', false);
     resizableTable();
     sortableTable();
     $('#selectedMenu').text($('#menuEntEquAss').text());
 })
+
 
 
 function loadEquipmentHDR(searchString, searchflag) {
@@ -444,6 +448,14 @@ function importExcel() {
         });
     }
 }
+var mouseX;
+var mouseY;
+$(document).mousemove(function (e) {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+});
+
+$(".ui-state-default").on("mouseleave", function () { $('#DivToShow').hide(); });
 
 $('#nextYear').click(function () {
     $('.ui-icon-circle-triangle-e').trigger('click');
@@ -454,10 +466,14 @@ $('#prevYear').click(function () {
     setTimeout(onChangeYear(), 500)
 });
 function onChangeYear() {
+    $(".ui-state-default").on("mouseleave", function () { $('#DivToShow').hide(); });
     $('#currentYear').text($('.ui-datepicker-year:first').text());
     $(".ui-state-default").on("mouseenter", function () {
         var equipmentID = $($(this)[0].outerHTML).attr('equipmentid');
         var unitID = $($(this)[0].outerHTML).attr('unitID');
+        gbl_selected_td = $($(this)[0].outerHTML);
+        //$('#DivToShow').css({ 'top': mouseY-30, 'left': mouseX-130 }).show();
+        //return; //##########
         if (equipmentID != undefined) {
 
             $.ajax({
@@ -472,8 +488,8 @@ function onChangeYear() {
                 success: function (data) {
                     if (data.IsValid) {
                         var equipmentTemplateString = '';
-                        equipmentTemplateString += '<div class="col-7"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-
+                        //equipmentTemplateString += '<div class="col-7"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+                        equipmentTemplateString += '<div class="col-7" style="padding-left:5px !important;"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
                         for (var i = 0; i < data.data.length; i++) {
                             var equipmentValue = data.data[i].Eq_Value.trim();
                             var sDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
@@ -481,11 +497,13 @@ function onChangeYear() {
                             equipmentTemplateString += '<tr><td>' + data.data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
                         }
                         equipmentTemplateString += '</tbody></table>';
-                        equipmentModelBody.html(equipmentTemplateString);
-                        equipmentTempDTL.modal('show');
+                        //equipmentModelBody.html(equipmentTemplateString);
+                        //equipmentTempDTL.modal('show');
+                        $('#DivToShow').html(equipmentTemplateString);
                     }
                 }, error: function (ex) { }
             });
+            $('#DivToShow').css({ 'top': mouseY - 30, 'left': mouseX - 130 }).show();
         }
     });
     getEquipmentEntityAssignmentByYear(ccEntityID);
@@ -498,6 +516,7 @@ function openCC(entityName, entityID) {
         var datepicker = $.fn.datepicker.noConflict();
         $.fn.bootstrapDP = datepicker;
     }
+    $('#currentYear').text($('.ui-datepicker-year:first').text());
     $("#monthsDatePicker").datepicker("destroy");
     $("#monthsDatePicker").datepicker({
         numberOfMonths: [3, 4],
@@ -505,10 +524,14 @@ function openCC(entityName, entityID) {
         changeYear: false,
         stepMonths: 12,
         //beforeShowDay: colorize,
-        onSelect: function (date) {
+        onSelect: function (date, inst) {
+            inst.show();
+            
+            //openAssignmentPopup();
+            //defaultz
             //alert($(this).val())
             //deleteAssignment(entityID, $(el).attr('equipmentid'), el, null, null)
-            getEquipmentEntityAssignmentByYear(entityID)
+            //getEquipmentEntityAssignmentByYear(entityID)
         }
     });
 
@@ -525,7 +548,87 @@ function openCC(entityName, entityID) {
     $('#ccEntityName').text(entityName);
     $('#calendarControlModel').modal('show');
 }
+function getFilterEquipmentEntityAssignmentByYear() {
+    var legendStr = '';
+    $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)'); });
+    selectedvalue = $('.selectDrpDown :selected').text().toLowerCase();
+    if (selectedvalue == 'no filter') {
+        for (var i = 0; i < dataArray.length; i++) {
+            if (preservedColor.length >= i) {
 
+                legendStr += '<tr><td style="background-color:#' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+            } else {
+                legendStr += '<tr><td style="background-color:#' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+            }
+
+
+            $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
+                var currMonth = $(this).attr('data-month');
+                var currYear = $(this).attr('data-year');
+                var currDay = $(this).text()
+                var currDate = new Date(currYear, currMonth, currDay);
+                if (new Date(dataArray[i].START_DATE) <= currDate && new Date(dataArray[i].END_DATE) >= currDate) {
+                    if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
+                        $(this).children().attr('equipmentID', dataArray[i].EQUIP_ID).attr('unitID', dataArray[i].UNIT_ID)
+                            .attr('data-start-date', dataArray[i].START_DATE).attr('data-end-date', dataArray[i].END_DATE)
+                            .attr('data-ent-id', dataArray[i].ENT_ID)
+                            .attr('onclick', "openAssignmentPopup()");
+                        if (preservedColor.length >= i) {
+
+                            $(this).children().css('background-color', '\'#' + preservedColor[i] + '\'')
+                        } else {
+                            $(this).children().css('background-color', '\'#' + dataArray[i].RendomColor + '\'')
+                        }
+                    }
+                    else {
+                        $(this).children().css('border', '2px solid black')
+                        //$(this).children().css('border', '4px solid ' + $(this).children().css('background-color')) //#####
+                    }
+                }
+            })
+        }
+        $('#tblLegend > tbody > tr').remove();
+        $('#tblLegend > tbody').append(legendStr);
+    } else {
+        for (var i = 0; i < dataArray.length; i++) {
+            if (dataArray[i].EQUIP_TYPE.toLowerCase() == selectedvalue) {
+                if (preservedColor.length >= i) {
+
+                    legendStr += '<tr><td style="background-color:#' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+                } else {
+                    legendStr += '<tr><td style="background-color:#' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+                }
+                $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
+                    var currMonth = $(this).attr('data-month');
+                    var currYear = $(this).attr('data-year');
+                    var currDay = $(this).text()
+                    var currDate = new Date(currYear, currMonth, currDay);
+                    if (new Date(dataArray[i].START_DATE) <= currDate && new Date(dataArray[i].END_DATE) >= currDate) {
+                        if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
+                            $(this).children().attr('equipmentID', dataArray[i].EQUIP_ID).attr('unitID', dataArray[i].UNIT_ID)
+                                .attr('data-start-date', dataArray[i].START_DATE).attr('data-end-date', dataArray[i].END_DATE)
+                                .attr('data-ent-id', dataArray[i].ENT_ID)
+                                .attr('onclick', "openAssignmentPopup()");
+                            if (preservedColor.length >= i) {
+
+                                $(this).children().css('background-color', '\'#' + preservedColor[i] + '\'')
+                            } else {
+                                $(this).children().css('background-color', '\'#' + dataArray[i].RendomColor + '\'')
+                            }
+                        }
+                        else {
+                            $(this).children().css('border', '2px solid black')
+                            //$(this).children().css('border', '4px solid ' + $(this).children().css('background-color'))
+                        }
+                    }
+                })
+                break;
+            }
+        }
+        $('#tblLegend > tbody > tr').remove();
+        $('#tblLegend > tbody').append(legendStr);
+    }
+}
 function getEquipmentEntityAssignmentByYear(entityID) {
     var year = $('#currentYear').text();
     $.ajax({
@@ -539,9 +642,17 @@ function getEquipmentEntityAssignmentByYear(entityID) {
             var newData = JSON.parse(data);
             if (newData.IsValid) {
                 var legendStr = '';
+                dataArray = newData.data;
                 for (var i = 0; i < newData.data.length; i++) {
-                    legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
-
+                    //legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                    if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
+                        preservedColor.push(newData.data[i].RendomColor);
+                    }
+                    if (preservedColor.length >= i) {
+                        legendStr += '<tr><td style="background-color:#' + preservedColor[i] + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                    } else {
+                        legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                    }
                     $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
                         var currMonth = $(this).attr('data-month');
                         var currYear = $(this).attr('data-year');
@@ -549,10 +660,19 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                         var currDate = new Date(currYear, currMonth, currDay);
                         if (new Date(newData.data[i].START_DATE) <= currDate && new Date(newData.data[i].END_DATE) >= currDate) {
                             if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
-                                $(this).children().css('background-color', '\'#' + newData.data[i].RendomColor + '\'').attr('equipmentID', newData.data[i].EQUIP_ID).attr('unitID', newData.data[i].UNIT_ID);
+                                $(this).children().attr('equipmentID', newData.data[i].EQUIP_ID).attr('unitID', newData.data[i].UNIT_ID)
+                                    .attr('data-start-date', newData.data[i].START_DATE).attr('data-end-date', newData.data[i].END_DATE)
+                                    .attr('data-ent-id', newData.data[i].ENT_ID)
+                                    .attr('onclick', "openAssignmentPopup()");
+                                if (preservedColor.length >= i) {
+                                    $(this).children().css('background-color', '\'#' + preservedColor[i] + '\'')
+                                } else {
+                                    $(this).children().css('background-color', '\'#' + newData.data[i].RendomColor + '\'')
+                                }
                             }
                             else {
-                                $(this).children().css('border', '2px solid black')
+                                $(this).children().css('border', '2px solid black');
+                                //$(this).children().css('border', '4px solid ' + $(this).children().css('background-color')); //#######
                             }
                         }
                     })
@@ -590,5 +710,23 @@ function filterFunction(dropDownVal) {
                 }
             }
         }
+        getFilterEquipmentEntityAssignmentByYear();
     });
+    
+}
+
+function openAssignmentPopup() {
+    var equipmentID = $(gbl_selected_td).attr('equipmentid');
+    var ent_id = $(gbl_selected_td).attr('data-ent-id');
+    var unitID = $(gbl_selected_td).attr('unitID');
+    $('#currEquipID').text(unitID)
+    deleteAssignmentModel.modal('show');
+    deleteEntityID = ent_id;
+    deleteEquipID = equipmentID;
+    //deleteElement = el;
+    deleteStartDate = new Date($(gbl_selected_td).attr('data-start-date'));
+    deleteEndDate = new Date($(gbl_selected_td).attr('data-end-date'));
+    resetDeleteAssignmentModel();
+    $('#startDateLbl').text($('.updateStartDatepicker').val());
+    $('#endDateLbl').text($('.updateEndDatepicker').val());
 }
