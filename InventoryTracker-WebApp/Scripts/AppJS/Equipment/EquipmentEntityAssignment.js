@@ -33,6 +33,7 @@ $(document).ready(function () {
     $('#selectedMenu').text($('#menuEntEquAss').text());
 });
 function bindTooltipForDates() {
+
     $("#monthsDatePicker td").attr("data-html", "true")
         .attr("data-placement", "top")
         .attr("data-popover-content", "#a1")
@@ -40,6 +41,7 @@ function bindTooltipForDates() {
         .attr("data-trigger", "focus");
 
     $("#monthsDatePicker td").popover({
+        sanitize: false,
         html: true,
         trigger: 'hover',
         content: function () {
@@ -50,6 +52,13 @@ function bindTooltipForDates() {
             var title = $(this).attr("data-popover-content");
             return $(title).children(".popover-heading").html();
         }
+    });
+    $("#monthsDatePicker td").on('hidden.bs.popover', function () {
+        $("#monthsDatePicker td").removeAttr("data-html")
+            .removeAttr("data-placement")
+            .removeAttr("data-popover-content")
+            .removeAttr("data-toggle")
+            .removeAttr("data-trigger");
     });
 }
 
@@ -484,6 +493,7 @@ $('#prevYear').click(function () {
     $('.ui-icon-circle-triangle-w').trigger('click')
     setTimeout(onChangeYear(), 500)
 });
+var tg = 9;
 function onChangeYear() {
     $(".ui-state-default").on("mouseleave", function () { $('#DivToShow').hide(); });
     $('#currentYear').text($('.ui-datepicker-year:first').text());
@@ -492,9 +502,9 @@ function onChangeYear() {
         var unitID = $($(this)[0].outerHTML).attr('unitID');
         gbl_selected_td = $($(this)[0].outerHTML);
         //$('#DivToShow').css({ 'top': mouseY-30, 'left': mouseX-130 }).show();
-        return; //##########
+        //return; //##########
         if (equipmentID != undefined) {
-            if (gbl_equipment_id != equipmentID) {
+            if (gbl_equipment_id != equipmentID || true) {
                 $.ajax({
                     before: AddLoader(),
                     after: RemoveLoader(),
@@ -508,17 +518,20 @@ function onChangeYear() {
                         if (data.IsValid) {
                             var equipmentTemplateString = '';
                             //equipmentTemplateString += '<div class="col-7"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-                            equipmentTemplateString += '<div class="col-7" style="padding-left:5px !important;"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+                            equipmentTemplateString += '<div><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
                             for (var i = 0; i < data.data.length; i++) {
                                 var equipmentValue = data.data[i].Eq_Value.trim();
                                 var sDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
                                 var eDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
                                 equipmentTemplateString += '<tr><td>' + data.data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
                             }
-                            equipmentTemplateString += '</tbody></table>';
+                            equipmentTemplateString += '</tbody></table></div>';
                             //equipmentModelBody.html(equipmentTemplateString);
                             //equipmentTempDTL.modal('show');
-                            $('#DivToShow').html(equipmentTemplateString);
+                            //equipmentTemplateString = '<table><tr><td>' + unitID +'</td></tr></table>';// '<div><h6> <label>Current Unit ID:</label> & nbsp; <label type="text" id="currEquipID">' + unitID +'</label></h6></div>';
+                            tg++;
+                            $('#a1').html('<div class="popover-heading"> ' + tg + ' This is the heading for #1sdf </div> <div class="popover-body">' + equipmentTemplateString + ' </div>');
+                            setTimeout(bindTooltipForDates(), 300);
                         }
                     }, error: function (ex) { }
                 });
@@ -701,7 +714,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                 $('#tblLegend > tbody > tr').remove();
                 $('#tblLegend > tbody').append(legendStr);
                 filterFunction(dropDownVal)
-                setTimeout(bindTooltipForDates(), 500);
+                //setTimeout(bindTooltipForDates(), 500);
                 $('#tblLegend > tbody > tr').each(function () {
                     var firstTd = $(this).find('td:first');
                     var firstTdColor = firstTd.css('background-color');
@@ -715,6 +728,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                             }
                         }
                     });
+                    
                 })
             }
         },
