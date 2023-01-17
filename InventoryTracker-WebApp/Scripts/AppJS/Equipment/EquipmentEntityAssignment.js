@@ -11,6 +11,7 @@ var equipmentTempDTL = $('#equipmentTempDTL');
 var gbl_selected_td;
 var dataArray = [];
 var preservedColor = [];
+var gbl_equipment_id ='0';
 $(document).ready(function () {
     //    loadAllEquipTemp();
     //    $('.datepicker').datepicker({
@@ -475,34 +476,36 @@ function onChangeYear() {
         //$('#DivToShow').css({ 'top': mouseY-30, 'left': mouseX-130 }).show();
         //return; //##########
         if (equipmentID != undefined) {
-
-            $.ajax({
-                before: AddLoader(),
-                after: RemoveLoader(),
-                url: '/Equipment/GetEquipmentTemplateDetails',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                type: 'GET',
-                async: false,
-                data: { 'equipID': equipmentID },
-                success: function (data) {
-                    if (data.IsValid) {
-                        var equipmentTemplateString = '';
-                        //equipmentTemplateString += '<div class="col-7"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-                        equipmentTemplateString += '<div class="col-7" style="padding-left:5px !important;"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-                        for (var i = 0; i < data.data.length; i++) {
-                            var equipmentValue = data.data[i].Eq_Value.trim();
-                            var sDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
-                            var eDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
-                            equipmentTemplateString += '<tr><td>' + data.data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
+            if (gbl_equipment_id != equipmentID) {
+                $.ajax({
+                    before: AddLoader(),
+                    after: RemoveLoader(),
+                    url: '/Equipment/GetEquipmentTemplateDetails',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'GET',
+                    async: false,
+                    data: { 'equipID': equipmentID },
+                    success: function (data) {
+                        if (data.IsValid) {
+                            var equipmentTemplateString = '';
+                            //equipmentTemplateString += '<div class="col-7"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+                            equipmentTemplateString += '<div class="col-7" style="padding-left:5px !important;"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+                            for (var i = 0; i < data.data.length; i++) {
+                                var equipmentValue = data.data[i].Eq_Value.trim();
+                                var sDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
+                                var eDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
+                                equipmentTemplateString += '<tr><td>' + data.data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
+                            }
+                            equipmentTemplateString += '</tbody></table>';
+                            //equipmentModelBody.html(equipmentTemplateString);
+                            //equipmentTempDTL.modal('show');
+                            $('#DivToShow').html(equipmentTemplateString);
                         }
-                        equipmentTemplateString += '</tbody></table>';
-                        //equipmentModelBody.html(equipmentTemplateString);
-                        //equipmentTempDTL.modal('show');
-                        $('#DivToShow').html(equipmentTemplateString);
-                    }
-                }, error: function (ex) { }
-            });
+                    }, error: function (ex) { }
+                });
+                gbl_equipment_id = equipmentID;
+            }
             $('#DivToShow').css({ 'top': mouseY - 30, 'left': mouseX - 130 }).show();
         }
     });
