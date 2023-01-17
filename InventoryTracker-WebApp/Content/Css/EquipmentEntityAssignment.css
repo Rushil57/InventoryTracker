@@ -28,7 +28,8 @@
 .entityNameStyle {
     font-weight: bold;
     font-size: medium;
-    margin-left:250px;
+    margin-left: 200px;
+    margin-right: 350px;
 }
 .legendStyle {
     font-weight: bold;
@@ -37,17 +38,31 @@
 }
 .mainModelStyle {
     padding-right: 350px;
+    margin-top:-25px;
 }
 
-
-.cool a.ui-state-default {
-    background-color: #e3ad88;
-    background-image: none;
-    border: 2px solid black;
+.headerStyle {
+    margin-top: -15px;
+    margin-bottom: -15px;
+    border-bottom:none;
 }
 
-.notcool a.ui-state-default {
-    background-color: #4472c4;
-    background-image: none;
-    color: white;
+.bodyStyle {
+    margin-top: -15px;
+}
+
+.tableDivStyle{
+    height:620px
+}
+
+.ui-datepicker-header{
+    font-size:smaller;
+}
+
+.ui-datepicker-title {
+    line-height: 0.8em !important;
+}
+
+.closeBtnStyle {
+    margin-top: -10px;
 }

@@ -7,6 +7,11 @@
     height: 112vh !important;
 }
 
+.min-vh-95 {
+    min-height: 95vh !important;
+    height: 95vh !important;
+}
+
 .min-vh-75 {
     min-height: 75vh !important;
     height: 75vh !important;
