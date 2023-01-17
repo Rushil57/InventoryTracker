@@ -468,6 +468,7 @@ function deleteAssignment(entityID, equipID, el, startDate, endDate) {
 
 var deleteAssignmentModel = $('#deleteAssignment');
 function removeAssignmentOption() {
+    $('#calendarControlModel').css('z-index', '99999');
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
@@ -515,6 +516,7 @@ function updateAssignmentOption() {
     }
     var startDate = $('.updateStartDatepicker').val();
     var endDate = $('.updateEndDatepicker').val();
+    $('#calendarControlModel').css('z-index', '99999');
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
@@ -545,6 +547,7 @@ function resetDeleteAssignmentModel() {
         $('.updateEndDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', deleteEndDate);
         $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', deleteStartDate);
     }
+    $('#calendarControlModel').css('z-index', '99999');
 }
 
 function divEquipmentHDRLoad(element) {
