@@ -497,7 +497,8 @@ function removeAssignmentOption() {
 
             $(deleteElement).parent().remove();
             if ($('#calendarControlModel').is(":visible")) {
-                getEquipmentEntityAssignmentByYear(deleteEntityID)
+                getEquipmentEntityAssignmentByYear(deleteEntityID);
+                loadEntityHDR('', false);
             }
         }, error: function (ex) { }
     });
@@ -528,7 +529,8 @@ function updateAssignmentOption() {
             $(deleteElement).attr('onclick', "deleteAssignment(" + deleteEntityID + ", " + deleteEquipID + ", this, '" + deleteStartDate + "','" + endDate + "')");
             $(deleteElement).parent().attr('data-bs-original-title', "Start date: " + startDate + " <br/> End date: " + endDate);
             if ($('#calendarControlModel').is(":visible")) {
-                getEquipmentEntityAssignmentByYear(deleteEntityID)
+                getEquipmentEntityAssignmentByYear(deleteEntityID);
+                loadEntityHDR('', false);
             }
         }, error: function (ex) { }
     });
