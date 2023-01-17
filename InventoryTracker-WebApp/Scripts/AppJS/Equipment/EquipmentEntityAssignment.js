@@ -31,9 +31,27 @@ $(document).ready(function () {
     resizableTable();
     sortableTable();
     $('#selectedMenu').text($('#menuEntEquAss').text());
-})
+});
+function bindTooltipForDates() {
+    $("#monthsDatePicker td").attr("data-html", "true")
+        .attr("data-placement", "top")
+        .attr("data-popover-content", "#a1")
+        .attr("data-toggle", "popover")
+        .attr("data-trigger", "focus");
 
-
+    $("#monthsDatePicker td").popover({
+        html: true,
+        trigger: 'hover',
+        content: function () {
+            var content = $(this).attr("data-popover-content");
+            return $(content).children(".popover-body").html();
+        },
+        title: function () {
+            var title = $(this).attr("data-popover-content");
+            return $(title).children(".popover-heading").html();
+        }
+    });
+}
 
 function loadEquipmentHDR(searchString, searchflag) {
     if (searchflag == true) {
@@ -460,7 +478,7 @@ $(".ui-state-default").on("mouseleave", function () { $('#DivToShow').hide(); })
 
 $('#nextYear').click(function () {
     $('.ui-icon-circle-triangle-e').trigger('click');
-    setTimeout(onChangeYear(), 500)
+    setTimeout(onChangeYear(), 500);
 });
 $('#prevYear').click(function () {
     $('.ui-icon-circle-triangle-w').trigger('click')
@@ -474,7 +492,7 @@ function onChangeYear() {
         var unitID = $($(this)[0].outerHTML).attr('unitID');
         gbl_selected_td = $($(this)[0].outerHTML);
         //$('#DivToShow').css({ 'top': mouseY-30, 'left': mouseX-130 }).show();
-        //return; //##########
+        return; //##########
         if (equipmentID != undefined) {
             if (gbl_equipment_id != equipmentID) {
                 $.ajax({
@@ -682,7 +700,8 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                 }
                 $('#tblLegend > tbody > tr').remove();
                 $('#tblLegend > tbody').append(legendStr);
-                filterFunction(dropDownVal)
+                filterFunction(dropDownVal);
+                setTimeout(bindTooltipForDates(), 500);
             }
         },
         error: function (e1, e2, e3) {
