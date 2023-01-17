@@ -559,9 +559,9 @@ function getFilterEquipmentEntityAssignmentByYear() {
         for (var i = 0; i < dataArray.length; i++) {
             if (preservedColor.length >= i) {
 
-                legendStr += '<tr><td style="background-color:#' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+                legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
             } else {
-                legendStr += '<tr><td style="background-color:#' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+                legendStr += '<tr><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
             }
 
 
@@ -578,9 +578,9 @@ function getFilterEquipmentEntityAssignmentByYear() {
                             .attr('onclick', "openAssignmentPopup()");
                         if (preservedColor.length >= i) {
 
-                            $(this).children().css('background-color', '\'#' + preservedColor[i] + '\'')
+                            $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
                         } else {
-                            $(this).children().css('background-color', '\'#' + dataArray[i].RendomColor + '\'')
+                            $(this).children().css('background-color', '\'' + dataArray[i].RendomColor + '\'')
                         }
                     }
                     else {
@@ -597,9 +597,9 @@ function getFilterEquipmentEntityAssignmentByYear() {
             if (dataArray[i].EQUIP_TYPE.toLowerCase() == selectedvalue) {
                 if (preservedColor.length >= i) {
 
-                    legendStr += '<tr><td style="background-color:#' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+                    legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
                 } else {
-                    legendStr += '<tr><td style="background-color:#' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+                    legendStr += '<tr><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
                 }
                 $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
                     var currMonth = $(this).attr('data-month');
@@ -614,9 +614,9 @@ function getFilterEquipmentEntityAssignmentByYear() {
                                 .attr('onclick', "openAssignmentPopup()");
                             if (preservedColor.length >= i) {
 
-                                $(this).children().css('background-color', '\'#' + preservedColor[i] + '\'')
+                                $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
                             } else {
-                                $(this).children().css('background-color', '\'#' + dataArray[i].RendomColor + '\'')
+                                $(this).children().css('background-color', '\'' + dataArray[i].RendomColor + '\'')
                             }
                         }
                         else {
@@ -649,12 +649,12 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                 for (var i = 0; i < newData.data.length; i++) {
                     //legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
-                        preservedColor.push(newData.data[i].RendomColor);
+                        preservedColor.push('#' + newData.data[i].RendomColor);
                     }
                     if (preservedColor.length >= i) {
-                        legendStr += '<tr><td style="background-color:#' + preservedColor[i] + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     } else {
-                        legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr><td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
                     $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
                         var currMonth = $(this).attr('data-month');
@@ -668,9 +668,9 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                                     .attr('data-ent-id', newData.data[i].ENT_ID)
                                     .attr('onclick', "openAssignmentPopup()");
                                 if (preservedColor.length >= i) {
-                                    $(this).children().css('background-color', '\'#' + preservedColor[i] + '\'')
+                                    $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
                                 } else {
-                                    $(this).children().css('background-color', '\'#' + newData.data[i].RendomColor + '\'')
+                                    $(this).children().css('background-color', '\'' + newData.data[i].RendomColor + '\'')
                                 }
                             }
                             else {
@@ -683,6 +683,20 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                 $('#tblLegend > tbody > tr').remove();
                 $('#tblLegend > tbody').append(legendStr);
                 filterFunction(dropDownVal)
+                $('#tblLegend > tbody > tr').each(function () {
+                    var firstTd = $(this).find('td:first');
+                    var firstTdColor = firstTd.css('background-color');
+                    firstTd.spectrum({
+                        color: firstTdColor,
+                        change: function (color) {
+                            var currentColorIndex = preservedColor.indexOf(rgba2hex(firstTdColor));
+                            if (currentColorIndex >= 0) {
+                                preservedColor[currentColorIndex] = color.toHexString();
+                                getEquipmentEntityAssignmentByYear(entityID);
+                            }
+                        }
+                    });
+                })
             }
         },
         error: function (e1, e2, e3) {
@@ -733,3 +747,5 @@ function openAssignmentPopup() {
     $('#startDateLbl').text($('.updateStartDatepicker').val());
     $('#endDateLbl').text($('.updateEndDatepicker').val());
 }
+
+const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`

@@ -17,6 +17,10 @@
     {
       "library": "datatables-responsive@2.4.0",
       "destination": "Scripts/datatables-responsive/"
+    },
+    {
+      "library": "spectrum@1.8.1",
+      "destination": "Scripts/Spectrum"
     }
   ]
 }

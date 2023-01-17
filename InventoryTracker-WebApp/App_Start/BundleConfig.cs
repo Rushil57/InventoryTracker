@@ -8,7 +8,7 @@ namespace InventoryTracker_WebApp
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js").Include("~/Scripts/jqueryui/jquery-ui.js"));
+                        "~/Scripts/jquery-{version}.js").Include("~/Scripts/jqueryui/jquery-ui.js").Include("~/Scripts/Spectrum/spectrum.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -27,7 +27,8 @@ namespace InventoryTracker_WebApp
                       "~/Content/site.css",
                       "~/Scripts/jqueryui/themes/base/jquery-ui-min.css",
                       "~/Scripts/jqueryui/themes/base/jquery-ui.css",
-                      "~/Scripts/bootstrap-datepicker/css/bootstrap-datepicker.min.css"));
+                      "~/Scripts/bootstrap-datepicker/css/bootstrap-datepicker.min.css",
+                      "~/Scripts/Spectrum/spectrum.min.css"));
         }
     }
 }
