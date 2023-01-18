@@ -469,6 +469,10 @@ function deleteAssignment(entityID, equipID, el, startDate, endDate) {
 }
 
 var deleteAssignmentModel = $('#deleteAssignment');
+new bootstrap.Modal(document.getElementById('deleteAssignment'), {
+    keyboard: false,
+    backdrop: 'static'
+})
 function removeAssignmentOption() {
     $('#calendarControlModel').css('z-index', '99999');
     $.ajax({
