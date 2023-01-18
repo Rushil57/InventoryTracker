@@ -458,7 +458,15 @@ var deleteEndDate = '';
 function deleteAssignment(entityID, equipID, el, startDate, endDate) {
     $('#startDateLbl').text(startDate);
     $('#endDateLbl').text(endDate);
-    $('#currEquipID').text($(el).parent().text())
+    if (isEquipEntityPopUP) {
+        $('#currEquipID').attr('hidden', false);
+        $('#currEquipID').text($(el).parent().text())
+    }
+    else {
+
+        $('#currEntityName').text(($(el).parent().text()));
+        $('#currEntityDiv').attr('hidden', false);
+    }
     deleteAssignmentModel.modal('show');
     deleteEntityID = entityID;
     deleteEquipID = equipID;

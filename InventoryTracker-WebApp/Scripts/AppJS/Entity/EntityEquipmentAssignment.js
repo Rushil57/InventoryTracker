@@ -8,6 +8,7 @@ var gbl_all_entity_data = [];
 var ccEquipType = '';
 var ccUnitID = '';
 var ccVendor = '';
+isEquipEntityPopUP = false;
 
 $(document).ready(function () {
     loadAllEquipTemp();
