@@ -687,6 +687,50 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
             return equipmentEntityAssignments;
         }
+        public List<EntityHeader> GetAllEquipmentEntityAssignment()
+        {
+            List<EntityHeader> entityHeaders = new List<EntityHeader>();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+
+                connection.Open();
+                string query = string.Empty;
+                query += "SELECT eh.[ENT_ID] ,[ENT_TYPE] ,[ENT_NAME],eea.START_DATE, eea.END_DATE FROM [dbo].[ENTITY_HDR] as eh join  [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea on eh.ENT_ID = eea.ENT_ID ";
+                entityHeaders = connection.Query<EntityHeader>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return entityHeaders;
+        }
+
+        public List<EquipmentDetail> GetAllEquipmentTemplateDetails()
+        {
+            List<EquipmentDetail> equipmentDetails = new List<EquipmentDetail>();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+
+                connection.Open();
+                string query = string.Empty;
+                query += "SELECT [Equip_Dtl_ID] ,[Equip_ID] ,ed.[Equip_Temp_ID] ,et.Prop_Name ,[Eq_Value] ,[Start_Date] ,[End_Date],et.Datatype FROM [dbo].[Equipment_Dtl] as ed join [dbo].[Equipment_Template] as et on ed.Equip_Temp_ID = et.Equip_Temp_ID";
+                equipmentDetails = connection.Query<EquipmentDetail>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return equipmentDetails;
+        }
+
+
         #endregion
+
+
+
     }
 }

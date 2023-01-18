@@ -11,7 +11,10 @@ var equipmentTempDTL = $('#equipmentTempDTL');
 var gbl_selected_td;
 var dataArray = [];
 var preservedColor = [];
-var gbl_equipment_id ='0';
+var gbl_equipment_id = '0';
+
+var gbl_all_equip_data = [];
+var gbl_all_entity_header_data = [];
 $(document).ready(function () {
     //    loadAllEquipTemp();
     //    $('.datepicker').datepicker({
@@ -34,31 +37,40 @@ $(document).ready(function () {
 });
 function bindTooltipForDates() {
 
+
     $("#monthsDatePicker td").attr("data-html", "true")
         .attr("data-placement", "top")
         .attr("data-popover-content", "#a1")
         .attr("data-toggle", "popover")
         .attr("data-trigger", "focus");
-
-    $("#monthsDatePicker td").popover({
-        sanitize: false,
-        html: true,
-        trigger: 'hover',
-        content: function () {
-            var content = $(this).attr("data-popover-content");
-            return $(content).children(".popover-body").html();
-        },
-        title: function () {
-            var title = $(this).attr("data-popover-content");
-            return $(title).children(".popover-heading").html();
-        }
-    });
     $("#monthsDatePicker td").on('hidden.bs.popover', function () {
         $("#monthsDatePicker td").removeAttr("data-html")
             .removeAttr("data-placement")
             .removeAttr("data-popover-content")
             .removeAttr("data-toggle")
             .removeAttr("data-trigger");
+        $("#monthsDatePicker td").attr("data-html", "true")
+            .attr("data-placement", "top")
+            .attr("data-popover-content", "#a1")
+            .attr("data-toggle", "popover")
+            .attr("data-trigger", "focus");
+    });
+
+
+    $("#monthsDatePicker td").popover({
+        sanitize: false,
+        html: true,
+        container: 'body',
+        trigger: 'hover',
+        content: function () {
+
+            var content = $(this).attr("data-popover-content");
+            return $(content).children(".popover-body").html();
+        },
+        //title: function () {
+        //    var title = $(this).attr("data-popover-content");
+        //    return $(title).children(".popover-heading").html();
+        //}
     });
 }
 
@@ -483,62 +495,43 @@ $(document).mousemove(function (e) {
     mouseY = e.pageY;
 });
 
-$(".ui-state-default").on("mouseleave", function () { $('#DivToShow').hide(); });
-
 $('#nextYear').click(function () {
     $('.ui-icon-circle-triangle-e').trigger('click');
     setTimeout(onChangeYear(), 500);
 });
 $('#prevYear').click(function () {
-    $('.ui-icon-circle-triangle-w').trigger('click')
+    $('.ui-icon-circle-triangle-w').trigger('click');
     setTimeout(onChangeYear(), 500)
 });
-var tg = 9;
 function onChangeYear() {
-    $(".ui-state-default").on("mouseleave", function () { $('#DivToShow').hide(); });
     $('#currentYear').text($('.ui-datepicker-year:first').text());
     $(".ui-state-default").on("mouseenter", function () {
         var equipmentID = $($(this)[0].outerHTML).attr('equipmentid');
         var unitID = $($(this)[0].outerHTML).attr('unitID');
         gbl_selected_td = $($(this)[0].outerHTML);
+        equipmentTemplateString = '';
+        $('#a1').html('');
+        console.log(this);
+        console.log("a" + $('#a1').html());
+        console.log('UI=>' + unitID);
         //$('#DivToShow').css({ 'top': mouseY-30, 'left': mouseX-130 }).show();
-        //return; //##########
-        if (equipmentID != undefined) {
-            if (gbl_equipment_id != equipmentID || true) {
-                $.ajax({
-                    before: AddLoader(),
-                    after: RemoveLoader(),
-                    url: '/Equipment/GetEquipmentTemplateDetails',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    type: 'GET',
-                    async: false,
-                    data: { 'equipID': equipmentID },
-                    success: function (data) {
-                        if (data.IsValid) {
-                            var equipmentTemplateString = '';
-                            //equipmentTemplateString += '<div class="col-7"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-                            equipmentTemplateString += '<div><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-                            for (var i = 0; i < data.data.length; i++) {
-                                var equipmentValue = data.data[i].Eq_Value.trim();
-                                var sDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
-                                var eDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
-                                equipmentTemplateString += '<tr><td>' + data.data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
-                            }
-                            equipmentTemplateString += '</tbody></table></div>';
-                            //equipmentModelBody.html(equipmentTemplateString);
-                            //equipmentTempDTL.modal('show');
-                            //equipmentTemplateString = '<table><tr><td>' + unitID +'</td></tr></table>';// '<div><h6> <label>Current Unit ID:</label> & nbsp; <label type="text" id="currEquipID">' + unitID +'</label></h6></div>';
-                            tg++;
-                            $('#a1').html('<div class="popover-heading"> ' + tg + ' This is the heading for #1sdf </div> <div class="popover-body">' + equipmentTemplateString + ' </div>');
-                            setTimeout(bindTooltipForDates(), 300);
-                        }
-                    }, error: function (ex) { }
-                });
-                gbl_equipment_id = equipmentID;
-            }
-            $('#DivToShow').css({ 'top': mouseY - 30, 'left': mouseX - 130 }).show();
+        //    //equipmentTemplateString += '<div class="col-7"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+        equipmentTemplateString += '<div><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+        var equip_all_data = gbl_all_equip_data.filter(x => x.Equip_ID == equipmentID);
+        for (var i = 0; i < equip_all_data.length; i++) {
+            var equipmentValue = equip_all_data[i].Eq_Value.trim();
+            var sDate = equip_all_data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(equip_all_data[i].Start_Date);
+            var eDate = equip_all_data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(equip_all_data[i].End_Date);
+            equipmentTemplateString += '<tr><td>' + equip_all_data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
+
         }
+        equipmentTemplateString += '</tbody></table></div>';
+        $('#a1').html('<div class="popover-body" style="z-index: 999999 !important;">' + equipmentTemplateString + ' </div>');
+
+        //bindTooltipForDates();
+        setTimeout(bindTooltipForDates(), 500);
+
+        //$('#DivToShow').css({ 'top': mouseY - 30, 'left': mouseX - 130 }).show();
     });
     getEquipmentEntityAssignmentByYear(ccEntityID);
 }
@@ -560,7 +553,7 @@ function openCC(entityName, entityID) {
         //beforeShowDay: colorize,
         onSelect: function (date, inst) {
             inst.show();
-            
+
             //openAssignmentPopup();
             //defaultz
             //alert($(this).val())
@@ -583,85 +576,57 @@ function openCC(entityName, entityID) {
     $('#calendarControlModel').modal('show');
 }
 function getFilterEquipmentEntityAssignmentByYear() {
-    var legendStr = '';
-    $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)'); });
     selectedvalue = $('.selectDrpDown :selected').text().toLowerCase();
     if (selectedvalue == 'no filter') {
-        for (var i = 0; i < dataArray.length; i++) {
-            if (preservedColor.length >= i) {
-
-                legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
-            } else {
-                legendStr += '<tr><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
-            }
-
-
-            $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
-                var currMonth = $(this).attr('data-month');
-                var currYear = $(this).attr('data-year');
-                var currDay = $(this).text()
-                var currDate = new Date(currYear, currMonth, currDay);
-                if (new Date(dataArray[i].START_DATE) <= currDate && new Date(dataArray[i].END_DATE) >= currDate) {
-                    if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
-                        $(this).children().attr('equipmentID', dataArray[i].EQUIP_ID).attr('unitID', dataArray[i].UNIT_ID)
-                            .attr('data-start-date', dataArray[i].START_DATE).attr('data-end-date', dataArray[i].END_DATE)
-                            .attr('data-ent-id', dataArray[i].ENT_ID)
-                            .attr('onclick', "openAssignmentPopup()");
-                        if (preservedColor.length >= i) {
-
-                            $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
-                        } else {
-                            $(this).children().css('background-color', '\'' + dataArray[i].RendomColor + '\'')
-                        }
-                    }
-                    else {
-                        $(this).children().css('border', '2px solid black')
-                        //$(this).children().css('border', '4px solid ' + $(this).children().css('background-color')) //#####
-                    }
-                }
-            })
-        }
-        $('#tblLegend > tbody > tr').remove();
-        $('#tblLegend > tbody').append(legendStr);
+        bindFilterCalender(dataArray);
     } else {
-        for (var i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].EQUIP_TYPE.toLowerCase() == selectedvalue) {
-                if (preservedColor.length >= i) {
+        var filterArray = dataArray.filter(x => x.EQUIP_TYPE.toLowerCase() == selectedvalue);
+        bindFilterCalender(filterArray);
 
-                    legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
-                } else {
-                    legendStr += '<tr><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
-                }
-                $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
-                    var currMonth = $(this).attr('data-month');
-                    var currYear = $(this).attr('data-year');
-                    var currDay = $(this).text()
-                    var currDate = new Date(currYear, currMonth, currDay);
-                    if (new Date(dataArray[i].START_DATE) <= currDate && new Date(dataArray[i].END_DATE) >= currDate) {
-                        if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
-                            $(this).children().attr('equipmentID', dataArray[i].EQUIP_ID).attr('unitID', dataArray[i].UNIT_ID)
-                                .attr('data-start-date', dataArray[i].START_DATE).attr('data-end-date', dataArray[i].END_DATE)
-                                .attr('data-ent-id', dataArray[i].ENT_ID)
-                                .attr('onclick', "openAssignmentPopup()");
-                            if (preservedColor.length >= i) {
 
-                                $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
-                            } else {
-                                $(this).children().css('background-color', '\'' + dataArray[i].RendomColor + '\'')
-                            }
-                        }
-                        else {
-                            $(this).children().css('border', '2px solid black')
-                            //$(this).children().css('border', '4px solid ' + $(this).children().css('background-color'))
-                        }
-                    }
-                })
-                break;
-            }
-        }
-        $('#tblLegend > tbody > tr').remove();
-        $('#tblLegend > tbody').append(legendStr);
     }
+}
+
+function bindFilterCalender(dataArray) {
+    var legendStr = '';
+    $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)'); });
+
+    for (var i = 0; i < dataArray.length; i++) {
+        if (preservedColor.length >= i) {
+
+            legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+        } else {
+            legendStr += '<tr><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+        }
+
+
+        $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
+            var currMonth = $(this).attr('data-month');
+            var currYear = $(this).attr('data-year');
+            var currDay = $(this).text()
+            var currDate = new Date(currYear, currMonth, currDay);
+            if (new Date(dataArray[i].START_DATE) <= currDate && new Date(dataArray[i].END_DATE) >= currDate) {
+                if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
+                    $(this).children().attr('equipmentID', dataArray[i].EQUIP_ID).attr('unitID', dataArray[i].UNIT_ID)
+                        .attr('data-start-date', dataArray[i].START_DATE).attr('data-end-date', dataArray[i].END_DATE)
+                        .attr('data-ent-id', dataArray[i].ENT_ID)
+                        .attr('onclick', "openAssignmentPopup()");
+                    if (preservedColor.length >= i) {
+
+                        $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
+                    } else {
+                        $(this).children().css('background-color', '\'' + dataArray[i].RendomColor + '\'')
+                    }
+                }
+                else {
+                    $(this).children().css('border', '2px solid black')
+                    //$(this).children().css('border', '4px solid ' + $(this).children().css('background-color')) //#####
+                }
+            }
+        })
+    }
+    $('#tblLegend > tbody > tr').remove();
+    $('#tblLegend > tbody').append(legendStr);
 }
 function getEquipmentEntityAssignmentByYear(entityID) {
     var year = $('#currentYear').text();
@@ -722,24 +687,44 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                         preferredFormat: "hex",
                         color: firstTdColor,
                         showAlpha: true,
-                        showInput: true,
+                        showInput: false,
                         change: function (color) {
                             var currentColorIndex = preservedColor.indexOf(rgba2hex(firstTdColor));
                             if (currentColorIndex >= 0) {
                                 preservedColor[currentColorIndex] = color.toHexString();
                                 getEquipmentEntityAssignmentByYear(entityID);
                             }
-                        }
+                        },
+
                     });
-                    
-                })
+
+                });
+            }
+
+        },
+    });
+    $.ajax({
+        before: AddLoader(),
+        after: RemoveLoader(),
+        type: "GET",
+        url: '/Equipment/GetAllEquipmentTemplateDetails',
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            var newData = JSON.parse(data);
+            if (newData.IsValid) {
+                gbl_all_equip_data = newData.data;
+                gbl_all_entity_header_data = newData.entityHeaders;
+
             }
         },
-        error: function (e1, e2, e3) {
+        error: function (e1) {
+
+            console.log(e1)
+
         }
     });
 }
-
 
 $('.selectDrpDown').change(function () {
     dropDownVal = $(this).val();
@@ -765,7 +750,7 @@ function filterFunction(dropDownVal) {
         }
         getFilterEquipmentEntityAssignmentByYear();
     });
-    
+
 }
 
 function openAssignmentPopup() {
@@ -786,3 +771,4 @@ function openAssignmentPopup() {
 }
 
 const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
+

@@ -135,6 +135,14 @@ namespace InventoryTracker_WebApp.Controllers
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
         }
+        
+        [HttpGet]
+        public string GetAllEquipmentTemplateDetails()
+        {
+                List<EquipmentDetail> equipmentTempDetails = _equipmentRepository.GetAllEquipmentTemplateDetails();
+                List<EntityHeader> entityHeaders = _equipmentRepository.GetAllEquipmentEntityAssignment();
+                return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTempDetails, entityHeaders = entityHeaders });   
+        }
 
         [HttpPost]
         public string DeleteEquipmentHeader(int equipID)

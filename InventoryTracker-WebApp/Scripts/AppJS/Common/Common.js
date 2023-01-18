@@ -37,7 +37,7 @@ $(document).ready(function () {
         html: true,
         content: document.getElementById('mypopover-content'),
     })
-    
+
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl)
@@ -531,6 +531,7 @@ function updateAssignmentOption() {
             $(deleteElement).attr('onclick', "deleteAssignment(" + deleteEntityID + ", " + deleteEquipID + ", this, '" + deleteStartDate + "','" + endDate + "')");
             $(deleteElement).parent().attr('data-bs-original-title', "Start date: " + startDate + " <br/> End date: " + endDate);
             if ($('#calendarControlModel').is(":visible")) {
+                openCC('', deleteEntityID);
                 getEquipmentEntityAssignmentByYear(deleteEntityID);
                 loadEntityHDR('', false);
             }
@@ -553,7 +554,7 @@ function resetDeleteAssignmentModel() {
 function divEquipmentHDRLoad(element) {
     if (element.scrollTop > 0) {
         if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
-            
+
             endIndexEquip = endIndexEquip + 30;
             startIndexEquip = endIndexEquip;
             var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();

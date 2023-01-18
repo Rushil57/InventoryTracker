@@ -32,6 +32,10 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         string IsValidEquipmentTemplate(List<string> columnHeader, string equipmentType);
 
 
+        List<EquipmentDetail> GetAllEquipmentTemplateDetails();
+
+        List<EntityHeader> GetAllEquipmentEntityAssignment();
+
         #region Equipment Calender Control
         List<EquipmentEntityAssignment> GetEquipmentEntityAssignmentByYear(string year,int entityID);
         #endregion
