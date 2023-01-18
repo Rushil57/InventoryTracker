@@ -65,6 +65,22 @@ function bindTooltipForDates() {
         content: function () {
 
             var content = $(this).attr("data-popover-content");
+
+            var equipmentID = $($(this).children(".ui-state-default")[0].outerHTML).attr('equipmentid');
+            var unitID = $($(this).children(".ui-state-default")[0].outerHTML).attr('unitID');
+            gbl_selected_td = $($(this).children(".ui-state-default")[0].outerHTML);
+            equipmentTemplateString = '';
+            equipmentTemplateString += '<div><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+            var equip_all_data = gbl_all_equip_data.filter(x => x.Equip_ID == equipmentID);
+            for (var i = 0; i < equip_all_data.length; i++) {
+                var equipmentValue = equip_all_data[i].Eq_Value.trim();
+                var sDate = equip_all_data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(equip_all_data[i].Start_Date);
+                var eDate = equip_all_data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(equip_all_data[i].End_Date);
+                equipmentTemplateString += '<tr><td>' + equip_all_data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
+
+            }
+            equipmentTemplateString += '</tbody></table></div>';
+            $('#a1').html('<div class="popover-body">' + equipmentTemplateString + ' </div>');
             return $(content).children(".popover-body").html();
         },
         //title: function () {
