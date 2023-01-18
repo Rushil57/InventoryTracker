@@ -627,6 +627,7 @@ function bindFilterCalender(dataArray) {
     }
     $('#tblLegend > tbody > tr').remove();
     $('#tblLegend > tbody').append(legendStr);
+    spectrumColor();
 }
 function getEquipmentEntityAssignmentByYear(entityID) {
     var year = $('#currentYear').text();
@@ -678,27 +679,9 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                 }
                 $('#tblLegend > tbody > tr').remove();
                 $('#tblLegend > tbody').append(legendStr);
+                spectrumColor();
                 filterFunction(dropDownVal)
                 //setTimeout(bindTooltipForDates(), 500);
-                $('#tblLegend > tbody > tr').each(function () {
-                    var firstTd = $(this).find('td:first');
-                    var firstTdColor = firstTd.css('background-color');
-                    firstTd.spectrum({
-                        preferredFormat: "hex",
-                        color: firstTdColor,
-                        showAlpha: true,
-                        showInput: false,
-                        change: function (color) {
-                            var currentColorIndex = preservedColor.indexOf(rgba2hex(firstTdColor));
-                            if (currentColorIndex >= 0) {
-                                preservedColor[currentColorIndex] = color.toHexString();
-                                getEquipmentEntityAssignmentByYear(entityID);
-                            }
-                        },
-
-                    });
-
-                });
             }
 
         },
@@ -772,3 +755,24 @@ function openAssignmentPopup() {
 
 const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
 
+
+function spectrumColor() {
+    $('#tblLegend > tbody > tr').each(function () {
+        var firstTd = $(this).find('td:first');
+        var firstTdColor = firstTd.css('background-color');
+        firstTd.spectrum({
+            preferredFormat: "hex",
+            color: firstTdColor,
+            showAlpha: true,
+            showInput: true,
+            change: function (color) {
+                var currentColorIndex = preservedColor.indexOf(rgba2hex(firstTdColor));
+                if (currentColorIndex >= 0) {
+                    preservedColor[currentColorIndex] = color.toHexString();
+                    getFilterEquipmentEntityAssignmentByYear();
+                }
+            }
+        });
+
+    })
+}
