@@ -585,7 +585,7 @@ function openCC(entityName, entityID) {
     //    return [true, "cool"];
     //}
 
-    $('#ccEntityName').text(entityName);
+    $('#ccEntityName').attr('hidden', false).text(entityName);
     $('#calendarControlModel').modal('show');
 }
 function getFilterEquipmentEntityAssignmentByYear() {
@@ -766,6 +766,7 @@ function openAssignmentPopup() {
     var ent_id = $(gbl_selected_td).attr('data-ent-id');
     var unitID = $(gbl_selected_td).attr('unitID');
     $('#currEquipID').text(unitID)
+    $('#currEquipDiv').attr('hidden', false);
     deleteAssignmentModel.modal('show');
     deleteEntityID = ent_id;
     deleteEquipID = equipmentID;

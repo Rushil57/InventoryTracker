@@ -8,7 +8,13 @@
             </div>
             <div class="modal-body" style="height:250px; overflow: auto;" id="entityTemplateModelBody">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-7" id="currEntityDiv" hidden>
+                        <h6>
+                            <label>Current Entity Name:</label>&nbsp;
+                            <label type="text" style="width:100px;" id="currEntityName"></label>
+                        </h6>
+                    </div>
+                    <div class="col-7" id="currEquipDiv" hidden>
                         <h6>
                             <label>Current Unit ID:</label>&nbsp;
                             <label type="text" style="width:100px;" id="currEquipID"></label>

@@ -29,7 +29,6 @@
     font-weight: bold;
     font-size: medium;
     margin-left: 200px;
-    /*margin-right: 350px;*/
 }
 .legendStyle {
     font-weight: bold;
@@ -65,4 +64,10 @@
 
 .closeBtnStyle {
     margin-top: -10px;
+}
+
+.equipStyle {
+    font-weight: bold;
+    font-size: medium;
+    margin-left: 70px;
 }

@@ -13,7 +13,9 @@ var previousentitysearch = '';
 var equipsearchflag = false;
 var previousequipsearch = '';
 var currentUpdateAssignDate = '';
-var uniqueEquipType = "";
+var uniqueEquipType = ""; 
+var uniqueEntityType = "";
+var isEquipEntityPopUP = true;
 
 var equipmentTemplate = $('#equipmentTemplate');
 
@@ -156,7 +158,7 @@ function loadAllEntityTemp() {
                     templateString += '<div class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
                 }
 
-                var uniqueEntityType = "";
+                uniqueEntityType = "";
                 uniqueEntityType += "<option value='0' >Select entity type</option>";
                 for (var j = 0; j < data.uniqueEntityTemplates.length; j++) {
                     var entType = data.uniqueEntityTemplates[j].Ent_type;
@@ -502,8 +504,14 @@ function removeAssignmentOption() {
 
             $(deleteElement).parent().remove();
             if ($('#calendarControlModel').is(":visible")) {
-                getEquipmentEntityAssignmentByYear(deleteEntityID);
-                loadEntityHDR('', false);
+                if (isEquipEntityPopUP) {
+                    getEquipmentEntityAssignmentByYear(deleteEntityID);
+                    loadEntityHDR('', false);
+                }
+                else {
+                    getEquipmentEntityAssignmentByYear(deleteEquipID);
+                    loadEquipmentHDR('', false);
+                }
             }
         }, error: function (ex) { }
     });
@@ -535,9 +543,16 @@ function updateAssignmentOption() {
             $(deleteElement).attr('onclick', "deleteAssignment(" + deleteEntityID + ", " + deleteEquipID + ", this, '" + deleteStartDate + "','" + endDate + "')");
             $(deleteElement).parent().attr('data-bs-original-title', "Start date: " + startDate + " <br/> End date: " + endDate);
             if ($('#calendarControlModel').is(":visible")) {
-                openCC('', deleteEntityID);
-                getEquipmentEntityAssignmentByYear(deleteEntityID);
-                loadEntityHDR('', false);
+                if (isEquipEntityPopUP) {
+                    openCC('', deleteEntityID);
+                    getEquipmentEntityAssignmentByYear(deleteEntityID);
+                    loadEntityHDR('', false);
+                }
+                else {
+                    openCC('', deleteEquipID,'','');
+                    getEquipmentEntityAssignmentByYear(deleteEquipID);
+                    loadEquipmentHDR('', false);
+                }
             }
         }, error: function (ex) { }
     });
