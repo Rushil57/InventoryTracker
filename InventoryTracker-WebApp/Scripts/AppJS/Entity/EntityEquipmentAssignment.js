@@ -616,8 +616,8 @@ function openCC(equipType, equipID, unitID, vendor) {
     $('.ui-datepicker').addClass('ccStyle')
     setTimeout(onChangeYear(), 500)
 
-    $('#ccEquipType').text(ccEquipType).attr('hidden', false);
-    $('#ccVendor').text(ccVendor).attr('hidden', false);
+    //$('#ccEquipType').text(ccEquipType).attr('hidden', false);
+    //$('#ccVendor').text(ccVendor).attr('hidden', false);
     $('#ccUnitID').text(ccUnitID).attr('hidden', false);
     $('#tblLegend > thead > tr > th:eq(1)').text('Entity Name')
     $('#tblLegend > thead > tr > th:eq(2)').text('Entity Type')
