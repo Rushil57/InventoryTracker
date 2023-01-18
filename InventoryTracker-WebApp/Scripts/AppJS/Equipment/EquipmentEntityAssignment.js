@@ -605,9 +605,11 @@ function bindFilterCalender(dataArray) {
     $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)'); });
 
     for (var i = 0; i < dataArray.length; i++) {
-        if (preservedColor.length >= i) {
-
-            legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+        var color = preservedColor.filter(x => x.UNITID == dataArray[i].UNIT_ID);
+        if (color.length >0) {
+            
+                legendStr += '<tr><td style="background-color:' + color[0].RandomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+            
         } else {
             legendStr += '<tr><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
         }
@@ -624,9 +626,10 @@ function bindFilterCalender(dataArray) {
                         .attr('data-start-date', dataArray[i].START_DATE).attr('data-end-date', dataArray[i].END_DATE)
                         .attr('data-ent-id', dataArray[i].ENT_ID)
                         .attr('onclick', "openAssignmentPopup()");
-                    if (preservedColor.length >= i) {
+                    var color = preservedColor.filter(x => x.UNITID == dataArray[i].UNIT_ID);
+                    if (color.length > 0) {
 
-                        $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
+                        $(this).children().css('background-color', '\'' + color[0].RandomColor + '\'')
                     } else {
                         $(this).children().css('background-color', '\'' + dataArray[i].RendomColor + '\'')
                     }
@@ -659,10 +662,17 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                 for (var i = 0; i < newData.data.length; i++) {
                     //legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
-                        preservedColor.push('#' + newData.data[i].RendomColor);
+                        var obj = {
+                            RandomColor: '#' + newData.data[i].RendomColor,
+                            UNITID: newData.data[i].UNIT_ID
+                        };
+                        preservedColor.push(obj);
                     }
-                    if (preservedColor.length >= i) {
-                        legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                    var color = preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID);
+                    if (color.length >= i) {
+                      
+                            legendStr += '<tr><td style="background-color:' + color[0].RandomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                      
                     } else {
                         legendStr += '<tr><td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
@@ -677,8 +687,10 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                                     .attr('data-start-date', newData.data[i].START_DATE).attr('data-end-date', newData.data[i].END_DATE)
                                     .attr('data-ent-id', newData.data[i].ENT_ID)
                                     .attr('onclick', "openAssignmentPopup()");
-                                if (preservedColor.length >= i) {
-                                    $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
+                                var color = preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID);
+                                if (color.length >= 0) {
+                                        $(this).children().css('background-color', '\'' + color[0].RandomColor + '\'')
+                                    
                                 } else {
                                     $(this).children().css('background-color', '\'' + newData.data[i].RendomColor + '\'')
                                 }
@@ -779,9 +791,10 @@ function spectrumColor() {
             showAlpha: true,
             showInput: true,
             change: function (color) {
-                var currentColorIndex = preservedColor.indexOf(rgba2hex(firstTdColor));
-                if (currentColorIndex >= 0) {
-                    preservedColor[currentColorIndex] = color.toHexString();
+                debugger;
+                var currentColorIndex = preservedColor.filter(x => x.RandomColor == rgba2hex(firstTdColor));
+                if (currentColorIndex.length >= 0) {
+                    preservedColor[0].RandomColor = color.toHexString();
                     getFilterEquipmentEntityAssignmentByYear();
                 }
             }
