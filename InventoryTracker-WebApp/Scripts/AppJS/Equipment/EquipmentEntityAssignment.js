@@ -504,35 +504,32 @@ $('#prevYear').click(function () {
     setTimeout(onChangeYear(), 500)
 });
 function onChangeYear() {
+    bindTooltipForDates();
     $('#currentYear').text($('.ui-datepicker-year:first').text());
-    $(".ui-state-default").on("mouseenter", function () {
-        var equipmentID = $($(this)[0].outerHTML).attr('equipmentid');
-        var unitID = $($(this)[0].outerHTML).attr('unitID');
-        gbl_selected_td = $($(this)[0].outerHTML);
-        equipmentTemplateString = '';
-        $('#a1').html('');
-        console.log(this);
-        console.log("a" + $('#a1').html());
-        console.log('UI=>' + unitID);
-        //$('#DivToShow').css({ 'top': mouseY-30, 'left': mouseX-130 }).show();
-        //    //equipmentTemplateString += '<div class="col-7"><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" style="width:100px;" id="currEquipID">' + unitID +'</label></h6></div><table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-        equipmentTemplateString += '<div><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-        var equip_all_data = gbl_all_equip_data.filter(x => x.Equip_ID == equipmentID);
-        for (var i = 0; i < equip_all_data.length; i++) {
-            var equipmentValue = equip_all_data[i].Eq_Value.trim();
-            var sDate = equip_all_data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(equip_all_data[i].Start_Date);
-            var eDate = equip_all_data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(equip_all_data[i].End_Date);
-            equipmentTemplateString += '<tr><td>' + equip_all_data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
+    //$(".ui-state-default").on("mouseenter", function () {
+    //    var equipmentID = $($(this)[0].outerHTML).attr('equipmentid');
+    //    var unitID = $($(this)[0].outerHTML).attr('unitID');
+    //    gbl_selected_td = $($(this)[0].outerHTML);
+    //    equipmentTemplateString = '';  
+    //    console.log(this);
+    //    console.log("a" + $('#a1').html());
+    //    console.log('UI=>' + unitID);
 
-        }
-        equipmentTemplateString += '</tbody></table></div>';
-        $('#a1').html('<div class="popover-body" style="z-index: 999999 !important;">' + equipmentTemplateString + ' </div>');
+    //    equipmentTemplateString += '<div><h6> <label>Current Unit ID:</label>&nbsp;<label type="text" id="currEquipID">' + unitID + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+    //    var equip_all_data = gbl_all_equip_data.filter(x => x.Equip_ID == equipmentID);
+    //    for (var i = 0; i < equip_all_data.length; i++) {
+    //        var equipmentValue = equip_all_data[i].Eq_Value.trim();
+    //        var sDate = equip_all_data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(equip_all_data[i].Start_Date);
+    //        var eDate = equip_all_data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(equip_all_data[i].End_Date);
+    //        equipmentTemplateString += '<tr><td>' + equip_all_data[i].Prop_Name + '</td><td>' + equipmentValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
 
-        //bindTooltipForDates();
-        setTimeout(bindTooltipForDates(), 500);
+    //    }
+    //    equipmentTemplateString += '</tbody></table></div>';
+    //    $('#a1').html('<div class="popover-body">' + equipmentTemplateString + ' </div>');
 
-        //$('#DivToShow').css({ 'top': mouseY - 30, 'left': mouseX - 130 }).show();
-    });
+    //    //setTimeout(bindTooltipForDates(), 1000);
+
+    //});
     getEquipmentEntityAssignmentByYear(ccEntityID);
 }
 
