@@ -15,6 +15,8 @@ var gbl_equipment_id = '0';
 
 var gbl_all_equip_data = [];
 var gbl_all_entity_header_data = [];
+var ccEntityName = '';
+
 $(document).ready(function () {
     //    loadAllEquipTemp();
     //    $('.datepicker').datepicker({
@@ -551,6 +553,9 @@ function onChangeYear() {
 
 function openCC(entityName, entityID) {
     ccEntityID = entityID;
+    if (entityName != '') {
+        ccEntityName = entityName;
+    }
     $('.selectDrpDown').html(uniqueEquipType).find('option:first').text('No Filter');
     if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
         var datepicker = $.fn.datepicker.noConflict();
@@ -585,7 +590,7 @@ function openCC(entityName, entityID) {
     //    return [true, "cool"];
     //}
 
-    $('#ccEntityName').attr('hidden', false).text(entityName);
+    $('#ccEntityName').attr('hidden', false).text(ccEntityName);
     $('#calendarControlModel').modal('show');
 }
 function getFilterEquipmentEntityAssignmentByYear() {

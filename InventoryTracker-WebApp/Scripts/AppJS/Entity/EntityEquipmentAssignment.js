@@ -5,6 +5,9 @@ var startDate = $('.datepicker');
 var preservedColor = [];
 var dropDownVal = '';
 var gbl_all_entity_data = [];
+var ccEquipType = '';
+var ccUnitID = '';
+var ccVendor = '';
 
 $(document).ready(function () {
     loadAllEquipTemp();
@@ -14,7 +17,7 @@ $(document).ready(function () {
     sortableTable();
     $('#selectedMenu').text($('#menuEquEntAss').text());
     $('#property').attr('onclick', 'showEquipModel()');
-   
+
 })
 
 function loadEntityHDR(searchString, searchflag) {
@@ -144,7 +147,7 @@ function loadEquipmentHDR(searchString, searchflag) {
                         }
                         if (headtext == "") {
                             var a = " " + data.data[i].ASSIGNED;
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").html('<svg onclick="openCC(\'' + data.data[i].EQUIP_TYPE + '\',' + data.data[i].EQUIP_ID + ',\'' + data.data[i].UNIT_ID +'\',\'' + data.data[i].VENDOR + '\')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
+                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").html('<svg onclick="openCC(\'' + data.data[i].EQUIP_TYPE + '\',' + data.data[i].EQUIP_ID + ',\'' + data.data[i].UNIT_ID + '\',\'' + data.data[i].VENDOR + '\')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
                         }
                         th = th + 1;
                     }
@@ -580,8 +583,17 @@ function onChangeYear() {
     getEquipmentEntityAssignmentByYear(ccEquipID);
 }
 
-function openCC(equipType,equipID,unitID,vendor) {
+function openCC(equipType, equipID, unitID, vendor) {
     ccEquipID = equipID;
+    if (equipType != '') {
+        ccEquipType = equipType;
+    }
+    if (unitID != '') {
+        ccUnitID = unitID;
+    }
+    if (vendor != '') {
+        ccVendor = vendor;
+    }
     $('.selectDrpDown').html(uniqueEntityType).find('option:first').text('No Filter');
     if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
         var datepicker = $.fn.datepicker.noConflict();
@@ -595,16 +607,16 @@ function openCC(equipType,equipID,unitID,vendor) {
         changeYear: false,
         stepMonths: 12,
         onSelect: function (date, inst) {
-            $(inst).show();
+            inst.show();
         }
     });
 
     $('.ui-datepicker').addClass('ccStyle')
     setTimeout(onChangeYear(), 500)
 
-    $('#ccEquipType').text(equipType).attr('hidden', false);
-    $('#ccVendor').text(vendor).attr('hidden', false);
-    $('#ccUnitID').text(unitID).attr('hidden', false);
+    $('#ccEquipType').text(ccEquipType).attr('hidden', false);
+    $('#ccVendor').text(ccVendor).attr('hidden', false);
+    $('#ccUnitID').text(ccUnitID).attr('hidden', false);
     $('#tblLegend > thead > tr > th:eq(1)').text('Entity Name')
     $('#tblLegend > thead > tr > th:eq(2)').text('Entity Type')
     $('#calendarControlModel').modal('show');
