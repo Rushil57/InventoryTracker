@@ -13,7 +13,7 @@
         <h6>
             <input type="hidden" id="equipHDRID" value="0" />
             <select name='equipType' class='dropdown-control' style="display:inline;width:27%" id='equipType' disabled></select>
-            
+
             <input type="text" class="datepicker dropdown-control float-end" style="display:inline;width:18%" id="mainDate" />
         </h6>
         <div class="border border-color min-vh-16 overflow-hidden mb-2">
@@ -89,28 +89,10 @@
 
 @*Modal Start*@
 @Html.Partial("_EquipmentCommonModel")
-
-@*Model End
-    Entity Modal Start*@
-<div class="modal fade" id="entityTempDTL" tabindex="-1" aria-labelledby="entityTempDTLLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="entityTempDTLLabel">Entity Details</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="height: 275px; overflow: auto;" id="entityModelBody">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-@*Entity Model End*@
-
+@Html.Partial("_EntityTemplateDetail")
 @Html.Partial("_ImportModel")
+@*Model End*@
+
 @section scripts{
     <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
     <script src="~/Scripts/AppJS/Equipment/EquipmentCommon.js?v=@versionUpdate"></script>

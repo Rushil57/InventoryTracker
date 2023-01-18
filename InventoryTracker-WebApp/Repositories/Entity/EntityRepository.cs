@@ -601,5 +601,25 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             finally { connection.Close(); }
         }
+
+        public List<EntityDetail> GetAllEntityTemplateDetails()
+        {
+            List<EntityDetail> entityDetails = new List<EntityDetail>();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                query += "SELECT [Ent_Dtl_ID],[Ent_ID],ed.[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date],et.Prop_name,et.Datatype FROM [dbo].[Entity_Dtl] as ed join[dbo].[Entity_Template] as et on ed.Ent_Temp_ID = et.Ent_temp_id";
+
+                entityDetails = connection.Query<EntityDetail>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return entityDetails;
+        }
     }
 }

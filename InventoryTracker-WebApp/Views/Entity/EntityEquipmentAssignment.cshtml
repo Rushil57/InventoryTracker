@@ -3,7 +3,7 @@
     ViewBag.Title = "EntityEquipmentAssignment";
     var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
-
+<link rel="stylesheet" href="~/Content/Css/EquipmentEntityAssignment.css">
 <div class="row">
     <div class="col-md-4 ms-5">
         @Html.Partial("_EntityLeftSection")
@@ -34,7 +34,7 @@
             </div>
         </div>
         @Html.Partial("_AssignmentButtons")
-       
+
     </div>
 </div>
 
@@ -45,6 +45,8 @@
 @Html.Partial("_DeleteAssignmentModel")
 @Html.Partial("_ImportModel")
 @Html.Partial("_SummaryModel")
+@Html.Partial("_CalendarControlModel")
+@Html.Partial("_EntityTemplateDetail")
 @*Model End*@
 
 

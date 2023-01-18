@@ -663,7 +663,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
         }
 
         #region Equipment Calender Control
-        public List<EquipmentEntityAssignment> GetEquipmentEntityAssignmentByYear(string year,int entityID)
+        public List<EquipmentEntityAssignment> GetEquipmentEntityAssignmentByYear(string year,int entityID,int equipID)
         {
             List<EquipmentEntityAssignment> equipmentEntityAssignments = new List<EquipmentEntityAssignment>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -672,11 +672,15 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 connection.Open();
                 string query = string.Empty;
 
-                query = "SELECT distinct [EQUIP_ENT_ID] ,eea.[EQUIP_ID] ,eea.[ENT_ID],eh.UNIT_ID,enh.ENT_NAME,eh.EQUIP_TYPE,eea.START_DATE,eea.END_DATE  FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea join EQUIPMENT_HDR  as eh on eea.EQUIP_ID = eh.EQUIP_ID join ENTITY_HDR as enh on eea.ENT_ID = enh.ENT_ID";
+                query = "SELECT distinct [EQUIP_ENT_ID] ,eea.[EQUIP_ID] ,eea.[ENT_ID],eh.UNIT_ID,enh.ENT_NAME,eh.EQUIP_TYPE,enh.ENT_TYPE,eea.START_DATE,eea.END_DATE  FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea join EQUIPMENT_HDR  as eh on eea.EQUIP_ID = eh.EQUIP_ID join ENTITY_HDR as enh on eea.ENT_ID = enh.ENT_ID";
 
-                if (!string.IsNullOrEmpty(year))
+                if (!string.IsNullOrEmpty(year) && entityID > 0)
                 {
                     query += " and ('" + year + "' between YEAR(eea.Start_Date) and YEAR(eea.End_Date)) where eea.ENT_ID = " + entityID;
+                }
+                else if (!string.IsNullOrEmpty(year) && equipID > 0)
+                {
+                    query += " and ('" + year + "' between YEAR(eea.Start_Date) and YEAR(eea.End_Date)) where eea.EQUIP_ID = " + equipID;
                 }
                 equipmentEntityAssignments = connection.Query<EquipmentEntityAssignment>(query).ToList();
             }

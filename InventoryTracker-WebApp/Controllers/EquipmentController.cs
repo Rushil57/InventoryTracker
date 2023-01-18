@@ -742,11 +742,11 @@ namespace InventoryTracker_WebApp.Controllers
         #endregion
 
         #region Equipment Calender Control
-        public string GetEquipmentEntityAssignmentByYear(string year,int entityID)
+        public string GetEquipmentEntityAssignmentByYear(string year,int entityID=0, int equipID=0)
         {
             if (!string.IsNullOrEmpty(year))
             {
-                var data = _equipmentRepository.GetEquipmentEntityAssignmentByYear(year, entityID);
+                var data = _equipmentRepository.GetEquipmentEntityAssignmentByYear(year, entityID,equipID);
                 data.ForEach(x => x.RendomColor = System.Drawing.Color.FromArgb
                 (rnd.Next(0,256), rnd.Next(0,256), rnd.Next(0,256)).Name.ToString());
                 return JsonConvert.SerializeObject(new { IsValid = true, data = data });

@@ -100,6 +100,13 @@ namespace InventoryTracker_WebApp.Controllers
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
         }
 
+        [HttpGet]
+        public string GetAllEntityTemplateDetails()
+        {
+            List<EntityDetail> entTempDetails = _entityRepository.GetAllEntityTemplateDetails();
+            return JsonConvert.SerializeObject(new { IsValid = true, data = entTempDetails});
+        }
+
         #endregion
 
         #region Entity Search

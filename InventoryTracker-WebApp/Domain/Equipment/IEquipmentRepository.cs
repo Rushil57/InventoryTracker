@@ -37,7 +37,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         List<EntityHeader> GetAllEquipmentEntityAssignment();
 
         #region Equipment Calender Control
-        List<EquipmentEntityAssignment> GetEquipmentEntityAssignmentByYear(string year,int entityID);
+        List<EquipmentEntityAssignment> GetEquipmentEntityAssignmentByYear(string year,int entityID,int equipID);
         #endregion
     }
 }
