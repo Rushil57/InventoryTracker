@@ -635,7 +635,7 @@ function getFilterEquipmentEntityAssignmentByYear() {
 
 function bindFilterCalender(dataArray) {
     var legendStr = '';
-    $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)'); });
+    $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)').css('border', 'none'); });
 
     for (var i = 0; i < dataArray.length; i++) {
         var color = preservedColor.filter(x => x.ENT_NAME == dataArray[i].ENT_NAME);
@@ -678,6 +678,7 @@ function bindFilterCalender(dataArray) {
 }
 function getEquipmentEntityAssignmentByYear(equipID) {
     var year = $('#currentYear').text();
+    $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)').css('border','none'); });
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
