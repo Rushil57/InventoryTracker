@@ -674,7 +674,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                         preservedColor.push(obj);
                     }
                     var color = preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID);
-                    if (color.length >= i) {
+                    if (color.length > 0 ) {
                       
                             legendStr += '<tr><td style="background-color:' + color[0].RandomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                       
@@ -693,7 +693,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                                     .attr('data-ent-id', newData.data[i].ENT_ID)
                                     .attr('onclick', "openAssignmentPopup()");
                                 var color = preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID);
-                                if (color.length >= 0) {
+                                if (color.length > 0) {
                                         $(this).children().css('background-color', '\'' + color[0].RandomColor + '\'')
                                     
                                 } else {
@@ -797,10 +797,9 @@ function spectrumColor() {
             showAlpha: true,
             showInput: true,
             change: function (color) {
-                debugger;
                 var currentColorIndex = preservedColor.filter(x => x.RandomColor == rgba2hex(firstTdColor));
-                if (currentColorIndex.length >= 0) {
-                    preservedColor[0].RandomColor = color.toHexString();
+                if (currentColorIndex.length > 0) {
+                    currentColorIndex[0].RandomColor = color.toHexString();
                     getFilterEquipmentEntityAssignmentByYear();
                 }
             }

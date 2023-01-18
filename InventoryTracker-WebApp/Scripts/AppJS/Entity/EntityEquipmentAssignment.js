@@ -558,28 +558,29 @@ $('#prevYear').click(function () {
     setTimeout(onChangeYear(), 500)
 });
 function onChangeYear() {
+    bindTooltipForDates();
     $('#currentYear').text($('.ui-datepicker-year:first').text());
-    $(".ui-state-default").on("mouseenter", function () {
-        var entityID = $($(this)[0].outerHTML).attr('data-ent-id');
-        var entType = $($(this)[0].outerHTML).attr('entType');
-        gbl_selected_td = $($(this)[0].outerHTML);
-        entityTemplateString = '';
-        $('#a1').html('');
+    //$(".ui-state-default").on("mouseenter", function () {
+    //    var entityID = $($(this)[0].outerHTML).attr('data-ent-id');
+    //    var entType = $($(this)[0].outerHTML).attr('entType');
+    //    gbl_selected_td = $($(this)[0].outerHTML);
+    //    entityTemplateString = '';
+    //    $('#a1').html('');
 
-        entityTemplateString += '<div><h6> <label>Current Entity Name:</label>&nbsp;<label type="text" id="currEntName">' + entType + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-        var ent_all_data = gbl_all_entity_data.filter(x => x.Ent_ID == entityID);
-        for (var i = 0; i < ent_all_data.length; i++) {
-            var entityValue = ent_all_data[i].Ent_Value.trim();
-            var sDate = ent_all_data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(ent_all_data[i].Start_Date);
-            var eDate = ent_all_data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(ent_all_data[i].End_Date);
-            entityTemplateString += '<tr><td>' + ent_all_data[i].Prop_Name + '</td><td>' + entityValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
+    //    entityTemplateString += '<div><h6> <label>Current Entity Name:</label>&nbsp;<label type="text" id="currEntName">' + entType + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+    //    var ent_all_data = gbl_all_entity_data.filter(x => x.Ent_ID == entityID);
+    //    for (var i = 0; i < ent_all_data.length; i++) {
+    //        var entityValue = ent_all_data[i].Ent_Value.trim();
+    //        var sDate = ent_all_data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(ent_all_data[i].Start_Date);
+    //        var eDate = ent_all_data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(ent_all_data[i].End_Date);
+    //        entityTemplateString += '<tr><td>' + ent_all_data[i].Prop_Name + '</td><td>' + entityValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
 
-        }
-        entityTemplateString += '</tbody></table></div>';
-        $('#a1').html('<div class="popover-body" style="z-index: 999999 !important;">' + entityTemplateString + ' </div>');
+    //    }
+    //    entityTemplateString += '</tbody></table></div>';
+    //    $('#a1').html('<div class="popover-body" style="z-index: 999999 !important;">' + entityTemplateString + ' </div>');
 
-        setTimeout(bindTooltipForDates(), 500);
-    });
+    //    setTimeout(bindTooltipForDates(), 500);
+    //});
     getEquipmentEntityAssignmentByYear(ccEquipID);
 }
 
@@ -636,9 +637,10 @@ function bindFilterCalender(dataArray) {
     $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)'); });
 
     for (var i = 0; i < dataArray.length; i++) {
-        if (preservedColor.length >= i) {
+        var color = preservedColor.filter(x => x.ENT_NAME == dataArray[i].ENT_NAME);
+        if (color.length > 0) {
 
-            legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
+            legendStr += '<tr><td style="background-color:' + color[0].RandomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
         } else {
             legendStr += '<tr><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
         }
@@ -655,9 +657,10 @@ function bindFilterCalender(dataArray) {
                         .attr('data-start-date', dataArray[i].START_DATE).attr('data-end-date', dataArray[i].END_DATE)
                         .attr('data-ent-id', dataArray[i].ENT_ID)
                         .attr('onclick', "openAssignmentPopup()");
-                    if (preservedColor.length >= i) {
+                    var color = preservedColor.filter(x => x.ENT_NAME == dataArray[i].ENT_NAME);
+                    if (color.length > 0) {
 
-                        $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
+                        $(this).children().css('background-color', '\'' + color[0].RandomColor + '\'')
                     } else {
                         $(this).children().css('background-color', '\'' + dataArray[i].RendomColor + '\'')
                     }
@@ -688,10 +691,15 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                 dataArray = newData.data;
                 for (var i = 0; i < newData.data.length; i++) {
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
-                        preservedColor.push('#' + newData.data[i].RendomColor);
+                        var obj = {
+                            RandomColor: '#' + newData.data[i].RendomColor,
+                            ENT_NAME: newData.data[i].ENT_NAME
+                        };
+                        preservedColor.push(obj);
                     }
-                    if (preservedColor.length >= i) {
-                        legendStr += '<tr><td style="background-color:' + preservedColor[i] + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                    var color = preservedColor.filter(x => x.ENT_NAME == newData.data[i].ENT_NAME);
+                    if (color.length > 0) {
+                        legendStr += '<tr><td style="background-color:' + color[0].RandomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     } else {
                         legendStr += '<tr><td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
@@ -707,8 +715,9 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                                     .attr('data-ent-id', newData.data[i].ENT_ID)
                                     .attr('entName', newData.data[i].ENT_NAME)
                                     .attr('onclick', "openAssignmentPopup()");
-                                if (preservedColor.length >= i) {
-                                    $(this).children().css('background-color', '\'' + preservedColor[i] + '\'')
+                                var color = preservedColor.filter(x => x.ENT_NAME == newData.data[i].ENT_NAME);
+                                if (color.length > 0) {
+                                    $(this).children().css('background-color', '\'' + color[0].RandomColor + '\'')
                                 } else {
                                     $(this).children().css('background-color', '\'' + newData.data[i].RendomColor + '\'')
                                 }
@@ -807,9 +816,9 @@ function spectrumColor() {
             showAlpha: true,
             showInput: true,
             change: function (color) {
-                var currentColorIndex = preservedColor.indexOf(rgba2hex(firstTdColor));
-                if (currentColorIndex >= 0) {
-                    preservedColor[currentColorIndex] = color.toHexString();
+                var currentColorIndex = preservedColor.filter(x => x.RandomColor == rgba2hex(firstTdColor));
+                if (currentColorIndex.length > 0) {
+                    currentColorIndex[0].RandomColor = color.toHexString();
                     getFilterEquipmentEntityAssignmentByYear();
                 }
             }
@@ -848,6 +857,26 @@ function bindTooltipForDates() {
         content: function () {
 
             var content = $(this).attr("data-popover-content");
+
+            var entityID = $($(this).children(".ui-state-default")[0].outerHTML).attr('data-ent-id');
+            var entType = $($(this).children(".ui-state-default")[0].outerHTML).attr('entType');
+            gbl_selected_td = $($(this).children(".ui-state-default")[0].outerHTML);
+            entityTemplateString = '';
+            $('#a1').html('');
+
+            entityTemplateString += '<div><h6> <label>Current Entity Name:</label>&nbsp;<label type="text" id="currEntName">' + entType + '</label></h6></div><table class="table" style="margin:2.5px !important;"><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+            var ent_all_data = gbl_all_entity_data.filter(x => x.Ent_ID == entityID);
+            for (var i = 0; i < ent_all_data.length; i++) {
+                var entityValue = ent_all_data[i].Ent_Value.trim();
+                var sDate = ent_all_data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(ent_all_data[i].Start_Date);
+                var eDate = ent_all_data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(ent_all_data[i].End_Date);
+                entityTemplateString += '<tr><td>' + ent_all_data[i].Prop_Name + '</td><td>' + entityValue + '</td><td>' + sDate + '</td><td>' + eDate + '</td>';
+
+            }
+            entityTemplateString += '</tbody></table></div>';
+            $('#a1').html('<div class="popover-body" style="z-index: 999999 !important;">' + entityTemplateString + ' </div>');
+
+
             return $(content).children(".popover-body").html();
         },
     });
