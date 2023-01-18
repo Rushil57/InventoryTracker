@@ -469,7 +469,7 @@ function deleteAssignment(entityID, equipID, el, startDate, endDate) {
 }
 
 var deleteAssignmentModel = $('#deleteAssignment');
-new bootstrap.Modal(document.getElementById('deleteAssignment'), {
+new bootstrap.Modal(deleteAssignmentModel, {
     keyboard: false,
     backdrop: 'static'
 })
