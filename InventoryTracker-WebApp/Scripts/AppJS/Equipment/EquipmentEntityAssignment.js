@@ -776,7 +776,7 @@ function openAssignmentPopup() {
     var unitID = $(gbl_selected_td).attr('unitID');
     $('#currEquipID').text(unitID)
     $('#currEquipDiv').attr('hidden', false);
-    $('#changeUnitID').html(ccUnitIDSelectList).val(equipmentID);
+    $('#changeUnitID').attr('hidden', false).html(ccUnitIDSelectList).val(equipmentID);
     deleteAssignmentModel.modal('show');
     deleteEntityID = ent_id;
     deleteEquipID = equipmentID;

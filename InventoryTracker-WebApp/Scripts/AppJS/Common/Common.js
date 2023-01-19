@@ -460,12 +460,14 @@ function deleteAssignment(entityID, equipID, el, startDate, endDate) {
     $('#endDateLbl').text(endDate);
     if (isEquipEntityPopUP) {
         $('#currEquipDiv').attr('hidden', false);
-        $('#currEquipID').text($(el).parent().text())
+        $('#currEquipID').text($(el).parent().text());
+        $('#changeUnitID').attr('hidden', true)
     }
     else {
 
         $('#currEntityName').text(($(el).parent().text()));
         $('#currEntityDiv').attr('hidden', false);
+        $('#changeEntityName').attr('hidden', true)
     }
     deleteAssignmentModel.modal('show');
     deleteEntityID = entityID;
