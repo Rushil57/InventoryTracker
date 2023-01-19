@@ -13,6 +13,7 @@ var currentEntityType = 0;
 var currentEntityName = '';
 var previousEquipmentElement = '';
 var entityNameLblEle = $('#entityNameLbl');
+//var ccPropDetails = [];
 
 $(document).ready(function () {
     //    loadAllEntityTemp();
@@ -35,7 +36,7 @@ $(document).ready(function () {
 
 
 function loadEntityHDR(searchString, searchflag) {
-    
+
     if (searchflag == true) {
         entitysearchflag = true;
         $("#entityHDR > tbody > tr").remove();
@@ -176,8 +177,7 @@ function addEntityHeader() {
 function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, element) {
     entityType.removeClass('textBox-BackColor');
     entityName.removeClass('textBox-BackColor').attr('hidden', true);
-    
-   
+    $('#entityCC').remove();
 
     if (element != undefined) {
         $(previousElement).css('background-color', 'white').css('color', 'black');
@@ -233,7 +233,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                     if (new Date(mainDate) >= new Date(sDate) && new Date(mainDate) <= new Date(eDate)) {
                         lightGreenClass = "lightGreenCls";
                     }
-                    equipmentHeadersString += '<tr  style="cursor:pointer" onclick= showEquipmentDetails(this) class="' + lightGreenClass +'"><input type="hidden" value="' + data.equipmentHeaders[i].EQUIP_ID + '" /><td>' + data.equipmentHeaders[i].EQUIP_TYPE + '</td><td>' + sDate + '</td><td>' + eDate + '</td></tr>';
+                    equipmentHeadersString += '<tr  style="cursor:pointer" onclick= showEquipmentDetails(this) class="' + lightGreenClass + '"><input type="hidden" value="' + data.equipmentHeaders[i].EQUIP_ID + '" /><td>' + data.equipmentHeaders[i].EQUIP_TYPE + '</td><td>' + sDate + '</td><td>' + eDate + '</td></tr>';
                 }
                 $("#tblEquipmentHistory > tbody >  tr").remove();
                 $("#tblEquipmentHistory > tbody").append(equipmentHeadersString);
@@ -256,6 +256,7 @@ $('#editTemplate').click(function () {
     entityNameLblEle.attr('hidden', true);
     entityNameLblEle.text('');
     entityName.attr('hidden', false);
+    $('#mainDate').after('<svg style="cursor:pointer" onclick="openCC(\'' + currentEntityName + '\',' + currentEntityID  +')" id="entityCC" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4- float-end mt-2 me-2" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
     $("#tblTemplateDtl > tbody >  tr").each(function () {
         var firsttd = $(this).find("td:eq(1)");
         var secondtd = $(this).find("td:eq(2)");
@@ -310,6 +311,9 @@ $('#newTemplate').click(function () {
     entityNameLblEle.attr('hidden', true);
     entityNameLblEle.text('');
     entityName.attr('hidden', false);
+
+    $('#entityCC').remove();
+
     var todayDate = (new Date()).toLocaleDateString().split('T')[0];
     $("#tblTemplateDtl > tbody >  tr").remove();
     $('.datepicker').datepicker({
@@ -567,10 +571,84 @@ function importExcel() {
             });
         }
     }
-    
+
 }
 
 function sampleFileDownload() {
     $("#bulkImport").popover('hide');
     window.location.href = '/ExcelFiles/Entity_Bulk_Import.xlsx';
+}
+
+$('#nextYear').click(function () {
+    $('.ui-icon-circle-triangle-e').trigger('click');
+    setTimeout(onChangeYear(), 500);
+});
+$('#prevYear').click(function () {
+    $('.ui-icon-circle-triangle-w').trigger('click');
+    setTimeout(onChangeYear(), 500)
+});
+
+function openCC(entityName, entityID) {
+    ccEntityID = entityID;
+    if (entityName != '') {
+        ccEntityName = entityName;
+    }
+    $('.selectDrpDown').html(uniqueEquipType).find('option:first').text('No Filter');
+    if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
+        var datepicker = $.fn.datepicker.noConflict();
+        $.fn.bootstrapDP = datepicker;
+    }
+    $('#currentYear').text($('.ui-datepicker-year:first').text());
+    $("#monthsDatePicker").datepicker("destroy");
+    $("#monthsDatePicker").datepicker({
+        numberOfMonths: [3, 4],
+        changeMonth: false,
+        changeYear: false,
+        stepMonths: 12,
+        onSelect: function (date, inst) {
+            inst.show();
+        }
+    });
+
+    $('.ui-datepicker').addClass('ccStyle')
+    setTimeout(onChangeYear(), 500)
+    $('#ccEntityName').attr('hidden', false).text(ccEntityName);
+
+    var legendStr = '';
+    var filterStr = '<option value="0" selected>No Filter</option>';
+    $("#tblTemplateDtl > tbody >  tr").each(function () {
+        legendStr += ''
+        var zerotdText = $(this).find("td:eq(0)").text();
+        //var secondtd = $(this).find("td:eq(2)");
+        //var thirdtd = $(this).find("td:eq(3)");
+        var entityTmpID = $(this).find('entityTmpID');
+        var color = getRandomColor();
+        legendStr += '<tr><input type="hidden" value="' + entityTmpID + '"><td style="background-color:' + color + ' !important"></td><td>' + zerotdText + '</td></tr>';
+        filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>'
+        //ccPropDetails.push({
+        //    tmpID: entityTmpID,
+        //    propName: zerotd ,
+        //    startDate: secondtd,
+        //    endDate: thirdtd,
+        //    color: color
+        //    })
+    });
+    $('#tblLegend > tbody > tr').remove();
+    $('#tblLegend > tbody').append(legendStr);
+    $('.selectDrpDown').html(filterStr);
+    $('#calendarControlModel').modal('show');
+}
+
+
+function onChangeYear() {
+    $('#currentYear').text($('.ui-datepicker-year:first').text());
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }

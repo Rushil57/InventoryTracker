@@ -3,10 +3,9 @@
     var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
 
-
+<link rel="stylesheet" href="~/Content/Css/EquipmentEntityAssignment.css">
 <div class="row">
     <div class="col-md-4 ms-5">
-
         @Html.Partial("_EntityLeftSection")
         @Html.Partial("_SearchScreenButtons")
 
@@ -15,6 +14,7 @@
         <h6>
             <input type="hidden" id="entityHDRID" value="0" />
             <select name='entityType' class='dropdown-control' style="display:inline;width:27%" id='entityType' disabled></select>
+
             <input type="text" class="datepicker dropdown-control float-end" style="display:inline;width:18%" id="mainDate" />
         </h6>
         <div class="border border-color min-vh-10 overflow-hidden mb-2">
@@ -84,9 +84,10 @@
 @*Modal Start*@
 @Html.Partial("_EntityCommonModel")
 @Html.Partial("_EquipmentTemplateDetail")
+@Html.Partial("_CalendarControlSearchModel")
 @*Model End*@
 
-   
+
 
 @Html.Partial("_ImportModel")
 @section scripts{
