@@ -613,11 +613,11 @@ function bindFilterCalender(dataArray) {
     for (var i = 0; i < dataArray.length; i++) {
         var color = preservedColor.filter(x => x.UNITID == dataArray[i].UNIT_ID);
         if (color.length >0) {
-            
-                legendStr += '<tr><td style="background-color:' + color[0].RandomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+       
+            legendStr += '<tr><input type="hidden" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" unitID ="' + dataArray[i].UNIT_ID + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="background-color:' + color[0].RandomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
             
         } else {
-            legendStr += '<tr><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
+            legendStr += '<tr><input type="hidden" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" unitID ="' + dataArray[i].UNIT_ID + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].UNIT_ID + '</td><td>' + dataArray[i].EQUIP_TYPE + '</td></tr>';
         }
 
 
@@ -679,10 +679,10 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                     var color = preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID);
                     if (color.length > 0 ) {
                       
-                            legendStr += '<tr><td style="background-color:' + color[0].RandomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr><input type="hidden" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" unitID ="' + newData.data[i].UNIT_ID + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + color[0].RandomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                       
                     } else {
-                        legendStr += '<tr><td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr><input type="hidden" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" unitID ="' + newData.data[i].UNIT_ID + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
                     ccUnitIDSelectList += '<option value=' + newData.data[i].EQUIP_ID + '>' + newData.data[i].UNIT_ID + '</option>'
                     $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
@@ -814,6 +814,9 @@ function spectrumColor() {
 }
 
 $('#changeUnitID').change(function () {
-    gbl_selected_td = $($('.ui-datepicker-calendar').find('[unitid="' + $(this).find(":selected").text() +'"]')[0])
+    gbl_selected_td = $($('.ui-datepicker-calendar').find('[unitid="' + $(this).find(":selected").text() + '"]')[0])
+    if (gbl_selected_td[0] == undefined) {
+        gbl_selected_td = $('#tblLegend > tbody > tr').find('[unitid="' + $(this).find(":selected").text() + '"]');
+    }
     gbl_selected_td.trigger('click')
 })
