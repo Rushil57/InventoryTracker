@@ -515,10 +515,12 @@ function removeAssignmentOption() {
             $(deleteElement).parent().remove();
             if ($('#calendarControlModel').is(":visible")) {
                 if (isEquipEntityPopUP) {
+                    openCC('', deleteEntityID);
                     getEquipmentEntityAssignmentByYear(deleteEntityID);
                     loadEntityHDR('', false);
                 }
                 else {
+                    openCC('', deleteEquipID, '', '');
                     getEquipmentEntityAssignmentByYear(deleteEquipID);
                     loadEquipmentHDR('', false);
                 }

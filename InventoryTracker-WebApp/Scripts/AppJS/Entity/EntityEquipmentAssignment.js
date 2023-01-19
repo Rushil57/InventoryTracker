@@ -642,9 +642,9 @@ function bindFilterCalender(dataArray) {
         var color = preservedColor.filter(x => x.ENT_NAME == dataArray[i].ENT_NAME);
         if (color.length > 0) {
 
-            legendStr += '<tr><input type="hidden" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + color[0].RandomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
+            legendStr += '<tr><input type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + color[0].RandomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
         } else {
-            legendStr += '<tr><input type="hidden" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
+            legendStr += '<tr><input type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
         }
 
 
@@ -666,9 +666,11 @@ function bindFilterCalender(dataArray) {
                     } else {
                         $(this).children().css('background-color', '\'' + dataArray[i].RendomColor + '\'')
                     }
+                    $(this).children().attr('isBorderedBox', '0');
                 }
                 else {
-                    $(this).children().css('border', '2px solid black')
+                    $(this).children().css('border', '2px solid black');
+                    $(this).children().attr('isBorderedBox', '1');
                 }
             }
         })
@@ -703,9 +705,9 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                     }
                     var color = preservedColor.filter(x => x.ENT_NAME == newData.data[i].ENT_NAME);
                     if (color.length > 0) {
-                        legendStr += '<tr><input type="hidden" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + color[0].RandomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr><input type="hidden" isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + color[0].RandomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     } else {
-                        legendStr += '<tr> <input type="hidden" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr> <input type="hidden"  isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
                     ccEntityNameSelectList += '<option value=' + newData.data[i].ENT_ID + '>' + newData.data[i].ENT_NAME + '</option>';
 
@@ -727,9 +729,11 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                                 } else {
                                     $(this).children().css('background-color', '\'' + newData.data[i].RendomColor + '\'')
                                 }
+                                $(this).children().attr('isBorderedBox', '0');
                             }
                             else {
                                 $(this).children().css('border', '2px solid black');
+                                $(this).children().attr('isBorderedBox', '1');
                             }
                         }
                     })
@@ -796,9 +800,17 @@ function openAssignmentPopup() {
     var ent_id = $(gbl_selected_td).attr('data-ent-id');
     var entType = $(gbl_selected_td).attr('entType');
     var entName = $(gbl_selected_td).attr('entName');
+    var isBorderedBoxVal = $(gbl_selected_td).attr('isBorderedBox');
+
     $('#currEntityName').text(entName);
     $('#currEntityDiv').attr('hidden', false);
-    $('#changeEntityName').attr('hidden', false).html(ccEntityNameSelectList).val(ent_id);
+    if (isBorderedBoxVal == '1') {
+        $('#changeEntityName').attr('hidden', false).html(ccEntityNameSelectList).val(ent_id);
+    }
+    else {
+        $('#changeEntityName').attr('hidden', true)
+    }
+   
     deleteAssignmentModel.modal('show');
     deleteEntityID = ent_id;
     deleteEquipID = equipmentID;
@@ -866,6 +878,9 @@ function bindTooltipForDates() {
             var content = $(this).attr("data-popover-content");
 
             var entityID = $($(this).children(".ui-state-default")[0].outerHTML).attr('data-ent-id');
+            if (entityID == undefined) {
+                return;
+            }
             var entType = $($(this).children(".ui-state-default")[0].outerHTML).attr('entType');
             gbl_selected_td = $($(this).children(".ui-state-default")[0].outerHTML);
             entityTemplateString = '';
