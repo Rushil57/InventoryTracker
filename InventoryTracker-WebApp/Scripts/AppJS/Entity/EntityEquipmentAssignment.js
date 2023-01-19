@@ -9,6 +9,7 @@ var ccEquipType = '';
 var ccUnitID = '';
 var ccVendor = '';
 isEquipEntityPopUP = false;
+var ccEntityNameSelectList = '';
 
 $(document).ready(function () {
     loadAllEquipTemp();
@@ -691,6 +692,7 @@ function getEquipmentEntityAssignmentByYear(equipID) {
             if (newData.IsValid) {
                 var legendStr = '';
                 dataArray = newData.data;
+                ccEntityNameSelectList = '';
                 for (var i = 0; i < newData.data.length; i++) {
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
                         var obj = {
@@ -705,6 +707,8 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                     } else {
                         legendStr += '<tr><td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
+                    ccEntityNameSelectList += '<option value=' + newData.data[i].ENT_ID + '>' + newData.data[i].ENT_NAME + '</option>';
+
                     $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
                         var currMonth = $(this).attr('data-month');
                         var currYear = $(this).attr('data-year');
@@ -794,6 +798,7 @@ function openAssignmentPopup() {
     var entName = $(gbl_selected_td).attr('entName');
     $('#currEntityName').text(entName);
     $('#currEntityDiv').attr('hidden', false);
+    $('#changeEntityName').html(ccEntityNameSelectList).val(ent_id);
     deleteAssignmentModel.modal('show');
     deleteEntityID = ent_id;
     deleteEquipID = equipmentID;
@@ -883,3 +888,8 @@ function bindTooltipForDates() {
         },
     });
 }
+
+$('#changeEntityName').change(function () {
+    gbl_selected_td = $($('.ui-datepicker-calendar').find('[entname="' + $(this).find(":selected").text() + '"]')[0]);
+    gbl_selected_td.trigger('click');
+})

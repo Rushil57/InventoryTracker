@@ -16,6 +16,7 @@ var gbl_equipment_id = '0';
 var gbl_all_equip_data = [];
 var gbl_all_entity_header_data = [];
 var ccEntityName = '';
+var ccUnitIDSelectList = '';
 
 $(document).ready(function () {
     //    loadAllEquipTemp();
@@ -665,6 +666,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
             if (newData.IsValid) {
                 var legendStr = '';
                 dataArray = newData.data;
+                ccUnitIDSelectList = '';
                 for (var i = 0; i < newData.data.length; i++) {
                     //legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
@@ -682,6 +684,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                     } else {
                         legendStr += '<tr><td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
+                    ccUnitIDSelectList += '<option value=' + newData.data[i].EQUIP_ID + '>' + newData.data[i].UNIT_ID + '</option>'
                     $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
                         var currMonth = $(this).attr('data-month');
                         var currYear = $(this).attr('data-year');
@@ -773,6 +776,7 @@ function openAssignmentPopup() {
     var unitID = $(gbl_selected_td).attr('unitID');
     $('#currEquipID').text(unitID)
     $('#currEquipDiv').attr('hidden', false);
+    $('#changeUnitID').html(ccUnitIDSelectList).val(equipmentID);
     deleteAssignmentModel.modal('show');
     deleteEntityID = ent_id;
     deleteEquipID = equipmentID;
@@ -808,3 +812,8 @@ function spectrumColor() {
 
     })
 }
+
+$('#changeUnitID').change(function () {
+    gbl_selected_td = $($('.ui-datepicker-calendar').find('[unitid="' + $(this).find(":selected").text() +'"]')[0])
+    gbl_selected_td.trigger('click')
+})
