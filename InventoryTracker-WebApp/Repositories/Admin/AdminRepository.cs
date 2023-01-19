@@ -40,7 +40,7 @@ namespace InventoryTracker_WebApp.Repositories.Admin
                 message.IsBodyHtml = true; //to make message body as html  
                 message.Body = bodyString;
                 smtp.Port = 587;
-                smtp.Host = "smtp.gmail.com"; //for gmail host  
+                smtp.Host = "smtp.office365.com"; //for microsoft outlook host  
                 smtp.EnableSsl = true;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(UserName, Password);
