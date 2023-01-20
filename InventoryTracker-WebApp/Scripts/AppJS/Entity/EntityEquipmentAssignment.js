@@ -644,9 +644,9 @@ function bindFilterCalender(dataArray) {
         var color = preservedColor.filter(x => x.ENT_NAME == dataArray[i].ENT_NAME);
         if (color.length > 0) {
 
-            legendStr += '<tr><input type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + color[0].RandomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
+            legendStr += '<tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + dataArray[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(dataArray[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(dataArray[i].END_DATE) +'"><input type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + color[0].RandomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
         } else {
-            legendStr += '<tr><input type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
+            legendStr += '<tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + dataArray[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(dataArray[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(dataArray[i].END_DATE) +'"><input type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="background-color:' + dataArray[i].RendomColor + '"></td><td>' + dataArray[i].ENT_NAME + '</td><td>' + dataArray[i].ENT_TYPE + '</td></tr>';
         }
 
 
@@ -679,6 +679,7 @@ function bindFilterCalender(dataArray) {
     }
     $('#tblLegend > tbody > tr').remove();
     $('#tblLegend > tbody').append(legendStr);
+    $('[data-bs-toggle="tooltip"]').tooltip();
     spectrumColor();
 }
 function getEquipmentEntityAssignmentByYear(equipID) {
@@ -707,9 +708,9 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                     }
                     var color = preservedColor.filter(x => x.ENT_NAME == newData.data[i].ENT_NAME);
                     if (color.length > 0) {
-                        legendStr += '<tr><input type="hidden" isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + color[0].RandomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + newData.data[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) +'"><input type="hidden" isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + color[0].RandomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     } else {
-                        legendStr += '<tr> <input type="hidden"  isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + newData.data[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) +'"> <input type="hidden"  isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="background-color:' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
                     ccEntityNameSelectList += '<option value=' + newData.data[i].ENT_ID + '>' + newData.data[i].ENT_NAME + '</option>';
 
@@ -742,6 +743,7 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                 }
                 $('#tblLegend > tbody > tr').remove();
                 $('#tblLegend > tbody').append(legendStr);
+                $('[data-bs-toggle="tooltip"]').tooltip();
                 spectrumColor();
                 filterFunction(dropDownVal)
             }
@@ -824,9 +826,6 @@ function openAssignmentPopup() {
     $('#endDateLbl').text($('.updateEndDatepicker').val());
     $('#calendarControlModel').css('z-index', '1035')
 }
-
-const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
-
 
 function spectrumColor() {
     $('#tblLegend > tbody > tr').each(function () {

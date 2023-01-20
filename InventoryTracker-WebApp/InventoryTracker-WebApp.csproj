@@ -946,6 +946,7 @@
     <Content Include="Views\Shared\_EquipmentTemplateDetail.cshtml" />
     <Content Include="Views\Shared\_EntityTemplateDetail.cshtml" />
     <Content Include="Views\Shared\_CalendarControlSearchModel.cshtml" />
+    <Content Include="Views\Shared\_EditEntityEquipmentModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

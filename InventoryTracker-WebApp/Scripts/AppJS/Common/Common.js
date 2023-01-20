@@ -17,6 +17,9 @@ var uniqueEquipType = "";
 var uniqueEntityType = "";
 var isEquipEntityPopUP = true;
 
+const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
+
+
 var equipmentTemplate = $('#equipmentTemplate');
 
 var lastPlusRow = '<tr><td colspan = "3"></td>  <td  class="textBox-BackColor"> <svg style ="cursor: pointer" xmlns="http://www.w3.org/2000/svg"  width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16"> <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" /> </svg> </td> </tr> ';
@@ -683,3 +686,5 @@ function BulkImportTemplate(isEntity) {
         }
     });
 }
+
+$('#editEntityEquipment').modal({ backdrop: 'static', keyboard: false })  
