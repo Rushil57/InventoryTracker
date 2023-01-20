@@ -19,6 +19,7 @@ var ccEntityID = 0;
 var ccEntityName = '';
 var isDropDownChange = false;
 var filterStr = '';
+var isCalenderButtonPresent = false;
 
 $(document).ready(function () {
     //    loadAllEntityTemp();
@@ -183,7 +184,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
     entityType.removeClass('textBox-BackColor');
     entityName.removeClass('textBox-BackColor').attr('hidden', true);
     $('#entityCC').remove();
-
+    isCalenderButtonPresent = false;
     if (element != undefined) {
         $(previousElement).css('background-color', 'white').css('color', 'black');
         $(element).css('background-color', '#96a6c3').css('color', 'white');
@@ -261,7 +262,12 @@ $('#editTemplate').click(function () {
     entityNameLblEle.attr('hidden', true);
     entityNameLblEle.text('');
     entityName.attr('hidden', false);
-    $('#mainDate').after('<svg style="cursor:pointer" onclick="openCC(\'' + currentEntityName + '\',' + currentEntityID + ')" id="entityCC" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4- float-end mt-2 me-2" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
+
+    if (!isCalenderButtonPresent) {
+        $('#mainDate').after('<svg style="cursor:pointer" onclick="openCC(\'' + currentEntityName + '\',' + currentEntityID + ')" id="entityCC" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4- float-end mt-2 me-2" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
+        isCalenderButtonPresent = true;
+    }
+   
     $("#tblTemplateDtl > tbody >  tr").each(function () {
         var firsttd = $(this).find("td:eq(1)");
         var secondtd = $(this).find("td:eq(2)");
@@ -270,17 +276,7 @@ $('#editTemplate').click(function () {
         secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
         thirdtd.html("<input type='text' class='datepicker dropdown-control' value='" + thirdtd.text().trim() + "'>");
     });
-
-    if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
-        $('.datepicker').datepicker({
-            autoclose: true
-        });
-    }
-    else {
-        $('.datepicker').bootstrapDP({
-            autoclose: true
-        });
-    }
+    bootStrapDropDown();
     
 })
 
@@ -326,19 +322,10 @@ $('#newTemplate').click(function () {
     entityName.attr('hidden', false);
 
     $('#entityCC').remove();
-
+    isCalenderButtonPresent = false;
     var todayDate = (new Date()).toLocaleDateString().split('T')[0];
     $("#tblTemplateDtl > tbody >  tr").remove();
-    if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
-        $('.datepicker').datepicker({
-            autoclose: true
-        });
-    }
-    else {
-        $('.datepicker').bootstrapDP({
-            autoclose: true
-        });
-    }
+    bootStrapDropDown();
 })
 
 
@@ -696,7 +683,7 @@ function openCC(entityName, entityID) {
     $('#tblLegend > tbody').append(legendStr);
     $('[data-bs-toggle="tooltip"]').tooltip();
     $('.selectDrpDown').html(filterStr);
-    $('#calendarControlModel').modal('show');
+    $('#calendarControlModel').modal('show').css('z-index', '99999');;
     setTimeout(onChangeYear(), 500)
 }
 
@@ -704,15 +691,6 @@ function openCC(entityName, entityID) {
 function onChangeYear() {
     $('#currentYear').text($('.ui-datepicker-year:first').text());
     filterFunction(dropDownVal);
-}
-
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
 }
 
 function bindDate(filterVal = 0) {
@@ -879,11 +857,3 @@ function callFunction() {
     $('#entityCC').trigger('click');
     $('.selectDrpDown').val(dropDownVal)
 }
-
-
-var mouseX;
-var mouseY;
-$(document).mousemove(function (e) {
-    mouseX = e.pageX;
-    mouseY = e.pageY;
-});

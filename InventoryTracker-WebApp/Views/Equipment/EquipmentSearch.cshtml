@@ -3,7 +3,7 @@
     ViewBag.Title = "EquipmentList";
     var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
-
+<link rel="stylesheet" href="~/Content/Css/EquipmentEntityAssignment.css">
 <div class="row">
     <div class="col-md-4 ms-5">
         @Html.Partial("_EquipmentLeftSection")
@@ -91,10 +91,12 @@
 @Html.Partial("_EquipmentCommonModel")
 @Html.Partial("_EntityTemplateDetail")
 @Html.Partial("_ImportModel")
+@Html.Partial("_CalendarControlSearchModel")
+@Html.Partial("_EditEntityEquipmentModel")
 @*Model End*@
 
 @section scripts{
-    <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
-    <script src="~/Scripts/AppJS/Equipment/EquipmentCommon.js?v=@versionUpdate"></script>
-    <script src="~/Scripts/AppJS/Equipment/EquipmentSearch.js?v=@versionUpdate"></script>
+<script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
+<script src="~/Scripts/AppJS/Equipment/EquipmentCommon.js?v=@versionUpdate"></script>
+<script src="~/Scripts/AppJS/Equipment/EquipmentSearch.js?v=@versionUpdate"></script>
 }
