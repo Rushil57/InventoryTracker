@@ -17,6 +17,8 @@ var gbl_all_equip_data = [];
 var gbl_all_entity_header_data = [];
 var ccEntityName = '';
 var ccUnitIDSelectList = '';
+var isDropDownChange = false;
+
 
 $(document).ready(function () {
     //    loadAllEquipTemp();
@@ -784,8 +786,9 @@ function openAssignmentPopup() {
     var isBorderedBoxVal = $(gbl_selected_td).attr('isBorderedBox');
     $('#currEquipID').text(unitID)
     $('#currEquipDiv').attr('hidden', false);
-    if (isBorderedBoxVal == '1') {
+    if (isBorderedBoxVal == '1' || isDropDownChange) {
         $('#changeUnitID').attr('hidden', false).html(ccUnitIDSelectList).val(equipmentID);
+        isDropDownChange = false;
     }
     else {
         $('#changeUnitID').attr('hidden', true)
@@ -827,9 +830,11 @@ function spectrumColor() {
 }
 
 $('#changeUnitID').change(function () {
+    isDropDownChange = true;
     gbl_selected_td = $($('.ui-datepicker-calendar').find('[unitid="' + $(this).find(":selected").text() + '"]')[0])
     if (gbl_selected_td[0] == undefined) {
         gbl_selected_td = $('#tblLegend > tbody > tr').find('[unitid="' + $(this).find(":selected").text() + '"]');
     }
     gbl_selected_td.trigger('click')
+    
 })

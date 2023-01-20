@@ -10,6 +10,8 @@ var ccUnitID = '';
 var ccVendor = '';
 isEquipEntityPopUP = false;
 var ccEntityNameSelectList = '';
+var isDropDownChange = false;
+
 
 $(document).ready(function () {
     loadAllEquipTemp();
@@ -804,8 +806,9 @@ function openAssignmentPopup() {
 
     $('#currEntityName').text(entName);
     $('#currEntityDiv').attr('hidden', false);
-    if (isBorderedBoxVal == '1') {
+    if (isBorderedBoxVal == '1' || isDropDownChange) {
         $('#changeEntityName').attr('hidden', false).html(ccEntityNameSelectList).val(ent_id);
+        isDropDownChange = false;
     }
     else {
         $('#changeEntityName').attr('hidden', true)
@@ -905,6 +908,7 @@ function bindTooltipForDates() {
 }
 
 $('#changeEntityName').change(function () {
+    isDropDownChange = true;
     gbl_selected_td = $($('.ui-datepicker-calendar').find('[entname="' + $(this).find(":selected").text() + '"]')[0]);
     if (gbl_selected_td[0] == undefined) {
         gbl_selected_td = $('#tblLegend > tbody > tr').find('[entname="' + $(this).find(":selected").text() + '"]');
