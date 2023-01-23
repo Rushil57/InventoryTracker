@@ -716,7 +716,12 @@ function bindDate(filterVal = 0) {
         var dataVal = $(this)[0].dataValue;
         var entityDtlID = $(this)[0].entityDtlID;
         var tmpID = $(this)[0].tmpID;
-        $('#tblLegend >  tbody').find('[currdtlid="' + tmpID +'"]').show()
+
+        $('#tblLegend >  tbody > tr > td').filter(function () {
+            var newColor = $(this).css("background-color");
+            return rgba2hex(newColor).toUpperCase() === color;
+        }).parent().show();
+
         $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
             var currMonth = $(this).attr('data-month');
             var currYear = $(this).attr('data-year');
