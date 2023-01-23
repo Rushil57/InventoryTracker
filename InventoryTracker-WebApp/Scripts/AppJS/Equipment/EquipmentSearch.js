@@ -787,7 +787,9 @@ function bindDate(filterVal = 0) {
     var year = $('#currentYear').text();
     $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)').css('border', 'none').attr('data-bs-toggle', '') });
     var currentYearData = ccPropDetails.filter(x => new Date(x.startDate).getFullYear() == year || new Date(x.endDate).getFullYear() >= year);
-    currentYearData;
+
+    $('#tblLegend >  tbody >  tr').hide();
+
     if (filterVal > 0) {
         currentYearData = ccPropDetails.filter(x => x.tmpID == filterVal);
     }
@@ -799,7 +801,7 @@ function bindDate(filterVal = 0) {
         var dataVal = $(this)[0].dataValue;
         var equipDtlID = $(this)[0].equipDtlID;
         var tmpID = $(this)[0].tmpID;
-
+        $('#tblLegend >  tbody').find('[currdtlid="' + tmpID + '"]').show()
         $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
             var currMonth = $(this).attr('data-month');
             var currYear = $(this).attr('data-year');
