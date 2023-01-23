@@ -21,7 +21,6 @@ var ccEquipID = 0;
 var ccUnitID = '';
 var isDropDownChange = false;
 var filterStr = '';
-var isCalenderButtonPresent = false;
 
 $(document).ready(function () {
     $('#selectedMenu').text($('#menuEquipSearch').text());
@@ -206,8 +205,7 @@ $('#newTemplate').click(function () {
     equipTypeEle.val(0).addClass('textBox-BackColor');
     vendorEle.val("").addClass('textBox-BackColor');
     equipmentHDRID.val(0);
-    $('#entityCC').remove();
-    isCalenderButtonPresent = false;
+    $('#entityCC').attr('onclick', '').css('opacity', '0.4');
     unitidLblEle.attr('hidden', true);
     unitidLblEle.text('');
     unitidEle.attr('hidden', false);
@@ -319,7 +317,7 @@ function saveHDRTemplateDtl() {
             data: JSON.stringify({ 'equipmentHDR': JSON.stringify(equipmentHDR), 'equipmentTmpDtl': JSON.stringify(equipmentTmpDtl) }),
             success: function (data) {
                 if (data.IsValid) {
-                    loadEquipmentHDR($('#searchEquipmentStr').val(),true);
+                    loadEquipmentHDR($('#searchEquipmentStr').val(), true);
                     $('#equipHDR > tbody >  tr:last').trigger('click');
                     addEquipmentColumn();
                 }
@@ -352,10 +350,9 @@ $('#editTemplate').click(function () {
 
     disabled();
 
-    if (!isCalenderButtonPresent) {
-        $('#mainDate').after('<svg style="cursor:pointer" onclick="openCC(\'' + currentUnitID + '\',' + currentEquipID + ')" id="entityCC" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4- float-end mt-2 me-2" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
-        isCalenderButtonPresent = true;
-    }
+
+    $('#entityCC').attr('onclick', 'openCC(\'' + currentUnitID + '\',' + currentEquipID + ')')
+        .css('opacity', '1');;
 
     $("#tblTemplateDtl > tbody >  tr").each(function () {
         var firsttd = $(this).find("td:eq(1)");
@@ -373,8 +370,7 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
     unitidEle.removeClass('textBox-BackColor').attr('hidden', true);
     equipTypeEle.removeClass('textBox-BackColor');
     vendorEle.removeClass('textBox-BackColor').attr('hidden', true);
-    $('#entityCC').remove();
-    isCalenderButtonPresent = false;
+    $('#entityCC').attr('onclick', '').css('opacity', '0.4');
     if (element != undefined) {
         $(previousElement).css('background-color', 'white').css('color', 'black');
         $(element).css('background-color', '#96a6c3').css('color', 'white');
@@ -503,7 +499,7 @@ $('#deleteTemplate').click(function () {
                 data: JSON.stringify({ 'equipID': $(previousElement).find('input[type="hidden"]').val() }),
                 success: function (data) {
                     if (data.IsValid) {
-                        loadEquipmentHDR($('#searchEquipmentStr').val().trim(),true);
+                        loadEquipmentHDR($('#searchEquipmentStr').val().trim(), true);
                         addEquipmentColumn();
                         $('#newTemplate').trigger('click')
                     }
@@ -612,7 +608,7 @@ function importExcel() {
 
         formData.append("file", files[0]);
         if (isBulkImport) {
-            
+
             $.ajax({
                 before: AddLoader(),
                 after: RemoveLoader(),
@@ -707,7 +703,6 @@ function openCC(unitID, equipID) {
     filterStr = '<option value="0" selected>No Filter</option>';
     ccPropDetails = [];
     $("#tblTemplateDtl > tbody >  tr").each(function () {
-        legendStr += ''
         var zerotdText = $(this).find("td:eq(0)").text();
         var firstText = $(this).find("td:eq(1) > input").val();
         var secondtd = $(this).find("td:eq(2) > input").val();
@@ -718,7 +713,7 @@ function openCC(unitID, equipID) {
         var equipDtlID = $(this).find('.equipDtlID').val();
 
         var color = getRandomColor();
-        legendStr += '<tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important"></td><td>' + zerotdText + '</td></tr>';
+        legendStr += '<tr data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText +'" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important"></td><td>' + zerotdText + '</td></tr>';
         filterStr += '<option value=' + equipTmpID + '>' + zerotdText + '</option>';
 
         ccPropDetails.push({
@@ -886,22 +881,25 @@ function openEditPopup(element) {
     var equipDtlID = $(element).attr('equipDtlID');
     var isBorderedBoxVal = $(element).attr('isBorderedBox');
     var equipTmpID = $(element).attr('equipTmpID');
-    if (isBorderedBoxVal == '1' || isDropDownChange) {
-        //$('#changeProp').attr('hidden', false).html(filterStr).val(equipTmpID);
-        //$($('#changeProp >  option')[0]).remove()
-        // Neee to uncommit
-        isDropDownChange = false;
-    }
-    else {
-        $('#changeProp').attr('hidden', true)
-    }
+    $('#changeProp').attr('hidden', true);
+    $('#saveData').attr('hidden', true);
+    $('#updateData').attr('hidden', false);
+    //if (isBorderedBoxVal == '1' || isDropDownChange) {
+    //    //$('#changeProp').attr('hidden', false).html(filterStr).val(equipTmpID);
+    //    //$($('#changeProp >  option')[0]).remove()
+    //    // Neee to uncommit
+    //    isDropDownChange = false;
+    //}
+    //else {
+    //    $('#changeProp').attr('hidden', true)
+    //}
     $('#currEntDTLID').val(equipDtlID);
     $('#startDateLbl').text(sdate);
     $('#endDateLbl').text(edate);
     $('.updateStartDatepicker').val(sdate);
     $('.updateEndDatepicker').val(edate);
     $('#propName').text(propName);
-    $('#dataValue').text(dataValue);
+    $('#dataValue').val(dataValue);
     resetEditModel();
     $('#editEntityEquipment').modal('show');
     $('#calendarControlModel').css('z-index', '1035')
@@ -925,7 +923,9 @@ function resetEditModel() {
 function updateEditOption() {
     var sdate = $('.updateStartDatepicker').val();
     var edate = $('.updateEndDatepicker').val();
+    var dataValue = $('#dataValue').val();
     var changeValueEle = $('#tblTemplateDtl >  tbody').find("[value='" + $('#currEntDTLID').val() + "']");
+    changeValueEle.parent().find('td:eq(1) > input').val(dataValue);
     changeValueEle.parent().find('td:eq(2) > input').val(sdate);
     changeValueEle.parent().find('td:eq(3) > input').val(edate);
     saveHDRTemplateDtl();
@@ -936,7 +936,82 @@ function updateEditOption() {
     setTimeout(callFunction, 500)
 }
 
-function callFunction() {
-    $('#entityCC').trigger('click');
-    $('.selectDrpDown').val(dropDownVal)
+
+//$('#changeProp').change(function () {
+//    var propName = $(this).find(":selected").text();
+//    var element = $('#tblLegend >  tbody').find('[propName="' + propName + '"]')
+//    //var dtlID = element.attr('currdtlid');
+//    //var sDate = element.attr('startDate');
+//    //var eDate = element.attr('endDate')
+//    //var dataValue = element.attr('dataValue');
+
+//})
+
+
+function GetAllTemplate() {
+
+    $.ajax({
+        before: AddLoader(),
+        after: RemoveLoader(),
+        url: '/Equipment/GetEquipmentTemplate',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: 'GET',
+        async: false,
+        data: { 'equipmentType': currentEquipmentType },
+        success: function (data) {
+            if (data.IsValid) {
+                var currPropDorpDown = '';
+                for (var i = 0; i < data.data.length; i++) {
+                    currPropDorpDown += '<option value="' + data.data[i].Equip_Temp_ID + '">' + data.data[i].Prop_Name + '</option>';
+                }
+                $('#changeProp').html(currPropDorpDown);
+            }
+        }, error: function (ex) { }
+    });
+}
+
+function saveData() {
+
+    var newEquipmentHDR = [];
+    newEquipmentHDR.push({
+        EQUIP_TYPE: currentEquipmentType,
+        VENDOR: currentVendor,
+        UNIT_ID: currentUnitID,
+        EQUIP_ID: currentEquipID
+    })
+
+    var newEquipmentTmpDtl = [];
+    newEquipmentTmpDtl.push({
+        Equip_Dtl_ID: 0,
+        Equip_Temp_ID: $('#changeProp').find(":selected").val(),
+        Eq_Value: $('#dataValue').val(),
+        Start_Date: $('.updateStartDatepicker').val(),
+        End_Date: $('.updateEndDatepicker').val()
+    })
+
+
+    $.ajax({
+        before: AddLoader(),
+        after: RemoveLoader(),
+        url: '/Equipment/SaveEquipmentHDRTempData',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: 'POST',
+        async: false,
+        data: JSON.stringify({ 'equipmentHDR': JSON.stringify(newEquipmentHDR), 'equipmentTmpDtl': JSON.stringify(newEquipmentTmpDtl) }),
+        success: function (data) {
+            if (data.IsValid) {
+                $('#editEntityEquipment').modal('hide');
+                $('#calendarControlModel').modal('hide');
+                $("#equipHDR > tbody").find("[value='" + ccEquipID + "']").parent().trigger('click');
+                $('#editTemplate').trigger('click');
+                setTimeout(callFunction, 500)
+            }
+            else {
+                alert(data.data)
+            }
+        }, error: function (ex) { }
+    });
+
 }

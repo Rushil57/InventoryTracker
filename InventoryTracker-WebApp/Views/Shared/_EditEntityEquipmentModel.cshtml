@@ -4,24 +4,23 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="editEntityEquipmentLabel">Edit</h6>
+                <button type="button" class="btn btn-primary float-end" style="margin-left:300px" onclick="AddNewProp()">Add New</button>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick=" resetEditModel()"></button>
             </div>
-            <div class="modal-body" style="height:250px; overflow: auto;" id="editEntityEquipmentBody">
+            <div class="modal-body" style="height:300px; overflow: auto;" id="editEntityEquipmentBody">
                 <div class="row">
                     <input type="hidden" value="0" id="currEntDTLID" />
-                    <div class="col-7">
+                    <div class="col-12">
                         <h6>
-                            <label>Current Property Name:</label>&nbsp;
+                            <label>Property Name:</label>&nbsp;
                             <label type="text" id="propName"></label>
+                            <select name='changeProp' class='dropdown-control' style="display:inline;width:auto" id='changeProp' hidden></select>
                         </h6>
                     </div>
-                    <div class="col-7">
-                        <select name='changeProp' class='dropdown-control float-end' style="display:inline;" id='changeProp' hidden></select>
-                    </div>
-                    <div class="col-7">
+                    <div class="col-12">
                         <h6>
                             <label>Current Data Value:</label>&nbsp;
-                            <label type="text" id="dataValue"></label>
+                            <input type="text" id="dataValue" class="dropdown-control" style="display: inline; width: 40%; height:32px" />
                         </h6>
                     </div>
                     <div class="col-7">
@@ -39,12 +38,12 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-5">
+                    <div class="col-6">
                         <h6>
                             <label>Start Date:</label> &nbsp;<input type="text" class="updateStartDatepicker dropdown-control" style="display: inline; width: 60%; height:32px" />
                         </h6>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <h6>
                             <label>End Date:</label> &nbsp;<input type="text" class="updateEndDatepicker dropdown-control" style="display: inline; width:60%; height:32px" />
                         </h6>
@@ -54,7 +53,8 @@
                 <div class="row" style="padding-top:10px;">
                     <div class="col-md-3"></div>
                     <div class="col-md-6">
-                        <button type="button" class="btn btn-primary" onclick="updateEditOption()">Update Start/End Dates</button>
+                        <button type="button" id="updateData" class="btn btn-primary" onclick="updateEditOption()">Update Start/End Dates</button>
+                        <button type="button" class="btn btn-primary" style="margin-left:75px" onclick="saveData()" id="saveData" hidden>Save</button>
                     </div>
                     <div class="col-md-3"></div>
                 </div>

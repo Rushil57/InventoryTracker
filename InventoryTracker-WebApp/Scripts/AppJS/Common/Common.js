@@ -35,7 +35,7 @@ $(document).ready(function () {
             addEntityHeader();
         }
     })
-    $('#import , #property , #export ,#sampleFile').tooltip();
+    $('#import , #property , #export ,#sampleFile, #entityCC').tooltip();
 
     var popover = new bootstrap.Popover(document.querySelector('#bulkImport'), {
         container: 'body',
@@ -698,6 +698,29 @@ function getRandomColor() {
     return color;
 }
 
+
+function callFunction() {
+    $('#entityCC').trigger('click');
+    $('.selectDrpDown').val(dropDownVal)
+}
+
+
+function AddNewProp() {
+    var sDate = getTodayDate();
+    $('#dataValue').val('');
+    $('#propName').text('');
+    $('#startDateLbl').text(sDate);
+    $('#endDateLbl').text('01/01/9999');
+    $('.updateStartDatepicker').bootstrapDP('setDate', sDate);
+    $('.updateEndDatepicker').bootstrapDP('setDate', '01/01/9999');
+    $('#changeProp').attr('hidden', false);
+    $('#saveData').attr('hidden', false);
+    $('#updateData').attr('hidden', true);
+
+    GetAllTemplate();
+}
+
+
 function bootStrapDropDown() {
     if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
         $('.datepicker').datepicker({
@@ -710,3 +733,12 @@ function bootStrapDropDown() {
         });
     }
 }
+
+function getTodayDate() {
+    var d = new Date();
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    var output = (month < 10 ? '0' : '') + month + '/' + (day < 10 ? '0' : '') + day + '/' + d.getFullYear();
+    return output;
+}
+
