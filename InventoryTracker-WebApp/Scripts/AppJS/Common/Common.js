@@ -47,6 +47,13 @@ $(document).ready(function () {
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl)
     })
+
+
+    $('.selectDrpDown').change(function () {
+        dropDownVal = $(this).val();
+        filterFunction(dropDownVal);
+    })
+
 })
 function updateRowIndex() {
     var j = 1;
@@ -487,7 +494,7 @@ new bootstrap.Modal(deleteAssignmentModel, {
     backdrop: 'static'
 })
 function removeAssignmentOption() {
-    $('#calendarControlModel').css('z-index', '99999');
+    $('#calendarControlModel').css('z-index', '1055');
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
@@ -543,7 +550,7 @@ function updateAssignmentOption() {
     }
     var startDate = $('.updateStartDatepicker').val();
     var endDate = $('.updateEndDatepicker').val();
-    $('#calendarControlModel').css('z-index', '99999');
+    $('#calendarControlModel').css('z-index', '1055');
     $.ajax({
         before: AddLoader(),
         after: RemoveLoader(),
@@ -582,7 +589,7 @@ function resetDeleteAssignmentModel() {
         $('.updateEndDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', deleteEndDate);
         $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', deleteStartDate);
     }
-    $('#calendarControlModel').css('z-index', '99999');
+    $('#calendarControlModel').css('z-index', '1055');
 }
 
 function divEquipmentHDRLoad(element) {
@@ -687,7 +694,6 @@ function BulkImportTemplate(isEntity) {
     });
 }
 
-$('#editEntityEquipment').modal({ backdrop: 'static', keyboard: false })  
 
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
@@ -698,6 +704,21 @@ function getRandomColor() {
     return color;
 }
 
+
+function resetEditModel() {
+    var sdate = $('#startDateLbl').text();
+    var edate = $('#endDateLbl').text();
+
+    if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
+        $('.updateEndDatepicker').datepicker({ autoclose: true }).datepicker('setDate', edate);
+        $('.updateStartDatepicker').datepicker({ autoclose: true }).datepicker('setDate', sdate);
+    }
+    else {
+        $('.updateEndDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', edate);
+        $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', sdate);
+    }
+    $('#calendarControlModel').css('z-index', '1055');
+}
 
 function callFunction() {
     $('#entityCC').trigger('click');
@@ -742,3 +763,27 @@ function getTodayDate() {
     return output;
 }
 
+
+
+
+function filterFunction(dropDownVal) {
+    $("#tblLegend tr").each(function (index) {
+        var row = $(this);
+        if (dropDownVal == 0) {
+            row.show();
+            bindDate(0)
+        }
+        else {
+            if (index !== 0) {
+                if (row.find('[type="hidden"]').val().toLowerCase() != dropDownVal.toLowerCase().trim()) {
+                    row.hide();
+                }
+                else {
+                    row.show();
+                    bindDate(row.find('[type="hidden"]').val().toLowerCase());
+                }
+            }
+        }
+
+    });
+}

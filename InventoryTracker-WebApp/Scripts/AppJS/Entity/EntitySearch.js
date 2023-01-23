@@ -596,8 +596,6 @@ function openCC(entityName, entityID) {
     if (entityName != '') {
         ccEntityName = entityName;
     }
-    $('.selectDrpDown').html(uniqueEquipType).find('option:first').text('No Filter');
-
     if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
         var datepicker = $.fn.datepicker.noConflict();
         $.fn.bootstrapDP = datepicker;
@@ -621,6 +619,7 @@ function openCC(entityName, entityID) {
     var legendStr = '';
     filterStr = '<option value="0" selected>No Filter</option>';
     ccPropDetails = [];
+    var entityTmpIDList = [];
     $("#tblTemplateDtl > tbody >  tr").each(function () {
 
         var zerotdText = $(this).find("td:eq(0)").text();
@@ -633,8 +632,14 @@ function openCC(entityName, entityID) {
         var entityDtlID = $(this).find('.entityDtlID').val();
 
         var color = getRandomColor();
-        legendStr += '<tr data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText +'" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="background-color:' + color + ' !important"></td><td>' + zerotdText + '</td></tr>';
-        filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>';
+        legendStr += '<tr data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="background-color:' + color + ' !important"></td><td>' + zerotdText + '</td></tr>';
+        if (entityTmpIDList.filter(x => x.id == entityTmpID) == 0) {
+            filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>';
+
+            entityTmpIDList.push({
+                id: entityTmpID
+            })
+        }
 
         ccPropDetails.push({
             tmpID: entityTmpID,
@@ -678,7 +683,7 @@ function openCC(entityName, entityID) {
     $('#tblLegend > tbody').append(legendStr);
     $('[data-bs-toggle="tooltip"]').tooltip();
     $('.selectDrpDown').html(filterStr);
-    $('#calendarControlModel').modal('show').css('z-index', '99999');;
+    $('#calendarControlModel').modal('show').css('z-index', '1055');
     setTimeout(onChangeYear(), 500)
 }
 
@@ -760,35 +765,6 @@ function spectrumColor() {
 
     })
 }
-
-$('.selectDrpDown').change(function () {
-    dropDownVal = $(this).val();
-    filterFunction(dropDownVal);
-})
-
-
-function filterFunction(dropDownVal) {
-    $("#tblLegend tr").each(function (index) {
-        var row = $(this);
-        if (dropDownVal == 0) {
-            row.show();
-            bindDate(0)
-        }
-        else {
-            if (index !== 0) {
-                if (row.find('[type="hidden"]').val().toLowerCase() != dropDownVal.toLowerCase().trim()) {
-                    row.hide();
-                }
-                else {
-                    row.show();
-                    bindDate(row.find('[type="hidden"]').val().toLowerCase());
-                }
-            }
-        }
-
-    });
-}
-
 function openEditPopup(element) {
     var sdate = $(element).attr('data-start-date');
     var edate = $(element).attr('data-end-date');
@@ -821,21 +797,6 @@ function openEditPopup(element) {
     resetEditModel();
     $('#editEntityEquipment').modal('show');
     $('#calendarControlModel').css('z-index', '1035')
-}
-
-function resetEditModel() {
-    var sdate = $('#startDateLbl').text();
-    var edate = $('#endDateLbl').text();
-
-    if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
-        $('.updateEndDatepicker').datepicker({ autoclose: true }).datepicker('setDate', edate);
-        $('.updateStartDatepicker').datepicker({ autoclose: true }).datepicker('setDate', sdate);
-    }
-    else {
-        $('.updateEndDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', edate);
-        $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', sdate);
-    }
-    $('#calendarControlModel').css('z-index', '99999');
 }
 
 function updateEditOption() {
