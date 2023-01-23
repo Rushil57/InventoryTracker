@@ -200,6 +200,11 @@ function addEquipmentHeader() {
 
 
 $('#newTemplate').click(function () {
+    currentEquipID = 0;
+    currentUnitID = '';
+    currentEquipmentType = '';
+    currentVendor = '';
+
     enabled();
     unitidEle.val("").addClass('textBox-BackColor');
     equipTypeEle.val(0).addClass('textBox-BackColor');
@@ -337,32 +342,34 @@ function saveHDRTemplateDtl() {
 //})
 
 $('#editTemplate').click(function () {
-    unitidEle.addClass('textBox-BackColor');
-    equipTypeEle.addClass('textBox-BackColor');
-    vendorEle.addClass('textBox-BackColor');
+    if (currentEquipID > 0) {
+        unitidEle.addClass('textBox-BackColor');
+        equipTypeEle.addClass('textBox-BackColor');
+        vendorEle.addClass('textBox-BackColor');
 
-    unitidLblEle.attr('hidden', true);
-    unitidLblEle.text('');
-    unitidEle.attr('hidden', false);
-    vendorLblEle.attr('hidden', true);
-    vendorLblEle.text('');
-    vendorEle.attr('hidden', false);
+        unitidLblEle.attr('hidden', true);
+        unitidLblEle.text('');
+        unitidEle.attr('hidden', false);
+        vendorLblEle.attr('hidden', true);
+        vendorLblEle.text('');
+        vendorEle.attr('hidden', false);
 
-    disabled();
+        disabled();
 
 
-    $('#entityCC').attr('onclick', 'openCC(\'' + currentUnitID + '\',' + currentEquipID + ')')
-        .css('opacity', '1');;
+        $('#entityCC').attr('onclick', 'openCC(\'' + currentUnitID + '\',' + currentEquipID + ')')
+            .css('opacity', '1');;
 
-    $("#tblTemplateDtl > tbody >  tr").each(function () {
-        var firsttd = $(this).find("td:eq(1)");
-        var secondtd = $(this).find("td:eq(2)");
-        var thirdtd = $(this).find("td:eq(3)");
-        firsttd.html("<input type='text' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'>");
-        secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
-        thirdtd.html("<input type='text' class='datepicker dropdown-control' value='" + thirdtd.text().trim() + "'>");
-    });
-    bootStrapDropDown();
+        $("#tblTemplateDtl > tbody >  tr").each(function () {
+            var firsttd = $(this).find("td:eq(1)");
+            var secondtd = $(this).find("td:eq(2)");
+            var thirdtd = $(this).find("td:eq(3)");
+            firsttd.html("<input type='text' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'>");
+            secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
+            thirdtd.html("<input type='text' class='datepicker dropdown-control' value='" + thirdtd.text().trim() + "'>");
+        });
+        bootStrapDropDown();
+    }
 })
 
 

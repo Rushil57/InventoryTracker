@@ -254,26 +254,28 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
 
 
 $('#editTemplate').click(function () {
-    entityType.addClass('textBox-BackColor');
-    entityName.addClass('textBox-BackColor');
-    disabled();
-    entityNameLblEle.attr('hidden', true);
-    entityNameLblEle.text('');
-    entityName.attr('hidden', false);
 
-    $('#entityCC').attr('onclick', 'openCC(\'' + currentEntityName + '\',' + currentEntityID + ')')
-        .css('opacity','1');
-   
-    $("#tblTemplateDtl > tbody >  tr").each(function () {
-        var firsttd = $(this).find("td:eq(1)");
-        var secondtd = $(this).find("td:eq(2)");
-        var thirdtd = $(this).find("td:eq(3)");
-        firsttd.html("<input type='text' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'>");
-        secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
-        thirdtd.html("<input type='text' class='datepicker dropdown-control' value='" + thirdtd.text().trim() + "'>");
-    });
-    bootStrapDropDown();
-    
+    if (currentEntityID > 0) {
+        entityType.addClass('textBox-BackColor');
+        entityName.addClass('textBox-BackColor');
+        disabled();
+        entityNameLblEle.attr('hidden', true);
+        entityNameLblEle.text('');
+        entityName.attr('hidden', false);
+
+        $('#entityCC').attr('onclick', 'openCC(\'' + currentEntityName + '\',' + currentEntityID + ')')
+            .css('opacity', '1');
+
+        $("#tblTemplateDtl > tbody >  tr").each(function () {
+            var firsttd = $(this).find("td:eq(1)");
+            var secondtd = $(this).find("td:eq(2)");
+            var thirdtd = $(this).find("td:eq(3)");
+            firsttd.html("<input type='text' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'>");
+            secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
+            thirdtd.html("<input type='text' class='datepicker dropdown-control' value='" + thirdtd.text().trim() + "'>");
+        });
+        bootStrapDropDown();
+    }
 })
 
 $('#deleteTemplate').click(function () {
@@ -316,6 +318,10 @@ $('#newTemplate').click(function () {
     entityNameLblEle.attr('hidden', true);
     entityNameLblEle.text('');
     entityName.attr('hidden', false);
+
+    currentEntityID = 0;
+    currentEntityType = '';
+    currentEntityName = '';
 
     $('#entityCC').attr('onclick', '').css('opacity', '0.4');;
     var todayDate = (new Date()).toLocaleDateString().split('T')[0];
