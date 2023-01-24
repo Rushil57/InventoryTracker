@@ -787,3 +787,9 @@ function filterFunction(dropDownVal) {
 
     });
 }
+
+
+function bindTooltip() {
+    $('[data-bs-toggle="tooltip"]').tooltip('dispose');
+    $('[data-bs-toggle="tooltip"]').tooltip();
+}

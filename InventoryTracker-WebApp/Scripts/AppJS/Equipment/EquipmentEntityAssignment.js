@@ -256,7 +256,7 @@ function loadEntityHDR(searchString, searchflag) {
                         equipActive.text(parseInt(equipActiveCount) + 1);
 
 
-                        $('[data-bs-toggle="tooltip"]').tooltip();
+                        bindTooltip();
                         $.ajax({
                             before: AddLoader(),
                             after: RemoveLoader(),
@@ -656,7 +656,7 @@ function bindFilterCalender(dataArray) {
     }
     $('#tblLegend > tbody > tr').remove();
     $('#tblLegend > tbody').append(legendStr);
-    $('[data-bs-toggle="tooltip"]').tooltip();
+    bindTooltip();
     spectrumColor();
 }
 function getEquipmentEntityAssignmentByYear(entityID) {
@@ -722,7 +722,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                 }
                 $('#tblLegend > tbody > tr').remove();
                 $('#tblLegend > tbody').append(legendStr);
-                $('[data-bs-toggle="tooltip"]').tooltip();
+                bindTooltip();
                 
                 spectrumColor();
                 filterFunction(dropDownVal)

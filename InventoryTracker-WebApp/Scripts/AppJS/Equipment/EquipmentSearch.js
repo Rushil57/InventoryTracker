@@ -770,8 +770,8 @@ function openCC(unitID, equipID) {
     });
     $('#tblLegend > tbody > tr').remove();
     $('#tblLegend > tbody').append(legendStr);
-    $('[data-bs-toggle="tooltip"]').tooltip();
-    $('.selectDrpDown').html(filterStr);
+    bindTooltip();
+    $('.selectDrpDown').html(filterStr).val(dropDownVal);
     $('#calendarControlModel').modal('show').css('z-index', '1055');
     setTimeout(onChangeYear(), 500)
 }
@@ -838,7 +838,7 @@ function bindDate(filterVal = 0) {
             }
         })
     })
-    $('[data-bs-toggle="tooltip"]').tooltip();
+    bindTooltip();
     spectrumColor();
 }
 
