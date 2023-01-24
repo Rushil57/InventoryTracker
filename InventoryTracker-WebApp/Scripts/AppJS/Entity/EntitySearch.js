@@ -587,14 +587,7 @@ function sampleFileDownload() {
     window.location.href = '/ExcelFiles/Entity_Bulk_Import.xlsx';
 }
 
-$('#nextYear').click(function () {
-    $('.ui-icon-circle-triangle-e').trigger('click');
-    setTimeout(onChangeYear(), 500);
-});
-$('#prevYear').click(function () {
-    $('.ui-icon-circle-triangle-w').trigger('click');
-    setTimeout(onChangeYear(), 500)
-});
+nextPrevYear();
 
 function openCC(entityName, entityID) {
     ccEntityID = entityID;
@@ -702,11 +695,11 @@ function onChangeYear() {
 function bindDate(filterVal = 0) {
     var year = $('#currentYear').text();
     $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)').css('border', 'none').attr('data-bs-toggle', '') });
-    var currentYearData = ccPropDetails.filter(x => new Date(x.startDate).getFullYear() == year || new Date(x.endDate).getFullYear() >= year);
+    var currentYearData = ccPropDetails.filter(x => new Date(x.startDate).getFullYear() <= year && new Date(x.endDate).getFullYear() >= year);
 
     $('#tblLegend >  tbody >  tr').hide();
     if (filterVal > 0) {
-        currentYearData = ccPropDetails.filter(x => x.tmpID == filterVal);
+        currentYearData = currentYearData.filter(x => x.tmpID == filterVal);
     }
     $(currentYearData).each(function () {
         var sDate = $(this)[0].startDate;
@@ -756,27 +749,6 @@ function bindDate(filterVal = 0) {
 }
 
 
-function spectrumColor() {
-    $('#tblLegend > tbody > tr').each(function () {
-        var firstTd = $(this).find('td:first');
-        var firstTdColor = firstTd.css('background-color');
-        firstTd.spectrum({
-            preferredFormat: "hex",
-            color: firstTdColor,
-            showAlpha: true,
-            showInput: true,
-            change: function (color) {
-                var currentColorIndex = ccPropDetails.filter(x => x.color == rgba2hex(firstTdColor).toUpperCase());
-                if (currentColorIndex.length > 0) {
-                    currentColorIndex[0].color = color.toHexString().toUpperCase();
-                    $(this).css('background-color', color.toHexString().toUpperCase())
-                    filterFunction(dropDownVal);
-                }
-            }
-        });
-
-    })
-}
 function openEditPopup(element) {
     var sdate = $(element).attr('data-start-date');
     var edate = $(element).attr('data-end-date');

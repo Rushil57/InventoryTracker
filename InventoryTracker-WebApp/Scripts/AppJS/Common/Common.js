@@ -793,3 +793,82 @@ function bindTooltip() {
     $('[data-bs-toggle="tooltip"]').tooltip('dispose');
     $('[data-bs-toggle="tooltip"]').tooltip();
 }
+
+function nextPrevYear() {
+    $('#nextYear').click(function () {
+        $('.ui-icon-circle-triangle-e').trigger('click');
+        setTimeout(onChangeYear(), 500);
+    });
+    $('#prevYear').click(function () {
+        $('.ui-icon-circle-triangle-w').trigger('click');
+        setTimeout(onChangeYear(), 500)
+    });
+
+}
+
+
+function spectrumColor() {
+    $('#tblLegend > tbody > tr').each(function () {
+        var firstTd = $(this).find('td:first');
+        var firstTdColor = firstTd.css('background-color');
+        firstTd.spectrum({
+            preferredFormat: "hex",
+            color: firstTdColor,
+            showAlpha: true,
+            showInput: true,
+            change: function (color) {
+                var currentColorIndex = ccPropDetails.filter(x => x.color == rgba2hex(firstTdColor).toUpperCase());
+                if (currentColorIndex.length > 0) {
+                    currentColorIndex[0].color = color.toHexString().toUpperCase();
+                    $(this).css('background-color', color.toHexString().toUpperCase())
+                    filterFunction(dropDownVal);
+                }
+            }
+        });
+
+    })
+}
+
+
+function spectrumColorForAssignment() {
+    $('#tblLegend > tbody > tr').each(function () {
+        var firstTd = $(this).find('td:first');
+        var firstTdColor = firstTd.css('background-color');
+        firstTd.spectrum({
+            preferredFormat: "hex",
+            color: firstTdColor,
+            showAlpha: true,
+            showInput: true,
+            change: function (color) {
+                var currentColorIndex = preservedColor.filter(x => x.RandomColor == rgba2hex(firstTdColor));
+                if (currentColorIndex.length > 0) {
+                    currentColorIndex[0].RandomColor = color.toHexString();
+                    getFilterEquipmentEntityAssignmentByYear();
+                }
+            }
+        });
+
+    })
+}
+
+
+function filterFunctionForAssignment(dropDownVal) {
+    $("#tblLegend tr").each(function (index) {
+        var row = $(this);
+
+        if (dropDownVal == 0) {
+            row.show();
+        }
+        else {
+            if (index !== 0) {
+                if (row.find('td:last').text().toLowerCase() != dropDownVal.toLowerCase().trim()) {
+                    row.hide();
+                }
+                else {
+                    row.show();
+                }
+            }
+        }
+    });
+    getFilterEquipmentEntityAssignmentByYear();
+}

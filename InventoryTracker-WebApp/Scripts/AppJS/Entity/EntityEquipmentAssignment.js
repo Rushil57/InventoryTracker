@@ -552,15 +552,7 @@ $(document).mousemove(function (e) {
     mouseX = e.pageX;
     mouseY = e.pageY;
 });
-
-$('#nextYear').click(function () {
-    $('.ui-icon-circle-triangle-e').trigger('click');
-    setTimeout(onChangeYear(), 500);
-});
-$('#prevYear').click(function () {
-    $('.ui-icon-circle-triangle-w').trigger('click');
-    setTimeout(onChangeYear(), 500)
-});
+nextPrevYear();
 function onChangeYear() {
     bindTooltipForDates();
     $('#currentYear').text($('.ui-datepicker-year:first').text());
@@ -680,7 +672,7 @@ function bindFilterCalender(dataArray) {
     $('#tblLegend > tbody > tr').remove();
     $('#tblLegend > tbody').append(legendStr);
     bindTooltip();
-    spectrumColor();
+    spectrumColorForAssignment();
 }
 function getEquipmentEntityAssignmentByYear(equipID) {
     var year = $('#currentYear').text();
@@ -744,8 +736,8 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                 $('#tblLegend > tbody > tr').remove();
                 $('#tblLegend > tbody').append(legendStr);
                 bindTooltip();
-                spectrumColor();
-                filterFunction(dropDownVal)
+                spectrumColorForAssignment();
+                filterFunctionForAssignment(dropDownVal)
             }
 
         },
@@ -773,30 +765,8 @@ function getEquipmentEntityAssignmentByYear(equipID) {
 
 $('.selectDrpDown').change(function () {
     dropDownVal = $(this).val();
-    filterFunction(dropDownVal);
+    filterFunctionForAssignment(dropDownVal);
 })
-
-function filterFunction(dropDownVal) {
-    $("#tblLegend tr").each(function (index) {
-        var row = $(this);
-
-        if (dropDownVal == 0) {
-            row.show();
-        }
-        else {
-            if (index !== 0) {
-                if (row.find('td:last').text().toLowerCase() != dropDownVal.toLowerCase().trim()) {
-                    row.hide();
-                }
-                else {
-                    row.show();
-                }
-            }
-        }
-        getFilterEquipmentEntityAssignmentByYear();
-    });
-
-}
 
 function openAssignmentPopup() {
     isEquipEntityPopUP = false;
@@ -825,27 +795,6 @@ function openAssignmentPopup() {
     $('#startDateLbl').text($('.updateStartDatepicker').val());
     $('#endDateLbl').text($('.updateEndDatepicker').val());
     $('#calendarControlModel').css('z-index', '1035')
-}
-
-function spectrumColor() {
-    $('#tblLegend > tbody > tr').each(function () {
-        var firstTd = $(this).find('td:first');
-        var firstTdColor = firstTd.css('background-color');
-        firstTd.spectrum({
-            preferredFormat: "hex",
-            color: firstTdColor,
-            showAlpha: true,
-            showInput: true,
-            change: function (color) {
-                var currentColorIndex = preservedColor.filter(x => x.RandomColor == rgba2hex(firstTdColor));
-                if (currentColorIndex.length > 0) {
-                    currentColorIndex[0].RandomColor = color.toHexString();
-                    getFilterEquipmentEntityAssignmentByYear();
-                }
-            }
-        });
-
-    })
 }
 
 function bindTooltipForDates() {
