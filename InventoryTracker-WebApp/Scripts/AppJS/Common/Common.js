@@ -767,26 +767,32 @@ function getTodayDate() {
 
 
 function filterFunction(dropDownVal) {
+    var isFirstLoad = true;
     $("#tblLegend tr").each(function (index) {
         var row = $(this);
-        if (dropDownVal == 0) {
-            row.show();
-            bindDate(0)
-        }
-        else {
-            if (index !== 0) {
-                if (row.find('[type="hidden"]').val().toLowerCase() != dropDownVal.toLowerCase().trim()) {
-                    row.hide();
-                }
-                else {
-                    row.show();
-                    bindDate(row.find('[type="hidden"]').val().toLowerCase());
+        if (isFirstLoad) {
+            if (dropDownVal == 0) {
+                row.show();
+                bindDate(0);
+                isFirstLoad = false;
+            }
+            else {
+                if (index !== 0) {
+                    if (row.find('[type="hidden"]').val().toLowerCase() != dropDownVal.toLowerCase().trim()) {
+                        row.hide();
+                    }
+                    else {
+                        row.show();
+                        bindDate(row.find('[type="hidden"]').val().toLowerCase());
+                        isFirstLoad = false;
+                    }
                 }
             }
         }
 
     });
 }
+
 
 
 function bindTooltip() {
