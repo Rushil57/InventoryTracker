@@ -1,7 +1,7 @@
 ﻿
 @{
     Layout = "";
-    ViewBag.Title = "IT MultiInstance";
+    ViewBag.Title = "MultiInstance";
     var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
 
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="~/Content/Css/Style.css">
     <link rel="stylesheet" href="~/Content/Css/MultiInstance.css" />
     <link rel="stylesheet" href="~/Content/Css/LoginIndex.css" />
+    <title>@ViewBag.Title</title>
 </head>
 <body>
     @Html.Partial("_Loader")
