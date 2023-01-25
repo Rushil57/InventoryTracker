@@ -715,6 +715,7 @@ function openCC(entityName, entityID) {
 function onChangeYear() {
     $('#currentYear').text($('.ui-datepicker-year:first').text());
     filterFunction(dropDownVal);
+    $('#entityCC').tooltip('dispose');
 }
 
 function bindDate(filterVal = 0) {
@@ -807,9 +808,12 @@ function openEditPopup(element) {
     $('.updateStartDatepicker').val(sdate);
     $('.updateEndDatepicker').val(edate);
     $('#propName').text(propName).attr('dataType', dataType);
-    $('#dataValue').val(dataValue).attr('type', textType);
+    $('#dataValue').attr('type', textType).val(dataValue);
     if (dataType == 'bool') {
-        $('#dataValue').prop('checked', dataValue == 'true' ? true : false);
+        $('#dataValue').prop('checked', dataValue == 'true' ? true : false).addClass('checkboxStyleEdit');
+    }
+    else {
+        $('#dataValue').removeClass('checkboxStyleEdit');
     }
     resetEditModel();
     $('#editEntityEquipment').modal('show');

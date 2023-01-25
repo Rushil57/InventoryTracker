@@ -203,3 +203,8 @@ td, th {
     border-radius: 4px !important;
     padding: 0px;
 }
+
+.checkboxStyleEdit {
+    height: 15px !important;
+    margin-left: -90px;
+}

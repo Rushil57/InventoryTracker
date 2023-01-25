@@ -894,7 +894,10 @@ function onChangePropDropDown() {
     var dataType = $('#changeProp').find(":selected").attr('datatype').toLowerCase();
     var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
     if (dataType == 'bool') {
-        $('#dataValue').prop('checked',false)
+        $('#dataValue').prop('checked', false).addClass('checkboxStyleEdit');
+    }
+    else {
+        $('#dataValue').removeClass('checkboxStyleEdit');
     }
     $('#dataValue').attr('type', textType);
 }
