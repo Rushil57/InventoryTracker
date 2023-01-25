@@ -880,6 +880,8 @@ function openEditPopup(element) {
     $('#changeProp').attr('hidden', true);
     $('#saveData').attr('hidden', true);
     $('#updateData').attr('hidden', false);
+    $('#removeDetail').attr('hidden', false);
+
     //if (isBorderedBoxVal == '1' || isDropDownChange) {
     //    //$('#changeProp').attr('hidden', false).html(filterStr).val(equipTmpID);
     //    //$($('#changeProp >  option')[0]).remove()
