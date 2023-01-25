@@ -7,6 +7,7 @@
 
 
 function loadTemplate(equipmentType, currentLI) {
+    isFirstTimeEntEqu = true;
     $("#ul > li").removeClass('cls-selected-li');
     if (currentLI != undefined) {
         $(currentLI).addClass('cls-selected-li');
@@ -133,6 +134,7 @@ $('#newTemplate').click(function () {
     loadTemplate('');
     elementTemplateName.append('<input class="dropdown-control textBox-BackColor" type="text" id="templateName" />');
     addCursorFunc();
+    isFirstTimeEntEqu = true;
 })
 
 deleteButton.click(function () {

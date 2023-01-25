@@ -12,6 +12,7 @@ namespace InventoryTracker_WebApp.Domain.Entity
         bool CheckDuplicateEntityHDR(EntityHeader entityHeader);
         bool DeleteEntityTemplates(string entityType);
         List<EntityDetail> GetEntityTemplateDetails(int entityID, string startDate);
+        bool RemoveEntityEquipmentTemplateDetail(int deatailID, int isEntity);
         List<EntityDetail> EntityValueByPropName(string propName);
         List<EquipmentHeader> GetEntityEquipmentAssignment(int entityID);
         bool DeleteEntityHeader(int entityID);

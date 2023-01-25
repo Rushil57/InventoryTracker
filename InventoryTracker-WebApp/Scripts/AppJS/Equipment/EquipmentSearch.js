@@ -21,6 +21,8 @@ var ccEquipID = 0;
 var ccUnitID = '';
 var isDropDownChange = false;
 var filterStr = '';
+var isFirstTimeEdit = true;
+var isEntityDeleted = 0; 
 
 $(document).ready(function () {
     $('#selectedMenu').text($('#menuEquipSearch').text());
@@ -274,7 +276,12 @@ function saveHDRTemplateDtl() {
         $("#tblTemplateDtl > tbody >  tr").each(function () {
             var Equip_Dtl_ID = $(this).find('.equipDtlID').val();
             var Equip_Temp_ID = $(this).find('.equipTmpID').val();
+            var dataType = $(this).find('.dataType').val().toLowerCase();
+
             var firsttd = (typeof $(this).find("td:eq(1)").text() != 'undefined' && $(this).find("td:eq(1)").text().trim() != "") ? $(this).find("td:eq(1)").text() : $(this).find("td:eq(1) >  input").val();
+            if (dataType == 'bool') {
+                firsttd = $(this).find("td:eq(1) > input").is(':checked');
+            }
             var secondtd = (typeof $(this).find("td:eq(2)").text() != 'undefined' && $(this).find("td:eq(2)").text().trim() != '') ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) >  input").val();
             var thirdtd = (typeof $(this).find("td:eq(3)").text() != 'undefined' && $(this).find("td:eq(3)").text().trim() != '') ? $(this).find("td:eq(3)").text() : $(this).find("td:eq(3) >  input").val();
 
@@ -342,7 +349,14 @@ function saveHDRTemplateDtl() {
 //})
 
 $('#editTemplate').click(function () {
-    if (currentEquipID > 0) {
+    if (currentEquipID == 0) {
+        alert("Please select Equipment!");
+        return;
+    }
+    else if (currentEquipID > 0 && isFirstTimeEdit) {
+        isFirstTimeEdit = false;
+        $('#entityCC').tooltip();
+        $('#entityCC').tooltip('dispose');
         unitidEle.addClass('textBox-BackColor');
         equipTypeEle.addClass('textBox-BackColor');
         vendorEle.addClass('textBox-BackColor');
@@ -364,7 +378,13 @@ $('#editTemplate').click(function () {
             var firsttd = $(this).find("td:eq(1)");
             var secondtd = $(this).find("td:eq(2)");
             var thirdtd = $(this).find("td:eq(3)");
-            firsttd.html("<input type='text' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'>");
+            var dataType = $(this).find(".dataType").val().toLowerCase();
+            var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+            var isChecked = '';
+            if (firsttd.text().trim() == 'true' && dataType == 'bool') {
+                isChecked = 'checked'
+            }
+            firsttd.html("<input type='" + textType + "' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'" + isChecked + ">");
             secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
             thirdtd.html("<input type='text' class='datepicker dropdown-control' value='" + thirdtd.text().trim() + "'>");
         });
@@ -378,6 +398,9 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
     equipTypeEle.removeClass('textBox-BackColor');
     vendorEle.removeClass('textBox-BackColor').attr('hidden', true);
     $('#entityCC').attr('onclick', '').css('opacity', '0.4');
+    isFirstTimeEdit = true;
+    $('#entityCC').tooltip();
+
     if (element != undefined) {
         $(previousElement).css('background-color', 'white').css('color', 'black');
         $(element).css('background-color', '#96a6c3').css('color', 'white');
@@ -421,7 +444,7 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
                         eqValue = data.data[i].Eq_Value;
                     }
                     var endDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
-                    equipmentDetailString += '<tr><input type="hidden" class="equipDtlID" value="' + data.data[i].Equip_Dtl_ID + '" /><input type="hidden" class="equipTmpID" value="' + data.data[i].Equip_Temp_ID + '" /><td>' + data.data[i].Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
+                    equipmentDetailString += '<tr><input type="hidden" class="equipDtlID" value="' + data.data[i].Equip_Dtl_ID + '" /><input type="hidden" class="equipTmpID" value="' + data.data[i].Equip_Temp_ID + '" /><input type="hidden" class="dataType" value="' + data.data[i].Datatype + '" /><td>' + data.data[i].Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
                 }
                 $("#tblTemplateDtl > tbody >  tr").remove();
                 $("#tblTemplateDtl > tbody").append(equipmentDetailString);
@@ -581,7 +604,9 @@ $('#equipType').change(function () {
             if (data.IsValid) {
                 var templateString = '';
                 for (var i = 0; i < data.data.length; i++) {
-                    templateString += "<tr><input type='hidden' class='equipDtlID' value='0' /> <input type='hidden' class='equipTmpID' value='" + data.data[i].Equip_Temp_ID + "'/><td>" + data.data[i].Prop_Name + "</td><td><input type='text' class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
+                    var dataType = data.data[i].Datatype.toLowerCase()
+                    var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+                    templateString += "<tr><input type='hidden' class='equipDtlID' value='0' /> <input type='hidden' class='equipTmpID' value='" + data.data[i].Equip_Temp_ID + "'/><input type='hidden' class='dataType' value='" + dataType + "'/><td>" + data.data[i].Prop_Name + "</td><td><input type='" + textType +"' class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
                 }
                 $('#tblTemplateDtl > tbody > tr').remove();
                 $('#tblTemplateDtl > tbody').append(templateString);
@@ -710,9 +735,10 @@ function openCC(unitID, equipID) {
         var thirdtdDate = new Date(thirdtd);
         var equipTmpID = $(this).find('.equipTmpID').val();
         var equipDtlID = $(this).find('.equipDtlID').val();
+        var dataType = $(this).find('.dataType').val();
 
         var color = getRandomColor();
-        legendStr += '<tr data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText +'" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important"></td><td>' + zerotdText + '</td></tr>';
+        legendStr += '<tr equipTmpID="' + equipTmpID + '" isBorderedBox="1" equipDtlID="' + equipDtlID + '" data-equip-id="' + equipmentHDRID.val() + '" dataType="' + dataType + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important;cursor:pointer"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
         
         if (equipmentTmpIDList.filter(x => x.id == equipTmpID) == 0) {
             filterStr += '<option value=' + equipTmpID + '>' + zerotdText + '</option>';
@@ -728,7 +754,8 @@ function openCC(unitID, equipID) {
             endDate: thirdtd,
             color: color,
             dataValue: firstText,
-            equipDtlID: equipDtlID
+            equipDtlID: equipDtlID,
+            dataType : dataType
         })
         $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
             var currMonth = $(this).attr('data-month');
@@ -751,7 +778,8 @@ function openCC(unitID, equipID) {
                         .attr('propName', zerotdText)
                         .attr('dataValue', firstText)
                         .attr('equipDtlID', equipDtlID)
-                        .attr('equipTmpID', equipTmpID);
+                        .attr('equipTmpID', equipTmpID)
+                        .attr('dataType', dataType);
                 }
                 else {
                     $(this).children().css('border', '2px solid black')
@@ -793,6 +821,7 @@ function bindDate(filterVal = 0) {
         var dataVal = $(this)[0].dataValue;
         var equipDtlID = $(this)[0].equipDtlID;
         var tmpID = $(this)[0].tmpID;
+        var dataType = $(this)[0].dataType;
 
 
         $('#tblLegend >  tbody > tr > td').filter(function () {
@@ -821,7 +850,8 @@ function bindDate(filterVal = 0) {
                         .attr('propName', propName)
                         .attr('dataValue', dataVal)
                         .attr('equipDtlID', equipDtlID)
-                        .attr('equipTmpID', tmpID);
+                        .attr('equipTmpID', tmpID)
+                        .attr('dataType', dataType);
                 }
                 else {
                     $(this).children().css('border', '2px solid black')
@@ -835,7 +865,6 @@ function bindDate(filterVal = 0) {
 }
 
 
-
 function openEditPopup(element) {
     var sdate = $(element).attr('data-start-date');
     var edate = $(element).attr('data-end-date');
@@ -845,6 +874,8 @@ function openEditPopup(element) {
     var equipDtlID = $(element).attr('equipDtlID');
     var isBorderedBoxVal = $(element).attr('isBorderedBox');
     var equipTmpID = $(element).attr('equipTmpID');
+    var dataType = $(element).attr('dataType').toLowerCase();
+
     $('#changeProp').attr('hidden', true);
     $('#saveData').attr('hidden', true);
     $('#updateData').attr('hidden', false);
@@ -857,13 +888,18 @@ function openEditPopup(element) {
     //else {
     //    $('#changeProp').attr('hidden', true)
     //}
+    var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+
     $('#currEntDTLID').val(equipDtlID);
     $('#startDateLbl').text(sdate);
     $('#endDateLbl').text(edate);
     $('.updateStartDatepicker').val(sdate);
     $('.updateEndDatepicker').val(edate);
-    $('#propName').text(propName);
-    $('#dataValue').val(dataValue);
+    $('#propName').text(propName).attr('dataType', dataType);
+    $('#dataValue').val(dataValue).attr('type', textType);
+    if (dataType == 'bool') {
+        $('#dataValue').prop('checked', dataValue == 'true' ? true : false);
+    }
     resetEditModel();
     $('#editEntityEquipment').modal('show');
     $('#calendarControlModel').css('z-index', '1035')
@@ -875,6 +911,11 @@ function updateEditOption() {
     var edate = $('.updateEndDatepicker').val();
     var dataValue = $('#dataValue').val();
     var changeValueEle = $('#tblTemplateDtl >  tbody').find("[value='" + $('#currEntDTLID').val() + "']");
+    var dataType = $('#propName').attr('dataType').toLowerCase();
+
+    if (dataType == 'bool') {
+        changeValueEle.parent().find('td:eq(1) > input').attr('checked', $('#dataValue').is(':checked'));
+    }
     changeValueEle.parent().find('td:eq(1) > input').val(dataValue);
     changeValueEle.parent().find('td:eq(2) > input').val(sdate);
     changeValueEle.parent().find('td:eq(3) > input').val(edate);
@@ -886,18 +927,7 @@ function updateEditOption() {
     setTimeout(callFunction, 500)
 }
 
-
-//$('#changeProp').change(function () {
-//    var propName = $(this).find(":selected").text();
-//    var element = $('#tblLegend >  tbody').find('[propName="' + propName + '"]')
-//    //var dtlID = element.attr('currdtlid');
-//    //var sDate = element.attr('startDate');
-//    //var eDate = element.attr('endDate')
-//    //var dataValue = element.attr('dataValue');
-
-//})
-
-
+bindChangeProp();
 function GetAllTemplate() {
 
     $.ajax({
@@ -913,7 +943,7 @@ function GetAllTemplate() {
             if (data.IsValid) {
                 var currPropDorpDown = '';
                 for (var i = 0; i < data.data.length; i++) {
-                    currPropDorpDown += '<option value="' + data.data[i].Equip_Temp_ID + '">' + data.data[i].Prop_Name + '</option>';
+                    currPropDorpDown += '<option value="' + data.data[i].Equip_Temp_ID + '" dataType="' + data.data[i].Datatype + '">' + data.data[i].Prop_Name + '</option>';
                 }
                 $('#changeProp').html(currPropDorpDown);
             }
@@ -930,16 +960,22 @@ function saveData() {
         UNIT_ID: currentUnitID,
         EQUIP_ID: currentEquipID
     })
-
+    var eqValue = '';
+    if ($('#changeProp').find(":selected").attr('dataType').toLowerCase() == 'bool') {
+        eqValue = $('#dataValue').is(':checked');
+    }
+    else {
+        eqValue = $('#dataValue').val()
+    }
     var newEquipmentTmpDtl = [];
     newEquipmentTmpDtl.push({
         Equip_Dtl_ID: 0,
         Equip_Temp_ID: $('#changeProp').find(":selected").val(),
-        Eq_Value: $('#dataValue').val(),
+        Eq_Value: eqValue,
         Start_Date: $('.updateStartDatepicker').val(),
         End_Date: $('.updateEndDatepicker').val()
     })
-
+    
 
     $.ajax({
         before: AddLoader(),

@@ -107,6 +107,26 @@ namespace InventoryTracker_WebApp.Controllers
             return JsonConvert.SerializeObject(new { IsValid = true, data = entTempDetails});
         }
 
+        [HttpPost]
+        public string RemoveEntityEquipmentTemplateDetail(int deatailID,int isEntity)
+        {
+            try
+            {
+                if (deatailID > 0 )
+                {
+                    var isDeleted = _entityRepository.RemoveEntityEquipmentTemplateDetail(deatailID, isEntity);
+                    if (isDeleted)
+                    {
+                        return JsonConvert.SerializeObject(new { IsValid = true, data = "Data deleted successfully!" });
+                    }
+                }
+                return JsonConvert.SerializeObject(new { IsValid = false, data = "Data not deleted!" });
+            }
+            catch (Exception e)
+            {
+                return JsonConvert.SerializeObject(new { IsValid = false, data = "Data not deleted!" });
+            }   
+        }
         #endregion
 
         #region Entity Search

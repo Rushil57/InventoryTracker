@@ -5,6 +5,7 @@
 })
 function loadTemplate(entityType, currentLI) {
     $("#ul > li").removeClass('cls-selected-li');
+    isFirstTimeEntEqu = true;
     if (currentLI != undefined) {
         $(currentLI).addClass('cls-selected-li');
     }
@@ -130,6 +131,7 @@ $('#newTemplate').click(function () {
     loadTemplate('');
     elementTemplateName.append('<input type="text" class="dropdown-control textBox-BackColor" id="templateName" />');
     addCursorFunc();
+    isFirstTimeEntEqu = true;
 })
 
 deleteButton.click(function () {

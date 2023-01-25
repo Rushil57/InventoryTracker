@@ -16,6 +16,7 @@ var currentUpdateAssignDate = '';
 var uniqueEquipType = ""; 
 var uniqueEntityType = "";
 var isEquipEntityPopUP = true;
+var isFirstTimeEntEqu = true;
 
 const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
 
@@ -75,24 +76,27 @@ function deleteRow() {
     updateRowIndex();
 }
 function editTemplate(type) {
-    var templateName = elementTemplateName.text();
-    if (templateName == "") {
-        alert("Please select " + type);
-        return;
+    if (isFirstTimeEntEqu) {
+        isFirstTimeEntEqu = false;
+        var templateName = elementTemplateName.text();
+        if (templateName == "") {
+            alert("Please select " + type);
+            return;
+        }
+
+        addTrashFunc();
+        sortableTemplateRow();
+
+        $("#tblTemplate > tbody >  tr ").each(function () {
+            var zerotd = $(this).find("td:eq(0)");
+            //var onetd = $(this).find("td:eq(1)");
+            zerotd.html("<input type='text' class='dropdown-control' value='" + zerotd.text().trim() + "'>");
+            //onetd.html("<input type='text' value='" + onetd.text().trim() + "'>");
+        })
+        $("#tblTemplate > tbody >  tr:last ").remove();
+        elementtblTemplateBody.append(lastPlusRow);
+        addCursorFunc();
     }
-
-    addTrashFunc();
-    sortableTemplateRow();
-
-    $("#tblTemplate > tbody >  tr ").each(function () {
-        var zerotd = $(this).find("td:eq(0)");
-        //var onetd = $(this).find("td:eq(1)");
-        zerotd.html("<input type='text' class='dropdown-control' value='" + zerotd.text().trim() + "'>");
-        //onetd.html("<input type='text' value='" + onetd.text().trim() + "'>");
-    })
-    $("#tblTemplate > tbody >  tr:last ").remove();
-    elementtblTemplateBody.append(lastPlusRow);
-    addCursorFunc();
 }
 
 function AddLoader() {
@@ -737,8 +741,8 @@ function AddNewProp() {
     $('#changeProp').attr('hidden', false);
     $('#saveData').attr('hidden', false);
     $('#updateData').attr('hidden', true);
-
     GetAllTemplate();
+    onChangePropDropDown();
 }
 
 
@@ -796,6 +800,7 @@ function filterFunction(dropDownVal) {
 
 
 function bindTooltip() {
+    
     $('[data-bs-toggle="tooltip"]').tooltip('dispose');
     $('[data-bs-toggle="tooltip"]').tooltip();
 }
@@ -877,4 +882,57 @@ function filterFunctionForAssignment(dropDownVal) {
         }
     });
     getFilterEquipmentEntityAssignmentByYear();
+}
+
+
+function bindChangeProp() {
+    $('#changeProp').change(function () {
+        onChangePropDropDown();
+    })
+}
+function onChangePropDropDown() {
+    var dataType = $('#changeProp').find(":selected").attr('datatype').toLowerCase();
+    var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+    if (dataType == 'bool') {
+        $('#dataValue').prop('checked',false)
+    }
+    $('#dataValue').attr('type', textType);
+}
+
+
+function openEditPopupFromChild(element) {
+    openEditPopup($(element).parent())
+}
+
+
+function removeEntEquDetail() {
+    $.ajax({
+        before: AddLoader(),
+        after: RemoveLoader(),
+        url: '/Entity/RemoveEntityEquipmentTemplateDetail',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: 'POST',
+        async: false,
+        data: JSON.stringify({ 'deatailID': $('#currEntDTLID').val(), 'isEntity': isEntityDeleted }),
+        success: function (data) {
+            alert(data.data)
+            if (data.IsValid) {
+                
+                $('#editEntityEquipment').modal('hide');
+                $('#calendarControlModel').modal('hide');
+                if (isEntityDeleted) {
+                    $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');
+                }
+                else {
+                    $("#equipHDR > tbody").find("[value='" + ccEquipID + "']").parent().trigger('click');
+                }
+                $('#editTemplate').trigger('click');
+                setTimeout(callFunction, 500)
+            }
+            else {
+                alert(data.data)
+            }
+        }, error: function (ex) { }
+    });
 }

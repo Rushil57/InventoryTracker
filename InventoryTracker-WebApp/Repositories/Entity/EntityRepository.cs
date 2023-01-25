@@ -178,7 +178,31 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             finally { connection.Close(); }
         }
+        public bool RemoveEntityEquipmentTemplateDetail(int deatailID,int isEntity)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                var query = string.Empty;
+                if (isEntity == 1)
+                {
+                    query += "DELETE FROM [Entity_Dtl] WHERE [Ent_Dtl_ID] =" + deatailID;
+                }
+                else
+                {
+                    query += "DELETE FROM [Equipment_Dtl] WHERE [Equip_Dtl_ID] = " + deatailID;
+                }
 
+                connection.Query<bool>(query).ToList();
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
         public List<EntityDetail> GetEntityTemplateDetails(int entityID, string startDate)
         {
             List<EntityDetail> entityDetailList = new List<EntityDetail>();

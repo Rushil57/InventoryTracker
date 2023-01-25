@@ -19,6 +19,8 @@ var ccEntityID = 0;
 var ccEntityName = '';
 var isDropDownChange = false;
 var filterStr = '';
+var isFirstTimeEdit = true;
+var isEntityDeleted = 1;
 
 $(document).ready(function () {
     //    loadAllEntityTemp();
@@ -183,6 +185,9 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
     entityType.removeClass('textBox-BackColor');
     entityName.removeClass('textBox-BackColor').attr('hidden', true);
     $('#entityCC').attr('onclick', '').css('opacity', '0.4');
+    isFirstTimeEdit = true;
+    $('#entityCC').tooltip();
+
     if (element != undefined) {
         $(previousElement).css('background-color', 'white').css('color', 'black');
         $(element).css('background-color', '#96a6c3').css('color', 'white');
@@ -222,7 +227,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                         eqValue = data.data[i].Ent_Value;
                     }
                     var endDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
-                    entityDetailString += '<tr><input type="hidden" class="entityDtlID" value="' + data.data[i].Ent_Dtl_ID + '" /><input type="hidden" class="entityTmpID" value="' + data.data[i].Ent_Temp_ID + '" /><td>' + data.data[i].Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
+                    entityDetailString += '<tr><input type="hidden" class="entityDtlID" value="' + data.data[i].Ent_Dtl_ID + '" /><input type="hidden" class="entityTmpID" value="' + data.data[i].Ent_Temp_ID + '" /><input type="hidden" class="dataType" value="' + data.data[i].Datatype + '" /><td>' + data.data[i].Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
                 }
                 $("#tblTemplateDtl > tbody >  tr").remove();
                 $("#tblTemplateDtl > tbody").append(entityDetailString);
@@ -254,8 +259,13 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
 
 
 $('#editTemplate').click(function () {
-
-    if (currentEntityID > 0) {
+    if (currentEntityID == 0) {
+        alert("Please select Entity!");
+        return;
+    }
+    else if (currentEntityID > 0 && isFirstTimeEdit) {
+        isFirstTimeEdit = false;
+        $('#entityCC').tooltip('dispose');
         entityType.addClass('textBox-BackColor');
         entityName.addClass('textBox-BackColor');
         disabled();
@@ -270,7 +280,13 @@ $('#editTemplate').click(function () {
             var firsttd = $(this).find("td:eq(1)");
             var secondtd = $(this).find("td:eq(2)");
             var thirdtd = $(this).find("td:eq(3)");
-            firsttd.html("<input type='text' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'>");
+            var dataType = $(this).find(".dataType").val().toLowerCase();
+            var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+            var isChecked = '';
+            if (firsttd.text().trim() == 'true' && dataType == 'bool') {
+                isChecked = 'checked'
+            }
+            firsttd.html("<input type='" + textType + "' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'" + isChecked +">");
             secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
             thirdtd.html("<input type='text' class='datepicker dropdown-control' value='" + thirdtd.text().trim() + "'>");
         });
@@ -318,7 +334,7 @@ $('#newTemplate').click(function () {
     entityNameLblEle.attr('hidden', true);
     entityNameLblEle.text('');
     entityName.attr('hidden', false);
-
+    $('#entityCC').tooltip();
     currentEntityID = 0;
     currentEntityType = '';
     currentEntityName = '';
@@ -371,7 +387,11 @@ function saveHDRTemplateDtl() {
         $("#tblTemplateDtl > tbody >  tr").each(function () {
             var Ent_Dtl_ID = $(this).find('.entityDtlID').val();
             var Ent_Temp_ID = $(this).find('.entityTmpID').val();
+            var dataType = $(this).find('.dataType').val().toLowerCase();
             var firsttd = (typeof $(this).find("td:eq(1)").text() != 'undefined' && $(this).find("td:eq(1)").text().trim() != "") ? $(this).find("td:eq(1)").text() : $(this).find("td:eq(1) >  input").val();
+            if (dataType == 'bool') {
+                firsttd = $(this).find("td:eq(1) > input").is(':checked');
+            }
             var secondtd = (typeof $(this).find("td:eq(2)").text() != 'undefined' && $(this).find("td:eq(2)").text().trim() != '') ? $(this).find("td:eq(2)").text() : $(this).find("td:eq(2) >  input").val();
             var thirdtd = (typeof $(this).find("td:eq(3)").text() != 'undefined' && $(this).find("td:eq(3)").text().trim() != '') ? $(this).find("td:eq(3)").text() : $(this).find("td:eq(3) >  input").val();
 
@@ -505,7 +525,9 @@ $('#entityType').change(function () {
             if (data.IsValid) {
                 var templateString = '';
                 for (var i = 0; i < data.data.length; i++) {
-                    templateString += "<tr><input type='hidden' class='entityDtlID' value='0' /> <input type='hidden' class='entityTmpID' value='" + data.data[i].Ent_temp_id + "'/><td>" + data.data[i].Prop_name + "</td><td><input type='text' class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
+                    var dataType = data.data[i].Datatype.toLowerCase()
+                    var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+                    templateString += "<tr><input type='hidden' class='entityDtlID' value='0' /> <input type='hidden' class='entityTmpID' value='" + data.data[i].Ent_temp_id + "'/><input type='hidden' class='dataType' value='" + dataType + "'/><td>" + data.data[i].Prop_name + "</td><td><input type='" + textType +"' class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
                 }
                 $('#tblTemplateDtl > tbody > tr').remove();
                 $('#tblTemplateDtl > tbody').append(templateString);
@@ -629,9 +651,10 @@ function openCC(entityName, entityID) {
         var thirdtdDate = new Date(thirdtd);
         var entityTmpID = $(this).find('.entityTmpID').val();
         var entityDtlID = $(this).find('.entityDtlID').val();
+        var dataType = $(this).find('.dataType').val();
 
         var color = getRandomColor();
-        legendStr += '<tr data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="background-color:' + color + ' !important"></td><td>' + zerotdText + '</td></tr>';
+        legendStr += '<tr dataType="' + dataType + '" entityTempID="' + entityTmpID + '" isBorderedBox="1" entityDtlID="' + entityDtlID + '" data-ent-id="' + entityHDRID.val() + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="cursor:pointer;background-color:' + color + ' !important"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
         if (entityTmpIDList.filter(x => x.id == entityTmpID) == 0) {
             filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>';
 
@@ -647,7 +670,8 @@ function openCC(entityName, entityID) {
             endDate: thirdtd,
             color: color,
             dataValue: firstText,
-            entityDtlID: entityDtlID
+            entityDtlID: entityDtlID,
+            dataType: dataType
         })
         $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
             var currMonth = $(this).attr('data-month');
@@ -669,7 +693,8 @@ function openCC(entityName, entityID) {
                         .attr('propName', zerotdText)
                         .attr('dataValue', firstText)
                         .attr('entityDtlID', entityDtlID)
-                        .attr('entityTempID', entityTmpID);
+                        .attr('entityTempID', entityTmpID)
+                        .attr('dataType', dataType);
                 }
                 else {
                     $(this).children().css('border', '2px solid black')
@@ -709,6 +734,7 @@ function bindDate(filterVal = 0) {
         var dataVal = $(this)[0].dataValue;
         var entityDtlID = $(this)[0].entityDtlID;
         var tmpID = $(this)[0].tmpID;
+        var dataType = $(this)[0].dataType;
 
         $('#tblLegend >  tbody > tr > td').filter(function () {
             var newColor = $(this).css("background-color");
@@ -735,7 +761,8 @@ function bindDate(filterVal = 0) {
                         .attr('propName', propName)
                         .attr('dataValue', dataVal)
                         .attr('entityDtlID', entityDtlID)
-                        .attr('entityTempID', tmpID);
+                        .attr('entityTempID', tmpID)
+                        .attr('dataType', dataType);
                 }
                 else {
                     $(this).children().css('border', '2px solid black')
@@ -758,6 +785,7 @@ function openEditPopup(element) {
     var entityDtlID = $(element).attr('entityDtlID');
     var isBorderedBoxVal = $(element).attr('isBorderedBox');
     var entityTempID = $(element).attr('entityTempID');
+    var dataType = $(element).attr('dataType').toLowerCase();
     $('#changeProp').attr('hidden', true);
     $('#saveData').attr('hidden', true );
     $('#updateData').attr('hidden', false );
@@ -765,19 +793,24 @@ function openEditPopup(element) {
     //if (isBorderedBoxVal == '1' || isDropDownChange) {
     // //$('#changeProp').attr('hidden', false).html(filterStr).val(entityTempID);
     //    //$($('#changeProp >  option')[0]).remove()
-    //    // Neee to uncommit   
+    //    // Neee to uncommit
     //    isDropDownChange = false;
     //}
     //else {
     //    $('#changeProp').attr('hidden', true)
     //}
+    var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+
     $('#currEntDTLID').val(entityDtlID);
     $('#startDateLbl').text(sdate);
     $('#endDateLbl').text(edate);
     $('.updateStartDatepicker').val(sdate);
     $('.updateEndDatepicker').val(edate);
-    $('#propName').text(propName);
-    $('#dataValue').val(dataValue);
+    $('#propName').text(propName).attr('dataType', dataType);
+    $('#dataValue').val(dataValue).attr('type', textType);
+    if (dataType == 'bool') {
+        $('#dataValue').prop('checked', dataValue == 'true' ? true : false);
+    }
     resetEditModel();
     $('#editEntityEquipment').modal('show');
     $('#calendarControlModel').css('z-index', '1035')
@@ -788,6 +821,11 @@ function updateEditOption() {
     var edate = $('.updateEndDatepicker').val();
     var dataValue = $('#dataValue').val();
     var changeValueEle = $('#tblTemplateDtl >  tbody').find("[value='" + $('#currEntDTLID').val() + "']");
+    var dataType = $('#propName').attr('dataType').toLowerCase();
+
+    if (dataType == 'bool') {
+        changeValueEle.parent().find('td:eq(1) > input').attr('checked', $('#dataValue').is(':checked'));
+    }
     changeValueEle.parent().find('td:eq(1) > input').val(dataValue);
     changeValueEle.parent().find('td:eq(2) > input').val(sdate);
     changeValueEle.parent().find('td:eq(3) > input').val(edate);
@@ -798,18 +836,7 @@ function updateEditOption() {
     $('#editTemplate').trigger('click');
     setTimeout(callFunction, 500)
 }
-
-
-//$('#changeProp').change(function () {
-//    var propName = $(this).find(":selected").text();
-//    var element = $('#tblLegend >  tbody').find('[propName="' + propName + '"]')
-//    //var dtlID = element.attr('currdtlid');
-//    //var sDate = element.attr('startDate');
-//    //var eDate = element.attr('endDate')
-//    //var dataValue = element.attr('dataValue');
-
-//})
-
+bindChangeProp();
 function GetAllTemplate() {
     $.ajax({
         before: AddLoader(),
@@ -824,7 +851,7 @@ function GetAllTemplate() {
             if (data.IsValid) {
                 var currPropDorpDown = '';
                 for (var i = 0; i < data.data.length; i++) {
-                    currPropDorpDown += '<option value="' + data.data[i].Ent_temp_id + '">' + data.data[i].Prop_name + '</option>';
+                    currPropDorpDown += '<option value="' + data.data[i].Ent_temp_id + '" dataType="' + data.data[i].Datatype + '">' + data.data[i].Prop_name + '</option>';
                 }
                 $('#changeProp').html(currPropDorpDown);
             }
@@ -833,12 +860,18 @@ function GetAllTemplate() {
 }
 
 function saveData() {
-
+    var eqValue = '';
+    if ($('#changeProp').find(":selected").attr('dataType').toLowerCase() == 'bool') {
+        eqValue = $('#dataValue').is(':checked');
+    }
+    else {
+        eqValue = $('#dataValue').val()
+    }
     var newEntityTmpDtl = []
     newEntityTmpDtl.push({
         Ent_Dtl_ID: 0,
         Ent_Temp_ID: $('#changeProp').find(":selected").val(),
-        Ent_Value: $('#dataValue').val(),
+        Ent_Value: eqValue,
         Start_Date: $('.updateStartDatepicker').val(),
         End_Date: $('.updateEndDatepicker').val()
     })
@@ -874,3 +907,4 @@ function saveData() {
         }, error: function (ex) { }
     });
 }
+
