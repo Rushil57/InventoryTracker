@@ -178,7 +178,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             finally { connection.Close(); }
         }
-        public bool RemoveEntityEquipmentTemplateDetail(int deatailID,int isEntity)
+        public bool RemoveEntityEquipmentTemplateDetail(int deatailID, int isEntity)
         {
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
@@ -228,6 +228,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
                 query += "order by et.Sequence";
                 entityDetailList = connection.Query<EntityDetail>(query).ToList();
+                EntityDetailListByDtl(ref entityDetailList);
             }
             catch (Exception e)
             {
@@ -236,7 +237,32 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             finally { connection.Close(); }
             return entityDetailList;
         }
-
+        public void EntityDetailListByDtl(ref List<EntityDetail> entityDetails)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                int previousTempID = 0;
+                foreach (var ed in entityDetails.OrderBy(x=>x.Ent_Temp_ID))
+                {
+                    if (previousTempID == ed.Ent_Temp_ID)
+                    {
+                        continue;
+                    }
+                    previousTempID = ed.Ent_Temp_ID;
+                    query = "SELECT [Ent_Dtl_ID],[Ent_ID],ed.[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date],et.Prop_name,et.Datatype FROM [dbo].[Entity_Dtl] as ed join[dbo].[Entity_Template] as et on ed.Ent_Temp_ID = et.Ent_temp_id where Ent_ID =" + ed.Ent_ID + " and et.Ent_Temp_ID = " + ed.Ent_Temp_ID;
+                    var result = connection.Query<EntityDetail>(query).ToList();
+                    ed.EntityDetailsByTemplate = result;
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
         public List<EntityDetail> EntityValueByPropName(string propName)
         {
             List<EntityDetail> entityDetailList = new List<EntityDetail>();
@@ -447,7 +473,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                     var startDate = Convert.ToDateTime(sDate).Year + "-" + Convert.ToDateTime(sDate).Month + "-" + Convert.ToDateTime(sDate).Day;
                     var eDate = values[i + 2];
                     var endDate = Convert.ToDateTime(eDate).Year + "-" + Convert.ToDateTime(eDate).Month + "-" + Convert.ToDateTime(eDate).Day;
-                    query += "SET @ENTTempID = (select top 1 Ent_temp_id from Entity_Template where ENT_TYPE = '" + values[0] + "' and Prop_name= '" + columnHeader[i] + "')IF ((select count(Ent_Dtl_ID) from Entity_Dtl where Ent_ID = @ENTID and Ent_Temp_ID = @ENTTempID and Ent_Value = '" + values[i] + "'))  = 0  BEGIN  INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (@ENTID,@ENTTempID,'" + values[i].Trim() + "','" + startDate +"','" + endDate +"')End SET @ENTTempID = 0;";
+                    query += "SET @ENTTempID = (select top 1 Ent_temp_id from Entity_Template where ENT_TYPE = '" + values[0] + "' and Prop_name= '" + columnHeader[i] + "')IF ((select count(Ent_Dtl_ID) from Entity_Dtl where Ent_ID = @ENTID and Ent_Temp_ID = @ENTTempID and Ent_Value = '" + values[i] + "'))  = 0  BEGIN  INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (@ENTID,@ENTTempID,'" + values[i].Trim() + "','" + startDate + "','" + endDate + "')End SET @ENTTempID = 0;";
                 }
                 var isInserted = connection.Query<bool>(query).FirstOrDefault();
                 return isInserted;
@@ -583,11 +609,11 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 var query = string.Empty;
                 if (isEntity)
                 {
-                    query += "IF ((SELECT COUNT(*) FROM [Entity_Template] WHERE [Ent_type] = '"+ values[0] + "' AND [Prop_name] ='"+ values[1] + "'))  = 0 BEGIN INSERT INTO [Entity_Template] ([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES('" + values[0].Trim() + "','" + values[1].Trim() + "','" + values[2].Trim() + "'," + values[3] + ") END";
+                    query += "IF ((SELECT COUNT(*) FROM [Entity_Template] WHERE [Ent_type] = '" + values[0] + "' AND [Prop_name] ='" + values[1] + "'))  = 0 BEGIN INSERT INTO [Entity_Template] ([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES('" + values[0].Trim() + "','" + values[1].Trim() + "','" + values[2].Trim() + "'," + values[3] + ") END";
                 }
                 else
                 {
-                    query += "IF ((SELECT COUNT(*) FROM Equipment_Template WHERE Equipment_Type = '"+ values[0] + "' AND [Prop_name] ='"+values[1]+"'))  = 0 BEGIN INSERT INTO [Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype],[Sequence]) VALUES('" + values[0].Trim() + "','" + values[1].Trim() + "','" + values[2].Trim() + "'," + values[3] + ") END";
+                    query += "IF ((SELECT COUNT(*) FROM Equipment_Template WHERE Equipment_Type = '" + values[0] + "' AND [Prop_name] ='" + values[1] + "'))  = 0 BEGIN INSERT INTO [Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype],[Sequence]) VALUES('" + values[0].Trim() + "','" + values[1].Trim() + "','" + values[2].Trim() + "'," + values[3] + ") END";
                 }
                 var isInserted = connection.Query<bool>(query).FirstOrDefault();
                 return true;
@@ -599,18 +625,18 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             finally { connection.Close(); }
         }
 
-        public string IsValidEntityTemplate(List<string> columnHeader,string entityType)
+        public string IsValidEntityTemplate(List<string> columnHeader, string entityType)
         {
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
                 string columnHeaderVal = string.Empty;
-                for (int i = 2; i < columnHeader.Count; i= i+3)
+                for (int i = 2; i < columnHeader.Count; i = i + 3)
                 {
                     var query = string.Empty;
-                    query += "Declare @isValidColum bit = 1; IF ((SELECT COUNT(*) FROM Entity_Template WHERE Ent_type = '"+entityType+"' AND [Prop_name] ='" + columnHeader[i] + "'))  = 0 BEGIN SET @isValidColum = 0; End select @isValidColum;";
-                    bool isValidEntity =  connection.Query<bool>(query).FirstOrDefault();
+                    query += "Declare @isValidColum bit = 1; IF ((SELECT COUNT(*) FROM Entity_Template WHERE Ent_type = '" + entityType + "' AND [Prop_name] ='" + columnHeader[i] + "'))  = 0 BEGIN SET @isValidColum = 0; End select @isValidColum;";
+                    bool isValidEntity = connection.Query<bool>(query).FirstOrDefault();
                     if (!isValidEntity)
                     {
                         columnHeaderVal = columnHeader[i];

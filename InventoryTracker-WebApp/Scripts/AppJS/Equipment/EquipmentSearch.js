@@ -445,6 +445,25 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
                     }
                     var endDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
                     equipmentDetailString += '<tr><input type="hidden" class="equipDtlID" value="' + data.data[i].Equip_Dtl_ID + '" /><input type="hidden" class="equipTmpID" value="' + data.data[i].Equip_Temp_ID + '" /><input type="hidden" class="dataType" value="' + data.data[i].Datatype + '" /><td>' + data.data[i].Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
+
+                    if (data.data[i].EquipmentDetailsByTemplate != null) {
+
+                        for (var k = 0; k < data.data[i].EquipmentDetailsByTemplate.length; k++) {
+                            var detailsByTmp = data.data[i].EquipmentDetailsByTemplate[k];
+                            var startDateTmp = detailsByTmp.Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(detailsByTmp.Start_Date);
+
+                            var eqValueTmp = '';
+                            if (detailsByTmp.Datatype.toLowerCase() == 'hyperlink') {
+                                eqValueTmp = '<a href="https://' + detailsByTmp.Eq_Value + '" target="_blank">' + detailsByTmp.Eq_Value + '</a>'
+                            }
+                            else {
+                                eqValueTmp = detailsByTmp.Eq_Value;
+                            }
+                            var endDateTmp = detailsByTmp.End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(detailsByTmp.End_Date);
+
+                            equipmentDetailString += '<tr hidden><input type="hidden" class="equipDtlID" value="' + detailsByTmp.Equip_Dtl_ID + '" /><input type="hidden" class="equipTmpID" value="' + detailsByTmp.Equip_Temp_ID + '" /><input type="hidden" class="dataType" value="' + detailsByTmp.Datatype + '" /><td>' + detailsByTmp.Prop_Name + '</td><td>' + eqValueTmp + '</td><td>' + startDateTmp + '</td><td>' + endDateTmp + '</td></tr>';
+                        }
+                    }
                 }
                 $("#tblTemplateDtl > tbody >  tr").remove();
                 $("#tblTemplateDtl > tbody").append(equipmentDetailString);
@@ -727,6 +746,10 @@ function openCC(unitID, equipID) {
     ccPropDetails = [];
     var equipmentTmpIDList = [];
     $("#tblTemplateDtl > tbody >  tr").each(function () {
+        if ($(this).attr('hidden')) {
+            return;
+        }
+
         var zerotdText = $(this).find("td:eq(0)").text();
         var firstText = $(this).find("td:eq(1) > input").val();
         var secondtd = $(this).find("td:eq(2) > input").val();
@@ -865,7 +888,7 @@ function bindDate(filterVal = 0) {
     spectrumColor();
 }
 
-
+var dateRangeTmp = '';
 function openEditPopup(element) {
     var sdate = $(element).attr('data-start-date');
     var edate = $(element).attr('data-end-date');
@@ -881,6 +904,7 @@ function openEditPopup(element) {
     $('#saveData').attr('hidden', true);
     $('#updateData').attr('hidden', false);
     $('#removeDetail').attr('hidden', false);
+    $('#dateRangeDiv').attr('hidden', false);
 
     //if (isBorderedBoxVal == '1' || isDropDownChange) {
     //    //$('#changeProp').attr('hidden', false).html(filterStr).val(equipTmpID);
@@ -892,6 +916,21 @@ function openEditPopup(element) {
     //    $('#changeProp').attr('hidden', true)
     //}
     var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+
+    dateRangeTmp = '';
+
+    $("#tblTemplateDtl > tbody >  tr:hidden").each(function () {
+        var sDateTmp = $(this).find('td:eq(2) >  input').val();
+        var eDateTmp = $(this).find('td:eq(3) >  input').val();
+        var currEquDTLIDTemp = $(this).find('.equipDtlID').val();
+        var currEquipTempID = $(this).find('.equipTmpID').val();
+        var selectedText = sDateTmp == sdate && eDateTmp == edate && currEquDTLIDTemp == equipDtlID ? 'selected' : '';
+        if (currEquipTempID == equipTmpID) {
+            dateRangeTmp += '<option ' + selectedText + ' currEquipmentDTLID="' + currEquDTLIDTemp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+        }
+    })
+    $('#dateRange').html(dateRangeTmp);
+
 
     $('#currEntDTLID').val(equipDtlID);
     $('#startDateLbl').text(sdate);
@@ -920,6 +959,7 @@ function updateEditOption() {
     var dataType = $('#propName').attr('dataType').toLowerCase();
 
     if (dataType == 'bool') {
+        dataValue = $('#dataValue').is(':checked');
         changeValueEle.parent().find('td:eq(1) > input').attr('checked', $('#dataValue').is(':checked'));
     }
     changeValueEle.parent().find('td:eq(1) > input').val(dataValue);
@@ -1007,3 +1047,28 @@ function saveData() {
     });
 
 }
+
+
+$('#dateRange').change(function () {
+    var dropdownEquipDtlID = $(this).find(":selected").attr('currEquipmentDTLID');
+    var elementDtl = $("#tblTemplateDtl > tbody >  tr").find('[value="' + dropdownEquipDtlID + '"]').parent();
+    var sDateTmp = elementDtl.find('td:eq(2) >  input').val();
+    var eDateTmp = elementDtl.find('td:eq(3) >  input').val();
+    var propNameTemp = elementDtl.find('td:eq(0)').text();
+    var dataTypeTemp = elementDtl.find('.dataType').val().toLowerCase();
+    var eqValueTemp = elementDtl.find('td:eq(1) >  input').val();
+    var textTypeTemp = dataTypeTemp == 'bool' ? 'checkbox' : dataTypeTemp == 'int' || dataTypeTemp == 'decimal' ? 'number' : dataTypeTemp == 'hyperlink' ? 'url' : dataTypeTemp == 'datetime' ? 'date' : 'text';
+
+    $('#startDateLbl').text(sDateTmp);
+    $('#endDateLbl').text(eDateTmp);
+    $('.updateStartDatepicker').val(sDateTmp);
+    $('.updateEndDatepicker').val(eDateTmp);
+    $('#currEntDTLID').val(dropdownEquipDtlID);
+    $('#dataValue').attr('type', textTypeTemp).val(eqValueTemp);
+    if (dataTypeTemp == 'bool') {
+        $('#dataValue').prop('checked', eqValueTemp == 'true' ? true : false).addClass('checkboxStyleEdit');
+    }
+    else {
+        $('#dataValue').removeClass('checkboxStyleEdit');
+    }
+})

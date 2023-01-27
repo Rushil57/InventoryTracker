@@ -294,6 +294,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                     query += " where Start_Date = '" + startDate + "'";
                 }
                 equipmentDetails = connection.Query<EquipmentDetail>(query).ToList();
+                EquipmentDetailListByDtl(ref equipmentDetails);
             }
             catch (Exception e)
             {
@@ -302,7 +303,32 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
             return equipmentDetails;
         }
-
+        public void EquipmentDetailListByDtl(ref List<EquipmentDetail> equipmentDetails)
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                int previousTempID = 0;
+                foreach (var ed in equipmentDetails.OrderBy(x=>x.Equip_Temp_ID))
+                {
+                    if (previousTempID == ed.Equip_Temp_ID)
+                    {
+                        continue;
+                    }
+                    previousTempID = ed.Equip_Temp_ID;
+                    query = "SELECT [Equip_Dtl_ID] ,[Equip_ID] ,ed.[Equip_Temp_ID] ,et.Prop_Name ,[Eq_Value] ,[Start_Date] ,[End_Date],et.Datatype FROM [dbo].[Equipment_Dtl] as ed join [dbo].[Equipment_Template] as et on ed.Equip_Temp_ID = et.Equip_Temp_ID  where Equip_ID =" + ed.Equip_ID + " and et.Equip_Temp_ID = " + ed.Equip_Temp_ID;
+                    var result = connection.Query<EquipmentDetail>(query).ToList();
+                    ed.EquipmentDetailsByTemplate = result;
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+        }
         public List<EntityHeader> GetEquipmentEntityAssignmentBYEquipID(int equipID)
         {
             List<EntityHeader> entityHeaders = new List<EntityHeader>();

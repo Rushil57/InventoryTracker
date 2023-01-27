@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace InventoryTracker_WebApp.Models
 {
@@ -12,5 +13,6 @@ namespace InventoryTracker_WebApp.Models
         public DateTime End_Date { get; set; }
         public string Prop_Name { get; set; }
         public string Datatype { get; set; }
+        public List<EquipmentDetail> EquipmentDetailsByTemplate { get; set; }
     }
 }

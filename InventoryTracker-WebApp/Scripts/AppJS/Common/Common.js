@@ -742,6 +742,8 @@ function AddNewProp() {
     $('#saveData').attr('hidden', false);
     $('#updateData').attr('hidden', true);
     $('#removeDetail').attr('hidden', true);
+    $('#dateRangeDiv').attr('hidden', true);
+
     GetAllTemplate();
     onChangePropDropDown();
 }
