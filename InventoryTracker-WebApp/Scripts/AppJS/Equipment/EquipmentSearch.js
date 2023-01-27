@@ -449,11 +449,11 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
                     var filteredData = data.data.filter(x => x.Prop_Name == fData.Prop_Name);
                     if (filteredData.length > 0) {
                         if (z == 0) {
-                            z = filterData.length - 1;
+                            z = filteredData.length - 1;
                         } else {
                             z = z - 1;
                         }
-                        fData = filterData[z];
+                        fData = filteredData[z];
                         
                         if (z != 0) {
                             --i;
