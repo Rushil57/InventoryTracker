@@ -787,9 +787,10 @@ function openCC(unitID, equipID) {
         var dataType = $(this).find('.dataType').val();
 
         var color = getRandomColor();
-        legendStr += '<tr equipTmpID="' + equipTmpID + '" isBorderedBox="1" equipDtlID="' + equipDtlID + '" data-equip-id="' + equipmentHDRID.val() + '" dataType="' + dataType + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important;cursor:pointer"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
-
+        
         if (equipmentTmpIDList.filter(x => x.id == equipTmpID) == 0) {
+            legendStr += '<tr equipTmpID="' + equipTmpID + '" isBorderedBox="1" equipDtlID="' + equipDtlID + '" data-equip-id="' + equipmentHDRID.val() + '" dataType="' + dataType + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important;cursor:pointer"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
+
             filterStr += '<option value=' + equipTmpID + '>' + zerotdText + '</option>';
             equipmentTmpIDList.push({
                 id: equipTmpID
