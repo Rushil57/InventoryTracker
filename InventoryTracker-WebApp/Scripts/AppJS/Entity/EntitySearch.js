@@ -67,7 +67,7 @@ function loadEntityHDR(searchString, searchflag) {
                 var entityString = '';
                 var isaddEntityColumn = false;
                 for (var i = 0; i < data.data.length; i++) {
-                    entityString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null + ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
+                    entityString += '<tr style="cursor:pointer" id="' + data.data[i].ENT_ID +'" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null + ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
                     //entityString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null +    ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
                 }
                 var tableHeadLength = $("#entityHDR > thead > tr >  th").length;
@@ -216,18 +216,24 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
         success: function (data) {
             if (data.IsValid) {
                 var entityDetailString = '';
-                for (var i = 0; i < data.data.length; i++) {
-                    var startDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
+                debugger;
+                for (var i = 0; i < data.defaultentity.length; i++) {
+                    fdata = data.defaultentity[i];
+                    var filterData = data.data.filter(x => x.Prop_Name == fdata.Prop_Name);
+                    if (filterData.length > 0) {
+                        fdata = data.data[i];
+                    }
+                    var startDate = fdata.Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(fdata.Start_Date);
 
                     var eqValue = '';
-                    if (data.data[i].Datatype.toLowerCase() == 'hyperlink') {
-                        eqValue = '<a href="https://' + data.data[i].Ent_Value + '" target="_blank">' + data.data[i].Ent_Value + '</a>'
+                    if (fdata.Datatype.toLowerCase() == 'hyperlink') {
+                        eqValue = '<a href="https://' + fdata.Ent_Value + '" target="_blank">' + fdata.Ent_Value + '</a>'
                     }
                     else {
-                        eqValue = data.data[i].Ent_Value;
+                        eqValue = fdata.Ent_Value;
                     }
-                    var endDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
-                    entityDetailString += '<tr><input type="hidden" class="entityDtlID" value="' + data.data[i].Ent_Dtl_ID + '" /><input type="hidden" class="entityTmpID" value="' + data.data[i].Ent_Temp_ID + '" /><input type="hidden" class="dataType" value="' + data.data[i].Datatype + '" /><td>' + data.data[i].Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
+    var endDate = fdata.End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(fdata.End_Date);
+    entityDetailString += '<tr><input type="hidden" class="entityDtlID" value="' + fdata.Ent_Dtl_ID + '" /><input type="hidden" class="entityTmpID" value="' + fdata.Ent_Temp_ID + '" /><input type="hidden" class="dataType" value="' + fdata.Datatype + '" /><td>' + fdata.Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
                 }
                 $("#tblTemplateDtl > tbody >  tr").remove();
                 $("#tblTemplateDtl > tbody").append(entityDetailString);
@@ -352,7 +358,7 @@ function saveHDRTemplateDtl() {
     var isExist = false;
     var alertText = 'Please enter ';
     var isPreVal = false;
-
+    debugger;
     if (entityTypeVal == null || entityTypeVal == "") {
         alertText += "Entity type";
         isPreVal = true;
@@ -440,7 +446,15 @@ function saveHDRTemplateDtl() {
             success: function (data) {
                 if (data.IsValid) {
                     loadEntityHDR($('#searchEntityStr').val().trim(), true);
-                    $('#entityHDR > tbody >  tr:last').trigger('click');
+                    var s = entityHDRID.val();
+                    $("#entityHDR > tbody > tr").each(function () {
+                        debugger;
+                        if (this.id == s) {                            
+                            $(this).trigger('click');
+                        }
+                    
+                    });
+                    //$('#entityHDR > tbody >  tr:last').trigger('click');
                     addEntityColumn();
                 }
                 else {

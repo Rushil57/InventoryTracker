@@ -138,7 +138,10 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 {
                     if (template.Equip_Temp_ID == 0)
                     {
+                        query += "DECLARE @pid INT \r\n";
                         query += "INSERT INTO [dbo].[Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype] ,[Sequence]) VALUES ('" + template.Equipment_Type.Trim() + "','" + template.Prop_Name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");";
+                        query += "\r\nSELECT @pid = @@IDENTITY";
+                        query += "\r\nINSERT INTO Equipment_Dtl(Equip_ID,Equip_Temp_ID,[Start_Date],[End_Date],[Eq_Value]) SELECT e.EQUIP_ID,@pid,CONVERT(date, GETDATE()),'9999-01-01','' from Equipment_Template as et JOIN EQUIPMENT_HDR e on et.Equipment_Type = e.EQUIP_TYPE Where Equip_Temp_ID = @pid;";
                     }
                     else
                     {
@@ -244,6 +247,33 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             }
         }
 
+        public List<EquipmentDetail> GetAllEquipmentTemplateProp(int equipID)
+        {
+            List<EquipmentDetail> entityDetailList = new List<EquipmentDetail>();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                query += "Select DISTINCT(et.Prop_name),et.Equipment_Type,et.Datatype,et.[Sequence],eh.EQUIP_ID,'01-01-9999' as End_Date,'' as Eq_Value from [Equipment_Dtl] as ed inner join [dbo].EQUIPMENT_HDR as eh on eh.EQUIP_ID = ed.EQUIP_ID \r\njoin [dbo].[Equipment_Template] et on et.Equipment_Type = eh.EQUIP_TYPE and et.Equip_Temp_ID != ed.Equip_Dtl_ID";
+
+
+                if (equipID > 0)
+                {
+                    query += " where eh.EQUIP_ID =" + equipID;
+                }
+
+
+                query += "order by et.Sequence";
+                entityDetailList = connection.Query<EquipmentDetail>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return entityDetailList;
+        }
         public List<EquipmentDetail> EquipmentValueByPropName(string propName)
         {
             List<EquipmentDetail> equipmentDetails = new List<EquipmentDetail>();

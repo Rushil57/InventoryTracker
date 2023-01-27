@@ -130,8 +130,9 @@ namespace InventoryTracker_WebApp.Controllers
             if (equipID > 0 || !string.IsNullOrWhiteSpace(startDate))
             {
                 List<EquipmentDetail> equipmentTempDetails = _equipmentRepository.GetEquipmentTemplateDetails(equipID, startDate);
+                List<EquipmentDetail> AllEquipmentTemplateProp = _equipmentRepository.GetAllEquipmentTemplateProp(equipID);
                 List<EntityHeader> entityHeaders = _equipmentRepository.GetEquipmentEntityAssignmentBYEquipID(equipID);
-                return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTempDetails, entityHeaders = entityHeaders });
+                return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTempDetails, entityHeaders = entityHeaders, defaultEquipment = AllEquipmentTemplateProp });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
         }

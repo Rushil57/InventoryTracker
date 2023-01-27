@@ -68,7 +68,7 @@ function loadEquipmentHDR(searchString, searchflag) {
                 var equipmentString = '';
                 var isaddEquipmentColumn = false;
                 for (var i = 0; i < data.data.length; i++) {
-                    equipmentString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].EQUIP_ID + ',' + null + ',\'' + data.data[i].UNIT_ID + '\',\'' + data.data[i].EQUIP_TYPE + '\',\'' + data.data[i].VENDOR + '\',this)"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
+                    equipmentString += '<tr style="cursor:pointer" id="' + data.data[i].EQUIP_ID +'" onclick="loadTemplateDetails(' + data.data[i].EQUIP_ID + ',' + null + ',\'' + data.data[i].UNIT_ID + '\',\'' + data.data[i].EQUIP_TYPE + '\',\'' + data.data[i].VENDOR + '\',this)"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
                 }
 
 
@@ -330,7 +330,17 @@ function saveHDRTemplateDtl() {
             success: function (data) {
                 if (data.IsValid) {
                     loadEquipmentHDR($('#searchEquipmentStr').val(), true);
-                    $('#equipHDR > tbody >  tr:last').trigger('click');
+                    $("#equipHDR > tbody >  tr").each(function () {
+                        var s = equipmentHDRID.val();
+                        $("#equipHDR > tbody > tr").each(function () {
+                            debugger;
+                            if (this.id == s) {
+                                $(this).trigger('click');
+                            }
+
+                        });
+                    });
+                    //$('#equipHDR > tbody >  tr:last').trigger('click');
                     addEquipmentColumn();
                 }
                 else {
@@ -433,18 +443,23 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
         success: function (data) {
             if (data.IsValid) {
                 var equipmentDetailString = '';
-                for (var i = 0; i < data.data.length; i++) {
-                    var startDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
+                for (var i = 0; i < data.defaultEquipment.length; i++) {
+                    fData = data.defaultEquipment[i];
+                    var filteredData = data.data.filter(x => x.Prop_Name == fData.Prop_Name);
+                    if (filteredData.length > 0) {
+                        fData = data.data[i];
+                    }
+                    var startDate = fData.Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(fData.Start_Date);
 
                     var eqValue = '';
-                    if (data.data[i].Datatype.toLowerCase() == 'hyperlink') {
-                        eqValue = '<a href="https://' + data.data[i].Eq_Value + '" target="_blank">' + data.data[i].Eq_Value + '</a>'
+                    if (fData.Datatype.toLowerCase() == 'hyperlink') {
+                        eqValue = '<a href="https://' + fData.Eq_Value + '" target="_blank">' + fData.Eq_Value + '</a>'
                     }
                     else {
-                        eqValue = data.data[i].Eq_Value;
+                        eqValue = fData.Eq_Value;
                     }
-                    var endDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
-                    equipmentDetailString += '<tr><input type="hidden" class="equipDtlID" value="' + data.data[i].Equip_Dtl_ID + '" /><input type="hidden" class="equipTmpID" value="' + data.data[i].Equip_Temp_ID + '" /><input type="hidden" class="dataType" value="' + data.data[i].Datatype + '" /><td>' + data.data[i].Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
+                    var endDate = fData.End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(fData.End_Date);
+                    equipmentDetailString += '<tr><input type="hidden" class="equipDtlID" value="' + fData.Equip_Dtl_ID + '" /><input type="hidden" class="equipTmpID" value="' + fData.Equip_Temp_ID + '" /><input type="hidden" class="dataType" value="' + fData.Datatype + '" /><td>' + fData.Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
                 }
                 $("#tblTemplateDtl > tbody >  tr").remove();
                 $("#tblTemplateDtl > tbody").append(equipmentDetailString);

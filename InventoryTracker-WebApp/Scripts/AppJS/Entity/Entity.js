@@ -7,7 +7,7 @@ function loadTemplate(entityType, currentLI) {
     $("#ul > li").removeClass('cls-selected-li');
     isFirstTimeEntEqu = true;
     if (currentLI != undefined) {
-        $(currentLI).addClass('cls-selected-li');
+        $("#"+currentLI).addClass('cls-selected-li');
     }
     $.ajax({
         before: AddLoader(),
@@ -21,7 +21,9 @@ function loadTemplate(entityType, currentLI) {
         success: function (data) {
             if (data.IsValid) {
                 var templateString = '';
+                
                 for (var i = 0; i < data.data.length; i++) {
+                
                     templateString += '<tr><input type="hidden" value="' + data.data[i].Ent_temp_id + '"/><td> <label>' + data.data[i].Prop_name + '</label></td > <td><label>' + data.data[i].Datatype + '</label></td> <td><label>' + data.data[i].Sequence + '</label></td> <td> <svg style =" cursor: pointer " xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"> <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" /> <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" /> </svg> </td> </tr > ';
                 }
                 templateString += lastPlusRow;
@@ -47,13 +49,15 @@ function loadEntity() {
         success: function (data) {
             if (data.IsValid) {
                 var entityString = '';
+                var entityTypeval ='';
                 for (var i = 0; i < data.uniqueEntityTemplates.length; i++) {
-                    entityString += '<li class="list-group-item entity" onclick="loadTemplate(\'' + data.uniqueEntityTemplates[i].Ent_type + '\',this)">' + data.uniqueEntityTemplates[i].Ent_type + '</li>';
+                    if (i == 0) { entityTypeval = data.uniqueEntityTemplates[i].Ent_type }
+                    entityString += '<li class="list-group-item entity" id="' + data.uniqueEntityTemplates[i].Ent_type + '" onclick="loadTemplate(\'' + data.uniqueEntityTemplates[i].Ent_type + '\',\'' + data.uniqueEntityTemplates[i].Ent_type + '\')">' + data.uniqueEntityTemplates[i].Ent_type + '</li>';
                 }
                 $("#ul > li").remove();
                 $("#ul").append(entityString);
                 if (data.uniqueEntityTemplates.length > 0) {
-                    loadTemplate(data.uniqueEntityTemplates[0].Ent_type, $("#ul > li:eq(0)"));
+                    loadTemplate(data.uniqueEntityTemplates[0].Ent_type, entityTypeval);
                 }
                 else {
                     loadTemplate('');
@@ -102,6 +106,7 @@ function saveTemplate() {
     }
     disableSortable();
     if (!isDuplicate) {
+        entityTypeVal = data[0].Ent_type;
         $.ajax({
             before: AddLoader(),
             after: RemoveLoader(),
@@ -115,7 +120,7 @@ function saveTemplate() {
                 if (data.IsValid && data.data) {
                     alert('Template save successfully.')
                     loadEntity();
-                    loadTemplate(entityType, $("#ul > li:eq(0)"));
+                    loadTemplate(entityType, entityTypeVal);
                 }
             }, error: function (ex) { }
         });

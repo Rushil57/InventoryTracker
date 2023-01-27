@@ -10,7 +10,7 @@ function loadTemplate(equipmentType, currentLI) {
     isFirstTimeEntEqu = true;
     $("#ul > li").removeClass('cls-selected-li');
     if (currentLI != undefined) {
-        $(currentLI).addClass('cls-selected-li');
+        $("#"+currentLI).addClass('cls-selected-li');
     }
    
     $.ajax({
@@ -52,13 +52,15 @@ function loadEquipment() {
         success: function (data) {
             if (data.IsValid) {
                 var equipmentString = '';
+                var equipTypeval = '';
                 for (var i = 0; i < data.uniqueEquipmentTemplates.length; i++) {
-                    equipmentString += '<li class="list-group-item entity" onclick="loadTemplate(\'' + data.uniqueEquipmentTemplates[i].Equipment_Type + '\',this)">' + data.uniqueEquipmentTemplates[i].Equipment_Type + '</li>';
+                    if (i == 0) { equipTypeval = data.uniqueEquipmentTemplates[i].Equipment_Type }
+                    equipmentString += '<li class="list-group-item entity" id="' + data.uniqueEquipmentTemplates[i].Equipment_Type + '" onclick="loadTemplate(\'' + data.uniqueEquipmentTemplates[i].Equipment_Type + '\',\'' + data.uniqueEquipmentTemplates[i].Equipment_Type + '\')">' + data.uniqueEquipmentTemplates[i].Equipment_Type + '</li>';
                 }
                 $("#ul > li").remove();
                 $("#ul").append(equipmentString);
                 if (data.data.length > 0) {
-                    loadTemplate(data.data[0].Equipment_Type, $("#ul > li:eq(0)"));
+                    loadTemplate(data.data[0].Equipment_Type, equipTypeval);
                 }
                 else {
                     loadTemplate('');
@@ -105,6 +107,8 @@ function saveTemplate() {
 
     disableSortable();
     if (!isDuplicate) {
+        equipmentTypeVal = data[0].Equipment_Type;
+
         $.ajax({
             before: AddLoader(),
             after: RemoveLoader(),
@@ -118,7 +122,7 @@ function saveTemplate() {
                 if (data.IsValid && data.data) {
                     alert('Template save successfully.')
                     loadEquipment();
-                    loadTemplate(equipmentType ,$("#ul > li:eq(0)"));
+                    loadTemplate(equipmentType, equipmentTypeVal);
                 }
             }, error: function (ex) {
             }
