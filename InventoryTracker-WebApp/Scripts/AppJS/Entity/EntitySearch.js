@@ -67,7 +67,7 @@ function loadEntityHDR(searchString, searchflag) {
                 var entityString = '';
                 var isaddEntityColumn = false;
                 for (var i = 0; i < data.data.length; i++) {
-                    entityString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null + ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
+                    entityString += '<tr style="cursor:pointer" id="' + data.data[i].ENT_ID + '" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null + ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
                     //entityString += '<tr style="cursor:pointer" onclick="loadTemplateDetails(' + data.data[i].ENT_ID + ',\'' + data.data[i].ENT_TYPE + '\',\'' + data.data[i].ENT_NAME + '\',' + null +    ',this)"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td>' + data.data[i].ASSIGNED + '</td></tr>';
                 }
                 var tableHeadLength = $("#entityHDR > thead > tr >  th").length;
@@ -216,22 +216,27 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
         success: function (data) {
             if (data.IsValid) {
                 var entityDetailString = '';
-                for (var i = 0; i < data.data.length; i++) {
-                    var startDate = data.data[i].Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].Start_Date);
+                for (var i = 0; i < data.defaultentity.length; i++) {
+                    fdata = data.defaultentity[i];
+                    var filterData = data.data.filter(x => x.Prop_Name == fdata.Prop_Name);
+                    if (filterData.length > 0) {
+                        fdata = filterData[0];
+                    }
+                    var startDate = fdata.Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(fdata.Start_Date);
 
                     var eqValue = '';
-                    if (data.data[i].Datatype.toLowerCase() == 'hyperlink') {
-                        eqValue = '<a href="https://' + data.data[i].Ent_Value + '" target="_blank">' + data.data[i].Ent_Value + '</a>'
+                    if (fdata.Datatype.toLowerCase() == 'hyperlink') {
+                        eqValue = '<a href="https://' + fdata.Ent_Value + '" target="_blank">' + fdata.Ent_Value + '</a>'
                     }
                     else {
-                        eqValue = data.data[i].Ent_Value;
+                        eqValue = fdata.Ent_Value;
                     }
-                    var endDate = data.data[i].End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.data[i].End_Date);
-                    entityDetailString += '<tr><input type="hidden" class="entityDtlID" value="' + data.data[i].Ent_Dtl_ID + '" /><input type="hidden" class="entityTmpID" value="' + data.data[i].Ent_Temp_ID + '" /><input type="hidden" class="dataType" value="' + data.data[i].Datatype + '" /><td>' + data.data[i].Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
+                    var endDate = fdata.End_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(fdata.End_Date);
+                    entityDetailString += '<tr><input type="hidden" class="entityDtlID" value="' + fdata.Ent_Dtl_ID + '" /><input type="hidden" class="entityTmpID" value="' + fdata.Ent_Temp_ID + '" /><input type="hidden" class="dataType" value="' + fdata.Datatype + '" /><td>' + fdata.Prop_Name + '</td><td>' + eqValue + '</td><td>' + startDate + '</td><td>' + endDate + '</td></tr>';
 
-                    if (data.data[i].EntityDetailsByTemplate != null) {
-                        for (var k = 0; k < data.data[i].EntityDetailsByTemplate.length; k++) {
-                            var detailsByTmp = data.data[i].EntityDetailsByTemplate[k];
+                    if (fdata.EntityDetailsByTemplate != null) {
+                        for (var k = 0; k < fdata.EntityDetailsByTemplate.length; k++) {
+                            var detailsByTmp = fdata.EntityDetailsByTemplate[k];
                             var startDateTmp = detailsByTmp.Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(detailsByTmp.Start_Date);
 
                             var eqValueTmp = '';
@@ -304,7 +309,7 @@ $('#editTemplate').click(function () {
             if (firsttd.text().trim() == 'true' && dataType == 'bool') {
                 isChecked = 'checked'
             }
-            firsttd.html("<input type='" + textType + "' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'" + isChecked +">");
+            firsttd.html("<input type='" + textType + "' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'" + isChecked + ">");
             secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
             thirdtd.html("<input type='text' class='datepicker dropdown-control' value='" + thirdtd.text().trim() + "'>");
         });
@@ -370,7 +375,7 @@ function saveHDRTemplateDtl() {
     var isExist = false;
     var alertText = 'Please enter ';
     var isPreVal = false;
-
+    debugger;
     if (entityTypeVal == null || entityTypeVal == "") {
         alertText += "Entity type";
         isPreVal = true;
@@ -458,7 +463,15 @@ function saveHDRTemplateDtl() {
             success: function (data) {
                 if (data.IsValid) {
                     loadEntityHDR($('#searchEntityStr').val().trim(), true);
-                    $('#entityHDR > tbody >  tr:last').trigger('click');
+                    var s = entityHDRID.val();
+                    $("#entityHDR > tbody > tr").each(function () {
+                        debugger;
+                        if (this.id == s) {
+                            $(this).trigger('click');
+                        }
+
+                    });
+                    //$('#entityHDR > tbody >  tr:last').trigger('click');
                     addEntityColumn();
                 }
                 else {
@@ -545,7 +558,7 @@ $('#entityType').change(function () {
                 for (var i = 0; i < data.data.length; i++) {
                     var dataType = data.data[i].Datatype.toLowerCase()
                     var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
-                    templateString += "<tr><input type='hidden' class='entityDtlID' value='0' /> <input type='hidden' class='entityTmpID' value='" + data.data[i].Ent_temp_id + "'/><input type='hidden' class='dataType' value='" + dataType + "'/><td>" + data.data[i].Prop_name + "</td><td><input type='" + textType +"' class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
+                    templateString += "<tr><input type='hidden' class='entityDtlID' value='0' /> <input type='hidden' class='entityTmpID' value='" + data.data[i].Ent_temp_id + "'/><input type='hidden' class='dataType' value='" + dataType + "'/><td>" + data.data[i].Prop_name + "</td><td><input type='" + textType + "' class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
                 }
                 $('#tblTemplateDtl > tbody > tr').remove();
                 $('#tblTemplateDtl > tbody').append(templateString);
@@ -808,7 +821,7 @@ function openEditPopup(element) {
     var entityTempID = $(element).attr('entityTempID');
     var dataType = $(element).attr('dataType').toLowerCase();
     $('#changeProp').attr('hidden', true);
-    $('#saveData').attr('hidden', true );
+    $('#saveData').attr('hidden', true);
     $('#updateData').attr('hidden', false);
     $('#removeDetail').attr('hidden', false);
     $('#dateRangeDiv').attr('hidden', false);
@@ -823,15 +836,15 @@ function openEditPopup(element) {
     //}
     var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
     dateRangeTmp = '';
-    
+
     $("#tblTemplateDtl > tbody >  tr:hidden").each(function () {
         var sDateTmp = $(this).find('td:eq(2) >  input').val();
         var eDateTmp = $(this).find('td:eq(3) >  input').val();
         var currEntDTLIDTemp = $(this).find('.entityDtlID').val();
         var currEntityTempID = $(this).find('.entityTmpID').val();
         var selectedText = sDateTmp == sdate && eDateTmp == edate && currEntDTLIDTemp == entityDtlID ? 'selected' : '';
-        if (currEntityTempID== entityTempID) {
-            dateRangeTmp += '<option ' + selectedText + ' currEntDTLID="' + currEntDTLIDTemp  +'">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+        if (currEntityTempID == entityTempID) {
+            dateRangeTmp += '<option ' + selectedText + ' currEntDTLID="' + currEntDTLIDTemp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
         }
     })
     $('#dateRange').html(dateRangeTmp);
@@ -953,7 +966,7 @@ $('#dateRange').change(function () {
     var sDateTmp = elementDtl.find('td:eq(2) >  input').val();
     var eDateTmp = elementDtl.find('td:eq(3) >  input').val();
     var propNameTemp = elementDtl.find('td:eq(0)').text();
-    var dataTypeTemp = elementDtl.find('.dataType').val().toLowerCase(); 
+    var dataTypeTemp = elementDtl.find('.dataType').val().toLowerCase();
     var eqValueTemp = elementDtl.find('td:eq(1) >  input').val();
     var textTypeTemp = dataTypeTemp == 'bool' ? 'checkbox' : dataTypeTemp == 'int' || dataTypeTemp == 'decimal' ? 'number' : dataTypeTemp == 'hyperlink' ? 'url' : dataTypeTemp == 'datetime' ? 'date' : 'text';
 

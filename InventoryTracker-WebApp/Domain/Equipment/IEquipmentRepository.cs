@@ -14,7 +14,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         bool SaveEquipmentHDR(EquipmentHeader equipmentHDR, List<EquipmentDetail> equipmentDtl);
         List<EquipmentDetail> EquipmentValueByPropName(string propName);
         List<EquipmentDetail> GetEquipmentTemplateDetails(int equipID, string startDate);
-
+        List<EquipmentDetail> GetAllEquipmentTemplateProp(int equipID);
         List<EntityHeader> GetEquipmentEntityAssignmentBYEquipID(int equipID);
         bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate);
 

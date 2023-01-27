@@ -141,7 +141,10 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 {
                     if (template.Ent_temp_id == 0)
                     {
-                        query += "INSERT INTO [dbo].[Entity_Template]([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES ('" + template.Ent_type.Trim() + "','" + template.Prop_name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");";
+                        query += "DECLARE @pid INT \r\n";
+                        query += "INSERT INTO [dbo].[Entity_Template]([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES ('" + template.Ent_type.Trim() + "','" + template.Prop_name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");\r\n";
+                        query += "\r\nSELECT @pid = @@IDENTITY";
+                        query += "\r\nINSERT INTO Entity_Dtl(Ent_ID,Ent_Temp_ID,[Start_Date],[End_Date],[Ent_Value]) SELECT e.ENT_ID,@pid,CONVERT(date, GETDATE()),'9999-01-01','' from Entity_Template as et JOIN ENTITY_HDR e on et.Ent_type = e.ENT_TYPE Where Ent_temp_id = @pid";
                     }
                     else
                     {
@@ -229,6 +232,34 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 query += "order by et.Sequence";
                 entityDetailList = connection.Query<EntityDetail>(query).ToList();
                 EntityDetailListByDtl(ref entityDetailList);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return entityDetailList;
+        }
+         public List<EntityDetail> GetAllEntityTemplateProp(int entityID)
+        {
+            List<EntityDetail> entityDetailList = new List<EntityDetail>();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                query += "Select DISTINCT(et.Prop_name),et.Ent_type,et.Datatype,et.Sequence,'01-01-9999' as End_Date,'' as Ent_Value from [Entity_Dtl] as ed inner join [dbo].ENTITY_HDR as eh on eh.ENT_ID = ed.Ent_ID \r\njoin [dbo].[Entity_Template] et on et.Ent_type = eh.ENT_TYPE and et.Ent_temp_id != ed.Ent_Temp_ID";
+
+                
+                if (entityID > 0)
+                {
+                    query += " where eh.Ent_ID =" + entityID;
+                }
+               
+
+                query += "order by et.Sequence";
+                entityDetailList = connection.Query<EntityDetail>(query).ToList();
+                
             }
             catch (Exception e)
             {

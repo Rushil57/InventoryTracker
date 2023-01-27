@@ -94,8 +94,10 @@ namespace InventoryTracker_WebApp.Controllers
             if (entityID > 0)
             {
                 List<EntityDetail> entityTempDetails = _entityRepository.GetEntityTemplateDetails(entityID, startDate);
+                List<EntityDetail> AllEntityTemplateProp = _entityRepository.GetAllEntityTemplateProp(entityID);
+
                 List<EquipmentHeader> equipmentHeaders = _entityRepository.GetEntityEquipmentAssignment(entityID);
-                return JsonConvert.SerializeObject(new { IsValid = true, data = entityTempDetails, equipmentHeaders = equipmentHeaders });
+                return JsonConvert.SerializeObject(new { IsValid = true, data = entityTempDetails, equipmentHeaders = equipmentHeaders, defaultentity = AllEntityTemplateProp });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
         }
