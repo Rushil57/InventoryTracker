@@ -273,7 +273,9 @@ function saveHDRTemplateDtl() {
 
         var equipmentTmpDtl = [];
         var isStartGTEnd = false;
+     
         $("#tblTemplateDtl > tbody >  tr").each(function () {
+            if ($(this).attr("hidden")) { return; }
             var Equip_Dtl_ID = $(this).find('.equipDtlID').val();
             var Equip_Temp_ID = $(this).find('.equipTmpID').val();
             var dataType = $(this).find('.dataType').val().toLowerCase();

@@ -248,7 +248,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             {
                 connection.Open();
                 string query = string.Empty;
-                query += "Select DISTINCT(et.Prop_name),et.Ent_type,et.Datatype,et.Sequence,'01-01-9999' as End_Date,'' as Ent_Value from [Entity_Dtl] as ed inner join [dbo].ENTITY_HDR as eh on eh.ENT_ID = ed.Ent_ID \r\njoin [dbo].[Entity_Template] et on et.Ent_type = eh.ENT_TYPE and et.Ent_temp_id != ed.Ent_Temp_ID";
+                query += "Select DISTINCT(et.Prop_name),et.Ent_type,et.Datatype,et.Sequence,'01-01-9999' as End_Date,'' as Ent_Value,GETDATE() as Start_Date,(Select Ent_Temp_ID from Entity_Template et1 Where et1.Ent_type = et.Ent_type AND et1.Prop_name = et.Prop_name) as Ent_Temp_ID from [Entity_Dtl] as ed inner join [dbo].ENTITY_HDR as eh on eh.ENT_ID = ed.Ent_ID \r\njoin [dbo].[Entity_Template] et on et.Ent_type = eh.ENT_TYPE and et.Ent_temp_id != ed.Ent_Temp_ID";
 
                 
                 if (entityID > 0)

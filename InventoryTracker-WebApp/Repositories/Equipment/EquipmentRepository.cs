@@ -255,7 +255,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             {
                 connection.Open();
                 string query = string.Empty;
-                query += "Select DISTINCT(et.Prop_name),et.Equipment_Type,et.Datatype,et.[Sequence],eh.EQUIP_ID,'01-01-9999' as End_Date,'' as Eq_Value from [Equipment_Dtl] as ed inner join [dbo].EQUIPMENT_HDR as eh on eh.EQUIP_ID = ed.EQUIP_ID \r\njoin [dbo].[Equipment_Template] et on et.Equipment_Type = eh.EQUIP_TYPE and et.Equip_Temp_ID != ed.Equip_Dtl_ID";
+                query += "Select DISTINCT(et.Prop_name),et.Equipment_Type,et.Datatype,et.[Sequence],eh.EQUIP_ID,'01-01-9999' as End_Date,'' as Eq_Value,GETDATE() as Start_Date,(Select Equip_Temp_ID from Equipment_Template et1 Where et1.Equipment_Type = et.Equipment_Type AND et1.Prop_name = et.Prop_name) as Equip_Temp_ID  from [Equipment_Dtl] as ed inner join [dbo].EQUIPMENT_HDR as eh on eh.EQUIP_ID = ed.EQUIP_ID \r\njoin [dbo].[Equipment_Template] et on et.Equipment_Type = eh.EQUIP_TYPE and et.Equip_Temp_ID != ed.Equip_Dtl_ID";
 
 
                 if (equipID > 0)
