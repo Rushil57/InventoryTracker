@@ -138,10 +138,9 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 {
                     if (template.Equip_Temp_ID == 0)
                     {
-                        query += "DECLARE @pid INT \r\n";
+                        
                         query += "INSERT INTO [dbo].[Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype] ,[Sequence]) VALUES ('" + template.Equipment_Type.Trim() + "','" + template.Prop_Name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");";
-                        query += "\r\nSELECT @pid = @@IDENTITY";
-                        query += "\r\nINSERT INTO Equipment_Dtl(Equip_ID,Equip_Temp_ID,[Start_Date],[End_Date],[Eq_Value]) SELECT e.EQUIP_ID,@pid,CONVERT(date, GETDATE()),'9999-01-01','' from Equipment_Template as et JOIN EQUIPMENT_HDR e on et.Equipment_Type = e.EQUIP_TYPE Where Equip_Temp_ID = @pid;";
+                        
                     }
                     else
                     {

@@ -141,10 +141,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 {
                     if (template.Ent_temp_id == 0)
                     {
-                        query += "DECLARE @pid INT \r\n";
-                        query += "INSERT INTO [dbo].[Entity_Template]([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES ('" + template.Ent_type.Trim() + "','" + template.Prop_name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");\r\n";
-                        query += "\r\nSELECT @pid = @@IDENTITY";
-                        query += "\r\nINSERT INTO Entity_Dtl(Ent_ID,Ent_Temp_ID,[Start_Date],[End_Date],[Ent_Value]) SELECT e.ENT_ID,@pid,CONVERT(date, GETDATE()),'9999-01-01','' from Entity_Template as et JOIN ENTITY_HDR e on et.Ent_type = e.ENT_TYPE Where Ent_temp_id = @pid";
+                        query += "INSERT INTO [dbo].[Entity_Template]([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES ('" + template.Ent_type.Trim() + "','" + template.Prop_name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");";   
                     }
                     else
                     {
