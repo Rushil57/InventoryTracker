@@ -216,11 +216,21 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
         success: function (data) {
             if (data.IsValid) {
                 var entityDetailString = '';
+                var z = 0;
                 for (var i = 0; i < data.defaultentity.length; i++) {
                     fdata = data.defaultentity[i];
                     var filterData = data.data.filter(x => x.Prop_Name == fdata.Prop_Name);
                     if (filterData.length > 0) {
-                        fdata = filterData[0];
+                        if (z == 0) {
+                            z = filterData.length - 1;
+                        } else {
+                            z = z - 1;
+                        }
+                        fdata = filterData[z];
+                        
+                        if (z != 0) {
+                            --i;
+                        }
                     }
                     var startDate = fdata.Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(fdata.Start_Date);
 
