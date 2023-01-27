@@ -273,7 +273,9 @@ function saveHDRTemplateDtl() {
 
         var equipmentTmpDtl = [];
         var isStartGTEnd = false;
+     
         $("#tblTemplateDtl > tbody >  tr").each(function () {
+            if ($(this).attr("hidden")) { return; }
             var Equip_Dtl_ID = $(this).find('.equipDtlID').val();
             var Equip_Temp_ID = $(this).find('.equipTmpID').val();
             var dataType = $(this).find('.dataType').val().toLowerCase();
@@ -443,11 +445,21 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
         success: function (data) {
             if (data.IsValid) {
                 var equipmentDetailString = '';
+                var z = 0;
                 for (var i = 0; i < data.defaultEquipment.length; i++) {
                     fData = data.defaultEquipment[i];
                     var filteredData = data.data.filter(x => x.Prop_Name == fData.Prop_Name);
                     if (filteredData.length > 0) {
-                        fData = filteredData[0];
+                        if (z == 0) {
+                            z = filteredData.length - 1;
+                        } else {
+                            z = z - 1;
+                        }
+                        fData = filteredData[z];
+                        
+                        if (z != 0) {
+                            --i;
+                        }
                     }
                     var startDate = fData.Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(fData.Start_Date);
 

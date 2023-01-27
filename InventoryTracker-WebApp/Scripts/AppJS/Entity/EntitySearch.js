@@ -216,11 +216,21 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
         success: function (data) {
             if (data.IsValid) {
                 var entityDetailString = '';
+                var z = 0;
                 for (var i = 0; i < data.defaultentity.length; i++) {
                     fdata = data.defaultentity[i];
                     var filterData = data.data.filter(x => x.Prop_Name == fdata.Prop_Name);
                     if (filterData.length > 0) {
-                        fdata = filterData[0];
+                        if (z == 0) {
+                            z = filterData.length - 1;
+                        } else {
+                            z = z - 1;
+                        }
+                        fdata = filterData[z];
+                        
+                        if (z != 0) {
+                            --i;
+                        }
                     }
                     var startDate = fdata.Start_Date == '0001-01-01T00:00:00' ? '' : getFormattedDate(fdata.Start_Date);
 
@@ -375,7 +385,6 @@ function saveHDRTemplateDtl() {
     var isExist = false;
     var alertText = 'Please enter ';
     var isPreVal = false;
-    debugger;
     if (entityTypeVal == null || entityTypeVal == "") {
         alertText += "Entity type";
         isPreVal = true;
@@ -408,6 +417,9 @@ function saveHDRTemplateDtl() {
         var entityTmpDtl = [];
         var isStartGTEnd = false;
         $("#tblTemplateDtl > tbody >  tr").each(function () {
+            if ($(this).attr('hidden')) {
+                return;
+            }
             var Ent_Dtl_ID = $(this).find('.entityDtlID').val();
             var Ent_Temp_ID = $(this).find('.entityTmpID').val();
             var dataType = $(this).find('.dataType').val().toLowerCase();
@@ -465,7 +477,6 @@ function saveHDRTemplateDtl() {
                     loadEntityHDR($('#searchEntityStr').val().trim(), true);
                     var s = entityHDRID.val();
                     $("#entityHDR > tbody > tr").each(function () {
-                        debugger;
                         if (this.id == s) {
                             $(this).trigger('click');
                         }
