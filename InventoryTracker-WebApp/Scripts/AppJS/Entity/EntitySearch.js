@@ -385,7 +385,6 @@ function saveHDRTemplateDtl() {
     var isExist = false;
     var alertText = 'Please enter ';
     var isPreVal = false;
-    debugger;
     if (entityTypeVal == null || entityTypeVal == "") {
         alertText += "Entity type";
         isPreVal = true;
@@ -418,6 +417,9 @@ function saveHDRTemplateDtl() {
         var entityTmpDtl = [];
         var isStartGTEnd = false;
         $("#tblTemplateDtl > tbody >  tr").each(function () {
+            if ($(this).attr('hidden')) {
+                return;
+            }
             var Ent_Dtl_ID = $(this).find('.entityDtlID').val();
             var Ent_Temp_ID = $(this).find('.entityTmpID').val();
             var dataType = $(this).find('.dataType').val().toLowerCase();
@@ -475,7 +477,6 @@ function saveHDRTemplateDtl() {
                     loadEntityHDR($('#searchEntityStr').val().trim(), true);
                     var s = entityHDRID.val();
                     $("#entityHDR > tbody > tr").each(function () {
-                        debugger;
                         if (this.id == s) {
                             $(this).trigger('click');
                         }
