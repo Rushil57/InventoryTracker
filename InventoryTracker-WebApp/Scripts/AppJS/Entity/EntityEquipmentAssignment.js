@@ -283,9 +283,22 @@ function addEquipmentColumn() {
                         async: false,
                         data: { 'propName': id },
                         success: function (data) {
-
+                            var indexOfID = -1;
+                            var j = 0;
+                            $("#equipHDR > thead >  tr >  th").each(function () {
+                                if ($(this).text().toLowerCase() == id.toLowerCase()) {
+                                    indexOfID = j;
+                                    return;
+                                }
+                                j++;
+                            })
                             for (var i = 0; i < data.data.length; i++) {
-                                $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Eq_Value);
+                                if (indexOfID >= 0) {
+                                    $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('td:eq(' + indexOfID + ')').text(data.data[i].Eq_Value)
+                                }
+                                else {
+                                    $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Eq_Value);
+                                }
                             }
                         },
                         error: function (ex) { }
@@ -310,7 +323,7 @@ function addEquipmentColumn() {
                     dataType: 'json',
                     type: 'GET',
                     async: false,
-                    data: { 'propName': $(this).attr('id') },
+                    data: { 'propName': id },
                     success: function (data) {
                         $("#equipHDR > tbody >  tr").each(function () {
                             $(this).find('.addEntity').after('<td></td>')
@@ -425,7 +438,7 @@ function addEntityColumn() {
                     dataType: 'json',
                     type: 'GET',
                     async: false,
-                    data: { 'propName': $(this).attr('id') },
+                    data: { 'propName': id },
                     success: function (data) {
                         $("#entityHDR > tbody >  tr").each(function () {
                             $(this).find('td:last').after('<td></td>')

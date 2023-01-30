@@ -318,10 +318,24 @@ function addEntityColumn() {
                         dataType: 'json',
                         type: 'GET',
                         async: false,
-                        data: { 'propName': $(this).attr('id') },
+                        data: { 'propName': id },
                         success: function (data) {
+                            var indexOfID = -1;
+                            var j = 0;
+                            $("#entityHDR > thead >  tr >  th").each(function () {
+                                if ($(this).text().toLowerCase() == id.toLowerCase()) {
+                                    indexOfID = j;
+                                    return;
+                                }
+                                j++;
+                            })
                             for (var i = 0; i < data.data.length; i++) {
-                                $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Ent_Value);
+                                if (indexOfID >= 0) {
+                                    $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('td:eq(' + indexOfID + ')').text(data.data[i].Ent_Value)
+                                }
+                                else {
+                                    $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Ent_Value);
+                                }
                             }
 
                         },
@@ -348,7 +362,7 @@ function addEntityColumn() {
                     dataType: 'json',
                     type: 'GET',
                     async: false,
-                    data: { 'propName': $(this).attr('id') },
+                    data: { 'propName': id },
                     success: function (data) {
                         $("#entityHDR > tbody >  tr").each(function () {
                             $(this).find('.addEntity').after('<td></td>')
