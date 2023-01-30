@@ -335,7 +335,6 @@ function saveHDRTemplateDtl() {
                     $("#equipHDR > tbody >  tr").each(function () {
                         var s = equipmentHDRID.val();
                         $("#equipHDR > tbody > tr").each(function () {
-                            debugger;
                             if (this.id == s) {
                                 $(this).trigger('click');
                             }
