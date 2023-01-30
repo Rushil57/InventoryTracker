@@ -12,7 +12,7 @@ isEquipEntityPopUP = false;
 var ccEntityNameSelectList = '';
 var isDropDownChange = false;
 var isAddNewEntity = false;
-var addNewEntitySelectList = '<option selected>Please select Entity</option>';
+var addNewEntitySelectList = '<option selected>Please select</option>';
 var dateRangeTmp = '';
 
 $(document).ready(function () {
@@ -189,7 +189,7 @@ function loadEquipmentHDR(searchString, searchflag) {
                             dataType: 'json',
                             type: 'POST',
                             async: false,
-                            data: JSON.stringify({ 'entityID': draggedEntityID, 'equipID': dropEquipID, 'startDate': startDate.val(), 'isDelete': 0, 'endDate': '9999/01/01','equipEntID':0 }),
+                            data: JSON.stringify({ 'entityID': draggedEntityID, 'equipID': dropEquipID, 'startDate': startDate.val(), 'isDelete': 0, 'endDate': '9999/01/01', 'equipEntID': 0 }),
                             success: function (data) {
 
                             }, error: function (ex) { }
@@ -648,14 +648,21 @@ function getFilterEquipmentEntityAssignmentByYear() {
 function bindFilterCalender(dataArray) {
     var legendStr = '';
     $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)').css('border', 'none'); });
-
+    var newUnitID = [];
     for (var i = 0; i < dataArray.length; i++) {
+        var isHidden = ''
+        if (newUnitID.filter(x => x.ENT_NAME == dataArray[i].ENT_NAME).length > 0) {
+            isHidden = 'hidden';
+        }
+        newUnitID.push({
+            ENT_NAME: dataArray[i].ENT_NAME
+        })
         var color = preservedColor.filter(x => x.ENT_NAME == dataArray[i].ENT_NAME);
         if (color.length > 0) {
 
-            legendStr += '<tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + dataArray[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(dataArray[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(dataArray[i].END_DATE) + '"><input type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="cursor:pointer;background-color:' + color[0].RandomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + dataArray[i].ENT_NAME + '\')">' + dataArray[i].ENT_NAME + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + dataArray[i].ENT_NAME + '\')">' + dataArray[i].ENT_TYPE + '</td></tr>';
+            legendStr += '<tr ' + isHidden + ' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + dataArray[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(dataArray[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(dataArray[i].END_DATE) + '"><input EQUIP_ENT_ID="' + dataArray[i].EQUIP_ENT_ID + '" type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="cursor:pointer;background-color:' + color[0].RandomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + dataArray[i].ENT_NAME + '\')">' + dataArray[i].ENT_NAME + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + dataArray[i].ENT_NAME + '\')">' + dataArray[i].ENT_TYPE + '</td></tr>';
         } else {
-            legendStr += '<tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + dataArray[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(dataArray[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(dataArray[i].END_DATE) + '"><input type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="cursor:pointer;background-color:' + dataArray[i].RendomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + dataArray[i].ENT_NAME + '\')">' + dataArray[i].ENT_NAME + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + dataArray[i].ENT_NAME + '\')">' + dataArray[i].ENT_TYPE + '</td></tr>';
+            legendStr += '<tr ' + isHidden + '  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + dataArray[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(dataArray[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(dataArray[i].END_DATE) + '"><input  EQUIP_ENT_ID="' + dataArray[i].EQUIP_ENT_ID + '" type="hidden" isBorderedBox="1" equipmentid="' + dataArray[i].EQUIP_ID + '" data-ent-id="' + dataArray[i].ENT_ID + '" entName ="' + dataArray[i].ENT_NAME + '" data-start-date="' + dataArray[i].START_DATE + '" data-end-date="' + dataArray[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="cursor:pointer;background-color:' + dataArray[i].RendomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + dataArray[i].ENT_NAME + '\')">' + dataArray[i].ENT_NAME + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + dataArray[i].ENT_NAME + '\')">' + dataArray[i].ENT_TYPE + '</td></tr>';
         }
 
 
@@ -669,7 +676,8 @@ function bindFilterCalender(dataArray) {
                     $(this).children().attr('equipmentID', dataArray[i].EQUIP_ID).attr('entType', dataArray[i].ENT_TYPE)
                         .attr('data-start-date', dataArray[i].START_DATE).attr('data-end-date', dataArray[i].END_DATE)
                         .attr('data-ent-id', dataArray[i].ENT_ID)
-                        .attr('onclick', "openAssignmentPopup()");
+                        .attr('onclick', "openAssignmentPopup()")
+                        .attr('EQUIP_ENT_ID', dataArray[i].EQUIP_ENT_ID);
                     var color = preservedColor.filter(x => x.ENT_NAME == dataArray[i].ENT_NAME);
                     if (color.length > 0) {
 
@@ -708,6 +716,13 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                 dataArray = newData.data;
                 ccEntityNameSelectList = '';
                 for (var i = 0; i < newData.data.length; i++) {
+                    var isHidden = '';
+                    if (preservedColor.filter(x => x.ENT_NAME == newData.data[i].ENT_NAME).length > 0) {
+                        isHidden = 'hidden';
+                    }
+                    else {
+                        ccEntityNameSelectList += '<option value=' + newData.data[i].ENT_ID + '>' + newData.data[i].ENT_NAME + '</option>';
+                    }
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
                         var obj = {
                             RandomColor: '#' + newData.data[i].RendomColor,
@@ -717,11 +732,10 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                     }
                     var color = preservedColor.filter(x => x.ENT_NAME == newData.data[i].ENT_NAME);
                     if (color.length > 0) {
-                        legendStr += '<tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + newData.data[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) + '"><input type="hidden" isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="cursor:pointer;background-color:' + color[0].RandomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].ENT_NAME + '\')">' + newData.data[i].UNIT_ID + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].ENT_NAME + '\')">' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr ' + isHidden + ' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + newData.data[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) + '"><input  EQUIP_ENT_ID="' + newData.data[i].EQUIP_ENT_ID + '" type="hidden" isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="cursor:pointer;background-color:' + color[0].RandomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].ENT_NAME + '\')">' + newData.data[i].UNIT_ID + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].ENT_NAME + '\')">' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     } else {
-                        legendStr += '<tr data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + newData.data[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) + '"> <input type="hidden"  isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="cursor:pointer;background-color:' + newData.data[i].RendomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].ENT_NAME + '\')">' + newData.data[i].UNIT_ID + '</td><td style="cursor:pointer;"onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].ENT_NAME + '\')">' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr ' + isHidden + '  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Entity name: ' + newData.data[i].ENT_NAME + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) + '"> <input   EQUIP_ENT_ID="' + newData.data[i].EQUIP_ENT_ID + '"  type="hidden"  isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" entName ="' + newData.data[i].ENT_NAME + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="cursor:pointer;background-color:' + newData.data[i].RendomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].ENT_NAME + '\')">' + newData.data[i].UNIT_ID + '</td><td style="cursor:pointer;"onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].ENT_NAME + '\')">' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
-                    ccEntityNameSelectList += '<option value=' + newData.data[i].ENT_ID + '>' + newData.data[i].ENT_NAME + '</option>';
 
                     $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
                         var currMonth = $(this).attr('data-month');
@@ -734,7 +748,8 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                                     .attr('data-start-date', newData.data[i].START_DATE).attr('data-end-date', newData.data[i].END_DATE)
                                     .attr('data-ent-id', newData.data[i].ENT_ID)
                                     .attr('entName', newData.data[i].ENT_NAME)
-                                    .attr('onclick', "openAssignmentPopup()");
+                                    .attr('onclick', "openAssignmentPopup()")
+                                    .attr('EQUIP_ENT_ID', dataArray[i].EQUIP_ENT_ID);
                                 var color = preservedColor.filter(x => x.ENT_NAME == newData.data[i].ENT_NAME);
                                 if (color.length > 0) {
                                     $(this).children().css('background-color', '\'' + color[0].RandomColor + '\'')
@@ -799,7 +814,8 @@ function openAssignmentPopup() {
     var entType = $(gbl_selected_td).attr('entType');
     var entName = $(gbl_selected_td).attr('entName');
     var isBorderedBoxVal = $(gbl_selected_td).attr('isBorderedBox');
-
+    var EQUIP_ENT_ID = $(gbl_selected_td).attr('equip_ent_id');
+    $('#currID').val(EQUIP_ENT_ID)
     $('#currEntityName').text(entName);
     $('#currEntityDiv').attr('hidden', false);
     if (isBorderedBoxVal == '1' || isDropDownChange) {
@@ -819,12 +835,13 @@ function openAssignmentPopup() {
     dateRangeTmp = '';
     $("#tblLegend > tbody >  tr").each(function () {
         var entid = $(this).find('input').attr('data-ent-id');
+        var equipEntID = $(this).find('input').attr('EQUIP_ENT_ID');
 
         if (deleteEntityID == entid) {
             var sDateTmp = getFormattedDate($(this).find('input').attr('data-start-date'));
             var eDateTmp = getFormattedDate($(this).find('input').attr('data-end-date'));
             var selectedText = sDateTmp == deleteStartDate && eDateTmp == deleteEndDate ? 'selected' : '';
-            dateRangeTmp += '<option ' + selectedText + ' entid="' + entid + '" startDate="' + sDateTmp + '" endDate="' + eDateTmp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+            dateRangeTmp += '<option ' + selectedText + ' EQUIP_ENT_ID="' + equipEntID + '" entid="' + entid + '" startDate="' + sDateTmp + '" endDate="' + eDateTmp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
         }
     })
     $('#dateRange').html(dateRangeTmp);
@@ -933,7 +950,7 @@ $('#dateRange').change(function () {
     var element = $(this).find(":selected");
     var sDateTmp = element.attr('startdate');
     var eDateTmp = element.attr('enddate');
-
+    $('#currID').val(element.attr('EQUIP_ENT_ID'))
     $('#startDateLbl').text(sDateTmp);
     $('#endDateLbl').text(eDateTmp);
     $('.updateStartDatepicker').bootstrapDP('setDate', sDateTmp);
