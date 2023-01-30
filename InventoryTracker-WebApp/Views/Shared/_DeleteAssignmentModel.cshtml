@@ -4,11 +4,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="deleteAssignmentLabel">Assignment Options</h6>
-                <button type="button" class="btn btn-primary float-end" style="margin-left:200px" onclick="AddNewPropOfAssign()">Add New</button>
+                <button type="button" class="btn btn-primary float-end" style="margin-left:200px" onclick="AddNewPropOfAssign()" id="addNewPropOfAssign">Add New</button>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="resetDeleteAssignmentModel()"></button>
             </div>
             <div class="modal-body" style="height:270px; overflow: auto;" id="entityTemplateModelBody">
                 <div class="row">
+                    <input type="hidden" value="0" id="currID" />
                     <div class="col-12" id="currEntityDiv" hidden>
                         <h6>
                             <label>Current Entity Name:</label>&nbsp;

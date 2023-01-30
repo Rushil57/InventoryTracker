@@ -398,7 +398,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
         }
 
-        public bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate)
+        public bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate,int equipEntID)
         {
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
@@ -407,7 +407,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 string query = string.Empty;
                 if (isDelete == 2)
                 {
-                    query = "UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [Start_DATE] = '" + startDate + "',[END_DATE] = '" + endDate + "' WHERE  EQUIP_ID = " + equipID + "and ENT_ID = " + entityID;
+                    query = "UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [Start_DATE] = '" + startDate + "',[END_DATE] = '" + endDate + "' WHERE  EQUIP_ID = " + equipID + "and ENT_ID = " + entityID + "and EQUIP_ENT_ID = " + equipEntID;
                 }
                 else
                 {
@@ -417,7 +417,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                     }
                     else
                     {
-                        query = "DELETE FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] WHERE EQUIP_ID = " + equipID + " and ENT_ID = " + entityID;
+                        query = "DELETE FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] WHERE EQUIP_ID = " + equipID + " and ENT_ID = " + entityID + " and EQUIP_ENT_ID = " + equipEntID;
                     }
 
                     query += "UPDATE [dbo].[EQUIPMENT_HDR] SET [ASSIGNED] =(select isnull((select count(EQUIP_ENT_ID) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID =" + equipID + "),0)) WHERE  EQUIP_ID = " + equipID;

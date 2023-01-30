@@ -16,7 +16,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         List<EquipmentDetail> GetEquipmentTemplateDetails(int equipID, string startDate);
         List<EquipmentDetail> GetAllEquipmentTemplateProp(int equipID);
         List<EntityHeader> GetEquipmentEntityAssignmentBYEquipID(int equipID);
-        bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate);
+        bool EquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate, int equipEntID);
 
         List<EquipmentEntityAssignment> GetEquipmentEntityAssignment(string startDate);
         bool CheckDuplicateEquipmentHDR(EquipmentHeader equipmentHeader);
