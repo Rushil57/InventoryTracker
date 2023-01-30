@@ -17,6 +17,7 @@ var uniqueEquipType = "";
 var uniqueEntityType = "";
 var isEquipEntityPopUP = true;
 var isFirstTimeEntEqu = true;
+var isDeleted = 2;
 
 const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
 
@@ -542,7 +543,6 @@ function removeAssignmentOption() {
         }, error: function (ex) { }
     });
 }
-
 function updateAssignmentOption() {
     if ($('.updateEndDatepicker').val() == '') {
         alert('Please select end date.');
@@ -563,7 +563,7 @@ function updateAssignmentOption() {
         dataType: 'json',
         type: 'POST',
         async: false,
-        data: JSON.stringify({ 'entityID': deleteEntityID, 'equipID': deleteEquipID, 'isDelete': 2, 'endDate': endDate, 'startDate': startDate }),
+        data: JSON.stringify({ 'entityID': deleteEntityID, 'equipID': deleteEquipID, 'isDelete': isDeleted, 'endDate': endDate, 'startDate': startDate }),
         success: function (data) {
             deleteAssignmentModel.modal('hide');
             $(deleteElement).attr('onclick', "deleteAssignment(" + deleteEntityID + ", " + deleteEquipID + ", this, '" + deleteStartDate + "','" + endDate + "')");

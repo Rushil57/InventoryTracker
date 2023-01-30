@@ -18,7 +18,9 @@ var gbl_all_entity_header_data = [];
 var ccEntityName = '';
 var ccUnitIDSelectList = '';
 var isDropDownChange = false;
-
+var isAddNew = false;
+var addNewSelectList = '<option selected>Please select unit id</option>';
+var dateRangeTmp = '';
 
 $(document).ready(function () {
     //    loadAllEquipTemp();
@@ -137,6 +139,7 @@ function loadEquipmentHDR(searchString, searchflag) {
                         if (headtext == "Unit ID") {
                             unitCol = th;
                             $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].UNIT_ID);
+                            addNewSelectList += "<option value='" + data.data[i].EQUIP_ID + "'>" + data.data[i].UNIT_ID + "</option>";
                         }
                         if (headtext == "Assigned") {
                             var a = " " + data.data[i].ASSIGNED;
@@ -755,6 +758,13 @@ $('.selectDrpDown').change(function () {
 })
 
 function openAssignmentPopup() {
+    $('#updateAssignmentOption').attr('hidden', false);
+    $('#removeAssignmentOption').attr('hidden', false);
+    $('#saveAssignmentOption').attr('hidden', true);
+    $('#dateRangeDiv').attr('hidden', false);
+    isAddNew = false;
+    isDeleted = 2;
+
     var equipmentID = $(gbl_selected_td).attr('equipmentid');
     var ent_id = $(gbl_selected_td).attr('data-ent-id');
     var unitID = $(gbl_selected_td).attr('unitID');
@@ -775,22 +785,67 @@ function openAssignmentPopup() {
     deleteStartDate = new Date($(gbl_selected_td).attr('data-start-date'));
     deleteEndDate = new Date($(gbl_selected_td).attr('data-end-date'));
     resetDeleteAssignmentModel();
+    dateRangeTmp = '';
+    $("#tblLegend > tbody >  tr").each(function () {
+        var equipmentid = $(this).find('input').attr('equipmentid');
+        
+        if (equipmentID == equipmentid) {
+            var sDateTmp = getFormattedDate($(this).find('input').attr('data-start-date'));
+            var eDateTmp = getFormattedDate($(this).find('input').attr('data-end-date'));
+            var selectedText = sDateTmp == deleteStartDate && eDateTmp == deleteEndDate ? 'selected' : '';
+            dateRangeTmp += '<option ' + selectedText + ' equipmentid="' + equipmentid + '" startDate="' + sDateTmp + '" endDate="' + eDateTmp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+        }
+    })
+    $('#dateRange').html(dateRangeTmp);
+
     $('#startDateLbl').text($('.updateStartDatepicker').val());
     $('#endDateLbl').text($('.updateEndDatepicker').val());
     $('#calendarControlModel').css('z-index', '1035')
 }
 
 $('#changeUnitID').change(function () {
-    isDropDownChange = true;
-    gbl_selected_td = $($('.ui-datepicker-calendar').find('[unitid="' + $(this).find(":selected").text() + '"]')[0])
-    if (gbl_selected_td[0] == undefined) {
-        gbl_selected_td = $('#tblLegend > tbody > tr').find('[unitid="' + $(this).find(":selected").text() + '"]');
+    if (!isAddNew) {
+        isDropDownChange = true;
+        gbl_selected_td = $($('.ui-datepicker-calendar').find('[unitid="' + $(this).find(":selected").text() + '"]')[0])
+        if (gbl_selected_td[0] == undefined) {
+            gbl_selected_td = $('#tblLegend > tbody > tr').find('[unitid="' + $(this).find(":selected").text() + '"]');
+        }
+        gbl_selected_td.trigger('click')
     }
-    gbl_selected_td.trigger('click')
-    
+    else {
+        deleteEquipID = $(this).val();
+    }
 })
 
 function openAssignmentPopupFromLegend(unitID) {
     gbl_selected_td = $('#tblLegend > tbody > tr').find('[unitid="' + unitID + '"]');
     openAssignmentPopup();
 }
+
+function AddNewPropOfAssign() {
+    var sDate = getTodayDate();
+    isAddNew = true;
+    isDeleted = 0;
+    $('#changeUnitID').html(addNewSelectList);
+    $('.updateStartDatepicker').bootstrapDP('setDate', sDate);
+    $('.updateEndDatepicker').bootstrapDP('setDate', '01/01/9999');
+    $('#startDateLbl').text(sDate);
+    $('#endDateLbl').text('01/01/9999');
+    $('#currEquipID').text('');
+    $('#updateAssignmentOption').attr('hidden', true);
+    $('#removeAssignmentOption').attr('hidden', true);
+    $('#saveAssignmentOption').attr('hidden', false);
+    $('#dateRangeDiv').attr('hidden', true);
+}
+
+
+$('#dateRange').change(function () {
+    var element = $(this).find(":selected");
+    var sDateTmp = element.attr('startdate');
+    var eDateTmp = element.attr('enddate');
+
+    $('#startDateLbl').text(sDateTmp);
+    $('#endDateLbl').text(eDateTmp);
+    $('.updateStartDatepicker').bootstrapDP('setDate', sDateTmp);
+    $('.updateEndDatepicker').bootstrapDP('setDate', eDateTmp);
+})
