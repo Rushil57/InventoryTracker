@@ -108,7 +108,11 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                 }
                 bool isInserted = _equipmentRepository.SaveEquipmentHDR(equipmentHeaders[0], equipmentDtl);
-                return JsonConvert.SerializeObject(new { IsValid = true, data = true });
+                if (!isInserted)
+                {
+                    return JsonConvert.SerializeObject(new { IsValid = true, data = "Value is already present on selected date range for this property." });
+                }
+                return JsonConvert.SerializeObject(new { IsValid = true, data = "Data save successfully!" });
             }
             return JsonConvert.SerializeObject(new { IsValid = false });
         }

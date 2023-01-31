@@ -362,7 +362,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 connection.Open();
                 var query = string.Empty;
                 var selectQuery = string.Empty;
-
+                var isSuccess = true;
                 //selectQuery += "SELECT [ENT_ID] FROM [dbo].[ENTITY_HDR] where ENT_TYPE='" + entityHDR.ENT_TYPE + "' and ENT_NAME = '" + entityHDR.VENDOR + "' and UNIT_ID ='" + equipmentHDR.UNIT_ID + "'";
                 //var isInsert = connection.Query<int>(selectQuery).FirstOrDefault();
                 if (entityHDR.ENT_ID == 0)
@@ -410,12 +410,16 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                                     var insertUpdate = "INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (" + entityHDR.ENT_ID + "," + ed.Ent_Temp_ID + ",'" + ed.Ent_Value + "'," + startDate + "," + endDate + ")";
                                     connection.Query<int>(insertUpdate).FirstOrDefault();
                                 }
+                                else
+                                {
+                                    isSuccess = false;
+                                }
                             }
 
                         }
                     }
                 }
-                return true;
+                return isSuccess;
             }
             catch (Exception e)
             {

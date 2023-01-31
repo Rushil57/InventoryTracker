@@ -475,7 +475,7 @@ function saveHDRTemplateDtl() {
             data: JSON.stringify({ 'entityHDR': JSON.stringify(entityHDR), 'entityTmpDtl': JSON.stringify(entityTmpDtl) }),
             success: function (data) {
                 if (data.IsValid) {
-                    alert('Data save successfully!');
+                    alert(data.data);
                     loadEntityHDR($('#searchEntityStr').val().trim(), true);
                     var s = entityHDRID.val();
                     if (s == 0) {
@@ -969,7 +969,7 @@ function saveData() {
         data: JSON.stringify({ 'entityHDR': JSON.stringify(newEntityHDR), 'entityTmpDtl': JSON.stringify(newEntityTmpDtl) }),
         success: function (data) {
             if (data.IsValid) {
-                alert('Data save successfully!');
+                alert(data.data);
                 $('#editEntityEquipment').modal('hide');
                 $('#calendarControlModel').modal('hide');
                 $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');

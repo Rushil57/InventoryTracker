@@ -106,15 +106,15 @@ namespace InventoryTracker_WebApp.Controllers
         public string GetAllEntityTemplateDetails()
         {
             List<EntityDetail> entTempDetails = _entityRepository.GetAllEntityTemplateDetails();
-            return JsonConvert.SerializeObject(new { IsValid = true, data = entTempDetails});
+            return JsonConvert.SerializeObject(new { IsValid = true, data = entTempDetails });
         }
 
         [HttpPost]
-        public string RemoveEntityEquipmentTemplateDetail(int deatailID,int isEntity)
+        public string RemoveEntityEquipmentTemplateDetail(int deatailID, int isEntity)
         {
             try
             {
-                if (deatailID > 0 )
+                if (deatailID > 0)
                 {
                     var isDeleted = _entityRepository.RemoveEntityEquipmentTemplateDetail(deatailID, isEntity);
                     if (isDeleted)
@@ -127,7 +127,7 @@ namespace InventoryTracker_WebApp.Controllers
             catch (Exception e)
             {
                 return JsonConvert.SerializeObject(new { IsValid = false, data = "Data not deleted!" });
-            }   
+            }
         }
         #endregion
 
@@ -138,11 +138,11 @@ namespace InventoryTracker_WebApp.Controllers
             return View();
         }
         [HttpGet]
-        public string EntityValueByPropName(string propName,string date)
+        public string EntityValueByPropName(string propName, string date)
         {
             if (!string.IsNullOrEmpty(propName))
             {
-                List<EntityDetail> entityDetails = _entityRepository.EntityValueByPropName(propName,date);
+                List<EntityDetail> entityDetails = _entityRepository.EntityValueByPropName(propName, date);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = entityDetails });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
@@ -175,7 +175,11 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                 }
                 bool isInserted = _entityRepository.SaveEntityHDR(entityHeaders[0], entityDtl);
-                return JsonConvert.SerializeObject(new { IsValid = true, data = true });
+                if (!isInserted)
+                {
+                    return JsonConvert.SerializeObject(new { IsValid = true, data = "Value is already present on selected date range for this property." });
+                }
+                return JsonConvert.SerializeObject(new { IsValid = true, data = "Data save successfully!" });
             }
             return JsonConvert.SerializeObject(new { IsValid = false });
         }
@@ -691,7 +695,7 @@ namespace InventoryTracker_WebApp.Controllers
                                         isValidColHDR = false;
                                     }
 
-                                    for (int colHDR = 4; colHDR < columnHeader.Count;colHDR++)
+                                    for (int colHDR = 4; colHDR < columnHeader.Count; colHDR++)
                                     {
                                         if (columnHeader[colHDR].Trim().ToString().ToLower() != "entity name")
                                         {
@@ -720,7 +724,7 @@ namespace InventoryTracker_WebApp.Controllers
                         fs.Close();
                     }
                 }
-                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidEntityName = excelInvalidEntityName, excelInvalidEntCount = excelInvalidEntCount,data="" });
+                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidEntityName = excelInvalidEntityName, excelInvalidEntCount = excelInvalidEntCount, data = "" });
             }
             catch (Exception e)
             {

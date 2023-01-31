@@ -185,7 +185,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 connection.Open();
                 var query = string.Empty;
                 var selectQuery = string.Empty;
-
+                bool isSuccess = true;
                 selectQuery += "SELECT [EQUIP_ID] FROM [dbo].[EQUIPMENT_HDR] where EQUIP_TYPE='" + equipmentHDR.EQUIP_TYPE + "' and VENDOR = '" + equipmentHDR.VENDOR + "' and UNIT_ID ='" + equipmentHDR.UNIT_ID + "'";
                 var isInsert = connection.Query<int>(selectQuery).FirstOrDefault();
                 if (isInsert == 0)
@@ -234,12 +234,16 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                                     var insertUpdate = "INSERT INTO [dbo].[Equipment_Dtl] ([Equip_ID] ,[Equip_Temp_ID] ,[Eq_Value] ,[Start_Date] ,[End_Date]) VALUES (" + equipmentHDR.EQUIP_ID + "," + ed.Equip_Temp_ID + ",'" + ed.Eq_Value + "'," + startDate + "," + endDate + ")";
                                     connection.Query<int>(insertUpdate).FirstOrDefault();
                                 }
+                                else
+                                {
+                                    isSuccess = false;
+                                }
                             }
 
                         }
                     }
                 }
-                return true;
+                return isSuccess;
             }
             catch (Exception e)
             {
