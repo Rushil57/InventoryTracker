@@ -699,7 +699,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                     if (preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID).length > 0) {
                         isHidden = 'hidden';
                     }
-                    ccUnitIDSelectList += '<option ' + isHidden +' value=' + newData.data[i].EQUIP_ID + '>' + newData.data[i].UNIT_ID + '</option>'
+                    ccUnitIDSelectList += '<option value=' + newData.data[i].EQUIP_ID + '>' + newData.data[i].UNIT_ID + '</option>'
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
                         var obj = {
                             RandomColor: '#' + newData.data[i].RendomColor,
