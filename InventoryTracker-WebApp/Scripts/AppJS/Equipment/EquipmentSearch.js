@@ -273,7 +273,7 @@ function saveHDRTemplateDtl() {
 
         var equipmentTmpDtl = [];
         var isStartGTEnd = false;
-     
+
         $("#tblTemplateDtl > tbody >  tr").each(function () {
             if ($(this).attr("hidden")) { return; }
             var Equip_Dtl_ID = $(this).find('.equipDtlID').val();
@@ -331,16 +331,20 @@ function saveHDRTemplateDtl() {
             data: JSON.stringify({ 'equipmentHDR': JSON.stringify(equipmentHDR), 'equipmentTmpDtl': JSON.stringify(equipmentTmpDtl) }),
             success: function (data) {
                 if (data.IsValid) {
+                    alert('Data save successfully!');
                     loadEquipmentHDR($('#searchEquipmentStr').val(), true);
-                    $("#equipHDR > tbody >  tr").each(function () {
-                        var s = equipmentHDRID.val();
+                    var s = equipmentHDRID.val();
+                    if (s == 0) {
+                        $('#entityHDR > tbody >  tr:first').trigger('click');
+                    }
+                    else {
                         $("#equipHDR > tbody > tr").each(function () {
                             if (this.id == s) {
                                 $(this).trigger('click');
                             }
 
                         });
-                    });
+                    }
                     //$('#equipHDR > tbody >  tr:last').trigger('click');
                     addEquipmentColumn();
                 }
@@ -455,7 +459,7 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
                             z = z - 1;
                         }
                         fData = filteredData[z];
-                        
+
                         if (z != 0) {
                             --i;
                         }
@@ -786,7 +790,7 @@ function openCC(unitID, equipID) {
         var dataType = $(this).find('.dataType').val();
 
         var color = getRandomColor();
-        
+
         if (equipmentTmpIDList.filter(x => x.id == equipTmpID) == 0) {
             legendStr += '<tr equipTmpID="' + equipTmpID + '" isBorderedBox="1" equipDtlID="' + equipDtlID + '" data-equip-id="' + equipmentHDRID.val() + '" dataType="' + dataType + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important;cursor:pointer"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
 
@@ -1060,6 +1064,7 @@ function saveData() {
         data: JSON.stringify({ 'equipmentHDR': JSON.stringify(newEquipmentHDR), 'equipmentTmpDtl': JSON.stringify(newEquipmentTmpDtl) }),
         success: function (data) {
             if (data.IsValid) {
+                alert('Data save successfully!');
                 $('#editEntityEquipment').modal('hide');
                 $('#calendarControlModel').modal('hide');
                 $("#equipHDR > tbody").find("[value='" + ccEquipID + "']").parent().trigger('click');
