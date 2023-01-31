@@ -487,6 +487,8 @@ function deleteAssignment(entityID, equipID, el, startDate, endDate, equipEntID)
     $('#dateRangeDiv').attr('hidden', true);
     $('#saveAssignmentOption').attr('hidden', true);
     $('#addNewPropOfAssign').attr('hidden', true);
+    $('#updateAssignmentOption').attr('hidden', false);
+    $('#removeAssignmentOption').attr('hidden', false);
     $('#currID').val(equipEntID)
     if (isEquipEntityPopUP) {
         $('#currEquipDiv').attr('hidden', false);
