@@ -657,6 +657,11 @@ function sampleFileDownload() {
     window.location.href = '/ExcelFiles/Entity_Bulk_Import.xlsx';
 }
 
+function sampleFileImportDownload() {
+    $("#import").popover('hide');
+    window.location.href = '/ExcelFiles/EntityImportSample.xlsx';
+}
+
 nextPrevYear();
 
 function openCC(entityName, entityID) {

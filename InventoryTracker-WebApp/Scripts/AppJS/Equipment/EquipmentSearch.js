@@ -738,8 +738,10 @@ function sampleFileDownload() {
     window.location.href = '/ExcelFiles/Equipment_Bulk_Import.xlsx';
 }
 
-
-
+function sampleFileImportDownload() {
+    $("#import").popover('hide');
+    window.location.href = '/ExcelFiles/EquipmentImportSample.xlsx';
+}
 
 nextPrevYear();
 

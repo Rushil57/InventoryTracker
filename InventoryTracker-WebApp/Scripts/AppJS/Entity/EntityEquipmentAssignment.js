@@ -714,13 +714,11 @@ function getEquipmentEntityAssignmentByYear(equipID) {
             if (newData.IsValid) {
                 var legendStr = '';
                 dataArray = newData.data;
-                ccEntityNameSelectList = '';
                 for (var i = 0; i < newData.data.length; i++) {
                     var isHidden = '';
                     if (preservedColor.filter(x => x.ENT_NAME == newData.data[i].ENT_NAME).length > 0) {
                         isHidden = 'hidden';
                     }
-                    ccEntityNameSelectList += '<option value=' + newData.data[i].ENT_ID + '>' + newData.data[i].ENT_NAME + '</option>';
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
                         var obj = {
                             RandomColor: '#' + newData.data[i].RendomColor,
@@ -816,6 +814,32 @@ function openAssignmentPopup() {
     $('#currID').val(EQUIP_ENT_ID)
     $('#currEntityName').text(entName);
     $('#currEntityDiv').attr('hidden', false);
+
+    dateRangeTmp = '';
+    ccEntityNameSelectList = '';
+    var selectedOption = '';
+
+    $("#tblLegend > tbody >  tr").each(function () {
+        var entid = $(this).find('input').attr('data-ent-id');
+        var equipEntID = $(this).find('input').attr('EQUIP_ENT_ID');
+
+        selectedOption = '';
+        if (!$(this).prop('hidden')) {
+            if (entid == ent_id) {
+                selectedOption = 'selected';
+            }
+            ccEntityNameSelectList += '<option ' + selectedOption + ' value=' + entid + '>' + $(this).find('input').attr('entname') + '</option>';
+        }
+
+        if (deleteEntityID == entid) {
+            var sDateTmp = getFormattedDate($(this).find('input').attr('data-start-date'));
+            var eDateTmp = getFormattedDate($(this).find('input').attr('data-end-date'));
+            var selectedText = sDateTmp == deleteStartDate && eDateTmp == deleteEndDate ? 'selected' : '';
+            dateRangeTmp += '<option ' + selectedText + ' EQUIP_ENT_ID="' + equipEntID + '" entid="' + entid + '" startDate="' + sDateTmp + '" endDate="' + eDateTmp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+        }
+    })
+    $('#dateRange').html(dateRangeTmp);
+
     if (isBorderedBoxVal == '1' || isDropDownChange) {
         $('#changeEntityName').attr('hidden', false).html(ccEntityNameSelectList).val(ent_id);
         isDropDownChange = false;
@@ -830,19 +854,7 @@ function openAssignmentPopup() {
     deleteStartDate = new Date($(gbl_selected_td).attr('data-start-date'));
     deleteEndDate = new Date($(gbl_selected_td).attr('data-end-date'));
     resetDeleteAssignmentModel();
-    dateRangeTmp = '';
-    $("#tblLegend > tbody >  tr").each(function () {
-        var entid = $(this).find('input').attr('data-ent-id');
-        var equipEntID = $(this).find('input').attr('EQUIP_ENT_ID');
-
-        if (deleteEntityID == entid) {
-            var sDateTmp = getFormattedDate($(this).find('input').attr('data-start-date'));
-            var eDateTmp = getFormattedDate($(this).find('input').attr('data-end-date'));
-            var selectedText = sDateTmp == deleteStartDate && eDateTmp == deleteEndDate ? 'selected' : '';
-            dateRangeTmp += '<option ' + selectedText + ' EQUIP_ENT_ID="' + equipEntID + '" entid="' + entid + '" startDate="' + sDateTmp + '" endDate="' + eDateTmp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
-        }
-    })
-    $('#dateRange').html(dateRangeTmp);
+    
 
     $('#startDateLbl').text($('.updateStartDatepicker').val());
     $('#endDateLbl').text($('.updateEndDatepicker').val());
@@ -954,3 +966,9 @@ $('#dateRange').change(function () {
     $('.updateStartDatepicker').bootstrapDP('setDate', sDateTmp);
     $('.updateEndDatepicker').bootstrapDP('setDate', eDateTmp);
 })
+
+
+function sampleFileImportDownload() {
+    $("#import").popover('hide');
+    window.location.href = '/ExcelFiles/EntityEquipmentAssignSample.xlsx';
+}

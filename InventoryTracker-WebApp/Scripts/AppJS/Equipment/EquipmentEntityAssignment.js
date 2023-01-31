@@ -692,14 +692,13 @@ function getEquipmentEntityAssignmentByYear(entityID) {
             if (newData.IsValid) {
                 var legendStr = '';
                 dataArray = newData.data;
-                ccUnitIDSelectList = '';
                 for (var i = 0; i < newData.data.length; i++) {
                     //legendStr += '<tr><td style="background-color:#' + newData.data[i].RendomColor + '"></td><td>' + newData.data[i].UNIT_ID + '</td><td>' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     var isHidden = '';
                     if (preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID).length > 0) {
                         isHidden = 'hidden';
                     }
-                    ccUnitIDSelectList += '<option value=' + newData.data[i].EQUIP_ID + '>' + newData.data[i].UNIT_ID + '</option>'
+                   
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
                         var obj = {
                             RandomColor: '#' + newData.data[i].RendomColor,
@@ -798,6 +797,27 @@ function openAssignmentPopup() {
     $('#currEquipID').text(unitID)
     $('#currID').val(EQUIP_ENT_ID)
     $('#currEquipDiv').attr('hidden', false);
+    dateRangeTmp = '';
+    ccUnitIDSelectList = '';
+    var selectedOption = '';
+    $("#tblLegend > tbody >  tr").each(function () {
+        var equipmentid = $(this).find('input').attr('equipmentid');
+        var equipEntID = $(this).find('input').attr('EQUIP_ENT_ID');
+        selectedOption = '';
+        if (!$(this).prop('hidden')) {
+            if (equipmentid == equipmentID) {
+                selectedOption = 'selected';
+            }
+            ccUnitIDSelectList += '<option ' + selectedOption + ' value=' + equipmentid + '>' + $(this).find('input').attr('unitid') + '</option>';
+        }
+        if (equipmentID == equipmentid) {
+            var sDateTmp = getFormattedDate($(this).find('input').attr('data-start-date'));
+            var eDateTmp = getFormattedDate($(this).find('input').attr('data-end-date'));
+            var selectedText = sDateTmp == deleteStartDate && eDateTmp == deleteEndDate ? 'selected' : '';
+            dateRangeTmp += '<option ' + selectedText + 'EQUIP_ENT_ID="' + equipEntID + '" equipmentid="' + equipmentid + '" startDate="' + sDateTmp + '" endDate="' + eDateTmp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+        }
+    })
+    $('#dateRange').html(dateRangeTmp);
     if (isBorderedBoxVal == '1' || isDropDownChange) {
         $('#changeUnitID').attr('hidden', false).html(ccUnitIDSelectList).val(equipmentID);
         isDropDownChange = false;
@@ -812,18 +832,7 @@ function openAssignmentPopup() {
     deleteStartDate = new Date($(gbl_selected_td).attr('data-start-date'));
     deleteEndDate = new Date($(gbl_selected_td).attr('data-end-date'));
     resetDeleteAssignmentModel();
-    dateRangeTmp = '';
-    $("#tblLegend > tbody >  tr").each(function () {
-        var equipmentid = $(this).find('input').attr('equipmentid');
-        var equipEntID = $(this).find('input').attr('EQUIP_ENT_ID');
-        if (equipmentID == equipmentid) {
-            var sDateTmp = getFormattedDate($(this).find('input').attr('data-start-date'));
-            var eDateTmp = getFormattedDate($(this).find('input').attr('data-end-date'));
-            var selectedText = sDateTmp == deleteStartDate && eDateTmp == deleteEndDate ? 'selected' : '';
-            dateRangeTmp += '<option ' + selectedText + 'EQUIP_ENT_ID="' + equipEntID + '" equipmentid="' + equipmentid + '" startDate="' + sDateTmp + '" endDate="' + eDateTmp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
-        }
-    })
-    $('#dateRange').html(dateRangeTmp);
+  
 
     $('#startDateLbl').text($('.updateStartDatepicker').val());
     $('#endDateLbl').text($('.updateEndDatepicker').val());
@@ -876,3 +885,9 @@ $('#dateRange').change(function () {
     $('.updateStartDatepicker').bootstrapDP('setDate', sDateTmp);
     $('.updateEndDatepicker').bootstrapDP('setDate', eDateTmp);
 })
+
+
+function sampleFileImportDownload() {
+    $("#import").popover('hide');
+    window.location.href = '/ExcelFiles/EquipmentEntityAssignSample.xlsx';
+}
