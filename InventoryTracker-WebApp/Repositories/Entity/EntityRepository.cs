@@ -401,10 +401,15 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                             }
                             else
                             {
-                                var insertUpdate = "UPDATE [dbo].[Entity_Dtl]  SET [End_Date] = " + startDate + " WHERE [Ent_Dtl_ID] = " + ed.Ent_Dtl_ID + "; ";
-                                endDate = Convert.ToDateTime(startDate.Replace("'", "")) > Convert.ToDateTime(endDate.Replace("'", "")) ? startDate : endDate;
-                                insertUpdate += "INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (" + entityHDR.ENT_ID + "," + ed.Ent_Temp_ID + ",'" + ed.Ent_Value + "'," + startDate + "," + endDate + ")";
-                                connection.Query<int>(insertUpdate).FirstOrDefault();
+                                var isRecordOfRangeQuery = "SELECT count(*) FROM [dbo].[Entity_Dtl] where Ent_ID = " + entityHDR.ENT_ID + " and Ent_Temp_ID = "+ed.Ent_Temp_ID+" and  ("+startDate+" between Start_Date and End_Date)";
+                                var isRecordOfRange = connection.Query<int>(isRecordOfRangeQuery).FirstOrDefault();
+                                if (isRecordOfRange == 0)
+                                {
+                                    //var insertUpdate = "UPDATE [dbo].[Entity_Dtl]  SET [End_Date] = " + startDate + " WHERE [Ent_Dtl_ID] = " + ed.Ent_Dtl_ID + "; ";
+                                    endDate = Convert.ToDateTime(startDate.Replace("'", "")) > Convert.ToDateTime(endDate.Replace("'", "")) ? startDate : endDate;
+                                    var insertUpdate = "INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (" + entityHDR.ENT_ID + "," + ed.Ent_Temp_ID + ",'" + ed.Ent_Value + "'," + startDate + "," + endDate + ")";
+                                    connection.Query<int>(insertUpdate).FirstOrDefault();
+                                }
                             }
 
                         }

@@ -474,14 +474,20 @@ function saveHDRTemplateDtl() {
             data: JSON.stringify({ 'entityHDR': JSON.stringify(entityHDR), 'entityTmpDtl': JSON.stringify(entityTmpDtl) }),
             success: function (data) {
                 if (data.IsValid) {
+                    alert('Data save successfully!');
                     loadEntityHDR($('#searchEntityStr').val().trim(), true);
                     var s = entityHDRID.val();
-                    $("#entityHDR > tbody > tr").each(function () {
-                        if (this.id == s) {
-                            $(this).trigger('click');
-                        }
+                    if (s == 0) {
+                        $('#entityHDR > tbody >  tr:first').trigger('click');
+                    }
+                    else {
+                        $("#entityHDR > tbody > tr").each(function () {
+                            if (this.id == s) {
+                                $(this).trigger('click');
+                            }
 
-                    });
+                        });
+                    }
                     //$('#entityHDR > tbody >  tr:last').trigger('click');
                     addEntityColumn();
                 }
@@ -957,6 +963,7 @@ function saveData() {
         data: JSON.stringify({ 'entityHDR': JSON.stringify(newEntityHDR), 'entityTmpDtl': JSON.stringify(newEntityTmpDtl) }),
         success: function (data) {
             if (data.IsValid) {
+                alert('Data save successfully!');
                 $('#editEntityEquipment').modal('hide');
                 $('#calendarControlModel').modal('hide');
                 $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');
