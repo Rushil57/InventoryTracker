@@ -318,7 +318,7 @@ function addEntityColumn() {
                         dataType: 'json',
                         type: 'GET',
                         async: false,
-                        data: { 'propName': id },
+                        data: { 'propName': id, 'date': $('#mainDate').val() },
                         success: function (data) {
                             var indexOfID = -1;
                             var j = 0;
@@ -362,7 +362,7 @@ function addEntityColumn() {
                     dataType: 'json',
                     type: 'GET',
                     async: false,
-                    data: { 'propName': id },
+                    data: { 'propName': id, 'date': $('#mainDate').val() },
                     success: function (data) {
                         $("#entityHDR > tbody >  tr").each(function () {
                             $(this).find('.addEntity').after('<td></td>')
@@ -699,9 +699,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                     if (preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID).length > 0) {
                         isHidden = 'hidden';
                     }
-                    else {
-                        ccUnitIDSelectList += '<option value=' + newData.data[i].EQUIP_ID + '>' + newData.data[i].UNIT_ID + '</option>'
-                    }
+                    ccUnitIDSelectList += '<option ' + isHidden +' value=' + newData.data[i].EQUIP_ID + '>' + newData.data[i].UNIT_ID + '</option>'
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
                         var obj = {
                             RandomColor: '#' + newData.data[i].RendomColor,
@@ -712,11 +710,11 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                     var color = preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID);
                     if (color.length > 0) {
 
-                        legendStr += '<tr ' + isHidden +'  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Unit ID: ' + newData.data[i].UNIT_ID + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) + '"><input EQUIP_ENT_ID="' + newData.data[i].EQUIP_ENT_ID + '" type="hidden" isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" unitID ="' + newData.data[i].UNIT_ID + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="cursor:pointer;background-color:' + color[0].RandomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].UNIT_ID + '\')">' + newData.data[i].UNIT_ID + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].UNIT_ID + '\')">' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr ' + isHidden + '  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Unit ID: ' + newData.data[i].UNIT_ID + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) + '"><input EQUIP_ENT_ID="' + newData.data[i].EQUIP_ENT_ID + '" type="hidden" isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" unitID ="' + newData.data[i].UNIT_ID + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"> <td style="cursor:pointer;background-color:' + color[0].RandomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].UNIT_ID + '\')">' + newData.data[i].UNIT_ID + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].UNIT_ID + '\')">' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     } else {
-                        legendStr += '<tr ' + isHidden +' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Unit ID: ' + newData.data[i].UNIT_ID + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) + '"><input type="hidden" EQUIP_ENT_ID="' + newData.data[i].EQUIP_ENT_ID + '"  isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" unitID ="' + newData.data[i].UNIT_ID + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="cursor:pointer;background-color:' + newData.data[i].RendomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].UNIT_ID + '\')">' + newData.data[i].UNIT_ID + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].UNIT_ID + '\')">' + newData.data[i].EQUIP_TYPE + '</td></tr>';
+                        legendStr += '<tr ' + isHidden + ' data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Unit ID: ' + newData.data[i].UNIT_ID + '<br/> Start Date: ' + getFormattedDate(newData.data[i].START_DATE) + ' <br/> End date: ' + getFormattedDate(newData.data[i].END_DATE) + '"><input type="hidden" EQUIP_ENT_ID="' + newData.data[i].EQUIP_ENT_ID + '"  isBorderedBox="1" equipmentid="' + newData.data[i].EQUIP_ID + '" data-ent-id="' + newData.data[i].ENT_ID + '" unitID ="' + newData.data[i].UNIT_ID + '" data-start-date="' + newData.data[i].START_DATE + '" data-end-date="' + newData.data[i].END_DATE + '"  onclick="openAssignmentPopup()"><td style="cursor:pointer;background-color:' + newData.data[i].RendomColor + '"></td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].UNIT_ID + '\')">' + newData.data[i].UNIT_ID + '</td><td style="cursor:pointer;" onclick="openAssignmentPopupFromLegend(\'' + newData.data[i].UNIT_ID + '\')">' + newData.data[i].EQUIP_TYPE + '</td></tr>';
                     }
-                    
+
                     $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
                         var currMonth = $(this).attr('data-month');
                         var currYear = $(this).attr('data-year');

@@ -12,7 +12,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         bool SaveEquipmentTemplate(List<EquipmentTemplate> equipmentTemplate);
         bool DeleteEquipment(string equipmentName);
         bool SaveEquipmentHDR(EquipmentHeader equipmentHDR, List<EquipmentDetail> equipmentDtl);
-        List<EquipmentDetail> EquipmentValueByPropName(string propName);
+        List<EquipmentDetail> EquipmentValueByPropName(string propName, string date);
         List<EquipmentDetail> GetEquipmentTemplateDetails(int equipID, string startDate);
         List<EquipmentDetail> GetAllEquipmentTemplateProp(int equipID);
         List<EntityHeader> GetEquipmentEntityAssignmentBYEquipID(int equipID);

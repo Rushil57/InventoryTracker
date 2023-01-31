@@ -305,7 +305,7 @@ function addEntityColumn() {
                     dataType: 'json',
                     type: 'GET',
                     async: false,
-                    data: { 'propName': $(this).attr('id') },
+                    data: { 'propName': $(this).attr('id'), 'date': $('#mainDate').val() },
                     success: function (data) {
                         $("#entityHDR > tbody >  tr").each(function () {
                             $(this).find('td:last').after('<td></td>')

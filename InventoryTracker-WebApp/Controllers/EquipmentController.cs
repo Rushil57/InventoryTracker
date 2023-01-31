@@ -114,11 +114,11 @@ namespace InventoryTracker_WebApp.Controllers
         }
 
         [HttpGet]
-        public string EquipmentValueByPropName(string propName)
+        public string EquipmentValueByPropName(string propName, string date)
         {
             if (!string.IsNullOrEmpty(propName))
             {
-                List<EquipmentDetail> equipmentDetails = _equipmentRepository.EquipmentValueByPropName(propName);
+                List<EquipmentDetail> equipmentDetails = _equipmentRepository.EquipmentValueByPropName(propName,date);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentDetails });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });

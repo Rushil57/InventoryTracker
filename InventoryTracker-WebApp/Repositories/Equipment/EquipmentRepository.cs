@@ -273,7 +273,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
             return entityDetailList;
         }
-        public List<EquipmentDetail> EquipmentValueByPropName(string propName)
+        public List<EquipmentDetail> EquipmentValueByPropName(string propName,string date)
         {
             List<EquipmentDetail> equipmentDetails = new List<EquipmentDetail>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -288,7 +288,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 //}
                 //else
                 //{
-                query = "select ed.Equip_ID,ed.Eq_Value  from Equipment_Dtl  as ed join Equipment_Template as et on ed.Equip_Temp_ID = et.Equip_Temp_ID and Prop_Name = '" + propName + "'";
+                query = "select ed.Equip_ID,ed.Eq_Value  from Equipment_Dtl  as ed join Equipment_Template as et on ed.Equip_Temp_ID = et.Equip_Temp_ID and Prop_Name = '" + propName + "'  and ('" + date + "' between ed.Start_Date and ed.End_Date)";
                 //}
                 equipmentDetails = connection.Query<EquipmentDetail>(query).ToList();
             }

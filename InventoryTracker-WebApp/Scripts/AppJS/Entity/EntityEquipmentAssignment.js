@@ -281,7 +281,7 @@ function addEquipmentColumn() {
                         dataType: 'json',
                         type: 'GET',
                         async: false,
-                        data: { 'propName': id },
+                        data: { 'propName': id, 'date' : $('#mainDate').val() },
                         success: function (data) {
                             var indexOfID = -1;
                             var j = 0;
@@ -323,7 +323,7 @@ function addEquipmentColumn() {
                     dataType: 'json',
                     type: 'GET',
                     async: false,
-                    data: { 'propName': id },
+                    data: { 'propName': id ,'date': $('#mainDate').val() },
                     success: function (data) {
                         $("#equipHDR > tbody >  tr").each(function () {
                             $(this).find('.addEntity').after('<td></td>')
@@ -399,7 +399,7 @@ function addEntityColumn() {
                                 dataType: 'json',
                                 type: 'GET',
                                 async: false,
-                                data: { 'propName': id },
+                                data: { 'propName': id, 'date': $('#mainDate').val() },
                                 success: function (data) {
                                     var tableHeadLength = $("#entityHDR > thead > tr >  th").length
                                     for (var th = tableHeadLength; th >= 0;) {
@@ -438,7 +438,7 @@ function addEntityColumn() {
                     dataType: 'json',
                     type: 'GET',
                     async: false,
-                    data: { 'propName': id },
+                    data: { 'propName': id, 'date': $('#mainDate').val() },
                     success: function (data) {
                         $("#entityHDR > tbody >  tr").each(function () {
                             $(this).find('td:last').after('<td></td>')
@@ -720,9 +720,7 @@ function getEquipmentEntityAssignmentByYear(equipID) {
                     if (preservedColor.filter(x => x.ENT_NAME == newData.data[i].ENT_NAME).length > 0) {
                         isHidden = 'hidden';
                     }
-                    else {
-                        ccEntityNameSelectList += '<option value=' + newData.data[i].ENT_ID + '>' + newData.data[i].ENT_NAME + '</option>';
-                    }
+                    ccEntityNameSelectList += '<option ' + isHidden +' value=' + newData.data[i].ENT_ID + '>' + newData.data[i].ENT_NAME + '</option>';
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
                         var obj = {
                             RandomColor: '#' + newData.data[i].RendomColor,

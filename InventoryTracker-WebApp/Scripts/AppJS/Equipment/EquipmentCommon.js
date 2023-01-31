@@ -145,7 +145,7 @@ function addEquipmentColumn() {
                         dataType: 'json',
                         type: 'GET',
                         async: false,
-                        data: { 'propName': id },
+                        data: { 'propName': id, 'date': $('#mainDate').val() },
                         success: function (data) {
                             for (var i = 0; i < data.data.length; i++) {
 
@@ -169,7 +169,7 @@ function addEquipmentColumn() {
                     dataType: 'json',
                     type: 'GET',
                     async: false,
-                    data: { 'propName': $(this).attr('id') },
+                    data: { 'propName': $(this).attr('id'), 'date': $('#mainDate').val() },
                     success: function (data) {
                         $("#equipHDR > tbody >  tr").each(function () {
                             $(this).find('td:last').after('<td></td>')

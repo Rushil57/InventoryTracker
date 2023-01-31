@@ -138,11 +138,11 @@ namespace InventoryTracker_WebApp.Controllers
             return View();
         }
         [HttpGet]
-        public string EntityValueByPropName(string propName)
+        public string EntityValueByPropName(string propName,string date)
         {
             if (!string.IsNullOrEmpty(propName))
             {
-                List<EntityDetail> entityDetails = _entityRepository.EntityValueByPropName(propName);
+                List<EntityDetail> entityDetails = _entityRepository.EntityValueByPropName(propName,date);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = entityDetails });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });

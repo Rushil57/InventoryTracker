@@ -291,7 +291,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             finally { connection.Close(); }
         }
-        public List<EntityDetail> EntityValueByPropName(string propName)
+        public List<EntityDetail> EntityValueByPropName(string propName,string date)
         {
             List<EntityDetail> entityDetailList = new List<EntityDetail>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -300,7 +300,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 connection.Open();
                 string query = string.Empty;
 
-                query = "select ed.Ent_ID,ed.Ent_Value from Entity_Dtl  as ed  join Entity_Template as et on ed.Ent_Temp_ID = et.Ent_temp_id and Prop_Name = '" + propName + "'";
+                query = "select ed.Ent_ID,ed.Ent_Value from Entity_Dtl  as ed  join Entity_Template as et on ed.Ent_Temp_ID = et.Ent_temp_id and Prop_Name = '" + propName + "'  and ('" + date + "' between ed.Start_Date and ed.End_Date)";
 
                 entityDetailList = connection.Query<EntityDetail>(query).ToList();
             }
