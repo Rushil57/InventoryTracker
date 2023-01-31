@@ -14,6 +14,7 @@ var isDropDownChange = false;
 var isAddNewEntity = false;
 var addNewEntitySelectList = '<option selected>Please select</option>';
 var dateRangeTmp = '';
+var isSearchDropDown = false;
 
 $(document).ready(function () {
     loadAllEquipTemp();

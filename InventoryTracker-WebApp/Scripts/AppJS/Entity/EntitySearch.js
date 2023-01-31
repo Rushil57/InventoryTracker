@@ -21,6 +21,7 @@ var isDropDownChange = false;
 var filterStr = '';
 var isFirstTimeEdit = true;
 var isEntityDeleted = 1;
+var isSearchDropDown = true;
 
 $(document).ready(function () {
     //    loadAllEntityTemp();

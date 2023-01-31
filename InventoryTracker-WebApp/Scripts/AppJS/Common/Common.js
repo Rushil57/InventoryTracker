@@ -61,12 +61,18 @@ $(document).ready(function () {
         return new bootstrap.Popover(popoverTriggerEl)
     })
 
-
-    $('.selectDrpDown').change(function () {
-        dropDownVal = $(this).val();
-        filterFunction(dropDownVal);
-    })
-
+    if (isSearchDropDown) {
+        $('.selectDrpDown').change(function () {
+            dropDownVal = $(this).val();
+            filterFunction(dropDownVal);
+        })
+    }
+    else {
+        $('.selectDrpDown').change(function () {
+            dropDownVal = $(this).val();
+            filterFunctionForAssignment(dropDownVal);
+        })
+    }
 })
 function updateRowIndex() {
     var j = 1;
