@@ -801,6 +801,7 @@ function openAssignmentPopup() {
     $('#removeAssignmentOption').attr('hidden', false);
     $('#saveAssignmentOption').attr('hidden', true);
     $('#dateRangeDiv').attr('hidden', false);
+    $('#addNewPropOfAssign').attr('hidden', false);
     isAddNewEntity = false;
     isDeleted = 2;
 

@@ -787,6 +787,7 @@ function openAssignmentPopup() {
     $('#removeAssignmentOption').attr('hidden', false);
     $('#saveAssignmentOption').attr('hidden', true);
     $('#dateRangeDiv').attr('hidden', false);
+    $('#addNewPropOfAssign').attr('hidden', false);
     isAddNew = false;
     isDeleted = 2;
     var EQUIP_ENT_ID = $(gbl_selected_td).attr('equip_ent_id');
