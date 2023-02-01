@@ -141,7 +141,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 {
                     if (template.Ent_temp_id == 0)
                     {
-                        query += "INSERT INTO [dbo].[Entity_Template]([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES ('" + template.Ent_type.Trim() + "','" + template.Prop_name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");";   
+                        query += "INSERT INTO [dbo].[Entity_Template]([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES ('" + template.Ent_type.Trim() + "','" + template.Prop_name.Trim() + "','" + template.Datatype + "' , " + template.Sequence + ");";
                     }
                     else
                     {
@@ -237,7 +237,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             finally { connection.Close(); }
             return entityDetailList;
         }
-         public List<EntityDetail> GetAllEntityTemplateProp(int entityID)
+        public List<EntityDetail> GetAllEntityTemplateProp(int entityID)
         {
             List<EntityDetail> entityDetailList = new List<EntityDetail>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -247,16 +247,16 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 string query = string.Empty;
                 query += "Select DISTINCT(et.Prop_name),et.Ent_type,et.Datatype,et.Sequence,'01-01-9999' as End_Date,'' as Ent_Value,GETDATE() as Start_Date,(Select Ent_Temp_ID from Entity_Template et1 Where et1.Ent_type = et.Ent_type AND et1.Prop_name = et.Prop_name) as Ent_Temp_ID from [Entity_Dtl] as ed inner join [dbo].ENTITY_HDR as eh on eh.ENT_ID = ed.Ent_ID \r\njoin [dbo].[Entity_Template] et on et.Ent_type = eh.ENT_TYPE";
 
-                
+
                 if (entityID > 0)
                 {
                     query += " where eh.Ent_ID =" + entityID;
                 }
-               
+
 
                 query += "order by et.Sequence";
                 entityDetailList = connection.Query<EntityDetail>(query).ToList();
-                
+
             }
             catch (Exception e)
             {
@@ -273,7 +273,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 connection.Open();
                 string query = string.Empty;
                 int previousTempID = 0;
-                foreach (var ed in entityDetails.OrderBy(x=>x.Ent_Temp_ID))
+                foreach (var ed in entityDetails.OrderBy(x => x.Ent_Temp_ID))
                 {
                     if (previousTempID == ed.Ent_Temp_ID)
                     {
@@ -291,7 +291,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             finally { connection.Close(); }
         }
-        public List<EntityDetail> EntityValueByPropName(string propName,string date)
+        public List<EntityDetail> EntityValueByPropName(string propName, string date)
         {
             List<EntityDetail> entityDetailList = new List<EntityDetail>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -401,7 +401,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                             }
                             else
                             {
-                                var isRecordOfRangeQuery = "SELECT count(*) FROM [dbo].[Entity_Dtl] where Ent_ID = " + entityHDR.ENT_ID + " and Ent_Temp_ID = "+ed.Ent_Temp_ID+" and  ("+startDate+" between Start_Date and End_Date)";
+                                var isRecordOfRangeQuery = "SELECT count(*) FROM [dbo].[Entity_Dtl] where Ent_ID = " + entityHDR.ENT_ID + " and Ent_Temp_ID = " + ed.Ent_Temp_ID + " and  (" + startDate + " between Start_Date and End_Date)";
                                 var isRecordOfRange = connection.Query<int>(isRecordOfRangeQuery).FirstOrDefault();
                                 if (isRecordOfRange == 0)
                                 {
@@ -412,7 +412,18 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                                 }
                                 else
                                 {
-                                    isSuccess = false;
+                                    var isRecordOfEndRange = "SELECT Ent_Dtl_ID FROM [dbo].[Entity_Dtl] where Ent_ID = " + entityHDR.ENT_ID + " and Ent_Temp_ID = " + ed.Ent_Temp_ID + " and  (" + endDate + " between Start_Date and End_Date) and End_Date = '01/01/9999'";
+                                    var entDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
+                                    if (entDtlID > 0)
+                                    {
+                                        var insertUpdate = "UPDATE [dbo].[Entity_Dtl]  SET [End_Date] = " + endDate + " WHERE [Ent_Dtl_ID] = " + entDtlID + "; ";
+                                         insertUpdate += "INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (" + entityHDR.ENT_ID + "," + ed.Ent_Temp_ID + ",'" + ed.Ent_Value + "'," + endDate + ",'01/01/9999')";
+                                        connection.Query<int>(insertUpdate).FirstOrDefault();
+                                    }
+                                    else
+                                    {
+                                        isSuccess = false;
+                                    }
                                 }
                             }
 
