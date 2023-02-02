@@ -293,20 +293,22 @@ namespace InventoryTracker_WebApp.Controllers
         [HttpPost]
         public string Import(HttpPostedFileBase file)
         {
+
             string path = string.Empty;
+            var fileExt = Path.GetExtension(file.FileName);
+            path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+            path += @"\ImportEntity" + DateTime.Now.Ticks + ".xlsx";
+            file.SaveAs(path);
+
+            FileStream fs = new FileStream(path, FileMode.Open);
             try
             {
-                var fileExt = Path.GetExtension(file.FileName);
-                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
-                path += @"\ImportEntity" + DateTime.Now.Ticks + ".xlsx";
-                file.SaveAs(path);
-
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
                 {
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        FileStream fs = new FileStream(path, FileMode.Open);
+                        
                         SLDocument sheet = new SLDocument(fs);
                         var startDate = (sheet.GetCellValueAsDateTime(1, 3));
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -359,7 +361,9 @@ namespace InventoryTracker_WebApp.Controllers
             }
             catch (Exception e)
             {
-                return JsonConvert.SerializeObject(new { IsValid = false, data = "Issue occured when file is imported." });
+
+                fs.Close();
+                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message });
             }
             finally
             {
@@ -378,19 +382,19 @@ namespace InventoryTracker_WebApp.Controllers
         {
             string path = string.Empty;
             bool isValidColHDR = true;
+            var fileExt = Path.GetExtension(file.FileName);
+            path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+            path += @"\BulkImportEntity" + DateTime.Now.Ticks + ".xlsx";
+            file.SaveAs(path);
+            FileStream fs = new FileStream(path, FileMode.Open);
             try
             {
-                var fileExt = Path.GetExtension(file.FileName);
-                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
-                path += @"\BulkImportEntity" + DateTime.Now.Ticks + ".xlsx";
-                file.SaveAs(path);
-
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
                 {
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        FileStream fs = new FileStream(path, FileMode.Open);
+                        
                         SLDocument sheet = new SLDocument(fs);
 
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -482,7 +486,8 @@ namespace InventoryTracker_WebApp.Controllers
             }
             catch (Exception e)
             {
-                return JsonConvert.SerializeObject(new { IsValid = false, data = "Issue occured when file is imported." });
+                fs.Close();
+                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message });
             }
             finally
             {
@@ -628,19 +633,20 @@ namespace InventoryTracker_WebApp.Controllers
             int gtOneAssign = 0;
             int excelInvalidEntCount = 0;
             bool isValidColHDR = true;
+            path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+            path += @"\EntityEquipmentAssignImport" + DateTime.Now.Ticks + ".xlsx";
+            file.SaveAs(path);
 
+            FileStream fs = new FileStream(path, FileMode.Open);
+           
             try
             {
-                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
-                path += @"\EntityEquipmentAssignImport" + DateTime.Now.Ticks + ".xlsx";
-                file.SaveAs(path);
-
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
                 {
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        FileStream fs = new FileStream(path, FileMode.Open);
+                        
                         SLDocument sheet = new SLDocument(fs);
 
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -728,7 +734,8 @@ namespace InventoryTracker_WebApp.Controllers
             }
             catch (Exception e)
             {
-                throw;
+                fs.Close();
+                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message });
             }
             finally
             {
@@ -747,19 +754,19 @@ namespace InventoryTracker_WebApp.Controllers
         public string BulkImportTemplate(HttpPostedFileBase file, bool isEntity)
         {
             string path = string.Empty;
+            var fileExt = Path.GetExtension(file.FileName);
+            path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+            path += @"\BulkImportTemplate" + DateTime.Now.Ticks + ".xlsx";
+            file.SaveAs(path);
+
+            FileStream fs = new FileStream(path, FileMode.Open);
             try
             {
-                var fileExt = Path.GetExtension(file.FileName);
-                path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
-                path += @"\BulkImportTemplate" + DateTime.Now.Ticks + ".xlsx";
-                file.SaveAs(path);
-
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
                 {
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        FileStream fs = new FileStream(path, FileMode.Open);
                         SLDocument sheet = new SLDocument(fs);
 
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -832,7 +839,8 @@ namespace InventoryTracker_WebApp.Controllers
             }
             catch (Exception e)
             {
-                return JsonConvert.SerializeObject(new { IsValid = false, data = "Issue occured when file is imported." });
+                fs.Close();
+                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message });
             }
             finally
             {

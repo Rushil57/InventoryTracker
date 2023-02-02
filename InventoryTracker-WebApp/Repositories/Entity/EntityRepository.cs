@@ -496,7 +496,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 var query = string.Empty;
                 for (int i = 2; i < columnHeader.Count; i++)
                 {
-                    query += "UPDATE [dbo].[Entity_Dtl] SET  [Ent_Value] = '" + values[i] + "' WHERE Ent_ID = " + values[0] + " and Ent_Temp_ID = (select top 1 [Ent_temp_id] FROM  [dbo].[Entity_Template] where [Ent_type] = (SELECT top 1 [ENT_TYPE] FROM [dbo].[ENTITY_HDR] where ENT_NAME = '" + values[1] + "') and [Prop_name] = '" + columnHeader[i] + "');"; //and Start_Date = " + startDate + "
+                    query += "UPDATE [dbo].[Entity_Dtl] SET  [Ent_Value] = '" + values[i].Replace("'","''") + "' WHERE Ent_ID = " + values[0] + " and Ent_Temp_ID = (select top 1 [Ent_temp_id] FROM  [dbo].[Entity_Template] where [Ent_type] = (SELECT top 1 [ENT_TYPE] FROM [dbo].[ENTITY_HDR] where ENT_NAME = '" + values[1].Replace("'", "''") + "') and [Prop_name] = '" + columnHeader[i].Replace("'", "''") + "');"; //and Start_Date = " + startDate + "
                 }
                 var isUpdated = connection.Query<bool>(query).FirstOrDefault();
                 return isUpdated;
@@ -613,7 +613,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                         }
                         else
                         {
-                            query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID = " + distValues[0] + " and ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + distValues[i] + "'))  = 0 BEGIN SET @entIDList += CONVERT(varchar(100), (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + distValues[i] + "')) + ','; INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT]([ENT_ID],[EQUIP_ID],[START_DATE],[END_DATE])VALUES((select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + distValues[i] + "')," + distValues[0] + ",'" + date + "','01/01/9999'); UPDATE [dbo].[EQUIPMENT_HDR] SET [ASSIGNED] =(select isnull((select count(EQUIP_ENT_ID) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID =" + distValues[0] + "),0)) WHERE  EQUIP_ID = " + distValues[0] + "; UPDATE [dbo].[ENTITY_HDR] SET [ASSIGNED] = (select isnull((select count(EQUIP_ENT_ID) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID =(select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + distValues[i] + "')),0)) WHERE  ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + distValues[i] + "') END ";
+                            query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID = " + distValues[0] + " and ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + distValues[i].Replace("'","''") + "'))  = 0 BEGIN SET @entIDList += CONVERT(varchar(100), (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + distValues[i].Replace("'", "''") + "')) + ','; INSERT INTO [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT]([ENT_ID],[EQUIP_ID],[START_DATE],[END_DATE])VALUES((select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + distValues[i].Replace("'", "''") + "')," + distValues[0] + ",'" + date + "','01/01/9999'); UPDATE [dbo].[EQUIPMENT_HDR] SET [ASSIGNED] =(select isnull((select count(EQUIP_ENT_ID) from EQUIPMENT_ENTITY_ASSIGNMENT where EQUIP_ID =" + distValues[0] + "),0)) WHERE  EQUIP_ID = " + distValues[0] + "; UPDATE [dbo].[ENTITY_HDR] SET [ASSIGNED] = (select isnull((select count(EQUIP_ENT_ID) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID =(select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + distValues[i].Replace("'", "''") + "')),0)) WHERE  ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + distValues[i].Replace("'", "''") + "') END ";
                         }
                     }
                 }
@@ -623,7 +623,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 {
                     if (!distValues.Contains(entityName))
                     {
-                        query += "  UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [END_DATE] = '" + date + "' WHERE EQUIP_ID = " + distValues[0] + " and ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + entityName + "')  and ('" + date + "' between Start_Date and End_Date) ";
+                        query += "  UPDATE [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] SET [END_DATE] = '" + date + "' WHERE EQUIP_ID = " + distValues[0] + " and ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + entityName.Replace("'", "''") + "')  and ('" + date + "' between Start_Date and End_Date) ";
                         removed++;
                     }
                 }
@@ -657,11 +657,11 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 var query = string.Empty;
                 if (isEntity)
                 {
-                    query += "IF ((SELECT COUNT(*) FROM [Entity_Template] WHERE [Ent_type] = '" + values[0] + "' AND [Prop_name] ='" + values[1] + "'))  = 0 BEGIN INSERT INTO [Entity_Template] ([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES('" + values[0].Trim() + "','" + values[1].Trim() + "','" + values[2].Trim() + "'," + values[3] + ") END";
+                    query += "IF ((SELECT COUNT(*) FROM [Entity_Template] WHERE [Ent_type] = '" + values[0].Replace("'", "''") + "' AND [Prop_name] ='" + values[1].Replace("'","''") + "'))  = 0 BEGIN INSERT INTO [Entity_Template] ([Ent_type],[Prop_name],[Datatype],[Sequence]) VALUES('" + values[0].Trim().Replace("'", "''") + "','" + values[1].Trim().Replace("'", "''") + "','" + values[2].Trim().Replace("'", "''") + "'," + values[3] + ") END";
                 }
                 else
                 {
-                    query += "IF ((SELECT COUNT(*) FROM Equipment_Template WHERE Equipment_Type = '" + values[0] + "' AND [Prop_name] ='" + values[1] + "'))  = 0 BEGIN INSERT INTO [Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype],[Sequence]) VALUES('" + values[0].Trim() + "','" + values[1].Trim() + "','" + values[2].Trim() + "'," + values[3] + ") END";
+                    query += "IF ((SELECT COUNT(*) FROM Equipment_Template WHERE Equipment_Type = '" + values[0].Replace("'", "''") + "' AND [Prop_name] ='" + values[1].Replace("'", "''") + "'))  = 0 BEGIN INSERT INTO [Equipment_Template] ([Equipment_Type],[Prop_Name],[Datatype],[Sequence]) VALUES('" + values[0].Trim().Replace("'", "''") + "','" + values[1].Trim().Replace("'", "''") + "','" + values[2].Trim().Replace("'", "''") + "'," + values[3] + ") END";
                 }
                 var isInserted = connection.Query<bool>(query).FirstOrDefault();
                 return true;
@@ -683,7 +683,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 for (int i = 2; i < columnHeader.Count; i = i + 3)
                 {
                     var query = string.Empty;
-                    query += "Declare @isValidColum bit = 1; IF ((SELECT COUNT(*) FROM Entity_Template WHERE Ent_type = '" + entityType + "' AND [Prop_name] ='" + columnHeader[i] + "'))  = 0 BEGIN SET @isValidColum = 0; End select @isValidColum;";
+                    query += "Declare @isValidColum bit = 1; IF ((SELECT COUNT(*) FROM Entity_Template WHERE Ent_type = '" + entityType.Replace("'","''") + "' AND [Prop_name] ='" + columnHeader[i] + "'))  = 0 BEGIN SET @isValidColum = 0; End select @isValidColum;";
                     bool isValidEntity = connection.Query<bool>(query).FirstOrDefault();
                     if (!isValidEntity)
                     {
