@@ -38,7 +38,7 @@ function loadEntityHDR(searchString, searchflag) {
     }
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
         url: '/Entity/GetEntityHeaderfromEntityEquipment',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -120,7 +120,7 @@ function loadEquipmentHDR(searchString, searchflag) {
     }
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
         url: '/Equipment/GetEquipmentHeaders',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -184,7 +184,7 @@ function loadEquipmentHDR(searchString, searchflag) {
 
                         $.ajax({
                             before: AddLoader(),
-                            after: RemoveLoader(),
+                            complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
                             url: '/Equipment/SaveEquipmentEntityAssignment',
                             contentType: 'application/json; charset=utf-8',
                             dataType: 'json',
@@ -318,7 +318,7 @@ function addEquipmentColumn() {
             if (isPresent) {
                 $.ajax({
                     before: AddLoader(),
-                    after: RemoveLoader(),
+                    complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
                     url: '/Equipment/EquipmentValueByPropName',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -433,7 +433,7 @@ function addEntityColumn() {
             if (isPresent) {
                 $.ajax({
                     before: AddLoader(),
-                    after: RemoveLoader(),
+                    complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
                     url: '/Entity/EntityValueByPropName',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -509,7 +509,7 @@ function exportData() {
     });
     AddLoader()
     window.location = "/Entity/EntityEquipmentAssignExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEquipmentStr').val().trim() + "&columns=" + headerCol;
-    RemoveLoader()
+    setTimeout(function () { RemoveLoader(); }, 2000);
 }
 
 
@@ -528,7 +528,7 @@ function importExcel() {
 
         $.ajax({
             before: AddLoader(),
-            after: RemoveLoader(),
+            complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
             type: "POST",
             url: '/Entity/EntityEquipmentAssignImport',
             data: formData,
@@ -705,7 +705,7 @@ function getEquipmentEntityAssignmentByYear(equipID) {
     $(".ui-datepicker-calendar > tbody > tr > td").each(function () { $(this).children().css('background-color', 'rgb(246, 246, 246)').css('border', 'none'); });
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
         type: "GET",
         url: '/Equipment/GetEquipmentEntityAssignmentByYear?year=' + year + '&equipID=' + equipID,
         contentType: false,
@@ -773,7 +773,7 @@ function getEquipmentEntityAssignmentByYear(equipID) {
     });
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
         type: "GET",
         url: '/Entity/GetAllEntityTemplateDetails',
         contentType: false,

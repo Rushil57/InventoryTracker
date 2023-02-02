@@ -57,7 +57,11 @@ function loadEquipmentHDR(searchString, searchflag) {
     }
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/GetEquipmentHeadersfromEquipmentEntity',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -97,7 +101,7 @@ function loadEquipmentHDR(searchString, searchflag) {
 //    //var equipType = [];
 //    $.ajax({
 //        before: AddLoader(),
-//        after: RemoveLoader(),
+//        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
 //        url: '/Equipment/GetEquipmentTemplate',
 //        contentType: 'application/json; charset=utf-8',
 //        dataType: 'json',
@@ -134,7 +138,7 @@ function loadEquipmentHDR(searchString, searchflag) {
 //            tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
 //            $.ajax({
 //                before: AddLoader(),
-//                after: RemoveLoader(),
+//                complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
 //                url: '/Equipment/EquipmentValueByPropName',
 //                contentType: 'application/json; charset=utf-8',
 //                dataType: 'json',
@@ -323,7 +327,11 @@ function saveHDRTemplateDtl() {
 
         $.ajax({
             before: AddLoader(),
-            after: RemoveLoader(),
+            complete: function () {
+                setTimeout(function () {
+                    RemoveLoader();
+                }, 500);
+            },
             url: '/Equipment/SaveEquipmentHDRTempData',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -439,7 +447,11 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
     //$(element).find('td:eq(0)').text()
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/GetEquipmentTemplateDetails',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -534,7 +546,11 @@ function showEntityDetails(element) {
 
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Entity/GetEntityTemplateDetails',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -569,7 +585,11 @@ $('#deleteTemplate').click(function () {
         if (confirm('Are you sure you want to delete this record?')) {
             $.ajax({
                 before: AddLoader(),
-                after: RemoveLoader(),
+                complete: function () {
+                    setTimeout(function () {
+                        RemoveLoader();
+                    }, 500);
+                },
                 url: '/Equipment/DeleteEquipmentHeader',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -605,7 +625,7 @@ $('#deleteTemplate').click(function () {
 //            tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
 //            $.ajax({
 //                before: AddLoader(),
-//                after: RemoveLoader(),
+//                complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
 //                url: '/Equipment/EquipmentValueByPropName',
 //                contentType: 'application/json; charset=utf-8',
 //                dataType: 'json',
@@ -642,7 +662,11 @@ function enabled() {
 $('#equipType').change(function () {
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/GetEquipmentTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -674,7 +698,7 @@ $('#equipType').change(function () {
 function exportData() {
     AddLoader();
     window.location = "/Equipment/Export?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEquipmentStr').val().trim();
-    RemoveLoader();
+    setTimeout(function () { RemoveLoader(); }, 2000);
 }
 
 function importExcel() {
@@ -692,7 +716,11 @@ function importExcel() {
 
             $.ajax({
                 before: AddLoader(),
-                after: RemoveLoader(),
+                complete: function () {
+                    setTimeout(function () {
+                        RemoveLoader();
+                    }, 500);
+                },
                 type: "POST",
                 url: '/Equipment/BulkImport',
                 data: formData,
@@ -713,7 +741,11 @@ function importExcel() {
         else {
             $.ajax({
                 before: AddLoader(),
-                after: RemoveLoader(),
+                complete: function () {
+                    setTimeout(function () {
+                        RemoveLoader();
+                    }, 500);
+                },
                 type: "POST",
                 url: '/Equipment/Import',
                 data: formData,
@@ -1011,7 +1043,11 @@ function GetAllTemplate() {
 
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/GetEquipmentTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -1058,7 +1094,11 @@ function saveData() {
 
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/SaveEquipmentHDRTempData',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',

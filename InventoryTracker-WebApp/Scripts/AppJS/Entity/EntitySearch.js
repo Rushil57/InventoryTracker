@@ -56,7 +56,7 @@ function loadEntityHDR(searchString, searchflag) {
     }
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
         url: '/Entity/GetEntityHeaderfromEntityEquipment',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -89,7 +89,7 @@ function loadEntityHDR(searchString, searchflag) {
 //function loadAllEntityTemp() {
 //    $.ajax({
 //        before: AddLoader(),
-//        after: RemoveLoader(),
+//        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
 //        url: '/Entity/GetEntityTemplate',
 //        contentType: 'application/json; charset=utf-8',
 //        dataType: 'json',
@@ -131,7 +131,7 @@ function loadEntityHDR(searchString, searchflag) {
 //            tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
 //            $.ajax({
 //                before: AddLoader(),
-//                after: RemoveLoader(),
+//                complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
 //                url: '/Entity/EntityValueByPropName',
 //                contentType: 'application/json; charset=utf-8',
 //                dataType: 'json',
@@ -207,7 +207,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
 
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
         url: '/Entity/GetEntityTemplateDetails',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -228,7 +228,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                             z = z - 1;
                         }
                         fdata = filterData[z];
-                        
+
                         if (z != 0) {
                             --i;
                         }
@@ -336,7 +336,7 @@ $('#deleteTemplate').click(function () {
         if (confirm('Are you sure you want to delete this record?')) {
             $.ajax({
                 before: AddLoader(),
-                after: RemoveLoader(),
+                complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
                 url: '/Entity/DeleteEntityHeader',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -466,7 +466,7 @@ function saveHDRTemplateDtl() {
 
         $.ajax({
             before: AddLoader(),
-            after: RemoveLoader(),
+            complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
             url: '/Entity/SaveEntityHDRTempData',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -511,7 +511,11 @@ function showEquipmentDetails(element) {
 
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/GetEquipmentTemplateDetails',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -563,7 +567,11 @@ function enabled() {
 $('#entityType').change(function () {
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Entity/GetEntityTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -594,7 +602,7 @@ $('#entityType').change(function () {
 function exportData() {
     AddLoader();
     window.location = "/Entity/Export?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim();
-    RemoveLoader();
+    setTimeout(function () { RemoveLoader(); }, 2000);
 }
 
 function importExcel() {
@@ -611,7 +619,11 @@ function importExcel() {
         if (isBulkImport) {
             $.ajax({
                 before: AddLoader(),
-                after: RemoveLoader(),
+                complete: function () {
+                    setTimeout(function () {
+                        RemoveLoader();
+                    }, 500);
+                },
                 type: "POST",
                 url: '/Entity/BulkImport',
                 data: formData,
@@ -631,7 +643,11 @@ function importExcel() {
         } else {
             $.ajax({
                 before: AddLoader(),
-                after: RemoveLoader(),
+                complete: function () {
+                    setTimeout(function () {
+                        RemoveLoader();
+                    }, 500);
+                },
                 type: "POST",
                 url: '/Entity/Import',
                 data: formData,
@@ -710,7 +726,7 @@ function openCC(entityName, entityID) {
         var dataType = $(this).find('.dataType').val();
 
         var color = getRandomColor();
-        
+
         if (entityTmpIDList.filter(x => x.id == entityTmpID) == 0) {
             filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>';
             legendStr += '<tr dataType="' + dataType + '" entityTempID="' + entityTmpID + '" isBorderedBox="1" entityDtlID="' + entityDtlID + '" data-ent-id="' + entityHDRID.val() + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="cursor:pointer;background-color:' + color + ' !important"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
@@ -914,7 +930,11 @@ bindChangeProp();
 function GetAllTemplate() {
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Entity/GetEntityTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -960,7 +980,11 @@ function saveData() {
 
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Entity/SaveEntityHDRTempData',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',

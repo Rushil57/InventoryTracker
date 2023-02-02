@@ -32,7 +32,7 @@ $(document).ready(function () {
 //function loadEquipmentHDR(searchString) {
 //    $.ajax({
 //        before: AddLoader(),
-//        after: RemoveLoader(),
+//        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
 //        url: '/Equipment/GetEquipmentHeaders',
 //        contentType: 'application/json; charset=utf-8',
 //        dataType: 'json',
@@ -92,7 +92,7 @@ $('#search').click(function () {
 //    //var equipType = [];
 //    $.ajax({
 //        before: AddLoader(),
-//        after: RemoveLoader(),
+//        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
 //        url: '/Equipment/GetEquipmentTemplate',
 //        contentType: 'application/json; charset=utf-8',
 //        dataType: 'json',
@@ -163,7 +163,11 @@ function addEquipmentColumn() {
                 tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
                 $.ajax({
                     before: AddLoader(),
-                    after: RemoveLoader(),
+                    complete: function () {
+                        setTimeout(function () {
+                            RemoveLoader();
+                        }, 500);
+                    },
                     url: '/Equipment/EquipmentValueByPropName',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',

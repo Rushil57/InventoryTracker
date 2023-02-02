@@ -15,7 +15,11 @@ function loadTemplate(equipmentType, currentLI) {
    
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/GetEquipmentTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -43,7 +47,11 @@ function loadTemplate(equipmentType, currentLI) {
 function loadEquipment() {
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/GetEquipmentTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -111,7 +119,11 @@ function saveTemplate() {
 
         $.ajax({
             before: AddLoader(),
-            after: RemoveLoader(),
+            complete: function () {
+                setTimeout(function () {
+                    RemoveLoader();
+                }, 500);
+            },
             url: '/Equipment/SaveEquipmentTemplate',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -150,7 +162,11 @@ deleteButton.click(function () {
     if (confirm("Are you sure you want to delete Equipment ?")) {
         $.ajax({
             before: AddLoader(),
-            after: RemoveLoader(),
+            complete: function () {
+                setTimeout(function () {
+                    RemoveLoader();
+                }, 500);
+            },
             url: '/Equipment/DeleteEquipment',
             data: JSON.stringify({ 'equipmentType': templateName }),
             contentType: 'application/json; charset=utf-8',

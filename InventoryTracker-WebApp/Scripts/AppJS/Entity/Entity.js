@@ -11,7 +11,7 @@ function loadTemplate(entityType, currentLI) {
     }
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
         url: '/Entity/GetEntityTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -40,7 +40,7 @@ function loadTemplate(entityType, currentLI) {
 function loadEntity() {
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
         url: '/Entity/GetEntityTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -109,7 +109,7 @@ function saveTemplate() {
         entityTypeVal = data[0].Ent_type;
         $.ajax({
             before: AddLoader(),
-            after: RemoveLoader(),
+            complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
             url: '/Entity/SaveEntityTemplate',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -148,7 +148,7 @@ deleteButton.click(function () {
     if (confirm("Are you sure you want to delete Entity ?")) {
         $.ajax({
             before: AddLoader(),
-            after: RemoveLoader(),
+            complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
             url: '/Entity/DeleteEntity',
             data: JSON.stringify({ 'entityType': templateName }),
             contentType: 'application/json; charset=utf-8',

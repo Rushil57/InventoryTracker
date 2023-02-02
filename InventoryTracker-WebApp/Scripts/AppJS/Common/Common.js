@@ -175,7 +175,11 @@ function getFormattedDate(dString) {
 function loadAllEntityTemp() {
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Entity/GetEntityTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -209,7 +213,11 @@ function loadAllEquipTemp() {
     //var equipType = [];
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/GetEquipmentTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -255,7 +263,7 @@ function addEntityColumn() {
     //        tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
     //        $.ajax({
     //            before: AddLoader(),
-    //            after: RemoveLoader(),
+    //            complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
     //            url: '/Entity/EntityValueByPropName',
     //            contentType: 'application/json; charset=utf-8',
     //            dataType: 'json',
@@ -315,7 +323,11 @@ function addEntityColumn() {
             if (isPresent) {
                 $.ajax({
                     before: AddLoader(),
-                    after: RemoveLoader(),
+                    complete: function () {
+                        setTimeout(function () {
+                            RemoveLoader();
+                        }, 500);
+                    },
                     url: '/Entity/EntityValueByPropName',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -449,7 +461,11 @@ function sortableTable() {
 function GetEquipmentEntityAssignment(isEntityEquip) {
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/GetEquipmentEntityAssignment',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -526,7 +542,11 @@ function removeAssignmentOption() {
     $('#calendarControlModel').css('z-index', '1055');
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/SaveEquipmentEntityAssignment',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -581,7 +601,11 @@ function updateAssignmentOption() {
     $('#calendarControlModel').css('z-index', '1055');
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Equipment/SaveEquipmentEntityAssignment',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -701,7 +725,11 @@ function BulkImportTemplate(isEntity) {
     formData.append("isEntity", isEntity);
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         type: "POST",
         url: '/Entity/BulkImportTemplate',
         data: formData,
@@ -941,7 +969,11 @@ function openEditPopupFromChild(element) {
 function removeEntEquDetail() {
     $.ajax({
         before: AddLoader(),
-        after: RemoveLoader(),
+        complete: function () {
+            setTimeout(function () {
+                RemoveLoader();
+            }, 500);
+        },
         url: '/Entity/RemoveEntityEquipmentTemplateDetail',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
