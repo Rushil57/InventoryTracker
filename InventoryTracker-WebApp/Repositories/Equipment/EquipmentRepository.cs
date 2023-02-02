@@ -44,6 +44,26 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
             return equipmentHeaders;
         }
+        public int GetTotalCountEquipmentHeaders()
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string query = "Select Count(*) from EQUIPMENT_HDR";
+                int a = connection.Query<int>(query).FirstOrDefault();
+                return a;
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+            
+        }
         public List<EquipmentHeader> GetEquipmentHeadersfromEquipmentEntity(string searchString, int startRow, int endRow, string startDate)
         {
             List<EquipmentHeader> equipmentHeaders = new List<EquipmentHeader>();

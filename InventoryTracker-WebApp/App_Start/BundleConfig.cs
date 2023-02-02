@@ -8,7 +8,7 @@ namespace InventoryTracker_WebApp
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js").Include("~/Scripts/jqueryui/jquery-ui.js").Include("~/Scripts/Spectrum/spectrum.min.js"));
+                        "~/Scripts/jquery-{version}.js").Include("~/Scripts/jqueryui/jquery-ui.js").Include("~/Scripts/Spectrum/spectrum.min.js").Include("~/Scripts/jquery.tablesorter/js/jquery.tablesorter.js").Include("~/Scripts/jquery.tablesorter/js/jquery.tablesorter.widgets.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));

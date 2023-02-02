@@ -82,6 +82,12 @@ function loadEntityHDR(searchString, searchflag) {
                 if (isaddEntityColumn) {
                     addEntityColumn();
                 }
+                $("#entityHDR").trigger("destroy", [false, function () {
+                    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");    
+                }]);
+                var rowCount = $('#entityHDR tr').length -1;
+
+                $("#totalCount").html("Displaying " + rowCount + " out of "+ data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -179,6 +185,7 @@ function addEntityHeader() {
             }
         }
     });
+    
 }
 
 
@@ -228,7 +235,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                             z = z - 1;
                         }
                         fdata = filterData[z];
-
+                        
                         if (z != 0) {
                             --i;
                         }
@@ -265,7 +272,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                 }
                 $("#tblTemplateDtl > tbody >  tr").remove();
                 $("#tblTemplateDtl > tbody").append(entityDetailString);
-
+                $("#tblTemplateDtl").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
                 var equipmentHeadersString = '';
                 for (var i = 0; i < data.equipmentHeaders.length; i++) {
                     var sDate = data.equipmentHeaders[i].START_DATE == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.equipmentHeaders[i].START_DATE);
@@ -280,7 +287,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                 }
                 $("#tblEquipmentHistory > tbody >  tr").remove();
                 $("#tblEquipmentHistory > tbody").append(equipmentHeadersString);
-
+                $("#tblEquipmentHistory").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
             }
         }, error: function (ex) { }
     });
@@ -594,9 +601,11 @@ $('#entityType').change(function () {
                 $('.enddate').datepicker({
                     autoclose: true
                 }).datepicker('setDate', '01/01/9999');
+                
             }
         }, error: function (ex) { }
     });
+    setTimeout(function () { $("#tblTemplateDtl").tablesorter({ emptyTo: 'none/zero' }).trigger("update"); }, 200);
 })
 
 function exportData() {
@@ -726,7 +735,7 @@ function openCC(entityName, entityID) {
         var dataType = $(this).find('.dataType').val();
 
         var color = getRandomColor();
-
+        
         if (entityTmpIDList.filter(x => x.id == entityTmpID) == 0) {
             filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>';
             legendStr += '<tr dataType="' + dataType + '" entityTempID="' + entityTmpID + '" isBorderedBox="1" entityDtlID="' + entityDtlID + '" data-ent-id="' + entityHDRID.val() + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="cursor:pointer;background-color:' + color + ' !important"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
@@ -1031,3 +1040,8 @@ $('#dateRange').change(function () {
         $('#dataValue').removeClass('checkboxStyleEdit');
     }
 })
+$(function () {
+    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    $("#tblTemplateDtl").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    $("#tblEquipmentHistory").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+});

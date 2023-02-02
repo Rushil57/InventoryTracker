@@ -21,6 +21,51 @@
     {
       "library": "spectrum@1.8.1",
       "destination": "Scripts/Spectrum"
+    },
+    {
+      "library": "jquery.tablesorter@2.31.3",
+      "destination": "Scripts/jquery.tablesorter/",
+      "files": [
+        "js/jquery.tablesorter.min.js",
+        "css/jquery.tablesorter.pager.min.css",
+        "css/images/black-asc.gif",
+        "css/images/black-desc.gif",
+        "css/images/black-unsorted.gif",
+        "css/images/bootstrap-black-unsorted.png",
+        "css/images/bootstrap-white-unsorted.png",
+        "css/images/dragtable-handle.png",
+        "css/images/dragtable-handle.svg",
+        "css/images/dropbox-asc-hovered.png",
+        "css/images/dropbox-asc.png",
+        "css/images/dropbox-desc-hovered.png",
+        "css/images/dropbox-desc.png",
+        "css/images/first.png",
+        "css/images/green-asc.gif",
+        "css/images/green-desc.gif",
+        "css/images/green-header.gif",
+        "css/images/green-unsorted.gif",
+        "css/images/ice-asc.gif",
+        "css/images/ice-desc.gif",
+        "css/images/ice-unsorted.gif",
+        "css/images/last.png",
+        "css/images/loading.gif",
+        "css/images/metro-black-asc.png",
+        "css/images/metro-black-desc.png",
+        "css/images/metro-loading.gif",
+        "css/images/metro-unsorted.png",
+        "css/images/metro-white-asc.png",
+        "css/images/metro-white-desc.png",
+        "css/images/next.png",
+        "css/images/prev.png",
+        "css/images/white-asc.gif",
+        "css/images/white-desc.gif",
+        "css/images/white-unsorted.gif",
+        "css/filter.formatter.min.css",
+        "js/jquery.tablesorter.js",
+        "js/jquery.tablesorter.widgets.js",
+        "js/jquery.tablesorter.widgets.min.js",
+        "js/extras/jquery.tablesorter.pager.min.js"
+      ]
     }
   ]
 }

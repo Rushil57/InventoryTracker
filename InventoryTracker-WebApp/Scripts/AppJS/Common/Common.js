@@ -179,7 +179,7 @@ function loadAllEntityTemp() {
             setTimeout(function () {
                 RemoveLoader();
             }, 500);
-        },
+        }, 
         url: '/Entity/GetEntityTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -263,7 +263,7 @@ function addEntityColumn() {
     //        tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
     //        $.ajax({
     //            before: AddLoader(),
-    //            complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
+    //            after: RemoveLoader(),
     //            url: '/Entity/EntityValueByPropName',
     //            contentType: 'application/json; charset=utf-8',
     //            dataType: 'json',
@@ -366,6 +366,9 @@ function addEntityColumn() {
     })
     $("#entityHDR > thead >  tr > th").remove();
     $("#entityHDR > thead >  tr").append(hdrdata.toLocaleString().replaceAll(',', ''));
+    $("#entityHDR").trigger("destroy", [false, function () {
+        $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    }]);
     entityTemplate.modal('hide');
 
 
@@ -388,6 +391,9 @@ function addEntityHeader() {
         endIndexEntity = 30;
         loadEntityHDR(searchString, false);
     }
+    $("#entityHDR").trigger("destroy", [false, function () {
+        $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    }]);
 }
 
 
@@ -455,6 +461,9 @@ function sortableTable() {
         }
     });
     $('#entityHDR > thead tr').disableSelection();
+    $("#entityHDR").trigger("destroy", [false, function () {
+        $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    }]);
 }
 
 
