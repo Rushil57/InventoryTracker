@@ -73,6 +73,7 @@ function loadEntityHDR(searchString, searchflag) {
                         th = th + 1;
                     }
                 }
+
                 //$("#entityHDR > tbody >  tr").remove();
                 // $("#entityHDR > tbody").append(entityString);
                 $("#entityHDR > tbody >  tr").draggable({
@@ -97,6 +98,22 @@ function loadEntityHDR(searchString, searchflag) {
                     }
                 });
                 addEntityColumn();
+                $("#entityHDR").trigger("destroy", [false, function () {
+                    resizableTable();
+                    sortableTable();
+                    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                }]);
+                var rowCount =0;
+
+                $('#entityHDR tr').each(function (index, element) {
+                    
+                    if ($(element).attr('style')) {
+                        console.log($(element).attr('style'));
+                        rowCount = rowCount + 1;
+                        console.log(rowCount);
+                    }
+                });
+                $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -198,6 +215,15 @@ function loadEquipmentHDR(searchString, searchflag) {
                     }
                 });
                 addEquipmentColumn();
+                var rowCount = 0;
+
+                $('#equipHDR tr').each(function (index, element) {
+                    if ($(element).attr('style')) {
+                        rowCount = rowCount + 1;
+                    }
+                });
+
+                $("#totalCount1").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -243,6 +269,12 @@ function addEquipmentHeader() {
     //        }
     //    }
     //});
+    addEntityColumn();
+    $("#equipHDR").trigger("destroy", [false, function () {
+        resizableTable();
+        sortableTable();
+        $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    }]);
 }
 
 function addEquipmentColumn() {
@@ -359,6 +391,11 @@ function addEquipmentColumn() {
     $("#equipHDR > thead >  tr > th").remove();
     $("#equipHDR > thead >  tr").append(hdrdata.toLocaleString().replaceAll(',', ''));
     equipmentTemplate.modal('hide');
+    $("#equipHDR").trigger("destroy", [false, function () {
+        resizableTable();
+        sortableTable();
+        $("#equipHDR").tablesorter({emptyTo:'none/zero'}).trigger("update");
+    }]);
 }
 
 $('#btnSearchEquipment').click(function () {
@@ -473,6 +510,11 @@ function addEntityColumn() {
     $("#entityHDR > thead >  tr > th").remove();
     $("#entityHDR > thead >  tr").append(hdrdata.toLocaleString().replaceAll(',', ''));
     entityTemplate.modal('hide');
+    $("#entityHDR").trigger("destroy", [false, function () {
+        resizableTable();
+        sortableTable();
+        $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    }]);
 
 }
 
@@ -974,3 +1016,9 @@ function sampleFileImportDownload() {
     $("#import").popover('hide');
     window.location.href = '/ExcelFiles/EntityEquipmentAssignSample.xlsx';
 }
+
+$(function () {
+    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    
+});

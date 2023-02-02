@@ -88,6 +88,11 @@ function loadEquipmentHDR(searchString, searchflag) {
                 if (isaddEquipmentColumn) {
                     addEquipmentColumn();
                 }
+                $("#equipHDR").trigger("destroy", [false, function () {
+                    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                }]);
+                var rowCount = $('#equipHDR tr').length - 1;
+                $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -203,6 +208,9 @@ function addEquipmentHeader() {
             }
         }
     });
+    $("#equipHDR").trigger("destroy", [false, function () {
+        $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    }]);
 }
 
 
@@ -509,7 +517,7 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
                 }
                 $("#tblTemplateDtl > tbody >  tr").remove();
                 $("#tblTemplateDtl > tbody").append(equipmentDetailString);
-
+                $("#tblTemplateDtl").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
                 var entityHeadersString = '';
                 for (var i = 0; i < data.entityHeaders.length; i++) {
                     var sDate = data.entityHeaders[i].START_DATE == '0001-01-01T00:00:00' ? '' : getFormattedDate(data.entityHeaders[i].START_DATE);
@@ -526,6 +534,8 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
                 $("#tblEntityHistory > tbody >  tr").remove();
                 $("#tblEntityHistory > tbody").append(entityHeadersString);
 
+                
+                $("#tblEntityHistory").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
             }
         }, error: function (ex) { }
     });
@@ -1146,3 +1156,9 @@ $('#dateRange').change(function () {
         $('#dataValue').removeClass('checkboxStyleEdit');
     }
 })
+
+$(function () {
+    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    $("#tblTemplateDtl").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    $("#tblEntityHistory").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+});

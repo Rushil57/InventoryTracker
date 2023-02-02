@@ -89,6 +89,23 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             return entityHeaders;
         }
+        public int GetEntityHeaderRowCount()
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try {
+                connection.Open();
+                string query = "Select Count(*) from [ENTITY_HDR]";
+                int a = connection.Query<int>(query).FirstOrDefault();
+                return a;
+            }
+            catch(Exception ex) {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
 
         public List<EntityTemplate> GetEntityTemplates(string entityType)
         {

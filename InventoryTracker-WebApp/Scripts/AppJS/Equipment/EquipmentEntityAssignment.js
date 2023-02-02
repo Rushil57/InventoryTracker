@@ -186,6 +186,11 @@ function loadEquipmentHDR(searchString, searchflag) {
                     }
                 });
                 addEquipmentColumn();
+                $("#equipHDR").trigger("destroy", [false, function () {
+                    resizableTable();
+                    sortableTable();
+                    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                }]);
                 //var tableHeadLength = $("#equipHDR > thead > tr >  th").length
                 //for (var th = 4; th <= tableHeadLength;) {
                 //    isaddEquipmentColumn = true;
@@ -196,7 +201,16 @@ function loadEquipmentHDR(searchString, searchflag) {
                 //if (isaddEquipmentColumn) {
                 //    addEquipmentColumn();
                 //}
+                
+                var rowCount = 0;
 
+                $('#equipHDR tr').each(function (index, element) {
+                    if ($(element).attr('style')) {
+                        rowCount = rowCount + 1;
+                    }
+                });
+
+                $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -289,6 +303,20 @@ function loadEntityHDR(searchString, searchflag) {
                     }
                 });
                 addEntityColumn();
+                $("#equipHDR").trigger("destroy", [false, function () {
+                    resizableTable();
+                    sortableTable();
+                    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                }]);
+                
+                var rowCount = 0;
+
+                $('#entityHDR tr').each(function (index, element) {
+                    if ($(element).attr('style')) {
+                        rowCount = rowCount + 1;
+                    }
+                });
+                $("#totalCount1").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -418,7 +446,11 @@ function addEntityColumn() {
     $("#entityHDR > thead >  tr > th").remove();
     $("#entityHDR > thead >  tr").append(hdrdata.toLocaleString().replaceAll(',', ''));
     entityTemplate.modal('hide');
-
+    $("#entityHDR").trigger("destroy", [false, function () {
+        resizableTable();
+        sortableTable();
+        $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    }]);
 }
 
 
@@ -921,3 +953,7 @@ function sampleFileImportDownload() {
     $("#import").popover('hide');
     window.location.href = '/ExcelFiles/EquipmentEntityAssignSample.xlsx';
 }
+$(function () {
+    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+});
