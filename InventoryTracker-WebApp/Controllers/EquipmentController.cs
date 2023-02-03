@@ -310,6 +310,7 @@ namespace InventoryTracker_WebApp.Controllers
             path += @"\ImportEquipment" + DateTime.Now.Ticks + ".xlsx";
             file.SaveAs(path);
             FileStream fs = new FileStream(path, FileMode.Open);
+            int CurrentRow = 0;
             try
             {
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
@@ -323,6 +324,7 @@ namespace InventoryTracker_WebApp.Controllers
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
                         for (int i = 2; i <= stats.EndRowIndex; i++)
                         {
+                            CurrentRow = i;
                             var headerCellValue = (sheet.GetCellValueAsString(i, 1));
                             if (headerCellValue.ToString() == null)
                             {
@@ -371,7 +373,7 @@ namespace InventoryTracker_WebApp.Controllers
             catch (Exception e)
             {
                 fs.Close();
-                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message });
+                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message.ToString() + "Issue occured in excel row number : " + CurrentRow });
             }
             finally
             {
@@ -396,6 +398,7 @@ namespace InventoryTracker_WebApp.Controllers
             path += @"\BulkImportEquipment" + DateTime.Now.Ticks + ".xlsx";
             file.SaveAs(path);
             FileStream fs = new FileStream(path, FileMode.Open);
+            int CurrentRow = 0;
             try
             {
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
@@ -409,6 +412,7 @@ namespace InventoryTracker_WebApp.Controllers
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
                         for (int i = 1; i <= stats.EndRowIndex; i++)
                         {
+                            CurrentRow = i;
                             var headerCellValue = (sheet.GetCellValueAsString(i, 1));
                             if (headerCellValue.ToString() == null)
                             {
@@ -495,7 +499,7 @@ namespace InventoryTracker_WebApp.Controllers
             catch (Exception e)
             {
                 fs.Close();
-                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message });
+                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message.ToString() + "Issue occured in excel row number : " + CurrentRow });
             }
             finally
             {
@@ -645,6 +649,7 @@ namespace InventoryTracker_WebApp.Controllers
             path += @"\EquipmentEntityAssignImport" + DateTime.Now.Ticks + ".xlsx";
             file.SaveAs(path);
             FileStream fs = new FileStream(path, FileMode.Open);
+            int CurrentRow = 0;
             try
             {
                 if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
@@ -660,6 +665,7 @@ namespace InventoryTracker_WebApp.Controllers
 
                         for (int i = 2; i <= stats.EndRowIndex; i++)
                         {
+                            CurrentRow = i;
                             var headerCellValue = (sheet.GetCellValueAsString(i, 1));
                             if (headerCellValue == null)
                             {
@@ -740,7 +746,7 @@ namespace InventoryTracker_WebApp.Controllers
             catch (Exception e)
             {
                 fs.Close();
-                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message });
+                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message.ToString() + "Issue occured in excel row number : " + CurrentRow });
             }
             finally
             {
