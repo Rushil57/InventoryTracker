@@ -597,8 +597,12 @@ $('#entityType').change(function () {
                 var templateString = '';
                 for (var i = 0; i < data.data.length; i++) {
                     var dataType = data.data[i].Datatype.toLowerCase()
+                    var isCheckedNum = '';
+                    if (dataType == 'int') {
+                        isCheckedNum = " onkeypress='checkNumeric(this,event)' ";
+                    }
                     var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
-                    templateString += "<tr><input type='hidden' class='entityDtlID' value='0' /> <input type='hidden' class='entityTmpID' value='" + data.data[i].Ent_temp_id + "'/><input type='hidden' class='dataType' value='" + dataType + "'/><td>" + data.data[i].Prop_name + "</td><td><input type='" + textType + "' class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
+                    templateString += "<tr><input type='hidden' class='entityDtlID' value='0' /> <input type='hidden' class='entityTmpID' value='" + data.data[i].Ent_temp_id + "'/><input type='hidden' class='dataType' value='" + dataType + "'/><td>" + data.data[i].Prop_name + "</td><td><input type='" + textType + "'" + isCheckedNum + " class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
                 }
                 $('#tblTemplateDtl > tbody > tr').remove();
                 $('#tblTemplateDtl > tbody').append(templateString);

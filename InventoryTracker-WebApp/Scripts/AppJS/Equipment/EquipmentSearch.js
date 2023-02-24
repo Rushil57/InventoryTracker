@@ -700,9 +700,13 @@ $('#equipType').change(function () {
             if (data.IsValid) {
                 var templateString = '';
                 for (var i = 0; i < data.data.length; i++) {
+                    var isCheckedNum = '';
                     var dataType = data.data[i].Datatype.toLowerCase()
+                    if (dataType == 'int') {
+                        isCheckedNum = " onkeypress='checkNumeric(this,event)' ";
+                    }
                     var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
-                    templateString += "<tr><input type='hidden' class='equipDtlID' value='0' /> <input type='hidden' class='equipTmpID' value='" + data.data[i].Equip_Temp_ID + "'/><input type='hidden' class='dataType' value='" + dataType + "'/><td>" + data.data[i].Prop_Name + "</td><td><input type='" + textType + "' class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
+                    templateString += "<tr><input type='hidden' class='equipDtlID' value='0' /> <input type='hidden' class='equipTmpID' value='" + data.data[i].Equip_Temp_ID + "'/><input type='hidden' class='dataType' value='" + dataType + "'/><td>" + data.data[i].Prop_Name + "</td><td><input type='" + textType + "'" + isCheckedNum + "  class='dropdown-control' style='width:100%' value=''> </td><td><input type='text' class='datepicker startdate dropdown-control' value=''></td><td><input type='text' class='datepicker enddate dropdown-control' value=''> </td></tr>";
                 }
                 $('#tblTemplateDtl > tbody > tr').remove();
                 $('#tblTemplateDtl > tbody').append(templateString);
