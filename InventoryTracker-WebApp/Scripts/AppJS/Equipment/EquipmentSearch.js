@@ -29,6 +29,8 @@ $(document).ready(function () {
     $('#selectedMenu').text($('#menuEquipSearch').text());
     $('#equipActive').remove();
     loadEquipmentHDR('', false);
+    resizableTable();
+    sortableTable();
     //    //loadEquipmentHDR();
     //    loadAllEquipTemp();
     //    //enabled();
@@ -43,6 +45,7 @@ $(document).ready(function () {
     //        }
     //        loadTemplateDetails(currentEquipID, currentDate, currentUnitID, currentEquipmentType, currentVendor)
     //    }).datepicker('setDate', new Date());
+
 })
 
 function loadEquipmentHDR(searchString, searchflag) {
@@ -88,11 +91,15 @@ function loadEquipmentHDR(searchString, searchflag) {
                 if (isaddEquipmentColumn) {
                     addEquipmentColumn();
                 }
-                $("#equipHDR").trigger("destroy", [false, function () {
-                    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
-                }]);
+
                 var rowCount = $('#equipHDR tr').length - 1;
                 $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
+                $("#equipHDR").trigger("destroy", [false, function () {
+                    resizableTable();
+                    sortableTable();
+                    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                }]);
+
             }
         }, error: function (ex) { }
     });
@@ -416,6 +423,9 @@ $('#editTemplate').click(function () {
             if (firsttd.text().trim() == 'true' && dataType == 'bool') {
                 isChecked = 'checked'
             }
+            if (dataType == 'int') {
+                isChecked = " onkeypress='checkNumeric(this,event)' ";
+            }
             firsttd.html("<input type='" + textType + "' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'" + isChecked + ">");
             secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
             thirdtd.html("<input type='text' class='datepicker dropdown-control' value='" + thirdtd.text().trim() + "'>");
@@ -534,8 +544,9 @@ function loadTemplateDetails(equipID, startDate, unitID, equipmentType, vendor, 
                 $("#tblEntityHistory > tbody >  tr").remove();
                 $("#tblEntityHistory > tbody").append(entityHeadersString);
 
-                
-                $("#tblEntityHistory").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+
+                sortTables("#tblTemplateDtl");
+                sortTables("#tblEntityHistory");
             }
         }, error: function (ex) { }
     });
@@ -570,7 +581,7 @@ function showEntityDetails(element) {
         success: function (data) {
             if (data.IsValid) {
                 var entityTemplateString = '';
-                entityTemplateString += '<table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
+                entityTemplateString += '<table id="tbEntityTemporydata" class="table tablesorter table-bordered" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
 
                 for (var i = 0; i < data.data.length; i++) {
                     var entityValue = data.data[i].Ent_Value.trim();
@@ -581,6 +592,8 @@ function showEntityDetails(element) {
                 }
                 entityTemplateString += '</tbody></table>';
                 entityModelBody.html(entityTemplateString);
+                $("#tbEntityTemporydata").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                sortTables("#tbEntityTemporydata");
                 entityTempDTL.modal('show');
             }
         }, error: function (ex) { }
@@ -699,6 +712,9 @@ $('#equipType').change(function () {
                 $('.enddate').datepicker({
                     autoclose: true
                 }).datepicker('setDate', '01/01/9999');
+
+                sortTables("#tblTemplateDtl");
+
             }
         }, error: function (ex) { }
     });

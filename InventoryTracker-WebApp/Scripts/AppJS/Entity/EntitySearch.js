@@ -39,6 +39,8 @@ $(document).ready(function () {
     $('#selectedMenu').text($('#menuEntSearch').text());
     $('#entityActive').remove();
     loadEntityHDR('', false);
+    resizableTable();
+    sortableTable();
     $('.bi-database').attr('onclick', 'showEntityModel()');
 })
 
@@ -287,7 +289,8 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                 }
                 $("#tblEquipmentHistory > tbody >  tr").remove();
                 $("#tblEquipmentHistory > tbody").append(equipmentHeadersString);
-                $("#tblEquipmentHistory").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                sortTables("#tblTemplateDtl");
+                sortTables("#tblEquipmentHistory");
             }
         }, error: function (ex) { }
     });
@@ -326,6 +329,9 @@ $('#editTemplate').click(function () {
             var isChecked = '';
             if (firsttd.text().trim() == 'true' && dataType == 'bool') {
                 isChecked = 'checked'
+            }
+            if (dataType == 'int') {
+                isChecked = " onkeypress='checkNumeric(this,event)' ";
             }
             firsttd.html("<input type='" + textType + "' class='dropdown-control' style='width:100%' value='" + firsttd.text().trim() + "'" + isChecked + ">");
             secondtd.html("<input type='text' class='datepicker dropdown-control' value='" + secondtd.text().trim() + "'>");
@@ -532,8 +538,7 @@ function showEquipmentDetails(element) {
         success: function (data) {
             if (data.IsValid) {
                 var equipmentTemplateString = '';
-                equipmentTemplateString += '<table class="table" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
-
+                equipmentTemplateString += '<table id="tblEquipmentTempDtl" class="table tablesorter table-bordered" ><thead style="background-color: #4472c4; color: white; "><tr><th scope="col">Property Name</th><th scope="col">Data Value</th><th scope="col">Start Date</th><th scope="col">End Date</th></tr></thead><tbody>';
                 for (var i = 0; i < data.data.length; i++) {
                     var equipmentValue = data.data[i].Eq_Value.trim();
 
@@ -543,6 +548,8 @@ function showEquipmentDetails(element) {
                 }
                 equipmentTemplateString += '</tbody></table>';
                 equipmentModelBody.html(equipmentTemplateString);
+                $("#tblEquipmentTempDtl").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                sortTables("#tblEquipmentTempDtl");
                 equipmentTempDTL.modal('show');
             }
         }, error: function (ex) { }
@@ -1045,3 +1052,8 @@ $(function () {
     $("#tblTemplateDtl").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
     $("#tblEquipmentHistory").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
 });
+
+
+
+
+

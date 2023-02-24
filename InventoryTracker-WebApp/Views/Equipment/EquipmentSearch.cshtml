@@ -3,6 +3,7 @@
     ViewBag.Title = "Equipment List";
     var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
 }
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="~/Content/Css/EquipmentEntityAssignment.css">
 <div class="row">
     <div class="col-md-4 ms-5">
@@ -98,7 +99,8 @@
 @*Model End*@
 
 @section scripts{
-<script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
-<script src="~/Scripts/AppJS/Equipment/EquipmentCommon.js?v=@versionUpdate"></script>
-<script src="~/Scripts/AppJS/Equipment/EquipmentSearch.js?v=@versionUpdate"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Equipment/EquipmentCommon.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/AppJS/Equipment/EquipmentSearch.js?v=@versionUpdate"></script>
 }

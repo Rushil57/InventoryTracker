@@ -179,7 +179,7 @@ function loadAllEntityTemp() {
             setTimeout(function () {
                 RemoveLoader();
             }, 500);
-        }, 
+        },
         url: '/Entity/GetEntityTemplate',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -959,6 +959,7 @@ function bindChangeProp() {
 }
 function onChangePropDropDown() {
     var dataType = $('#changeProp').find(":selected").attr('datatype').toLowerCase();
+    $('#propName').attr('dataType', dataType);
     var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
     if (dataType == 'bool') {
         $('#dataValue').prop('checked', false).addClass('checkboxStyleEdit');
@@ -1009,4 +1010,62 @@ function removeEntEquDetail() {
             }
         }, error: function (ex) { }
     });
+}
+
+function sortTables(tablename) {
+    $(tablename).trigger("destroy", [false, function () {
+        $(tablename + " th").resizable();
+        $(tablename + ' > thead tr').sortable({
+            containment: "parent",
+            placeholder: "placeholder",
+            opacity: 0.5,
+            helper: "clone",
+            axis: 'x',
+            start: function (e, ui) {
+                var ind_th = ui.item.index();
+                $(tablename + '#tbody tr').each(function (ind, el) {
+                    $('td', el).eq(ind_th).addClass('drg');
+                });
+            },
+            stop: function (e, ui) {
+                var itInd = ui.item.index() - 1;
+                $(tablename + " > tbody tr").each(function (ind, el) {
+                    var cell = $(".drg", el).detach();
+                    if (itInd < 0) {
+                        cell.insertBefore($("td", el).eq(itInd + 1));
+                    }
+                    else {
+                        cell.insertAfter($("td", el).eq(itInd));
+                    }
+                    cell.removeClass("drg").css("color", "black");
+                });
+            }
+        });
+        $(tablename + ' > thead tr').disableSelection();
+        $(tablename).tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    }]);
+
+}
+
+function checkNumericModel(e, event) {
+    var dataType = $('#propName').attr('dataType').toLowerCase();
+    if (dataType == "int") {
+        var charCode = (e.which) ? e.which : event.keyCode
+        var data = e.value;
+        if (String.fromCharCode(charCode).match(/[^0-9]/g)) {
+            data = data.replace(String.fromCharCode(charCode), '');
+            e.value = data;
+            event.preventDefault();
+        }
+    }
+}
+
+function checkNumeric(e, event) {
+    var charCode = (e.which) ? e.which : event.keyCode
+    var data = e.value;
+    if (String.fromCharCode(charCode).match(/[^0-9]/g)) {
+        data = data.replace(String.fromCharCode(charCode), '');
+        e.value = data;
+        event.preventDefault();
+    }
 }
