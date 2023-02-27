@@ -24,6 +24,7 @@ $(document).ready(function () {
     sortableTable();
     $('#selectedMenu').text($('#menuEquEntAss').text());
     $('#property').attr('onclick', 'showEquipModel()');
+    isFirstRowTextBox = true;
 
 })
 
@@ -97,7 +98,16 @@ function loadEntityHDR(searchString, searchflag) {
                     stop: function () {
                     }
                 });
+                
                 addEntityColumn();
+
+                if ($("#entityHDR > tbody > tr:first >  td:first").find('input').length == 0) {
+                    var firstTrHTML = '';
+                    $("#entityHDR > thead > tr >  th").each(function () {
+                        firstTrHTML += '<td><input type="text" style="height:30px" class="form-control" onkeyup="searchInTable(\'entityHDR\')"></td>';
+                    })
+                    $("#entityHDR > tbody > tr:first").before('<tr style="cursor:pointer">' + firstTrHTML + '<tr>');
+                }
                 $("#entityHDR").trigger("destroy", [false, function () {
                     resizableTable();
                     sortableTable();
@@ -215,6 +225,18 @@ function loadEquipmentHDR(searchString, searchflag) {
                     }
                 });
                 addEquipmentColumn();
+                if ($("#equipHDR > tbody > tr:first >  td:first").find('input').length == 0) {
+                    var firstTrHTML = '';
+                    $("#equipHDR > thead > tr >  th").each(function () {
+                        if ($(this).text() == '') {
+                            firstTrHTML += '<td></td>'
+                        }
+                        else {
+                            firstTrHTML += '<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td>'
+                        }
+                    })
+                    $("#equipHDR > tbody > tr:first").before('<tr style="cursor:pointer">' + firstTrHTML + '<tr>');
+                }
                 var rowCount = 0;
 
                 $('#equipHDR tr').each(function (index, element) {

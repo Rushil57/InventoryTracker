@@ -188,10 +188,11 @@ function loadAllEntityTemp() {
         success: function (data) {
             if (data.IsValid) {
                 var templateString = '';
-
+                templateString += 'Entity type: <select name="entityType" class="dropdown-control" id="entityTypeInColumns" onchange="entityTypeChange()"></select>';
                 for (var i = 0; i < data.uniquePropName.length; i++) {
                     var propName = data.uniquePropName[i].Prop_name.trim();
-                    templateString += '<div class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
+                    var entityTypeValue = data.uniquePropName[i].Ent_type.trim().toUpperCase();
+                    templateString += '<div entType=' + entityTypeValue +' class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
                 }
 
                 uniqueEntityType = "";
@@ -203,6 +204,7 @@ function loadAllEntityTemp() {
                 entityType.html(uniqueEntityType);
 
                 $('#entityTemplateModelBody').html(templateString);
+                $('#entityTypeInColumns').html(uniqueEntityType).find('option:first').remove();
             }
         }, error: function (ex) { }
     });
@@ -226,11 +228,12 @@ function loadAllEquipTemp() {
         success: function (data) {
             if (data.IsValid) {
                 var templateString = '';
-
+                    templateString += 'Equipment type: <select name="equipType" class="dropdown-control" id="equipTypeInColumns" onchange="equipTypeChange()"></select>';
                 for (var i = 0; i < data.uniquePropName.length; i++) {
                     var propName = data.uniquePropName[i].Prop_Name.trim();
                     //equipType.push(data.data[i].Equipment_Type.trim());
-                    templateString += '<div class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
+                    var equipTypeValue = data.uniquePropName[i].Equipment_Type.trim().toUpperCase();
+                    templateString += '<div equipType=' + equipTypeValue +' class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
                 }
                 //$.unique(equipType);
                 uniqueEquipType = "";
@@ -241,16 +244,21 @@ function loadAllEquipTemp() {
                 }
                 equipTypeEle.html(uniqueEquipType);
                 $('#equipmentTemplateModelBody').html(templateString);
+                $('#equipTypeInColumns').html(uniqueEquipType).find('option:first').remove();
             }
         }, error: function (ex) { }
     });
 }
 
 function showEntityModel() {
+    $('#entityTypeInColumns').prop('selectedIndex', 0);
+    entityTypeChange();
     entityTemplate.modal('show');
 }
 
 function showEquipModel() {
+    $('#equipTypeInColumns').prop('selectedIndex', 0);
+    equipTypeChange();
     equipmentTemplate.modal('show');
 }
 
@@ -1068,4 +1076,37 @@ function checkNumeric(e, event) {
         e.value = data;
         event.preventDefault();
     }
+}
+
+function searchInTable(tableName) {
+    $('#' + tableName + ' > tbody > tr').prop('hidden', false);
+    $('#' + tableName + '> tbody > tr:first > td').each(function () {
+        var elementVal = $(this).find('input').val();
+        var elementTd = $(this).index();
+        if (elementVal != '') {
+            $('#' + tableName + ' > tbody > tr').each(function () {
+                if ($(this).index() == 0 || $(this).find('td:eq(' + elementTd + ')').text() == '' || $(this).prop('hidden')) {
+                    return;
+                }
+                if ($(this).find('td:eq(' + elementTd + ')').text().toLowerCase().indexOf(elementVal) > -1) {
+                    $(this).prop('hidden', false);
+                }
+                else {
+                    $(this).prop('hidden', true);
+                }
+            })
+        }
+    });
+}
+
+function entityTypeChange() {
+    var selectedEntity = $('#entityTypeInColumns').find(':selected').val()
+    $('#entityTemplateModelBody').find('div').prop('hidden', true);
+    $('#entityTemplateModelBody').find('[entType="' + selectedEntity + '"]').prop('hidden', false);
+}
+
+function equipTypeChange() {
+    var selectedEntity = $('#equipTypeInColumns').find(':selected').val()
+    $('#equipmentTemplateModelBody').find('div').prop('hidden', true);
+    $('#equipmentTemplateModelBody').find('[equipType="' + selectedEntity + '"]').prop('hidden', false);
 }

@@ -43,10 +43,12 @@ namespace InventoryTracker_WebApp.Controllers
 
             var uniquePropName = equipmentTemplates.GroupBy(x => new
             {
-                x.Prop_Name
+                x.Prop_Name,
+                x.Equipment_Type
             }).Select(x => new EquipmentTemplate
             {
-                Prop_Name = x.Key.Prop_Name
+                Prop_Name = x.Key.Prop_Name,
+                Equipment_Type = x.Key.Equipment_Type
             }).ToList();
             return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTemplates, uniqueEquipmentTemplates = uniqueEquipmentTemplates, uniquePropName = uniquePropName });
         }

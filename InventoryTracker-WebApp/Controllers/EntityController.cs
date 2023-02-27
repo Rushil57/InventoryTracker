@@ -46,10 +46,12 @@ namespace InventoryTracker_WebApp.Controllers
 
             var uniquePropName = entityTemplates.GroupBy(x => new
             {
+                x.Ent_type,
                 x.Prop_name
             }).Select(x => new EntityTemplate
             {
-                Prop_name = x.Key.Prop_name
+                Prop_name = x.Key.Prop_name,
+                Ent_type =  x.Key.Ent_type
             }).ToList();
 
             return JsonConvert.SerializeObject(new { IsValid = true, data = entityTemplates, uniqueEntityTemplates = uniqueEntityTemplates, uniquePropName = uniquePropName });

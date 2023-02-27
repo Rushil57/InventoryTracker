@@ -42,6 +42,7 @@ $(document).ready(function () {
     resizableTable();
     sortableTable();
     $('#selectedMenu').text($('#menuEntEquAss').text());
+    isFirstRowTextBox = true;
 });
 function bindTooltipForDates() {
 
@@ -185,6 +186,9 @@ function loadEquipmentHDR(searchString, searchflag) {
                         //$('#equipHDR').parent().parent().addClass('overflow-auto');
                     }
                 });
+                if ($("#equipHDR > tbody > tr:first >  td:first").find('input').length == 0) {
+                    $("#equipHDR > tbody > tr:first").before('<tr style="cursor:pointer"><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control"  style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><tr>')
+                }
                 addEquipmentColumn();
                 $("#equipHDR").trigger("destroy", [false, function () {
                     resizableTable();
@@ -209,7 +213,7 @@ function loadEquipmentHDR(searchString, searchflag) {
                         rowCount = rowCount + 1;
                     }
                 });
-
+                
                 $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
@@ -303,6 +307,19 @@ function loadEntityHDR(searchString, searchflag) {
                     }
                 });
                 addEntityColumn();
+                if ($("#entityHDR > tbody > tr:first >  td:first").find('input').length == 0) {
+                    var firstTrHTML = '';
+                    $("#entityHDR > thead > tr >  th").each(function () {
+                        if ($(this).text() == '\n                            ') {
+                            firstTrHTML += '<td></td>'
+                        }
+                        else {
+                            firstTrHTML += '<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'entityHDR\')"></td>'
+                        }
+                    })
+                    $("#entityHDR > tbody > tr:first").before('<tr style="cursor:pointer">' + firstTrHTML + '<tr>');
+                }
+
                 $("#equipHDR").trigger("destroy", [false, function () {
                     resizableTable();
                     sortableTable();
@@ -391,7 +408,6 @@ function addEntityColumn() {
                         hdrdata.splice(a + 1, 0, "<th scope=\"col\">" + id + "</th>");
                     }
                 }
-
             });
             if (isPresent) {
                 // tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';

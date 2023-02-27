@@ -3,7 +3,7 @@
 var isLoadTime = true;
 var vendorEle = $('#vendor');
 var unitidEle = $('#uID');
-
+var isFirstRowTextBox = false;
 $(document).ready(function () {
     //loadEquipmentHDR();
     loadAllEquipTemp();
@@ -132,12 +132,12 @@ function addEquipmentColumn() {
             var id = $(this).attr('id');
             var th = 0;
             $("#equipHDR th").each(function (index) {
-                
+
                 if ($(this).text().toLowerCase() == id.toLowerCase()) {
                     isPresent = false;
                     $('#equipHDR tbody tr').each(function (ind, el) {
                         $('td', el).eq(index).show();
-                        
+
                     });
                     $.ajax({
                         url: '/Equipment/EquipmentValueByPropName',
@@ -148,13 +148,18 @@ function addEquipmentColumn() {
                         data: { 'propName': id, 'date': $('#mainDate').val() },
                         success: function (data) {
                             for (var i = 0; i < data.data.length; i++) {
-
                                 $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].Eq_Value);
                             }
                         },
                         error: function (ex) { }
                     });
                     $(this).show();
+                    if (isFirstRowTextBox && $("#equipHDR > tbody > tr:first >  td").length <= $("#equipHDR th").length) {
+                        $("#equipHDR > tbody >  tr:first > td:last").after('<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td>')
+                    }
+                    else if (isFirstRowTextBox && $("#equipHDR > tbody > tr:first >  td").length > $("#equipHDR th").length) {
+                        $("#equipHDR > tbody >  tr:first > td:last").remove();
+                    }
                     return false;
                 }
                 th = th + 1;
@@ -181,9 +186,13 @@ function addEquipmentColumn() {
                         for (var i = 0; i < data.data.length; i++) {
                             $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('td:last').text(data.data[i].Eq_Value);
                         }
+
                     },
                     error: function (ex) { }
                 });
+            }
+            if (isFirstRowTextBox) {
+                $("#equipHDR > tbody >  tr:first > td:last").html('<input type="text" style="height:30px" class="form-control" onkeyup="searchInTable(\'equipHDR\')">');
             }
         } else {
             var id = $(this).attr('id');

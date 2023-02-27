@@ -1,6 +1,7 @@
 ﻿var entityName = $('#entityName');
 var isLoadTime = true;
 var tblHDR = ' <th scope="col">Entity type</th> <th scope="col">Entity name</th><th scope="col">Assigned</th>';
+var isFirstRowTextBox = false;
 
 $(document).ready(function () {
     loadAllEntityTemp();
