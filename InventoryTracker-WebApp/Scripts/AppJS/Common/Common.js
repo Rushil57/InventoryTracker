@@ -1081,11 +1081,11 @@ function checkNumeric(e, event) {
 function searchInTable(tableName) {
     $('#' + tableName + ' > tbody > tr').prop('hidden', false);
     $('#' + tableName + '> tbody > tr:first > td').each(function () {
-        var elementVal = $(this).find('input').val();
+        var elementVal = $(this).find('input').val().toLowerCase();
         var elementTd = $(this).index();
         if (elementVal != '') {
             $('#' + tableName + ' > tbody > tr').each(function () {
-                if ($(this).index() == 0 || $(this).find('td:eq(' + elementTd + ')').text() == '' || $(this).prop('hidden')) {
+                if ($(this).index() == 0 || $(this).prop('hidden')) {
                     return;
                 }
                 if ($(this).find('td:eq(' + elementTd + ')').text().toLowerCase().indexOf(elementVal) > -1) {
