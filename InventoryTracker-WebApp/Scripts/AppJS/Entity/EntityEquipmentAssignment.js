@@ -125,9 +125,7 @@ function loadEntityHDR(searchString, searchflag) {
                 $('#entityHDR tr').each(function (index, element) {
                     
                     if ($(element).attr('style')) {
-                        console.log($(element).attr('style'));
                         rowCount = rowCount + 1;
-                        console.log(rowCount);
                     }
                 });
                 $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
