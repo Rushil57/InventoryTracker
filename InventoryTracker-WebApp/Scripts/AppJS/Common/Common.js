@@ -1083,7 +1083,7 @@ function searchInTable(tableName) {
     $('#' + tableName + '> tbody > tr:first > td').each(function () {
         var elementVal = $(this).find('input').val();
         var elementTd = $(this).index();
-        if (elementVal != '') {
+        if (elementVal != '' && elementVal != undefined) {
             elementVal.toLowerCase();
             $('#' + tableName + ' > tbody > tr').each(function () {
                 if ($(this).index() == 0 || $(this).prop('hidden')) {
