@@ -191,8 +191,8 @@ function loadAllEntityTemp() {
                 templateString += 'Entity type: <select name="entityType" class="dropdown-control" id="entityTypeInColumns" onchange="entityTypeChange()"></select>';
                 for (var i = 0; i < data.uniquePropName.length; i++) {
                     var propName = data.uniquePropName[i].Prop_name.trim();
-                    var entityTypeValue = data.uniquePropName[i].Ent_type.trim().toUpperCase();
-                    templateString += '<div entType=' + entityTypeValue +' class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
+                    var entityTypeValue = data.uniquePropNameEnt.filter(x => x.Prop_name === propName)[0].Ent_type.toUpperCase();
+                    templateString += '<div entType="' + entityTypeValue +'" class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
                 }
 
                 uniqueEntityType = "";
@@ -232,7 +232,7 @@ function loadAllEquipTemp() {
                 for (var i = 0; i < data.uniquePropName.length; i++) {
                     var propName = data.uniquePropName[i].Prop_Name.trim();
                     //equipType.push(data.data[i].Equipment_Type.trim());
-                    var equipTypeValue = data.uniquePropName[i].Equipment_Type.trim().toUpperCase();
+                    var equipTypeValue = data.uniquePropNameEqu.filter(x => x.Prop_Name === propName)[0].Equipment_Type.toUpperCase();
                     templateString += '<div equipType=' + equipTypeValue +' class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
                 }
                 //$.unique(equipType);

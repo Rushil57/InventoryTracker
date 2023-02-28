@@ -43,6 +43,14 @@ namespace InventoryTracker_WebApp.Controllers
 
             var uniquePropName = equipmentTemplates.GroupBy(x => new
             {
+                x.Prop_Name
+            }).Select(x => new EquipmentTemplate
+            {
+                Prop_Name = x.Key.Prop_Name
+            }).ToList();
+
+            var uniquePropNameEqu = equipmentTemplates.GroupBy(x => new
+            {
                 x.Prop_Name,
                 x.Equipment_Type
             }).Select(x => new EquipmentTemplate
@@ -50,7 +58,8 @@ namespace InventoryTracker_WebApp.Controllers
                 Prop_Name = x.Key.Prop_Name,
                 Equipment_Type = x.Key.Equipment_Type
             }).ToList();
-            return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTemplates, uniqueEquipmentTemplates = uniqueEquipmentTemplates, uniquePropName = uniquePropName });
+
+            return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTemplates, uniqueEquipmentTemplates = uniqueEquipmentTemplates, uniquePropName = uniquePropName, uniquePropNameEqu= uniquePropNameEqu });
         }
         public string GetEquipmentHeaders(string searchString, int startIndex, int endIndex)
         {
