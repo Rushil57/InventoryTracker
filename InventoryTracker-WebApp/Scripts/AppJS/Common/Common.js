@@ -1081,9 +1081,10 @@ function checkNumeric(e, event) {
 function searchInTable(tableName) {
     $('#' + tableName + ' > tbody > tr').prop('hidden', false);
     $('#' + tableName + '> tbody > tr:first > td').each(function () {
-        var elementVal = $(this).find('input').val().toLowerCase();
+        var elementVal = $(this).find('input').val();
         var elementTd = $(this).index();
         if (elementVal != '') {
+            elementVal.toLowerCase();
             $('#' + tableName + ' > tbody > tr').each(function () {
                 if ($(this).index() == 0 || $(this).prop('hidden')) {
                     return;
