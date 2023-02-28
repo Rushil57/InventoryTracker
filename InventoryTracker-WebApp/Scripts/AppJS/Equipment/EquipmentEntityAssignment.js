@@ -186,14 +186,21 @@ function loadEquipmentHDR(searchString, searchflag) {
                         //$('#equipHDR').parent().parent().addClass('overflow-auto');
                     }
                 });
-                if ($("#equipHDR > tbody > tr:first >  td:first").find('input').length == 0) {
-                    $("#equipHDR > tbody > tr:first").before('<tr style="cursor:pointer"><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control"  style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><tr>')
+                 if ($("#equipHDR").find('.static-rw').length == 0) {
+                    $("#equipHDR > tbody > tr:first").before('<tr class="static-rw" style="cursor:pointer"><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control"  style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><tr>')
                 }
                 addEquipmentColumn();
                 $("#equipHDR").trigger("destroy", [false, function () {
                     resizableTable();
                     sortableTable();
-                    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).bind("sortEnd", function (e, t) {
+                        setTimeout(function () {
+                            var frHtml = $("#equipHDR").find('.static-rw');
+                            $("#equipHDR").find('.static-rw').remove();
+
+                            $("#equipHDR > tbody > tr:first").before(frHtml);
+                        }, 10)
+                    }).trigger("update");
                 }]);
                 //var tableHeadLength = $("#equipHDR > thead > tr >  th").length
                 //for (var th = 4; th <= tableHeadLength;) {
@@ -307,7 +314,7 @@ function loadEntityHDR(searchString, searchflag) {
                     }
                 });
                 addEntityColumn();
-                if ($("#entityHDR > tbody > tr:first >  td:first").find('input').length == 0) {
+                if ($("#entityHDR").find('.static-rw').length == 0) {
                     var firstTrHTML = '';
                     $("#entityHDR > thead > tr >  th").each(function () {
                         if ($(this).text() == '\n                            ') {
@@ -317,13 +324,20 @@ function loadEntityHDR(searchString, searchflag) {
                             firstTrHTML += '<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'entityHDR\')"></td>'
                         }
                     })
-                    $("#entityHDR > tbody > tr:first").before('<tr style="cursor:pointer">' + firstTrHTML + '<tr>');
+                    $("#entityHDR > tbody > tr:first").before('<tr style="cursor:pointer" class="static-rw">' + firstTrHTML + '<tr>');
                 }
 
                 $("#equipHDR").trigger("destroy", [false, function () {
                     resizableTable();
                     sortableTable();
-                    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+                    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).bind("sortEnd", function (e, t) {
+                        setTimeout(function () {
+                            var frHtml = $("#equipHDR").find('.static-rw');
+                            $("#equipHDR").find('.static-rw').remove();
+
+                            $("#equipHDR > tbody > tr:first").before(frHtml);
+                        }, 10)
+                    }).trigger("update");
                 }]);
                 
                 var rowCount = 0;
@@ -465,7 +479,14 @@ function addEntityColumn() {
     $("#entityHDR").trigger("destroy", [false, function () {
         resizableTable();
         sortableTable();
-        $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+        $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).bind("sortEnd", function (e, t) {
+            setTimeout(function () {
+                var frHtml = $("#equipHDR").find('.static-rw');
+                $("#equipHDR").find('.static-rw').remove();
+
+                $("#equipHDR > tbody > tr:first").before(frHtml);
+            }, 10)
+        }).trigger("update");
     }]);
 }
 
@@ -970,6 +991,20 @@ function sampleFileImportDownload() {
     window.location.href = '/ExcelFiles/EquipmentEntityAssignSample.xlsx';
 }
 $(function () {
-    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
-    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).bind("sortEnd", function (e, t) {
+        setTimeout(function () {
+            var frHtml = $("#entityHDR").find('.static-rw');
+            $("#entityHDR").find('.static-rw').remove();
+
+            $("#entityHDR > tbody > tr:first").before(frHtml);
+        }, 10)
+    }).trigger("update");
+    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).bind("sortEnd", function (e, t) {
+        setTimeout(function () {
+            var frHtml = $("#equipHDR").find('.static-rw');
+            $("#equipHDR").find('.static-rw').remove();
+
+            $("#equipHDR > tbody > tr:first").before(frHtml);
+        }, 10)
+    }).trigger("update");
 });
