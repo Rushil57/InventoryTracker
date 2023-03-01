@@ -9,12 +9,18 @@
             <div class="modal-body" style="height: 95px; overflow: auto;" id="importModelBody">
                 <input type="file" id="file" class="form-control">
                 <div id="operationOptions" hidden>
-                    <input checked type="radio" id="AddRows" name="operationOptions" value="0">
-                    <label for="AddRows">Add Rows</label>
-                    <input type="radio" id="UpdateRows" name="operationOptions" value="1">
-                    <label for="UpdateRows">Update Rows</label>
-                    <input type="radio" id="AddUpdateRows" name="operationOptions" value="2">
-                    <label for="AddUpdateRows">Add/Update Rows</label>
+                    <div style="display:inline-block">
+                        <input checked type="radio" id="AddRows" name="operationOptions" value="0">
+                        <label for="AddRows">Add Rows</label>
+                    </div>
+                    <div style="display:inline-block">
+                        <input type="radio" id="UpdateRows" name="operationOptions" value="1">
+                        <label for="UpdateRows">Update Rows</label>
+                    </div>
+                    <div style="display:inline-block">
+                        <input type="radio" id="AddUpdateRows" name="operationOptions" value="2">
+                        <label for="AddUpdateRows">Add/Update Rows</label>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">

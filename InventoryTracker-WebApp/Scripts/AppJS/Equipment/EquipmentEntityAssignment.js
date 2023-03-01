@@ -43,8 +43,6 @@ $(document).ready(function () {
     sortableTable();
     $('#selectedMenu').text($('#menuEntEquAss').text());
     isFirstRowTextBox = true;
-    $('#exportDateRange').removeAttr('hidden');
-    $('#importDateRange').removeAttr('hidden');
 });
 function bindTooltipForDates() {
 

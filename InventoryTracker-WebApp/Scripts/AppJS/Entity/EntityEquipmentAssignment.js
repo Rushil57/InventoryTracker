@@ -1084,3 +1084,14 @@ $(function () {
     }).trigger("update");
     
 });
+
+function exportDateRangeData() {
+    AddLoader();
+    window.location = "/Entity/EntityEquipmentAssignDateRangeExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim();
+    setTimeout(function () { RemoveLoader(); }, 2000);
+}
+
+function sampleFileDateRangeImportDownload() {
+    $("#importDateRange").popover('hide')
+    window.location.href = '/ExcelFiles/EntityEquipmentAssignDateRangeSample.xlsx';
+}
