@@ -38,7 +38,7 @@ $(document).ready(function () {
             addEntityHeader();
         }
     })
-    $('#property , #export ,#sampleFile, #entityCC').tooltip();
+    $('#property , #export ,#sampleFile, #entityCC ,#exportDateRange').tooltip();
 
     if ($('#bulkImport').length > 0) {
         var popover = new bootstrap.Popover(document.querySelector('#bulkImport'), {
@@ -53,6 +53,14 @@ $(document).ready(function () {
             container: 'body',
             html: true,
             content: document.getElementById('sampleFileImport'),
+        })
+    }
+
+    if ($('#importDateRange').length > 0) {
+        var popover2 = new bootstrap.Popover(document.querySelector('#importDateRange'), {
+            container: 'body',
+            html: true,
+            content: document.getElementById('sampleFileDateRangeImport'),
         })
     }
 
@@ -713,10 +721,13 @@ function divEntityHDRLoad(element) {
 
 
 var isBulkImport = false;
+var isDateRangeImport = false;
+
 function importData() {
     $("#import").popover('hide')
     $("#file").val('');
     $('#importExcel').modal('show');
+    $('#operationOptions').attr('hidden', true);
     isBulkImport = false;
 }
 function importBulkData() {
@@ -724,6 +735,15 @@ function importBulkData() {
     $('#importExcel').modal('show');
     isBulkImport = true;
     $("#bulkImport").popover('hide');
+    $('#operationOptions').attr('hidden', true);
+}
+
+function importDateRangeData() {
+    importData();
+    $("#importDateRange").popover('hide');
+    $('#operationOptions').attr('hidden', false);
+    $('#AddRows').prop('checked', true)
+    isDateRangeImport = true;
 }
 $("#file").change(function () {
     var fileExtension = ['xls', 'xlsx', 'csv'];

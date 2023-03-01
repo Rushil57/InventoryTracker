@@ -6,8 +6,16 @@
                 <h6 class="modal-title" id="importLabel">Import</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" style="height: 70px; overflow: auto;" id="importModelBody">
+            <div class="modal-body" style="height: 95px; overflow: auto;" id="importModelBody">
                 <input type="file" id="file" class="form-control">
+                <div id="operationOptions" hidden>
+                    <input checked type="radio" id="AddRows" name="operationOptions" value="0">
+                    <label for="AddRows">Add Rows</label>
+                    <input type="radio" id="UpdateRows" name="operationOptions" value="1">
+                    <label for="UpdateRows">Update Rows</label>
+                    <input type="radio" id="AddUpdateRows" name="operationOptions" value="2">
+                    <label for="AddUpdateRows">Add/Update Rows</label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
