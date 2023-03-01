@@ -589,6 +589,11 @@ namespace InventoryTracker_WebApp.Controllers
                     int equipmentID = 0;
                     foreach (var item in e)
                     {
+                        if (item.Key == "EQUIP_ID")
+                        {
+                            equipmentID = item.Value;
+                            continue;
+                        }
                         sl.SetColumnStyle(j, sLStyleColor);
                         sl.AutoFitColumn(j);
                         if (i == 2)
@@ -603,10 +608,6 @@ namespace InventoryTracker_WebApp.Controllers
                             sl.SetCellValue(i, j, item.Value == null ? "" : item.Value.ToString());
                         }
                         j++;
-                        if (item.Key == "EQUIP_ID")
-                        {
-                            equipmentID = item.Value;
-                        }
                     }
                     if (i == 2)
                     {
@@ -712,12 +713,12 @@ namespace InventoryTracker_WebApp.Controllers
                                 }
                                 else
                                 {
-                                    if (columnHeader[0].Trim().ToString().ToLower() != "equip_id" || columnHeader[1].Trim().ToString().ToLower() != "equip_type" || columnHeader[2].Trim().ToString().ToLower() != "vendor" || columnHeader[3].Trim().ToString().ToLower() != "unit_id" || columnHeader.Count == 4)
+                                    if (columnHeader[0].Trim().ToString().ToLower() != "equip_type" || columnHeader[1].Trim().ToString().ToLower() != "vendor" || columnHeader[2].Trim().ToString().ToLower() != "unit_id" || columnHeader.Count == 3)
                                     {
                                         isValidColHDR = false;
                                     }
 
-                                    for (int colHDR = 4; colHDR < columnHeader.Count; colHDR++)
+                                    for (int colHDR = 3; colHDR < columnHeader.Count; colHDR++)
                                     {
                                         if (columnHeader[colHDR].Trim().ToString().ToLower() != "entity name")
                                         {
