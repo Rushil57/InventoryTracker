@@ -743,7 +743,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
         #region Equipment Entity Assign Date Range Export - Import
 
-        public bool UpdateInsertENTEQUDateRangeASS(string startDate, List<string> columnHeader, List<string> values, int operation, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName)
+        public bool UpdateInsertENTEQUDateRangeASS(string startDate, List<string> columnHeader, List<string> values, int operation, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName,out string totalNewUpdated)
         {
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             var date = Convert.ToDateTime(startDate).ToString("MM/d/yyyy").Replace("-", "/");
@@ -755,7 +755,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 string newInvalidEntity = string.Empty;
                 var query = string.Empty;
                 var firstIndexOfEntityName = columnHeader.IndexOf("Entity Name");
-
+                totalNewUpdated = "";
                 if (operation == 0)
                 {
                     query = "Declare @entIDList varchar(max)=''";
@@ -801,6 +801,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 else if (operation == 1)
                 {
                     query = string.Empty;
+                    query = "Declare @entIDList varchar(max)=''";
                     for (int i = firstIndexOfEntityName; i < values.Count; i = i + 3)
                     {
                         if (!string.IsNullOrEmpty(values[i]) && !string.IsNullOrEmpty(values[i + 1]) && !string.IsNullOrEmpty(values[i + 2]) && (Convert.ToDateTime(values[i + 1]) < Convert.ToDateTime(values[i + 2])))
@@ -813,7 +814,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                             {
                                 var sDate = Convert.ToDateTime(values[i + 1]).ToString("MM/d/yyyy").Replace("-", "/");
                                 var eDate = Convert.ToDateTime(values[i + 2]).ToString("MM/d/yyyy").Replace("-", "/");
-                                query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + values[i].Replace("'", "''") + "') and Equip_ID = (SELECT TOP (1) [EQUIP_ID] FROM [EQUIPMENT_HDR] where EQUIP_TYPE ='" + values[0].Replace("'", "''") + "' and VENDOR='" + values[1].Replace("'", "''") + "' and UNIT_ID = '" + values[2].Replace("'", "''") + "'))  >= 1 BEGIN WITH CTE AS (SELECT TOP 1 * FROM EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + values[i].Replace("'", "''") + "') and Equip_ID = (SELECT TOP(1)[EQUIP_ID] FROM[EQUIPMENT_HDR] where EQUIP_TYPE = '" + values[0].Replace("'", "''") + "' and VENDOR='" + values[1].Replace("'", "''") + "' and UNIT_ID = '" + values[2].Replace("'", "''") + "') ORDER BY EQUIP_ENT_ID DESC )UPDATE CTE SET START_DATE = '" + sDate + "' ,END_DATE ='" + eDate + "' ; END ";
+                                query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + values[i].Replace("'", "''") + "') and Equip_ID = (SELECT TOP (1) [EQUIP_ID] FROM [EQUIPMENT_HDR] where EQUIP_TYPE ='" + values[0].Replace("'", "''") + "' and VENDOR='" + values[1].Replace("'", "''") + "' and UNIT_ID = '" + values[2].Replace("'", "''") + "'))  >= 1 BEGIN WITH CTE AS (SELECT TOP 1 * FROM EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '" + values[i].Replace("'", "''") + "') and Equip_ID = (SELECT TOP(1)[EQUIP_ID] FROM[EQUIPMENT_HDR] where EQUIP_TYPE = '" + values[0].Replace("'", "''") + "' and VENDOR='" + values[1].Replace("'", "''") + "' and UNIT_ID = '" + values[2].Replace("'", "''") + "') ORDER BY EQUIP_ENT_ID DESC )UPDATE CTE SET START_DATE = '" + sDate + "' ,END_DATE ='" + eDate + "' SET @entIDList += CONVERT(varchar(100), (select top 1 ENT_ID from ENTITY_HDR where ENT_NAME='" + values[i].Replace("'", "''") + "')) + ','; END ";
                             }
                         }
                     }
@@ -832,8 +833,10 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
                     if (!string.IsNullOrEmpty(query))
                     {
+                        query += "select @entIDList;";
                         var isUpdated = connection.Query<string>(query).ToList();
                         totalNewAssigned = null;
+                        totalNewUpdated = isUpdated[0];
                         return true;
                     }
                 }

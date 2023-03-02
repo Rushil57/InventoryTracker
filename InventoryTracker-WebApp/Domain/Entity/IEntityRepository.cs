@@ -32,7 +32,7 @@ namespace InventoryTracker_WebApp.Domain.Entity
         int GetEntityHeaderRowCount();
 
         #region Entity Equipment Assign Date Range Export - Import
-        bool UpdateInsertENTEQUDateRangeASS(string startDate, List<string> columnHeader, List<string> values, int operation, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName);
+        bool UpdateInsertENTEQUDateRangeASS(string startDate, List<string> columnHeader, List<string> values, int operation, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName, out string totalNewUpdated);
         #endregion
     }
 }

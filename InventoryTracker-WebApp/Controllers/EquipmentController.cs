@@ -916,6 +916,8 @@ namespace InventoryTracker_WebApp.Controllers
             int gtOneAssign = 0;
             int excelInvalidUnitIDCount = 0;
             bool isValidColHDR = true;
+            string excelTotalUpdated = string.Empty;
+            int excelUpdatedCount = 0;
 
             path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
             path += @"\EquipmentEntityAssignDateRangeImport" + DateTime.Now.Ticks + ".xlsx";
@@ -977,10 +979,11 @@ namespace InventoryTracker_WebApp.Controllers
                                 }
                                 if (i != 2)
                                 {
-                                    var isUpdated = _equipmentRepository.UpdateInsertEQUENTDateRangeASS(startDate.ToShortDateString(), columnHeader, values, operation, out string totalNewAssigned, out int totalRemoved, out string invalidUnitID);
+                                    var isUpdated = _equipmentRepository.UpdateInsertEQUENTDateRangeASS(startDate.ToShortDateString(), columnHeader, values, operation, out string totalNewAssigned, out int totalRemoved, out string invalidUnitID, out string totalNewUpdated);
                                     excelTotalAssign += totalNewAssigned;
                                     excelTotalRemove = excelTotalRemove + totalRemoved;
                                     excelInvalidUnitID += invalidUnitID;
+                                    excelTotalUpdated += totalNewUpdated;
                                 }
                                 else
                                 {
@@ -1014,10 +1017,15 @@ namespace InventoryTracker_WebApp.Controllers
                             excelInvalidUnitID = excelInvalidUnitID.Substring(0, excelInvalidUnitID.Length - 1);
                             excelInvalidUnitIDCount = excelInvalidUnitID.Split(',').Count();
                         }
+                        if (!string.IsNullOrEmpty(excelTotalUpdated))
+                        {
+                            var totalUpdated = excelTotalUpdated.Substring(0, excelTotalUpdated.Length - 1).Split(',');
+                            excelUpdatedCount = totalUpdated.Count();
+                        }
                         fs.Close();
                     }
                 }
-                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidUnitID = excelInvalidUnitID, excelInvalidUnitIDCount = excelInvalidUnitIDCount, data = "" });
+                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidUnitID = excelInvalidUnitID, excelInvalidUnitIDCount = excelInvalidUnitIDCount, data = "", excelUpdatedCount = excelUpdatedCount });
             }
             catch (Exception e)
             {

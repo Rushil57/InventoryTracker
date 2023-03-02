@@ -639,11 +639,12 @@ function importExcel() {
                     $('#importExcel').modal('hide');
                     loadEntityHDR('', false);
                     loadEquipmentHDR('', false);
-                    $('#summaryBody').html(' <h6><label>How many new pieces of entity have been assigned: </label>&nbsp;<label id="excelTotalNewAssign"></label><br/> <label>How many new pieces of entity have been removed: </label>&nbsp;<label id="excelTotalRemove"></label><br/><label>How many new pieces of entity have > 1 assignment: </label>&nbsp;<label id="gtOneAssign"></label><br/><label>How many total record loaded:</label>&nbsp;<label id="totalRecords"></label><br/><label>How many records have invalid entity units: </label>&nbsp;<label id="invalidRecords"></label></h6>');
+                    $('#summaryBody').html(' <h6><label>How many new pieces of entity have been assigned: </label>&nbsp;<label id="excelTotalNewAssign"></label><br/> <label>How many new pieces of entity have been removed: </label>&nbsp;<label id="excelTotalRemove"></label><br/><label>How many new pieces of entity have > 1 assignment: </label>&nbsp;<label id="gtOneAssign"></label><br/><label>How many total record loaded:</label>&nbsp;<label id="totalRecords"></label><br/><label>How many records have invalid entity units: </label>&nbsp;<label id="invalidRecords"></label><br/><label>How many records have been updated: </label>&nbsp;<label id="updatedRecords"></label></h6>');
                     $('#excelTotalNewAssign').text(newData.excelTotalNewAssign);
                     $('#excelTotalRemove').text(newData.excelTotalRemove);
                     $('#gtOneAssign').text(newData.gtOneAssign)
                     $('#totalRecords').text(newData.totalRecords)
+                    $('#updatedRecords').text(newData.excelUpdatedCount)
                     var invalidRecordText = newData.excelInvalidEntityNameCount;
                     if (newData.excelInvalidEntityNameCount > 0) {
                         invalidRecordText += " [" + newData.excelInvalidEntityName + "]";
