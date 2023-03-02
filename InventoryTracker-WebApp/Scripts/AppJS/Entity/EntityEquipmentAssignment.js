@@ -609,6 +609,53 @@ function importExcel() {
         alert('Please select file.')
         return;
     }
+    else if (isDateRangeImport) {
+        var fileUpload = $("#file").get(0);
+        var files = fileUpload.files;
+        var formData = new FormData();
+
+        formData.append("file", files[0]);
+        formData.append("operation", $("input[type='radio'][name='operationOptions']:checked").val());
+        $.ajax({
+            before: AddLoader(),
+            complete: function () {
+                setTimeout(function () {
+                    RemoveLoader();
+                }, 500);
+            },
+            type: "POST",
+            url: '/Entity/EntityEquipmentAssignDateRangeImport',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                var newData = JSON.parse(data);
+                if (newData.data != '') {
+                    alert(newData.data);
+                }
+                if (newData.IsValid) {
+                    isDateRangeImport = false;
+                    alert('Data updated successfully.')
+                    $('#importExcel').modal('hide');
+                    loadEntityHDR('', false);
+                    loadEquipmentHDR('', false);
+                    $('#summaryBody').html(' <h6><label>How many new pieces of entity have been assigned: </label>&nbsp;<label id="excelTotalNewAssign"></label><br/> <label>How many new pieces of entity have been removed: </label>&nbsp;<label id="excelTotalRemove"></label><br/><label>How many new pieces of entity have > 1 assignment: </label>&nbsp;<label id="gtOneAssign"></label><br/><label>How many total record loaded:</label>&nbsp;<label id="totalRecords"></label><br/><label>How many records have invalid entity units: </label>&nbsp;<label id="invalidRecords"></label></h6>');
+                    $('#excelTotalNewAssign').text(newData.excelTotalNewAssign);
+                    $('#excelTotalRemove').text(newData.excelTotalRemove);
+                    $('#gtOneAssign').text(newData.gtOneAssign)
+                    $('#totalRecords').text(newData.totalRecords)
+                    var invalidRecordText = newData.excelInvalidEntityNameCount;
+                    if (newData.excelInvalidEntityNameCount > 0) {
+                        invalidRecordText += " [" + newData.excelInvalidEntityName + "]";
+                    }
+                    $('#invalidRecords').text(invalidRecordText);
+                    $('#summary').modal('show');
+                }
+            },
+            error: function (e1, e2, e3) {
+            }
+        });
+    }
     else {
         var fileUpload = $("#file").get(0);
         var files = fileUpload.files;

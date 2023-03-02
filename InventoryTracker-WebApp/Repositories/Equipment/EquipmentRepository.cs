@@ -891,7 +891,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                     query = string.Empty;
                     for (int i = firstIndexOfUnitID; i < values.Count; i = i + 3)
                     {
-                        if (!string.IsNullOrEmpty(values[i]) && !string.IsNullOrEmpty(values[i + 1]) && !string.IsNullOrEmpty(values[i + 2]) && (Convert.ToDateTime(values[i + 1]) < Convert.ToDateTime(values[i + 2])))
+                        if (!string.IsNullOrEmpty(values[i]) && !string.IsNullOrEmpty(values[i + 1]) && !string.IsNullOrEmpty(values[i + 2]) && (Convert.ToDateTime(values[i + 1]) <= Convert.ToDateTime(values[i + 2])))
                         {
                             if (GetAllEquipmentHeaders(values[i]).Count == 0)
                             {
@@ -901,7 +901,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                             {
                                 var sDate = Convert.ToDateTime(values[i + 1]).ToString("MM/d/yyyy").Replace("-", "/");
                                 var eDate = Convert.ToDateTime(values[i + 2]).ToString("MM/d/yyyy").Replace("-", "/");
-                                query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + values[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "'))  = 1 BEGIN Update [EQUIPMENT_ENTITY_ASSIGNMENT]  set START_DATE = '"+sDate+"' , END_DATE ='"+eDate+"' where ENT_ID = "+ values[0] +" and EQUIP_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "')END ";
+                                query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + values[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "'))  >= 1 BEGIN WITH CTE AS ( SELECT TOP 1 * FROM EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + values[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "') ORDER BY EQUIP_ENT_ID DESC) Update CTE SET START_DATE = '" + sDate + "', END_DATE ='" + eDate + "';END ";
                             }
                         }
                     }
@@ -930,7 +930,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                     query = "Declare @equipIDList varchar(max)=''";
                     for (int i = firstIndexOfUnitID; i < values.Count; i = i + 3)
                     {
-                        if (!string.IsNullOrEmpty(values[i]) && !string.IsNullOrEmpty(values[i + 1]) && !string.IsNullOrEmpty(values[i + 2]) && (Convert.ToDateTime(values[i + 1]) < Convert.ToDateTime(values[i + 2])))
+                        if (!string.IsNullOrEmpty(values[i]) && !string.IsNullOrEmpty(values[i + 1]) && !string.IsNullOrEmpty(values[i + 2]) && (Convert.ToDateTime(values[i + 1]) <= Convert.ToDateTime(values[i + 2])))
                         {
                             if (GetAllEquipmentHeaders(values[i]).Count == 0)
                             {
@@ -940,7 +940,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                             {
                                 var sDate = Convert.ToDateTime(values[i + 1]).ToString("MM/d/yyyy").Replace("-", "/");
                                 var eDate = Convert.ToDateTime(values[i + 2]).ToString("MM/d/yyyy").Replace("-", "/");
-                                query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + values[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "'))  = 1 BEGIN IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + values[0] + "  and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "') and (SELECT CAST(START_DATE AS DATE)) = '"+sDate+"' and (SELECT CAST(END_DATE AS DATE)) = '"+eDate+"') = 0 BEGIN Update EQUIPMENT_ENTITY_ASSIGNMENT SET END_DATE = '"+sDate+"' where ENT_ID = " + values[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "'); SET @equipIDList += CONVERT(varchar(100), (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "')) + ','; INSERT INTO [EQUIPMENT_ENTITY_ASSIGNMENT]([EQUIP_ID],[ENT_ID],[START_DATE],[END_DATE]) VALUES((select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "')," + values[0] + ",'" + sDate + "','" + eDate + "'); END END ";
+                                query += " IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + values[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "'))  >= 1 BEGIN IF (select count(*) from EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + values[0] + "  and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "') and (SELECT CAST(START_DATE AS DATE)) = '" + sDate + "' and (SELECT CAST(END_DATE AS DATE)) = '" + eDate + "') = 0 BEGIN WITH CTE AS ( SELECT TOP 1 * FROM EQUIPMENT_ENTITY_ASSIGNMENT where ENT_ID = " + values[0] + " and Equip_ID = (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "') ORDER BY EQUIP_ENT_ID DESC) Update CTE SET END_DATE = '" + sDate + "'; SET @equipIDList += CONVERT(varchar(100), (select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "')) + ','; INSERT INTO [EQUIPMENT_ENTITY_ASSIGNMENT]([EQUIP_ID],[ENT_ID],[START_DATE],[END_DATE]) VALUES((select top 1 EQUIP_ID from EQUIPMENT_HDR where UNIT_ID = '" + values[i].Replace("'", "''") + "')," + values[0] + ",'" + sDate + "','" + eDate + "'); END END ";
                             }
                         }
                     }
