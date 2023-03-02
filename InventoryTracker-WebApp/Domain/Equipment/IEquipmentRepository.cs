@@ -40,5 +40,9 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         #region Equipment Calender Control
         List<EquipmentEntityAssignment> GetEquipmentEntityAssignmentByYear(string year,int entityID,int equipID);
         #endregion
+
+        #region Equipment Entity Assign Date Range Export - Import
+        bool UpdateInsertEQUENTDateRangeASS(string startDate, List<string> columnHeader, List<string> values,int operation, out string totalNewAssigned, out int totalRemoved, out string invalidUnitID);
+        #endregion
     }
 }

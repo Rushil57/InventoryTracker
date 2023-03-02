@@ -392,6 +392,8 @@
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker3.css.map" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker3.standalone.css.map" />
     <Content Include="ExcelFiles\Entity.xlsx" />
+    <Content Include="ExcelFiles\EquipmentEntityAssignDateRangeSample.xlsx" />
+    <Content Include="ExcelFiles\EntityEquipmentAssignDateRangeSample.xlsx" />
     <None Include="Scripts\jquery-3.6.1.intellisense.js" />
     <Content Include="Scripts\datatables-responsive\dataTables.responsive.js" />
     <Content Include="Scripts\datatables-responsive\dataTables.responsive.min.js" />

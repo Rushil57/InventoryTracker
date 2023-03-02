@@ -59,7 +59,7 @@ namespace InventoryTracker_WebApp.Controllers
                 Equipment_Type = x.Key.Equipment_Type
             }).ToList();
 
-            return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTemplates, uniqueEquipmentTemplates = uniqueEquipmentTemplates, uniquePropName = uniquePropName, uniquePropNameEqu= uniquePropNameEqu });
+            return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTemplates, uniqueEquipmentTemplates = uniqueEquipmentTemplates, uniquePropName = uniquePropName, uniquePropNameEqu = uniquePropNameEqu });
         }
         public string GetEquipmentHeaders(string searchString, int startIndex, int endIndex)
         {
@@ -71,7 +71,7 @@ namespace InventoryTracker_WebApp.Controllers
         {
             List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeadersfromEquipmentEntity(searchString, startIndex, endIndex, startDate).ToList();
             int totalCount = _equipmentRepository.GetTotalCountEquipmentHeaders();
-            return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentHeaders,totalCount = totalCount });
+            return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentHeaders, totalCount = totalCount });
         }
 
         [HttpPost]
@@ -135,7 +135,7 @@ namespace InventoryTracker_WebApp.Controllers
         {
             if (!string.IsNullOrEmpty(propName))
             {
-                List<EquipmentDetail> equipmentDetails = _equipmentRepository.EquipmentValueByPropName(propName,date);
+                List<EquipmentDetail> equipmentDetails = _equipmentRepository.EquipmentValueByPropName(propName, date);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentDetails });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
@@ -153,13 +153,13 @@ namespace InventoryTracker_WebApp.Controllers
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
         }
-        
+
         [HttpGet]
         public string GetAllEquipmentTemplateDetails()
         {
-                List<EquipmentDetail> equipmentTempDetails = _equipmentRepository.GetAllEquipmentTemplateDetails();
-                List<EntityHeader> entityHeaders = _equipmentRepository.GetAllEquipmentEntityAssignment();
-                return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTempDetails, entityHeaders = entityHeaders });   
+            List<EquipmentDetail> equipmentTempDetails = _equipmentRepository.GetAllEquipmentTemplateDetails();
+            List<EntityHeader> entityHeaders = _equipmentRepository.GetAllEquipmentEntityAssignment();
+            return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTempDetails, entityHeaders = entityHeaders });
         }
 
         [HttpPost]
@@ -192,11 +192,11 @@ namespace InventoryTracker_WebApp.Controllers
         }
 
         [HttpPost]
-        public string SaveEquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate,int equipEntID)
+        public string SaveEquipmentEntityAssignment(int entityID, int equipID, string startDate, int isDelete, string endDate, int equipEntID)
         {
             if (equipID > 0 && entityID > 0)
             {
-                bool isAssigned = _equipmentRepository.EquipmentEntityAssignment(entityID, equipID, startDate, isDelete, endDate,equipEntID);
+                bool isAssigned = _equipmentRepository.EquipmentEntityAssignment(entityID, equipID, startDate, isDelete, endDate, equipEntID);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = isAssigned });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
@@ -329,7 +329,7 @@ namespace InventoryTracker_WebApp.Controllers
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        
+
                         SLDocument sheet = new SLDocument(fs);
                         var startDate = (sheet.GetCellValueAsDateTime(1, 3));
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -417,7 +417,7 @@ namespace InventoryTracker_WebApp.Controllers
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        
+
                         SLDocument sheet = new SLDocument(fs);
 
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -668,7 +668,7 @@ namespace InventoryTracker_WebApp.Controllers
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        
+
                         SLDocument sheet = new SLDocument(fs);
 
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -770,18 +770,268 @@ namespace InventoryTracker_WebApp.Controllers
         #endregion
 
         #region Equipment Calender Control
-        public string GetEquipmentEntityAssignmentByYear(string year,int entityID=0, int equipID=0)
+        public string GetEquipmentEntityAssignmentByYear(string year, int entityID = 0, int equipID = 0)
         {
             if (!string.IsNullOrEmpty(year))
             {
-                var data = _equipmentRepository.GetEquipmentEntityAssignmentByYear(year, entityID,equipID);
+                var data = _equipmentRepository.GetEquipmentEntityAssignmentByYear(year, entityID, equipID);
                 data.ForEach(x => x.RendomColor = System.Drawing.Color.FromArgb
-                (rnd.Next(0,256), rnd.Next(0,256), rnd.Next(0,256)).Name.ToString());
+                (rnd.Next(0, 256), rnd.Next(0, 256), rnd.Next(0, 256)).Name.ToString());
                 return JsonConvert.SerializeObject(new { IsValid = true, data = data });
             }
             return JsonConvert.SerializeObject(new { IsValid = false, data = false });
         }
 
+        #endregion
+
+        #region Equipment Entity Assign Date Range Export - Import
+
+        public FileResult EquipmentEntityAssignDateRangeExport(string startDate, string searchString)
+        {
+            MemoryStream ms = new MemoryStream();
+            using (SLDocument sl = new SLDocument())
+            {
+                var entities = _equipmentRepository.ExportEquipmentEntityAssign(startDate, searchString, string.Empty);
+                var equipmentHdr = _equipmentRepository.GetAllEquipmentHeaders();
+                var equipment_ent_assignment = _equipmentRepository.GetAllEquipment_Entity_AssignmentByDate(startDate);
+
+                SLStyle sLStyle = new SLStyle();
+                sLStyle.Protection.Locked = false;
+                sLStyle.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.White, System.Drawing.Color.White);
+
+                sLStyle.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.LeftBorder.Color = System.Drawing.Color.Black;
+
+                sLStyle.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.RightBorder.Color = System.Drawing.Color.Black;
+
+                sLStyle.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.BottomBorder.Color = System.Drawing.Color.Black;
+
+                sLStyle.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyle.Border.TopBorder.Color = System.Drawing.Color.Black;
+                sLStyle.Font.Bold = false;
+
+                SLSheetProtection sp = new SLSheetProtection();
+                sp.AllowEditObjects = true;
+                SLStyle sLStyleColor = new SLStyle();
+                sLStyleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGray, System.Drawing.Color.LightGray);
+
+                sLStyleColor.Font.Bold = true;
+
+                sLStyleColor.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.LeftBorder.Color = System.Drawing.Color.Black;
+
+                sLStyleColor.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.RightBorder.Color = System.Drawing.Color.Black;
+
+                sLStyleColor.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.BottomBorder.Color = System.Drawing.Color.Black;
+
+                sLStyleColor.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
+                sLStyleColor.Border.TopBorder.Color = System.Drawing.Color.Black;
+
+                sl.SetCellValue(1, 2, "Start Date:");
+                sl.SetCellValue(1, 3, startDate);
+
+                int i = 2;
+                sl.SetColumnStyle(1, sLStyleColor);
+                sl.SetColumnStyle(i + 1, sLStyleColor);
+                sl.AutoFitColumn(1);
+                int j = 0;
+                foreach (var e in entities)
+                {
+                    j = 1;
+                    int entID = 0;
+                    sl.SetColumnStyle(i, sLStyleColor);
+                    sl.AutoFitColumn(j);
+
+                    foreach (var item in e)
+                    {
+                        if (i == 2)
+                        {
+                            sl.RemoveCellStyle((i + 1), j);
+                            sl.SetCellValue(i, j, item.Key);
+                            sl.SetCellValue((i + 1), j, item.Value == null ? "" : item.Value.ToString());
+                        }
+                        else
+                        {
+                            sl.RemoveCellStyle(i, j);
+                            sl.SetCellValue(i, j, item.Value == null ? "" : item.Value.ToString());
+                        }
+                        j++;
+                        if (item.Key == "ENT_ID")
+                        {
+                            entID = item.Value;
+                        }
+                    }
+                    if (i == 2)
+                    {
+                        i++;
+                    }
+                    sl.SetColumnStyle(j, j + 200, sLStyle);
+                    var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entID).Select(x => x.EQUIP_ID).ToList();
+                    sl.SetCellValue(2, j, "Unit ID");
+                    foreach (var equipID in equipIDList)
+                    {
+                        sl.SetCellValue(i, j, equipmentHdr.Where(x => x.EQUIP_ID == equipID).Select(x => x.UNIT_ID).FirstOrDefault());
+                        sl.SetCellValue(2, j, "Unit ID");
+                        sl.AutoFitColumn(j);
+                        j++;
+
+                        sl.SetCellValue(i, j, equipment_ent_assignment.Where(x => x.EQUIP_ID == equipID && x.ENT_ID == entID).Select(x => x.START_DATE.ToShortDateString()).FirstOrDefault());
+                        sl.SetCellValue(2, j, "Start date");
+                        sl.AutoFitColumn(j);
+                        j++;
+
+                        sl.SetCellValue(i, j, equipment_ent_assignment.Where(x => x.EQUIP_ID == equipID && x.ENT_ID == entID).Select(x => x.END_DATE.ToShortDateString()).FirstOrDefault());
+                        sl.SetCellValue(2, j, "End date");
+                        sl.AutoFitColumn(j);
+                        j++;
+                    }
+                    i++;
+                }
+                sl.AutoFitColumn(1, j);
+                sLStyleColor.Protection.Locked = true;
+                sl.SetRowStyle(1, sLStyleColor);
+                sl.ProtectWorksheet(sp);
+                sl.SaveAs(ms);
+            }
+            ms.Position = 0;
+
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EquipmentEntityAssignDateRangeExport.xlsx");
+        }
+
+        [HttpPost]
+        public string EquipmentEntityAssignDateRangeImport(HttpPostedFileBase file, int operation)
+        {
+
+            var fileExt = Path.GetExtension(file.FileName);
+            string path = string.Empty;
+            string excelTotalAssign = string.Empty;
+            string excelInvalidUnitID = string.Empty;
+            int excelTotalRemove = 0;
+            int totalRecords = 0;
+            int excelTotalNewAssign = 0;
+            int gtOneAssign = 0;
+            int excelInvalidUnitIDCount = 0;
+            bool isValidColHDR = true;
+
+            path = AppDomain.CurrentDomain.BaseDirectory.ToString() + "ExcelFiles";
+            path += @"\EquipmentEntityAssignDateRangeImport" + DateTime.Now.Ticks + ".xlsx";
+            file.SaveAs(path);
+            FileStream fs = new FileStream(path, FileMode.Open);
+            int CurrentRow = 0;
+            try
+            {
+                if (fileExt == ".xls" || fileExt == ".xlsx" || fileExt == ".csv")
+                {
+                    List<string> columnHeader = new List<string>();
+                    using (SLDocument sl = new SLDocument())
+                    {
+
+                        SLDocument sheet = new SLDocument(fs);
+
+                        SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
+                        var startDate = (sheet.GetCellValueAsDateTime(1, 3));
+
+                        for (int i = 2; i <= stats.EndRowIndex; i++)
+                        {
+                            CurrentRow = i;
+                            var headerCellValue = (sheet.GetCellValueAsString(i, 1));
+                            if (headerCellValue == null)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                totalRecords = i - 2;
+                                List<string> values = new List<string>();
+                                for (int j = 1; j <= stats.EndColumnIndex; j++)
+                                {
+                                    var cellValue = (sheet.GetCellValueAsString(i, j));
+                                    if (i == 2)
+                                    {
+                                        if (!string.IsNullOrEmpty(cellValue))
+                                        {
+                                            columnHeader.Add(cellValue);
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (columnHeader.Count < j)
+                                        {
+                                            break;
+                                        }
+                                        if (!string.IsNullOrEmpty(cellValue) && ( columnHeader[j - 1].ToLower().ToString() == "start date" || columnHeader[j - 1].ToLower().ToString() == "end date"))
+                                        {
+                                            cellValue = (sheet.GetCellValueAsDateTime(i, j)).ToString();
+                                        }
+                                        var valueOFCell = cellValue == null ? "" : cellValue.ToString();
+                                        values.Add(valueOFCell.Trim());
+                                    }
+                                }
+                                if (i != 2)
+                                {
+                                    var isUpdated = _equipmentRepository.UpdateInsertEQUENTDateRangeASS(startDate.ToShortDateString(), columnHeader, values, operation, out string totalNewAssigned, out int totalRemoved, out string invalidUnitID);
+                                    excelTotalAssign += totalNewAssigned;
+                                    excelTotalRemove = excelTotalRemove + totalRemoved;
+                                    excelInvalidUnitID += invalidUnitID;
+                                }
+                                else
+                                {
+                                    if (columnHeader[0].Trim().ToString().ToLower() != "ent_id" || columnHeader[1].Trim().ToString().ToLower() != "ent_name" || columnHeader.Count == 2)
+                                    {
+                                        isValidColHDR = false;
+                                    }
+                                    for (int colHDR = 2; colHDR < columnHeader.Count; colHDR = colHDR + 3)
+                                    {
+                                        if (columnHeader[colHDR].Trim().ToString().ToLower() != "unit id" || columnHeader[colHDR + 1].Trim().ToString().ToLower() != "start date" || columnHeader[colHDR + 2].Trim().ToString().ToLower() != "end date")
+                                        {
+                                            isValidColHDR = false;
+                                        }
+                                    }
+                                    if (!isValidColHDR)
+                                    {
+                                        fs.Close();
+                                        return JsonConvert.SerializeObject(new { IsValid = false, data = "This excel file is not valid for Equipment Entity date range assign import. Please view sample file!" });
+                                    }
+                                }
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(excelTotalAssign))
+                        {
+                            var totalAssignment = excelTotalAssign.Substring(0, excelTotalAssign.Length - 1).Split(',');
+                            gtOneAssign = excelTotalAssign.Split(',').GroupBy(x => x).Where(g => g.Count() > 1).Count();
+                            excelTotalNewAssign = totalAssignment.Count();
+                        }
+                        if (!string.IsNullOrEmpty(excelInvalidUnitID))
+                        {
+                            excelInvalidUnitID = excelInvalidUnitID.Substring(0, excelInvalidUnitID.Length - 1);
+                            excelInvalidUnitIDCount = excelInvalidUnitID.Split(',').Count();
+                        }
+                        fs.Close();
+                    }
+                }
+                return JsonConvert.SerializeObject(new { IsValid = true, excelTotalNewAssign = excelTotalNewAssign, excelTotalRemove = excelTotalRemove, gtOneAssign = gtOneAssign, totalRecords = totalRecords, excelInvalidUnitID = excelInvalidUnitID, excelInvalidUnitIDCount = excelInvalidUnitIDCount, data = "" });
+            }
+            catch (Exception e)
+            {
+                fs.Close();
+                return JsonConvert.SerializeObject(new { IsValid = false, data = e.Message.ToString() + "Issue occured in excel row number : " + CurrentRow });
+            }
+            finally
+            {
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+            }
+        }
         #endregion
     }
 }
