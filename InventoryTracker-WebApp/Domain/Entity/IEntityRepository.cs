@@ -30,5 +30,9 @@ namespace InventoryTracker_WebApp.Domain.Entity
         bool InsertTemplate(List<string> columnHeader, List<string> values, bool isEntity);
         List<EntityDetail> GetAllEntityTemplateDetails();
         int GetEntityHeaderRowCount();
+
+        #region Entity Equipment Assign Date Range Export - Import
+        bool UpdateInsertENTEQUDateRangeASS(string startDate, List<string> columnHeader, List<string> values, int operation, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName);
+        #endregion
     }
 }

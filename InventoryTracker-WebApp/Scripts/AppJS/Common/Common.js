@@ -38,7 +38,7 @@ $(document).ready(function () {
             addEntityHeader();
         }
     })
-    $('#property,#propEquip ,#propEnitity,#divbulkImport,#divimport, #export ,#sampleFile, #entityCC', '#exportDateRange').tooltip();
+    $('#property,#propEquip ,#propEnitity,#divbulkImport,#divimport, #export ,#sampleFile, #entityCC, #exportDateRange').tooltip();
 
     if ($('#bulkImport').length > 0) {
         var popover = new bootstrap.Popover(document.querySelector('#bulkImport'), {
@@ -729,6 +729,7 @@ function importData() {
     $('#importExcel').modal('show');
     $('#operationOptions').attr('hidden', true);
     isBulkImport = false;
+    isDateRangeImport = false;
 }
 function importBulkData() {
     $("#file").val('');
@@ -736,6 +737,7 @@ function importBulkData() {
     isBulkImport = true;
     $("#bulkImport").popover('hide');
     $('#operationOptions').attr('hidden', true);
+    isDateRangeImport = false;
 }
 
 function importDateRangeData() {
