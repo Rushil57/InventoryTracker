@@ -221,7 +221,7 @@ function loadEquipmentHDR(searchString, searchflag) {
                     }
                 });
                 
-                $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
+                $("#totalCount").html("Displaying " + (rowCount-1) + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -347,7 +347,7 @@ function loadEntityHDR(searchString, searchflag) {
                         rowCount = rowCount + 1;
                     }
                 });
-                $("#totalCount1").html("Displaying " + rowCount + " out of " + data.totalCount);
+                $("#totalCount1").html("Displaying " + (rowCount-1) + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
