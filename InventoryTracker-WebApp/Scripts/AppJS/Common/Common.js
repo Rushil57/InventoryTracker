@@ -38,7 +38,7 @@ $(document).ready(function () {
             addEntityHeader();
         }
     })
-    $('#property , #export ,#sampleFile, #entityCC').tooltip();
+    $('#property,#propEquip ,#propEnitity,#divbulkImport,#divimport, #export ,#sampleFile, #entityCC').tooltip();
 
     if ($('#bulkImport').length > 0) {
         var popover = new bootstrap.Popover(document.querySelector('#bulkImport'), {
