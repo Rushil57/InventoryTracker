@@ -729,6 +729,7 @@ function importData() {
     $('#importExcel').modal('show');
     $('#operationOptions').attr('hidden', true);
     isBulkImport = false;
+    isDateRangeImport = false;
 }
 function importBulkData() {
     $("#file").val('');
@@ -736,6 +737,7 @@ function importBulkData() {
     isBulkImport = true;
     $("#bulkImport").popover('hide');
     $('#operationOptions').attr('hidden', true);
+    isDateRangeImport = false;
 }
 
 function importDateRangeData() {
