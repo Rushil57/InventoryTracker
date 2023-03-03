@@ -64,7 +64,7 @@ function loadEntityHDR(searchString, searchflag) {
         dataType: 'json',
         type: 'GET',
         async: false,
-        data: { 'searchString': searchString, 'startIndex': startIndexEntity, 'endIndex': endIndexEntity },
+        data: { 'searchString': searchString },
         success: function (data) {
             if (data.IsValid) {
                 var entityString = '';
@@ -165,10 +165,9 @@ function loadEntityHDR(searchString, searchflag) {
 //}
 
 function addEntityHeader() {
-    startIndexEntity = 0;
-    endIndexEntity = 30;
-    loadEntityHDR($('#searchEntityStr').val());
     addEntityColumn();
+    resizableTable();
+    sortableTable();
     $("#entityHDR tr").each(function (index) {
         if (index !== 0) {
             var row = $(this);
@@ -187,7 +186,6 @@ function addEntityHeader() {
             }
         }
     });
-    
 }
 
 

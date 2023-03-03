@@ -64,15 +64,15 @@ namespace InventoryTracker_WebApp.Controllers
 
             return JsonConvert.SerializeObject(new { IsValid = true, data = entityTemplates, uniqueEntityTemplates = uniqueEntityTemplates, uniquePropName = uniquePropName, uniquePropNameEnt= uniquePropNameEnt });
         }
-        public string GetEntityHeaders(string searchString, int startIndex, int endIndex)
+        public string GetEntityHeaders(string searchString)
         {
-            List<EntityHeader> entityHeaders = _entityRepository.GetEntityHeaders(searchString, startIndex, endIndex);
+            List<EntityHeader> entityHeaders = _entityRepository.GetEntityHeaders(searchString);
             int totalCount = _entityRepository.GetEntityHeaderRowCount();
             return JsonConvert.SerializeObject(new { IsValid = true, data = entityHeaders, totalCount = totalCount });
         }
-        public string GetEntityHeaderfromEntityEquipment(string searchString, int startIndex, int endIndex, string startDate)
+        public string GetEntityHeaderfromEntityEquipment(string searchString,string startDate)
         {
-            List<EntityHeader> entityHeaders = _entityRepository.GetEntityHeaderfromEntityEquipment(searchString, startIndex, endIndex, startDate);
+            List<EntityHeader> entityHeaders = _entityRepository.GetEntityHeaderfromEntityEquipment(searchString, startDate);
             int totalCount = _entityRepository.GetEntityHeaderRowCount();
             return JsonConvert.SerializeObject(new { IsValid = true, data = entityHeaders, totalCount = totalCount }) ;
         }

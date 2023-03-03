@@ -11,7 +11,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 {
     public class EntityRepository : IEntityRepository
     {
-        public List<EntityHeader> GetEntityHeaders(string searchString, int startIndex, int endIndex)
+        public List<EntityHeader> GetEntityHeaders(string searchString)
         {
             List<EntityHeader> entityHeaders = new List<EntityHeader>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -28,11 +28,11 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                         $" where ed.Ent_Value like '%" + searchString + "%'" +
                         $" or eh.ENT_TYPE like '%" + searchString + "%' " +
                         $" or eh.ENT_NAME like '%" + searchString + "%' " +
-                        $" or eq.UNIT_ID  like '%" + searchString + "%') t2 order by  CURRENT_TIMESTAMP offset " + startIndex + " rows FETCH NEXT 30 rows only";
+                        $" or eq.UNIT_ID  like '%" + searchString + "%') t2 ";
                 }
                 else
                 {
-                    query = "Select * From  (Select [ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR]) t2 order by  CURRENT_TIMESTAMP offset " + startIndex + " rows FETCH NEXT 30 rows only";
+                    query = "Select * From  (Select [ENT_ID] ,[ENT_TYPE] ,[ENT_NAME] ,[ASSIGNED] FROM [dbo].[ENTITY_HDR]) t2";
                 }
                 entityHeaders = connection.Query<EntityHeader>(query).ToList();
             }
@@ -46,7 +46,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
             return entityHeaders;
         }
-        public List<EntityHeader> GetEntityHeaderfromEntityEquipment(string searchString, int startIndex, int endIndex, string startDate)
+        public List<EntityHeader> GetEntityHeaderfromEntityEquipment(string searchString, string startDate)
         {
             List<EntityHeader> entityHeaders = new List<EntityHeader>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -67,7 +67,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                         $" left join Entity_Dtl  as ed on eh.ENT_ID = ed.ENT_ID" +
                         $" where ed.Ent_Value like '%" + searchString + "%'" +
                         $" or eh.ENT_TYPE like '%" + searchString + "%' " +
-                        $" or eh.ENT_NAME like '%" + searchString + "%') t2 order by  CURRENT_TIMESTAMP offset " + startIndex + " rows FETCH NEXT 30 rows only";
+                        $" or eh.ENT_NAME like '%" + searchString + "%') t2";
                 }
                 else
                 {
@@ -76,7 +76,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                     {
                         query += ", (SELECT count(*) FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea where eea.ENT_ID = eh.[ENT_ID] and ('" + startDate + "' between eea.Start_Date and eea.End_Date)) as [Active] ";
                     }
-                    query += " FROM [dbo].[ENTITY_HDR] as eh) t2 order by  CURRENT_TIMESTAMP offset " + startIndex + " rows FETCH NEXT 30 rows only";
+                    query += " FROM [dbo].[ENTITY_HDR] as eh) t2 ";
                 }
                 entityHeaders = connection.Query<EntityHeader>(query).ToList();
             }

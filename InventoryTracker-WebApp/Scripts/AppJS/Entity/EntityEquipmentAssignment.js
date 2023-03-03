@@ -45,7 +45,7 @@ function loadEntityHDR(searchString, searchflag) {
         dataType: 'json',
         type: 'GET',
         async: false,
-        data: { 'searchString': searchString, 'startIndex': startIndexEntity, 'endIndex': endIndexEntity, 'startDate': $('#mainDate').val() },
+        data: { 'searchString': searchString, 'startDate': $('#mainDate').val() },
         success: function (data) {
             if (data.IsValid) {
                 var entityString = '';
@@ -128,7 +128,8 @@ function loadEntityHDR(searchString, searchflag) {
                         rowCount = rowCount + 1;
                     }
                 });
-                $("#totalCount").html("Displaying " + (rowCount - 1) + " out of " + data.totalCount);
+                rowCount = rowCount > 0 ? rowCount - 1 : rowCount;
+                $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -158,7 +159,7 @@ function loadEquipmentHDR(searchString, searchflag) {
         dataType: 'json',
         type: 'GET',
         async: false,
-        data: { 'searchString': searchString, 'startIndex': startIndexEquip, 'endIndex': endIndexEquip },
+        data: { 'searchString': searchString},
         success: function (data) {
             if (data.IsValid) {
                 var equipmentString = '';
@@ -249,8 +250,8 @@ function loadEquipmentHDR(searchString, searchflag) {
                         rowCount = rowCount + 1;
                     }
                 });
-
-                $("#totalCount1").html("Displaying " + (rowCount - 1) + " out of " + data.totalCount);
+                rowCount = rowCount > 0 ? rowCount - 1 : rowCount;
+                $("#totalCount1").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -266,13 +267,11 @@ function addEquipmentHeader() {
             return;
         }
         startIndexEquip = 0;
-        endIndexEquip = 30;
         previousequipsearch = searchString;
         loadEquipmentHDR(searchString, true);
         return;
     } else {
         startIndexEquip = 0;
-        endIndexEquip = 30;
         loadEquipmentHDR('', true);
     }
     // loadEquipmentHDR('');
@@ -296,7 +295,6 @@ function addEquipmentHeader() {
     //        }
     //    }
     //});
-    addEntityColumn();
     $("#equipHDR").trigger("destroy", [false, function () {
         resizableTable();
         sortableTable();
@@ -580,7 +578,6 @@ function addEntityHeader() {
         loadEntityHDR(searchString, true);
     } else {
         startIndexEntity = 0;
-        endIndexEntity = 30;
         loadEntityHDR(searchString, false);
     }
 }

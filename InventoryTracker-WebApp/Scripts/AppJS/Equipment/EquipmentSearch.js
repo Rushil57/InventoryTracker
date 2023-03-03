@@ -70,7 +70,7 @@ function loadEquipmentHDR(searchString, searchflag) {
         dataType: 'json',
         type: 'GET',
         async: false,
-        data: { 'searchString': searchString, 'startIndex': startIndexEquip, 'endIndex': endIndexEquip },
+        data: { 'searchString': searchString},
         success: function (data) {
             if (data.IsValid) {
                 var equipmentString = '';
@@ -174,29 +174,7 @@ function loadEquipmentHDR(searchString, searchflag) {
 //    equipmentTemplate.modal('hide');
 //}
 function addEquipmentHeader() {
-    //var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
-    //if (searchString != '') {
-    //    if (previousequipsearch == searchString) {
-    //        previousequipsearch = searchString;
-    //        loadEquipmentHDR(searchString, false);
-    //        return;
-    //    }
-    //    previousequipsearch = searchString;
-    //    startIndexEquip = 0;
-    //    endIndexEquip = 30;
-    //    loadEquipmentHDR(searchString, true);
-    //} else {
-    //    startIndexEquip = 0;
-    //    endIndexEquip = 30;
-    //    loadEquipmentHDR(searchString, false);
-    //}
-
-    startIndexEquip = 0;
-    endIndexEquip = 30;
-    loadEquipmentHDR($('#searchEquipmentStr').val());
     addEquipmentColumn();
-    //$('#searchEquipmentStr').val().trim()
-    //addEquipmentColumn();
     $("#equipHDR tr").each(function (index) {
         if (index !== 0) {
             var row = $(this);
@@ -215,9 +193,11 @@ function addEquipmentHeader() {
             }
         }
     });
-    $("#equipHDR").trigger("destroy", [false, function () {
-        $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
-    }]);
+    resizableTable();
+    sortableTable();
+    //$("#equipHDR").trigger("destroy", [false, function () {
+    //    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    //}]);
 }
 
 
