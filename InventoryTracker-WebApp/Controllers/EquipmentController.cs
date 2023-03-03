@@ -786,8 +786,9 @@ namespace InventoryTracker_WebApp.Controllers
 
         #region Equipment Entity Assign Date Range Export - Import
 
-        public FileResult EquipmentEntityAssignDateRangeExport(string startDate, string searchString)
+        public FileResult EquipmentEntityAssignDateRangeExport(string startDate, string searchString,string cookievalue)
         {
+            System.Threading.Thread.Sleep(100);
             MemoryStream ms = new MemoryStream();
             using (SLDocument sl = new SLDocument())
             {
@@ -898,7 +899,7 @@ namespace InventoryTracker_WebApp.Controllers
                 sl.SaveAs(ms);
             }
             ms.Position = 0;
-
+            ControllerContext.HttpContext.Response.Cookies.Add(new HttpCookie("test", cookievalue));
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EquipmentEntityAssignDateRangeExport.xlsx");
         }
 
