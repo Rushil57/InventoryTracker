@@ -61,15 +61,15 @@ namespace InventoryTracker_WebApp.Controllers
 
             return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentTemplates, uniqueEquipmentTemplates = uniqueEquipmentTemplates, uniquePropName = uniquePropName, uniquePropNameEqu = uniquePropNameEqu });
         }
-        public string GetEquipmentHeaders(string searchString, int startIndex, int endIndex)
+        public string GetEquipmentHeaders(string searchString)
         {
-            List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeaders(searchString, startIndex, endIndex).ToList();
+            List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeaders(searchString).ToList();
             int totalCount = _equipmentRepository.GetTotalCountEquipmentHeaders();
             return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentHeaders, totalCount = totalCount });
         }
-        public string GetEquipmentHeadersfromEquipmentEntity(string searchString, int startIndex, int endIndex, string startDate)
+        public string GetEquipmentHeadersfromEquipmentEntity(string searchString, string startDate)
         {
-            List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeadersfromEquipmentEntity(searchString, startIndex, endIndex, startDate).ToList();
+            List<EquipmentHeader> equipmentHeaders = _equipmentRepository.GetEquipmentHeadersfromEquipmentEntity(searchString, startDate).ToList();
             int totalCount = _equipmentRepository.GetTotalCountEquipmentHeaders();
             return JsonConvert.SerializeObject(new { IsValid = true, data = equipmentHeaders, totalCount = totalCount });
         }

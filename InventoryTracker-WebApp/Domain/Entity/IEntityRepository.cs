@@ -5,8 +5,8 @@ namespace InventoryTracker_WebApp.Domain.Entity
 {
     public interface IEntityRepository
     {
-        List<EntityHeader> GetEntityHeaders(string searchString, int startIndex, int endIndex);
-        List<EntityHeader> GetEntityHeaderfromEntityEquipment(string searchString, int startIndex, int endIndex,string startDate);
+        List<EntityHeader> GetEntityHeaders(string searchString);
+        List<EntityHeader> GetEntityHeaderfromEntityEquipment(string searchString,string startDate);
         List<EntityTemplate> GetEntityTemplates(string entityType);
         bool SaveEntityTemplate(List<EntityTemplate> entityTemplate);
         bool CheckDuplicateEntityHDR(EntityHeader entityHeader);

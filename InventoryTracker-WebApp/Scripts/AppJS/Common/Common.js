@@ -5,9 +5,7 @@ var entityType = $('#entityType');
 var entityTemplate = $('#entityTemplate');
 var equipTypeEle = $('#equipType');
 var startIndexEquip = 0;
-var endIndexEquip = 0;
 var startIndexEntity = 0;
-var endIndexEntity = 0;
 var entitysearchflag = false;
 var previousentitysearch = '';
 var equipsearchflag = false;
@@ -404,7 +402,6 @@ function addEntityHeader() {
         loadEntityHDR(searchString, true);
     } else {
         startIndexEntity = 0;
-        endIndexEntity = 30;
         loadEntityHDR(searchString, false);
     }
     $("#entityHDR").trigger("destroy", [false, function () {
@@ -669,54 +666,6 @@ function resetDeleteAssignmentModel() {
         $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', deleteStartDate);
     }
     $('#calendarControlModel').css('z-index', '1055');
-}
-
-function divEquipmentHDRLoad(element) {
-    if (element.scrollTop > 0) {
-        if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
-
-            endIndexEquip = endIndexEquip + 30;
-            startIndexEquip = endIndexEquip;
-            var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
-            if (searchString != '') {
-                if (previousequipsearch == searchString) {
-                    previousequipsearch = searchString;
-                    loadEquipmentHDR(searchString, false);
-                    return;
-                }
-                startIndexEquip = 0;
-                previousequipsearch = searchString;
-                loadEquipmentHDR(searchString, true);
-                return;
-            }
-            else {
-                loadEquipmentHDR('', false);
-            }
-        }
-    }
-}
-function divEntityHDRLoad(element) {
-    if (element.scrollTop > 0) {
-        if (Math.ceil($(element).scrollTop() + $(element).innerHeight()) >= Math.floor($(element)[0].scrollHeight)) {
-            endIndexEntity = endIndexEntity + 30;
-            startIndexEntity = endIndexEntity;
-            var searchString = $('#searchEntityStr').val().toLowerCase().trim();
-            if (searchString != '') {
-                if (previousentitysearch == searchString) {
-                    previousentitysearch = searchString;
-                    loadEntityHDR(searchString, false);
-                    return;
-                }
-                startIndexEntity = 0;
-                previousentitysearch = searchString;
-                loadEntityHDR(searchString, true);
-                return;
-            }
-            else {
-                loadEntityHDR('', false);
-            }
-        }
-    }
 }
 
 

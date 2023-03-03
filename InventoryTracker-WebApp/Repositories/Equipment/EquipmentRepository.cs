@@ -11,7 +11,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
 {
     public class EquipmentRepository : IEquipmentRepository
     {
-        public List<EquipmentHeader> GetEquipmentHeaders(string searchString, int startRow, int endRow)
+        public List<EquipmentHeader> GetEquipmentHeaders(string searchString)
         {
             List<EquipmentHeader> equipmentHeaders = new List<EquipmentHeader>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -29,11 +29,11 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                         $" or eqh.EQUIP_TYPE like '%" + searchString + "%'" +
                         $" or eqh.VENDOR  like '%" + searchString + "%'" +
                         $" or eqh.UNIT_ID  like '%" + searchString + "%'" +
-                        $" or eh.ENT_NAME like '%" + searchString + "%') t1 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
+                        $" or eh.ENT_NAME like '%" + searchString + "%') t1";
                 }
                 else
                 {
-                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
+                    query = "Select * From  (Select [EQUIP_ID] ,[EQUIP_TYPE] ,[VENDOR] ,[UNIT_ID] ,[ASSIGNED] From [dbo].[EQUIPMENT_HDR]) t2";
                 }
                 equipmentHeaders = connection.Query<EquipmentHeader>(query).ToList();
             }
@@ -64,7 +64,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             }
 
         }
-        public List<EquipmentHeader> GetEquipmentHeadersfromEquipmentEntity(string searchString, int startRow, int endRow, string startDate)
+        public List<EquipmentHeader> GetEquipmentHeadersfromEquipmentEntity(string searchString, string startDate)
         {
             List<EquipmentHeader> equipmentHeaders = new List<EquipmentHeader>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -86,7 +86,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                     $" where ed.Eq_Value like '%" + searchString + "%'" +
                     $" or eqh.EQUIP_TYPE like '%" + searchString + "%'" +
                     $" or eqh.VENDOR  like '%" + searchString + "%'" +
-                    $" or eqh.UNIT_ID  like '%" + searchString + "%') t1 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
+                    $" or eqh.UNIT_ID  like '%" + searchString + "%') t1 ";
                 }
                 else
                 {
@@ -96,7 +96,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                     {
                         query += ", (SELECT count(*) FROM [dbo].[EQUIPMENT_ENTITY_ASSIGNMENT] as eea where eea.EQUIP_ID = eh.[EQUIP_ID] and ('" + startDate + "' between eea.Start_Date and eea.End_Date)) as [Active] ";
                     }
-                    query += "From [dbo].[EQUIPMENT_HDR] as eh) t2 order by  CURRENT_TIMESTAMP offset " + startRow + " rows FETCH NEXT 30 rows only";
+                    query += "From [dbo].[EQUIPMENT_HDR] as eh) t2";
 
                 }
                 equipmentHeaders = connection.Query<EquipmentHeader>(query).ToList();
