@@ -22,7 +22,7 @@ var isAddNew = false;
 var addNewSelectList = '<option selected>Please select</option>';
 var dateRangeTmp = '';
 var isSearchDropDown = false;
-var cookieValue = "123";
+
 $(document).ready(function () {
     //    loadAllEquipTemp();
     //    $('.datepicker').datepicker({
@@ -1048,29 +1048,18 @@ $(function () {
         }, 10)
     }).trigger("update");
 });
-
-
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
-function ClearCockie(name) {
-    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-}
 function exportDateRangeData() {
     AddLoader();
     window.location = "/Equipment/EquipmentEntityAssignDateRangeExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim() + "&cookieValue=" + cookieValue;
     _tmr = window.setInterval(function () {
-        var _str = getCookie("test");
+        var _str = getCookie("cookie_EquipData");
         if (document.cookie.indexOf(_str) !== -1) {
             // hide animation
-            setTimeout(function () { RemoveLoader(); }, 2000);
+            setTimeout(function () { RemoveLoader(); }, 1000);
             clearInterval(_tmr)
-            ClearCockie("test");
+            ClearCockie("cookie_EquipData");
         }
     }, 1000);
-
 }
 
 function sampleFileDateRangeImportDownload() {

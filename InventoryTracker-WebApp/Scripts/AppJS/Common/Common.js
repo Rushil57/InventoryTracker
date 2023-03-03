@@ -17,6 +17,7 @@ var isEquipEntityPopUP = true;
 var isFirstTimeEntEqu = true;
 var isDeleted = 2;
 var deleteEquipEntID = 0;
+var cookieValue = "123";
 
 const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
 
@@ -1080,4 +1081,13 @@ function equipTypeChange() {
     var selectedEntity = $('#equipTypeInColumns').find(':selected').val()
     $('#equipmentTemplateModelBody').find('div').prop('hidden', true);
     $('#equipmentTemplateModelBody').find('[equipType="' + selectedEntity + '"]').prop('hidden', false);
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+function ClearCockie(name) {
+    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
