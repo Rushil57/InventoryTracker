@@ -487,7 +487,7 @@ function saveHDRTemplateDtl() {
             success: function (data) {
                 if (data.IsValid) {
                     alert(data.data);
-                    loadEntityHDR($('#searchEntityStr').val().trim(), true);
+                    loadEntityHDR('', false);
                     var s = entityHDRID.val();
                     if (s == 0) {
                         $('#entityHDR > tbody >  tr:first').trigger('click');
@@ -502,6 +502,24 @@ function saveHDRTemplateDtl() {
                     }
                     //$('#entityHDR > tbody >  tr:last').trigger('click');
                     addEntityColumn();
+                    $("#entityHDR tr").each(function (index) {
+                        if (index !== 0 && index != 1) {
+                            var row = $(this);
+                            var isHide = true;
+                            row.find('td').each(function () {
+                                if ($(this).text().toLowerCase().indexOf($('#searchEntityStr').val().toLowerCase().trim()) != -1) {
+                                    isHide = false;
+                                    return;
+                                }
+                            })
+                            if (isHide) {
+                                row.hide();
+                            }
+                            else {
+                                row.show();
+                            }
+                        }
+                    });
                 }
                 else {
                     alert(data.data)

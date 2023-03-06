@@ -336,7 +336,7 @@ function saveHDRTemplateDtl() {
             success: function (data) {
                 if (data.IsValid) {
                     alert(data.data);
-                    loadEquipmentHDR($('#searchEquipmentStr').val(), true);
+                    loadEquipmentHDR('', false);
                     var s = equipmentHDRID.val();
                     if (s == 0) {
                         $('#entityHDR > tbody >  tr:first').trigger('click');
@@ -351,6 +351,24 @@ function saveHDRTemplateDtl() {
                     }
                     //$('#equipHDR > tbody >  tr:last').trigger('click');
                     addEquipmentColumn();
+                    $("#equipHDR tr").each(function (index) {
+                        if (index !== 0 && index != 1) {
+                            var row = $(this);
+                            var isHide = true;
+                            row.find('td').each(function () {
+                                if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1) {
+                                    isHide = false;
+                                    return;
+                                }
+                            })
+                            if (isHide) {
+                                row.hide();
+                            }
+                            else {
+                                row.show();
+                            }
+                        }
+                    });
                 }
                 else {
                     alert(data.data)
