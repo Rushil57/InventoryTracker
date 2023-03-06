@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 using InventoryTracker_WebApp.Domain.Equipment;
 using InventoryTracker_WebApp.Helpers;
 using InventoryTracker_WebApp.Models;
@@ -6,8 +7,11 @@ using Newtonsoft.Json;
 using SpreadsheetLight;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using System.Web.Mvc;
 
@@ -786,7 +790,7 @@ namespace InventoryTracker_WebApp.Controllers
 
         #region Equipment Entity Assign Date Range Export - Import
 
-        public FileResult EquipmentEntityAssignDateRangeExport(string startDate, string searchString)
+        public FileResult EquipmentEntityAssignDateRangeExport(string startDate, string searchString, string cookievalue)
         {
             MemoryStream ms = new MemoryStream();
             using (SLDocument sl = new SLDocument())
@@ -898,7 +902,7 @@ namespace InventoryTracker_WebApp.Controllers
                 sl.SaveAs(ms);
             }
             ms.Position = 0;
-
+            ControllerContext.HttpContext.Response.Cookies.Add(new HttpCookie("cookie_EquipData", cookievalue));
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EquipmentEntityAssignDateRangeExport.xlsx");
         }
 
@@ -969,7 +973,7 @@ namespace InventoryTracker_WebApp.Controllers
                                         {
                                             break;
                                         }
-                                        if (!string.IsNullOrEmpty(cellValue) && ( columnHeader[j - 1].ToLower().ToString() == "start date" || columnHeader[j - 1].ToLower().ToString() == "end date"))
+                                        if (!string.IsNullOrEmpty(cellValue) && (columnHeader[j - 1].ToLower().ToString() == "start date" || columnHeader[j - 1].ToLower().ToString() == "end date"))
                                         {
                                             cellValue = (sheet.GetCellValueAsDateTime(i, j)).ToString();
                                         }

@@ -1051,12 +1051,18 @@ $(function () {
         }, 10)
     }).trigger("update");
 });
-
-
 function exportDateRangeData() {
     AddLoader();
-    window.location = "/Equipment/EquipmentEntityAssignDateRangeExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim();
-    setTimeout(function () { RemoveLoader(); }, 2000);
+    window.location = "/Equipment/EquipmentEntityAssignDateRangeExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim() + "&cookieValue=" + cookieValue;
+    _tmr = window.setInterval(function () {
+        var _str = getCookie("cookie_EquipData");
+        if (document.cookie.indexOf(_str) !== -1) {
+            // hide animation
+            setTimeout(function () { RemoveLoader(); }, 1000);
+            clearInterval(_tmr)
+            ClearCockie("cookie_EquipData");
+        }
+    }, 1000);
 }
 
 function sampleFileDateRangeImportDownload() {
