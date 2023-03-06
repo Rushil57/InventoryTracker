@@ -123,6 +123,7 @@ $('#search').click(function () {
 
 
 function addEquipmentColumn() {
+    equipmentTemplate.modal('hide');
     var tableHeader = '';
     //tableHeader += '<th scope="col">Equip. type</th><th scope="col">Vendor</th><th scope="col">Unit ID</th><th scope="col">Assigned</th>';
     $('#equipmentTemplateModelBody .form-check-input').each(function () {
@@ -140,6 +141,8 @@ function addEquipmentColumn() {
 
                     });
                     $.ajax({
+                        before: AddLoader(),
+                        complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
                         url: '/Equipment/EquipmentValueByPropName',
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'json',
@@ -209,7 +212,6 @@ function addEquipmentColumn() {
     })
     //$("#equipHDR > thead >  tr > th").remove();
     $("#equipHDR > thead >  tr").append(tableHeader);
-    equipmentTemplate.modal('hide');
 }
 
 

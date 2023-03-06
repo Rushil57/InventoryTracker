@@ -154,7 +154,6 @@ function loadEquipmentHDR(searchString, searchflag) {
                 if ($("#equipHDR").find('.static-rw').length == 0) {
                     $("#equipHDR > tbody > tr:first").before('<tr class="static-rw" style="cursor:pointer"><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control"  style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><tr>')
                 }
-                //addEquipmentColumn();
                 $("#equipHDR").trigger("destroy", [false, function () {
                     resizableTable();
                     sortableTable();
@@ -167,16 +166,6 @@ function loadEquipmentHDR(searchString, searchflag) {
                         }, 10)
                     }).trigger("update");
                 }]);
-                //var tableHeadLength = $("#equipHDR > thead > tr >  th").length
-                //for (var th = 4; th <= tableHeadLength;) {
-                //    isaddEquipmentColumn = true;
-                //    $($("#equipHDR > thead > tr >  th")[th]).remove();
-                //    $("#equipHDR > tbody > tr").find("td:eq(" + th + ")").remove();
-                //    tableHeadLength = tableHeadLength - 1;
-                //}
-                //if (isaddEquipmentColumn) {
-                //    addEquipmentColumn();
-                //}
 
                 var rowCount = 0;
 
@@ -301,6 +290,7 @@ $('#btnSearchEntity').click(function () {
 })
 
 function addEntityColumn() {
+    entityTemplate.modal('hide');
     $('#entityTemplateModelBody .form-check-input').each(function () {
         var id = $(this).attr('id');
         if ($(this).is(':checked')) {
@@ -315,6 +305,8 @@ function addEntityColumn() {
             else {
                 alreadyAddedEntityCol.push(id);
                 $.ajax({
+                    before: AddLoader(),
+                    complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
                     url: '/Entity/EntityValueByPropName',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -354,9 +346,9 @@ function addEntityColumn() {
             })
         }
     });
-    entityTemplate.modal('hide');
 }
 function addEntityColumn_Old() {
+    entityTemplate.modal('hide');
     var tableHeader = '';
     var hdrdata = [];
     $("#entityHDR th").each(function (index) {
@@ -384,6 +376,8 @@ function addEntityColumn_Old() {
                         $(this).show();
                     }
                     $.ajax({
+                        before: AddLoader(),
+                        complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
                         url: '/Entity/EntityValueByPropName',
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'json',
@@ -474,7 +468,6 @@ function addEntityColumn_Old() {
     //  tableHeader += '<th scope="col">Equipment Assigned</th><th></th>';
     $("#entityHDR > thead >  tr > th").remove();
     $("#entityHDR > thead >  tr").append(hdrdata.toLocaleString().replaceAll(',', ''));
-    entityTemplate.modal('hide');
     $("#entityHDR").trigger("destroy", [false, function () {
         resizableTable();
         sortableTable();
@@ -1072,6 +1065,8 @@ function sampleFileDateRangeImportDownload() {
 
 
 function addEquipmentColumn() {
+
+    equipmentTemplate.modal('hide');
     $('#equipmentTemplateModelBody .form-check-input').each(function () {
         var id = $(this).attr('id');
         if ($(this).is(':checked')) {
@@ -1085,6 +1080,8 @@ function addEquipmentColumn() {
             else {
                 alreadyAddedEquipmentCol.push(id);
                 $.ajax({
+                    before: AddLoader(),
+                    complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
                     url: '/Equipment/EquipmentValueByPropName',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -1123,5 +1120,4 @@ function addEquipmentColumn() {
             })
         }
     });
-    equipmentTemplate.modal('hide');
 }

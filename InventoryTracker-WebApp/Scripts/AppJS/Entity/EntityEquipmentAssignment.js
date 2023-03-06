@@ -238,6 +238,7 @@ function addEquipmentHeader(isSearch) {
 }
 
 function addEquipmentColumn() {
+    equipmentTemplate.modal('hide');
     $('#equipmentTemplateModelBody .form-check-input').each(function () {
         var id = $(this).attr('id');
         if ($(this).is(':checked')) {
@@ -251,6 +252,8 @@ function addEquipmentColumn() {
             else {
                 alreadyAddedEquipmentCol.push(id);
                 $.ajax({
+                    before: AddLoader(),
+                    complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
                     url: '/Equipment/EquipmentValueByPropName',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -290,13 +293,13 @@ function addEquipmentColumn() {
             })
         }
     });
-    equipmentTemplate.modal('hide');
 }
 
 $('#btnSearchEquipment').click(function () {
     addEquipmentHeader(true);
 })
 function addEntityColumn() {
+    entityTemplate.modal('hide');
     $('#entityTemplateModelBody .form-check-input').each(function () {
         var id = $(this).attr('id');
         if ($(this).is(':checked')) {
@@ -311,6 +314,8 @@ function addEntityColumn() {
             else {
                 alreadyAddedEntityCol.push(id);
                 $.ajax({
+                    before: AddLoader(),
+                    complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
                     url: '/Entity/EntityValueByPropName',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
@@ -350,11 +355,12 @@ function addEntityColumn() {
             })
         }
     });
-    entityTemplate.modal('hide');
+    
 }
 
 function addEntityColumn_Old() {
     var hdrdata = [];
+    entityTemplate.modal('hide');
     $("#entityHDR th").each(function (index) {
         var headerdata = "<th scope=\"col\">" + $(this).text() + "</th>";
         if (hdrdata.indexOf(headerdata) == -1) {
@@ -382,6 +388,8 @@ function addEntityColumn_Old() {
                         $(this).show();
                         if (id != '') {
                             $.ajax({
+                                before: AddLoader(),
+                                complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
                                 url: '/Entity/EntityValueByPropName',
                                 contentType: 'application/json; charset=utf-8',
                                 dataType: 'json',
@@ -459,7 +467,6 @@ function addEntityColumn_Old() {
     })
     $("#entityHDR > thead >  tr > th").remove();
     $("#entityHDR > thead >  tr").append(hdrdata.toLocaleString().replaceAll(',', ''));
-    entityTemplate.modal('hide');
     $("#entityHDR").trigger("destroy", [false, function () {
         resizableTable();
         sortableTable();

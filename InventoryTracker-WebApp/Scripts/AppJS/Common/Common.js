@@ -270,37 +270,7 @@ function showEquipModel() {
 }
 
 function addEntityColumn() {
-    //var tableHeader = '';
-    //tableHeader += tblHDR;/*' <th scope="col">Entity type</th> <th scope="col">Entity name</th>';*/
-    ////tableHeader += ' <th scope="col">Entity type</th> <th scope="col">Entity name</th><th scope="col">Assigned</th>';
-    //$('#entityTemplateModelBody .form-check-input').each(function () {
-    //    if ($(this).is(':checked')) {
-    //        tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
-    //        $.ajax({
-    //            before: AddLoader(),
-    //            after: RemoveLoader(),
-    //            url: '/Entity/EntityValueByPropName',
-    //            contentType: 'application/json; charset=utf-8',
-    //            dataType: 'json',
-    //            type: 'GET',
-    //            async: false,
-    //            data: { 'propName': $(this).attr('id') },
-    //            success: function (data) {
-    //                $("#entityHDR > tbody >  tr").each(function () {
-    //                    $(this).find('td:last').after('<td></td>')
-    //                })
-    //                for (var i = 0; i < data.data.length; i++) {
-    //                    $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].Ent_ID + '"]').parent().find('td:last').text(data.data[i].Ent_Value);
-    //                }
-    //            },
-    //            error: function (ex) { }
-    //        });
-    //    }
-    //})
-    //$("#entityHDR > thead >  tr > th").remove();
-    //$("#entityHDR > thead >  tr").append(tableHeader);
-    //entityTemplate.modal('hide');
-
+    entityTemplate.modal('hide');
     var hdrdata = [];
     $("#entityHDR th").each(function (index) {
         var headerdata = "<th scope=\"col\">" + $(this).text() + "</th>";
@@ -384,9 +354,7 @@ function addEntityColumn() {
     $("#entityHDR").trigger("destroy", [false, function () {
         $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
     }]);
-    entityTemplate.modal('hide');
-
-
+    
 }
 
 
