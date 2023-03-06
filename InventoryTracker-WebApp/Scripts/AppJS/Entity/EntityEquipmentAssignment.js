@@ -15,6 +15,8 @@ var isAddNewEntity = false;
 var addNewEntitySelectList = '<option selected>Please select</option>';
 var dateRangeTmp = '';
 var isSearchDropDown = false;
+var alreadyAddedEntityCol = [];
+var alreadyAddedEquipmentCol = [];
 
 $(document).ready(function () {
     loadAllEquipTemp();
@@ -33,7 +35,7 @@ function loadEntityHDR(searchString, searchflag) {
         entitysearchflag = true;
         $("#entityHDR > tbody > tr").remove();
     }
-    if (startIndexEntity == 0) {
+    else if (startIndexEntity == 0) {
         entitysearchflag = false;
         $("#entityHDR > tbody > tr").remove();
     }
@@ -50,33 +52,10 @@ function loadEntityHDR(searchString, searchflag) {
             if (data.IsValid) {
                 var entityString = '';
                 for (var i = 0; i < data.data.length; i++) {
-                    //    entityString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td class="assigned">' + data.data[i].ASSIGNED + '</td></tr>';
-
-                    $("#entityHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td></td><tr>')
-                    var tableHeadLength = $("#entityHDR > thead > tr >  th").length
-                    for (var th = 0; th <= tableHeadLength;) {
-                        if (th != tableHeadLength && th != 0) {
-                            $("#entityHDR > tbody>tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find('td:last').after('<td></td>')
-                        }
-                        var headtext = $($("#entityHDR > thead > tr >  th")[th]).text();
-                        if (headtext == "Entity type") {
-                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].ENT_TYPE);
-                        } if (headtext == "Entity name") {
-                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].ENT_NAME);
-                            addNewEntitySelectList += "<option value='" + data.data[i].ENT_ID + "'>" + data.data[i].ENT_NAME + "</option>";
-
-                        } if (headtext == "Assigned") {
-                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").addClass("assigned").text(data.data[i].ASSIGNED);
-                        }
-                        if (headtext == "Active") {
-                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").addClass('active').text(data.data[i].Active);
-                        }
-                        th = th + 1;
-                    }
+                    addNewEntitySelectList += "<option value='" + data.data[i].ENT_ID + "'>" + data.data[i].ENT_NAME + "</option>";
+                    $("#entityHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_TYPE + '</td><td>' + data.data[i].ENT_NAME + '</td><td class="assigned">' + data.data[i].ASSIGNED + '</td><td class="active">' + data.data[i].Active + '</td><tr>');
                 }
 
-                //$("#entityHDR > tbody >  tr").remove();
-                // $("#entityHDR > tbody").append(entityString);
                 $("#entityHDR > tbody >  tr").draggable({
                     helper: 'clone',
                     start: function (e, ui) {
@@ -98,9 +77,6 @@ function loadEntityHDR(searchString, searchflag) {
                     stop: function () {
                     }
                 });
-                
-                addEntityColumn();
-
                 if ($("#entityHDR").find('.static-rw').length == 0) {
                     var firstTrHTML = '';
                     $("#entityHDR > thead > tr >  th").each(function () {
@@ -138,11 +114,6 @@ function loadEntityHDR(searchString, searchflag) {
 
 
 function loadEquipmentHDR(searchString, searchflag) {
-    //if (searchString == '') {
-    //    var tableHeader = '<th scope="col">Equipment type</th><th scope="col">Vendor</th><th scope="col">Unit ID</th><th scope="col">Entity Assigned</th><th scope="col"></th>';
-    //    $("#equipHDR > thead >  tr > th").remove();
-    //    $("#equipHDR > thead >  tr").append(tableHeader);
-    //}
     if (searchflag == true) {
         equipsearchflag = true;
         $("#equipHDR > tbody > tr").remove();
@@ -163,41 +134,11 @@ function loadEquipmentHDR(searchString, searchflag) {
         success: function (data) {
             if (data.IsValid) {
                 var equipmentString = '';
+                var icn = '';
                 for (var i = 0; i < data.data.length; i++) {
-                    // equipmentString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td class="addEntity">' + data.data[i].UNIT_ID + '</td><td class="droppable"></td><td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg></td></tr>';
-                    $("#equipHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td></td><tr>')
-
-                    var tableHeadLength = $("#equipHDR > thead > tr >  th").length
-                    for (var th = 0; th <= tableHeadLength;) {
-                        if (th != tableHeadLength && th != 0) {
-                            $("#equipHDR > tbody>tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find('td:last').after('<td></td>')
-                        }
-                        var headtext = $($("#equipHDR > thead > tr >  th")[th]).text();
-                        if (headtext == "Equipment type") {
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].EQUIP_TYPE);
-                        }
-                        if (headtext == "Vendor") {
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].VENDOR);
-                        }
-                        if (headtext == "Unit ID") {
-                            unitCol = th;
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").addClass("addEntity").text(data.data[i].UNIT_ID);
-                        }
-                        if (headtext == "Entity Assigned") {
-                            var a = " " + data.data[i].ASSIGNED;
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").addClass("droppable");
-                        }
-                        if (headtext == "") {
-                            var a = " " + data.data[i].ASSIGNED;
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").html('<svg onclick="openCC(\'' + data.data[i].EQUIP_TYPE + '\',' + data.data[i].EQUIP_ID + ',\'' + data.data[i].UNIT_ID + '\',\'' + data.data[i].VENDOR + '\')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
-                        }
-                        th = th + 1;
-                    }
+                    icn = '<svg onclick="openCC(\'' + data.data[i].EQUIP_TYPE + '\',' + data.data[i].EQUIP_ID + ',\'' + data.data[i].UNIT_ID + '\',\'' + data.data[i].VENDOR + '\')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>';
+                    $("#equipHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td class="droppable"></td><td class="addEquipment">' + icn + '</td><tr>');
                 }
-                //$("#equipHDR > tbody >  tr").remove();
-                //$("#equipHDR > tbody").append(equipmentString);
-
-
                 GetEquipmentEntityAssignment(1);
 
                 $(".droppable").droppable({
@@ -230,12 +171,11 @@ function loadEquipmentHDR(searchString, searchflag) {
                         });
                     }
                 });
-                addEquipmentColumn();
                 if ($("#equipHDR").find('.static-rw').length == 0) {
                     var firstTrHTML = '';
                     $("#equipHDR > thead > tr >  th").each(function () {
                         if ($(this).text() == '') {
-                            firstTrHTML += '<td></td>'
+                            firstTrHTML += '<td class="addEquipment"></td>'
                         }
                         else {
                             firstTrHTML += '<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td>'
@@ -258,191 +198,162 @@ function loadEquipmentHDR(searchString, searchflag) {
 }
 
 
-function addEquipmentHeader() {
-    var searchString = $('#searchEquipmentStr').val().toLowerCase().trim();
-    if (searchString != '') {
-        if (previousequipsearch == searchString) {
-            previousequipsearch = searchString;
-            loadEquipmentHDR(searchString, false);
-            return;
-        }
-        startIndexEquip = 0;
-        previousequipsearch = searchString;
-        loadEquipmentHDR(searchString, true);
-        return;
-    } else {
-        startIndexEquip = 0;
-        loadEquipmentHDR('', true);
-    }
-    // loadEquipmentHDR('');
-    //addEquipmentColumn();
-    resizableTable();
-    //$("#equipHDR tr").each(function (index) {
-    //    if (index !== 0) {
-    //        var row = $(this);
-    //        var isHide = true;
-    //        row.find('td').each(function () {
-    //            if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1) {
-    //                isHide = false;
-    //                return;
-    //            }
-    //        })
-    //        if (isHide) {
-    //            row.hide();
-    //        }
-    //        else {
-    //            row.show();
-    //        }
-    //    }
-    //});
-    $("#equipHDR").trigger("destroy", [false, function () {
+function addEquipmentHeader(isSearch) {
+
+    if (isSearch == undefined || !isSearch) {
+        addEquipmentColumn();
         resizableTable();
         sortableTable();
-        $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).bind("sortEnd", function (e, t) {
-            setTimeout(function () {
-                var frHtml = $("#equipHDR").find('.static-rw');
-                $("#equipHDR").find('.static-rw').remove();
+    }
+    $("#equipHDR tr").each(function (index) {
+        if (index !== 0 && index != 1) {
+            var row = $(this);
+            var isHide = true;
+            row.find('td').each(function () {
+                if ($(this).text().toLowerCase().indexOf($('#searchEquipmentStr').val().toLowerCase().trim()) != -1) {
+                    isHide = false;
+                    return;
+                }
+            })
+            if (isHide) {
+                row.hide();
+            }
+            else {
+                row.show();
+            }
+        }
+    });
+    //$("#equipHDR").trigger("destroy", [false, function () {
+    //    resizableTable();
+    //    sortableTable();
+    //    $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).bind("sortEnd", function (e, t) {
+    //        setTimeout(function () {
+    //            var frHtml = $("#equipHDR").find('.static-rw');
+    //            $("#equipHDR").find('.static-rw').remove();
 
-                $("#equipHDR > tbody > tr:first").before(frHtml);
-            }, 10)
-        }).trigger("update");
-    }]);
+    //            $("#equipHDR > tbody > tr:first").before(frHtml);
+    //        }, 10)
+    //    }).trigger("update");
+    //}]);
 }
 
 function addEquipmentColumn() {
-    //var tableHeader = '';
-    //tableHeader += ' <th scope="col">Equipment type</th><th scope="col">Vendor</th><th scope="col">Unit ID</th>';
-
-    var hdrdata = [];
-    $("#equipHDR th").each(function (index) {
-        var headerdata = "<th scope=\"col\">" + $(this).text() + "</th>";
-        if (hdrdata.indexOf(headerdata) == -1) {
-            hdrdata.push(headerdata);
-        }
-    });
-
     $('#equipmentTemplateModelBody .form-check-input').each(function () {
+        var id = $(this).attr('id');
         if ($(this).is(':checked')) {
-            //tableHeader += '<th scope="col">' + $(this).attr('id') + '</th>';
-            var isPresent = true;
-
-            var id = $(this).attr('id');
-            var th = 0;
-            $("#equipHDR th").each(function (index) {
-
-                if ($(this).text().toLowerCase() == id.toLowerCase()) {
-                    isPresent = false;
-
-                    if ($(this).text().toLowerCase() == id.toLowerCase()) {
-                        $('#equipHDR tbody tr').each(function (ind, el) {
-                            $('td', el).eq(index).show();
-                        });
-                        $(this).show();
-
-                    }
-                    $.ajax({
-                        url: '/Equipment/EquipmentValueByPropName',
-                        contentType: 'application/json; charset=utf-8',
-                        dataType: 'json',
-                        type: 'GET',
-                        async: false,
-                        data: { 'propName': id, 'date' : $('#mainDate').val() },
-                        success: function (data) {
-                            var indexOfID = -1;
-                            var j = 0;
-                            $("#equipHDR > thead >  tr >  th").each(function () {
-                                if ($(this).text().toLowerCase() == id.toLowerCase()) {
-                                    indexOfID = j;
-                                    return;
-                                }
-                                j++;
-                            })
-                            for (var i = 0; i < data.data.length; i++) {
-                                if (indexOfID >= 0) {
-                                    $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('td:eq(' + indexOfID + ')').text(data.data[i].Eq_Value)
-                                }
-                                else {
-                                    $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Eq_Value);
-                                }
-                            }
-                        },
-                        error: function (ex) { }
-                    });
-                }
-                if (hdrdata.indexOf("<th scope=\"col\">" + id + "</th>") == -1) {
-
-                    if ($(this).text().toLowerCase() == "unit id") {
-                        var data = $(this).html();
-                        var a = hdrdata.indexOf("<th scope=\"col\">Unit ID</th>");
-                        hdrdata.splice(a + 1, 0, "<th scope=\"col\">" + id + "</th>");
-                    }
-                }
-                th = th + 1;
-            });
-            if (isPresent) {
+            if (jQuery.inArray(id, alreadyAddedEquipmentCol) >= 0) {
+                var currInd = $("#equipHDR > thead >  tr >  th:contains(" + id + ")").index();
+                $("#equipHDR > thead >  tr >  th").eq(currInd).prop('hidden', false)
+                $("#equipHDR > tbody >  tr").each(function () {
+                    $(this).find('td').eq(currInd).prop('hidden', false);
+                });
+            }
+            else {
+                alreadyAddedEquipmentCol.push(id);
                 $.ajax({
-                    before: AddLoader(),
-                    complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
                     url: '/Equipment/EquipmentValueByPropName',
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     type: 'GET',
                     async: false,
-                    data: { 'propName': id ,'date': $('#mainDate').val() },
+                    data: { 'propName': id, 'date': $('#mainDate').val() },
                     success: function (data) {
-                        $("#equipHDR > tbody >  tr").each(function () {
-                            $(this).find('.addEntity').after('<td></td>')
-                        })
-                        for (var i = 0; i < data.data.length; i++) {
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].Equip_ID + '"]').parent().find('.addEntity').next().text(data.data[i].Eq_Value);
-                        }
+                        var addEquipmentIndex = $("#equipHDR > tbody > tr:first").find('.addEquipment').index();
+                        $('#equipHDR th').eq(addEquipmentIndex).before("<th scope=\"col\">" + id + "</th>");
+                        $("#equipHDR > tbody > tr:first > td").eq(addEquipmentIndex).before('<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td>');
+                        var i = 0;
+                        $("#equipHDR > tbody > tr").each(function (index) {
+                            if (index == 0) {
+                                return
+                            }
+                            if (data.data.length > 0 && $(this).find('input[value="' + data.data[i].Equip_ID + '"]').length > 0) {
+                                $(this).find('.addEquipment').before('<td>' + data.data[i].Eq_Value + '</td>');
+                                i++;
+                            }
+                            else {
+                                $(this).find('.addEquipment').before('<td></td>');
+                            }
+                        });
                     },
                     error: function (ex) { }
                 });
             }
-        } else {
-            var id = $(this).attr('id');
-            $("#equipHDR th").each(function (index) {
-
-                if ($(this).text().toLowerCase() == id.toLowerCase()) {
-                    $('#equipHDR tbody tr').each(function (ind, el) {
-                        $('td', el).eq(index).remove();
-                    });
-                    $(this).hide();
-                    var index = hdrdata.indexOf("<th scope=\"col\">" + id + "</th>");
-                    if (index > -1) {
-                        hdrdata.splice(index, 1);
-                    }
-
-                }
-
-            });
         }
-    })
-    // tableHeader += '<th scope="col">Entity Assigned</th><th></th>';
-    $("#equipHDR > thead >  tr > th").remove();
-    $("#equipHDR > thead >  tr").append(hdrdata.toLocaleString().replaceAll(',', ''));
+        else {
+            $("#equipHDR > thead >  tr >  th").each(function (index) {
+                if ($(this).text() == id) {
+                    $("#equipHDR > thead >  tr >  th").eq(index).prop('hidden', true);
+                    $("#equipHDR > tbody >  tr").each(function () {
+                        $(this).find('td').eq(index).prop('hidden', true);
+                    });
+                }
+            })
+        }
+    });
     equipmentTemplate.modal('hide');
-    $("#equipHDR").trigger("destroy", [false, function () {
-        resizableTable();
-        sortableTable();
-        $("#equipHDR").tablesorter({ emptyTo: 'none/zero' }).bind("sortEnd", function (e, t) {
-            setTimeout(function () {
-                var frHtml = $("#entityHDR").find('.static-rw');
-                $("#entityHDR").find('.static-rw').remove();
-
-                $("#entityHDR > tbody > tr:first").before(frHtml);
-            }, 10)
-        }).trigger("update");
-    }]);
 }
 
 $('#btnSearchEquipment').click(function () {
-    addEquipmentHeader();
+    addEquipmentHeader(true);
 })
-
-
 function addEntityColumn() {
+    $('#entityTemplateModelBody .form-check-input').each(function () {
+        var id = $(this).attr('id');
+        if ($(this).is(':checked')) {
+            if (jQuery.inArray(id, alreadyAddedEntityCol) >= 0) {
+
+                var currInd = $("#entityHDR > thead >  tr >  th:contains(" + id + ")").index();
+                $("#entityHDR > thead >  tr >  th").eq(currInd).prop('hidden', false)
+                $("#entityHDR > tbody >  tr").each(function () {
+                    $(this).find('td').eq(currInd).prop('hidden', false);
+                });
+            }
+            else {
+                alreadyAddedEntityCol.push(id);
+                $.ajax({
+                    url: '/Entity/EntityValueByPropName',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'GET',
+                    async: false,
+                    data: { 'propName': id, 'date': $('#mainDate').val() },
+                    success: function (data) {
+
+                        $('#entityHDR th:last').after("<th scope=\"col\">" + id + "</th>");
+                        $("#entityHDR > tbody > tr:first > td:last").after('<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'entityHDR\')"></td>');
+                        var i = 0;
+                        $("#entityHDR > tbody > tr").each(function (index) {
+                            if (index == 0) {
+                                return
+                            }
+                            if (data.data.length > 0 && $(this).find('input[value="' + data.data[i].Ent_ID + '"]').length > 0) {
+                                $(this).find('td:last').after('<td>' + data.data[i].Ent_Value + '</td>');
+                                i++;
+                            }
+                            else {
+                                $(this).find('td:last').after('<td></td>');
+                            }
+                        });
+                    },
+                    error: function (ex) { }
+                });
+            }
+        }
+        else {
+            $("#entityHDR > thead >  tr >  th").each(function (index) {
+                if ($(this).text() == id) {
+                    $("#entityHDR > thead >  tr >  th").eq(index).prop('hidden', true);
+                    $("#entityHDR > tbody >  tr").each(function () {
+                        $(this).find('td').eq(index).prop('hidden', true);
+                    });
+                }
+            })
+        }
+    });
+    entityTemplate.modal('hide');
+}
+
+function addEntityColumn_Old() {
     var hdrdata = [];
     $("#entityHDR th").each(function (index) {
         var headerdata = "<th scope=\"col\">" + $(this).text() + "</th>";
@@ -565,21 +476,30 @@ function addEntityColumn() {
 }
 
 
-function addEntityHeader() {
-    var searchString = $('#searchEntityStr').val().toLowerCase().trim();
-    if (searchString != '') {
-        if (previousentitysearch == searchString) {
-            previousentitysearch = searchString;
-            loadEntityHDR(searchString, false);
-            return;
-        }
-        previousentitysearch = searchString;
-        startIndexEntity = 0;
-        loadEntityHDR(searchString, true);
-    } else {
-        startIndexEntity = 0;
-        loadEntityHDR(searchString, false);
+function addEntityHeader(isSearch) {
+    if (isSearch == undefined || !isSearch) {
+        addEntityColumn();
+        resizableTable();
+        sortableTable();
     }
+    $("#entityHDR tr").each(function (index) {
+        if (index !== 0 && index != 1) {
+            var row = $(this);
+            var isHide = true;
+            row.find('td').each(function () {
+                if ($(this).text().toLowerCase().indexOf($('#searchEntityStr').val().toLowerCase().trim()) != -1) {
+                    isHide = false;
+                    return;
+                }
+            })
+            if (isHide) {
+                row.hide();
+            }
+            else {
+                row.show();
+            }
+        }
+    });
 }
 
 

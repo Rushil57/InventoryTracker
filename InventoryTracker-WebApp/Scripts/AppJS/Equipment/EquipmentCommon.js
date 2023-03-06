@@ -53,7 +53,7 @@ $(document).ready(function () {
 //}
 
 $('#search').click(function () {
-    addEquipmentHeader();
+    addEquipmentHeader(true);
 
 })
 

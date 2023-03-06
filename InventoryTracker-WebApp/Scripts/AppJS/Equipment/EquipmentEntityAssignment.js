@@ -23,6 +23,9 @@ var addNewSelectList = '<option selected>Please select</option>';
 var dateRangeTmp = '';
 var isSearchDropDown = false;
 
+var alreadyAddedEntityCol = [];
+var alreadyAddedEquipmentCol = [];
+
 $(document).ready(function () {
     //    loadAllEquipTemp();
     //    $('.datepicker').datepicker({
@@ -103,10 +106,7 @@ function bindTooltipForDates() {
 }
 
 function loadEquipmentHDR(searchString, searchflag) {
-    if (searchflag == true) {
-        $("#equipHDR > tbody > tr").remove();
-    }
-    if (startIndexEquip == 0) {
+    if (searchflag == true || startIndexEquip == 0) {
         $("#equipHDR > tbody > tr").remove();
     }
     $.ajax({
@@ -124,41 +124,12 @@ function loadEquipmentHDR(searchString, searchflag) {
         data: { 'searchString': searchString, 'startDate': $('#mainDate').val() },
         success: function (data) {
             if (data.IsValid) {
-                //var equipmentString = '';
+
                 for (var i = 0; i < data.data.length; i++) {
-                    //  equipmentString += '<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td class="assigned">' + data.data[i].ASSIGNED + '</td></tr>';
 
-                    $("#equipHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td ></td><tr>')
-
-                    var tableHeadLength = $("#equipHDR > thead > tr >  th").length
-                    for (var th = 0; th <= tableHeadLength;) {
-                        if (th != tableHeadLength && th != 0) {
-                            $("#equipHDR > tbody>tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find('td:last').after('<td></td>')
-                        }
-                        var headtext = $($("#equipHDR > thead > tr >  th")[th]).text();
-                        if (headtext == "Equip. type") {
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].EQUIP_TYPE);
-                        }
-                        if (headtext == "Vendor") {
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].VENDOR);
-                        }
-                        if (headtext == "Unit ID") {
-                            unitCol = th;
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").text(data.data[i].UNIT_ID);
-                            addNewSelectList += "<option value='" + data.data[i].EQUIP_ID + "'>" + data.data[i].UNIT_ID + "</option>";
-                        }
-                        if (headtext == "Assigned") {
-                            var a = " " + data.data[i].ASSIGNED;
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").addClass('assigned').text(a);
-                        }
-                        if (headtext == "Active") {
-                            $("#equipHDR > tbody >  tr").find('input[value="' + data.data[i].EQUIP_ID + '"]').parent().find("td:eq(" + th + ")").addClass('active').text(data.data[i].Active);
-                        }
-                        th = th + 1;
-                    }
+                    $("#equipHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].EQUIP_ID + '"/><td>' + data.data[i].EQUIP_TYPE + '</td><td>' + data.data[i].VENDOR + '</td><td>' + data.data[i].UNIT_ID + '</td><td class="assigned">' + data.data[i].ASSIGNED + '</td><td class="active">' + data.data[i].Active + '</td><tr>')
+                    addNewSelectList += "<option value='" + data.data[i].EQUIP_ID + "'>" + data.data[i].UNIT_ID + "</option>";
                 }
-                //$("#equipHDR > tbody >  tr").remove();
-                // $("#equipHDR > tbody").append(equipmentString);
                 $("#equipHDR > tbody >  tr").draggable({
                     helper: 'clone',
                     start: function (e, ui) {
@@ -176,20 +147,14 @@ function loadEquipmentHDR(searchString, searchflag) {
                             }
                             th = th - 1;
                         }
-                        //$('#equipHDR').parent().parent().removeClass('overflow-auto');
-                        //droppable.css('z-index', -1);
-                        //currentText = $(this).text();
-                        //draggedValue = currentText;
                     },
                     stop: function () {
-                        //droppable.css('z-index', 99999);
-                        //$('#equipHDR').parent().parent().addClass('overflow-auto');
                     }
                 });
-                 if ($("#equipHDR").find('.static-rw').length == 0) {
+                if ($("#equipHDR").find('.static-rw').length == 0) {
                     $("#equipHDR > tbody > tr:first").before('<tr class="static-rw" style="cursor:pointer"><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control"  style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td><tr>')
                 }
-                addEquipmentColumn();
+                //addEquipmentColumn();
                 $("#equipHDR").trigger("destroy", [false, function () {
                     resizableTable();
                     sortableTable();
@@ -212,7 +177,7 @@ function loadEquipmentHDR(searchString, searchflag) {
                 //if (isaddEquipmentColumn) {
                 //    addEquipmentColumn();
                 //}
-                
+
                 var rowCount = 0;
 
                 $('#equipHDR tr').each(function (index, element) {
@@ -229,10 +194,7 @@ function loadEquipmentHDR(searchString, searchflag) {
 
 
 function loadEntityHDR(searchString, searchflag) {
-    if (searchflag == true) {
-        $("#entityHDR > tbody > tr").remove();
-    }
-    if (startIndexEntity == 0) {
+    if (searchflag == true || startIndexEntity == 0) {
         $("#entityHDR > tbody > tr").remove();
     }
     $.ajax({
@@ -247,35 +209,15 @@ function loadEntityHDR(searchString, searchflag) {
         dataType: 'json',
         type: 'GET',
         async: false,
-        data: { 'searchString': searchString},
+        data: { 'searchString': searchString },
         success: function (data) {
             if (data.IsValid) {
                 var entityString = '';
+                var icn = "";
                 for (var i = 0; i < data.data.length; i++) {
-                    //  entityString += '<tr><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td class="addEntity">' + data.data[i].ENT_NAME + '</td><td class="droppable"></td><td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg></td></tr>';
-
-                    $("#entityHDR > tbody:last").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td></td><tr>')
-
-                    var tableHeadLength = $("#entityHDR > thead > tr >  th").length
-                    for (var th = 0; th <= tableHeadLength;) {
-                        if (th != tableHeadLength && th != 0) {
-                            $("#entityHDR > tbody>tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find('td:last').after('<td></td>')
-                        }
-                        var headtext = $($("#entityHDR > thead > tr >  th")[th]).text();
-                        if (headtext == "Entity Name") {
-                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").addClass("addEntity").text(data.data[i].ENT_NAME);
-                        }
-                        if (headtext == "Equipment Assigned") {
-                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").addClass("droppable");
-                        }
-                        if (headtext == "\n                            ") {
-                            $("#entityHDR > tbody >  tr").find('input[value="' + data.data[i].ENT_ID + '"]').parent().find("td:eq(" + th + ")").append('<svg onclick="openCC(\'' + data.data[i].ENT_NAME + '\',' + data.data[i].ENT_ID + ')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>');
-                        }
-                        th = th + 1;
-                    }
+                    icn = '<svg onclick="openCC(\'' + data.data[i].ENT_NAME + '\',' + data.data[i].ENT_ID + ')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar4-range" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" /><path d="M9 7.5a.5.5 0 0 1 .5-.5H15v2H9.5a.5.5 0 0 1-.5-.5v-1zm-2 3v1a.5.5 0 0 1-.5.5H1v-2h5.5a.5.5 0 0 1 .5.5z" /></svg>';
+                    $("#entityHDR").append('<tr style="cursor:pointer"><input type="hidden" value="' + data.data[i].ENT_ID + '"/><td>' + data.data[i].ENT_NAME + '</td> <td class="droppable"></td><td class="addEntity"> ' + icn + '</td></tr>');
                 }
-                //$("#entityHDR > tbody >  tr").remove();
-                //$("#entityHDR > tbody").append(entityString);
 
                 GetEquipmentEntityAssignment(0);
 
@@ -313,12 +255,11 @@ function loadEntityHDR(searchString, searchflag) {
                         });
                     }
                 });
-                addEntityColumn();
                 if ($("#entityHDR").find('.static-rw').length == 0) {
                     var firstTrHTML = '';
                     $("#entityHDR > thead > tr >  th").each(function () {
                         if ($(this).text() == '\n                            ') {
-                            firstTrHTML += '<td></td>'
+                            firstTrHTML += '<td class="addEntity"></td>'
                         }
                         else {
                             firstTrHTML += '<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'entityHDR\')"></td>'
@@ -339,7 +280,7 @@ function loadEntityHDR(searchString, searchflag) {
                         }, 10)
                     }).trigger("update");
                 }]);
-                
+
                 var rowCount = 0;
 
                 $('#entityHDR tr').each(function (index, element) {
@@ -349,16 +290,73 @@ function loadEntityHDR(searchString, searchflag) {
                 });
                 rowCount = rowCount > 0 ? rowCount - 1 : rowCount;
                 $("#totalCount1").html("Displaying " + rowCount + " out of " + data.totalCount);
+
             }
         }, error: function (ex) { }
     });
 }
 
 $('#btnSearchEntity').click(function () {
-    addEntityHeader();
+    addEntityHeader(true);
 })
 
 function addEntityColumn() {
+    $('#entityTemplateModelBody .form-check-input').each(function () {
+        var id = $(this).attr('id');
+        if ($(this).is(':checked')) {
+            if (jQuery.inArray(id, alreadyAddedEntityCol) >= 0) {
+
+                var currInd = $("#entityHDR > thead >  tr >  th:contains(" + id + ")").index();
+                $("#entityHDR > thead >  tr >  th").eq(currInd).prop('hidden', false)
+                $("#entityHDR > tbody >  tr").each(function () {
+                    $(this).find('td').eq(currInd).prop('hidden', false);
+                });
+            }
+            else {
+                alreadyAddedEntityCol.push(id);
+                $.ajax({
+                    url: '/Entity/EntityValueByPropName',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'GET',
+                    async: false,
+                    data: { 'propName': id, 'date': $('#mainDate').val() },
+                    success: function (data) {
+                        var addEntityIndex = $("#entityHDR > tbody > tr:first").find('.addEntity').index();
+                        $('#entityHDR th').eq(addEntityIndex).before("<th scope=\"col\">" + id + "</th>");
+                        $("#entityHDR > tbody > tr:first > td").eq(addEntityIndex).before('<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'entityHDR\')"></td>');
+                        var i = 0;
+                        $("#entityHDR > tbody > tr").each(function (index) {
+                            if (index == 0) {
+                                return
+                            }
+                            if (data.data.length > 0 && $(this).find('input[value="' + data.data[i].Ent_ID + '"]').length > 0) {
+                                $(this).find('.addEntity').before('<td>' + data.data[i].Ent_Value + '</td>');
+                                i++;
+                            }
+                            else {
+                                $(this).find('.addEntity').before('<td></td>');
+                            }
+                        });
+                    },
+                    error: function (ex) { }
+                });
+            }
+        }
+        else {
+            $("#entityHDR > thead >  tr >  th").each(function (index) {
+                if ($(this).text() == id) {
+                    $("#entityHDR > thead >  tr >  th").eq(index).prop('hidden', true);
+                    $("#entityHDR > tbody >  tr").each(function () {
+                        $(this).find('td').eq(index).prop('hidden', true);
+                    });
+                }
+            })
+        }
+    });
+    entityTemplate.modal('hide');
+}
+function addEntityColumn_Old() {
     var tableHeader = '';
     var hdrdata = [];
     $("#entityHDR th").each(function (index) {
@@ -492,11 +490,13 @@ function addEntityColumn() {
 }
 
 
-function addEntityHeader() {
-    loadEntityHDR('', false);
-
-    resizableTable();
-    sortableTable();
+function addEntityHeader(isSearch) {
+    //loadEntityHDR('', false);
+    if (isSearch == undefined || !isSearch) {
+        addEntityColumn();
+        resizableTable();
+        sortableTable();
+    }
     $("#entityHDR tr").each(function (index) {
         if (index !== 0 && index != 1) {
             var row = $(this);
@@ -517,10 +517,13 @@ function addEntityHeader() {
     });
 }
 
-function addEquipmentHeader() {
-    addEquipmentColumn();
-    resizableTable();
-    sortableTable();
+function addEquipmentHeader(isSearch) {
+
+    if (isSearch == undefined || !isSearch) {
+        addEquipmentColumn();
+        resizableTable();
+        sortableTable();
+    }
     $("#equipHDR tr").each(function (index) {
         if (index !== 0 && index != 1) {
             var row = $(this);
@@ -832,7 +835,7 @@ function getEquipmentEntityAssignmentByYear(entityID) {
                     if (preservedColor.filter(x => x.UNITID == newData.data[i].UNIT_ID).length > 0) {
                         isHidden = 'hidden';
                     }
-                   
+
                     if (preservedColor.indexOf(newData.data[i].RendomColor) == -1) {
                         var obj = {
                             RandomColor: '#' + newData.data[i].RendomColor,
@@ -971,7 +974,7 @@ function openAssignmentPopup() {
     deleteStartDate = new Date($(gbl_selected_td).attr('data-start-date'));
     deleteEndDate = new Date($(gbl_selected_td).attr('data-end-date'));
     resetDeleteAssignmentModel();
-  
+
 
     $('#startDateLbl').text($('.updateStartDatepicker').val());
     $('#endDateLbl').text($('.updateEndDatepicker').val());
@@ -1059,4 +1062,60 @@ function exportDateRangeData() {
 function sampleFileDateRangeImportDownload() {
     $("#importDateRange").popover('hide')
     window.location.href = '/ExcelFiles/EquipmentEntityAssignDateRangeSample.xlsx';
+}
+
+
+function addEquipmentColumn() {
+    $('#equipmentTemplateModelBody .form-check-input').each(function () {
+        var id = $(this).attr('id');
+        if ($(this).is(':checked')) {
+            if (jQuery.inArray(id, alreadyAddedEquipmentCol) >= 0) {
+                var currInd = $("#equipHDR > thead >  tr >  th:contains(" + id + ")").index();
+                $("#equipHDR > thead >  tr >  th").eq(currInd).prop('hidden', false)
+                $("#equipHDR > tbody >  tr").each(function () {
+                    $(this).find('td').eq(currInd).prop('hidden', false);
+                });
+            }
+            else {
+                alreadyAddedEquipmentCol.push(id);
+                $.ajax({
+                    url: '/Equipment/EquipmentValueByPropName',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: 'GET',
+                    async: false,
+                    data: { 'propName': id, 'date': $('#mainDate').val() },
+                    success: function (data) {
+                        $('#equipHDR th:last').after("<th scope=\"col\">" + id + "</th>");
+                        $("#equipHDR > tbody > tr:first > td:last").after('<td><input type="text" class="form-control" style="height:30px" onkeyup="searchInTable(\'equipHDR\')"></td>');
+                        var i = 0;
+                        $("#equipHDR > tbody > tr").each(function (index) {
+                            if (index == 0) {
+                                return
+                            }
+                            if (data.data.length > 0 && $(this).find('input[value="' + data.data[i].Equip_ID + '"]').length > 0) {
+                                $(this).find('td:last').after('<td>' + data.data[i].Eq_Value + '</td>');
+                                i++;
+                            }
+                            else {
+                                $(this).find('td:last').after('<td></td>');
+                            }
+                        });
+                    },
+                    error: function (ex) { }
+                });
+            }
+        }
+        else {
+            $("#equipHDR > thead >  tr >  th").each(function (index) {
+                if ($(this).text() == id) {
+                    $("#equipHDR > thead >  tr >  th").eq(index).prop('hidden', true);
+                    $("#equipHDR > tbody >  tr").each(function () {
+                        $(this).find('td').eq(index).prop('hidden', true);
+                    });
+                }
+            })
+        }
+    });
+    equipmentTemplate.modal('hide');
 }

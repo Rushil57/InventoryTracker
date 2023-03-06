@@ -28,12 +28,12 @@ var lastPlusRow = '<tr><td colspan = "3"></td>  <td  class="textBox-BackColor"> 
 $(document).ready(function () {
     $('#searchEquipmentStr').keydown(function (e) {
         if (e.keyCode == 13) {
-            addEquipmentHeader();
+            addEquipmentHeader(true);
         }
     })
     $('#searchEntityStr').keydown(function (e) {
         if (e.keyCode == 13) {
-            addEntityHeader();
+            addEntityHeader(true);
         }
     })
     $('#property,#propEquip ,#propEnitity,#divbulkImport,#divimport, #export ,#sampleFile, #entityCC, #exportDateRange, #divimpDateRange').tooltip();
@@ -474,9 +474,9 @@ function sortableTable() {
         }
     });
     $('#entityHDR > thead tr').disableSelection();
-    $("#entityHDR").trigger("destroy", [false, function () {
-        $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
-    }]);
+    //$("#entityHDR").trigger("destroy", [false, function () {
+    //    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
+    //}]);
 }
 
 
