@@ -269,7 +269,7 @@ function addEquipmentColumn() {
                             if (index == 0) {
                                 return
                             }
-                            if (data.data.length > 0 && $(this).find('input[value="' + data.data[i].Equip_ID + '"]').length > 0) {
+                            if (i < data.data.length && data.data.length > 0 && $(this).find('input[value="' + data.data[i].Equip_ID + '"]').length > 0) {
                                 $(this).find('.addEquipment').before('<td>' + data.data[i].Eq_Value + '</td>');
                                 i++;
                             }
@@ -331,7 +331,7 @@ function addEntityColumn() {
                             if (index == 0) {
                                 return
                             }
-                            if (data.data.length > 0 && $(this).find('input[value="' + data.data[i].Ent_ID + '"]').length > 0) {
+                            if (i < data.data.length && data.data.length > 0 && $(this).find('input[value="' + data.data[i].Ent_ID + '"]').length > 0) {
                                 $(this).find('td:last').after('<td>' + data.data[i].Ent_Value + '</td>');
                                 i++;
                             }
