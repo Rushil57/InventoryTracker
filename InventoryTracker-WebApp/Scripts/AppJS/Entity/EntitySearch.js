@@ -734,6 +734,7 @@ function openCC(entityName, entityID) {
         changeMonth: false,
         changeYear: false,
         stepMonths: 12,
+        defaultDate: '01/01/' + new Date().getFullYear(),
         onSelect: function (date, inst) {
             inst.show();
         }
