@@ -550,7 +550,14 @@ function exportData() {
     });
     AddLoader()
     window.location = "/Equipment/EquipmentEntityAssignExport?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim() + "&columns=" + headerCol;
-    setTimeout(function () { RemoveLoader(); }, 2000);
+    _tmr = window.setInterval(function () {
+        var _str = getCookie("cookie_EquipmentEntityAssignExport");
+        if (document.cookie.indexOf(_str) !== -1) {
+            setTimeout(function () { RemoveLoader(); }, 1000);
+            clearInterval(_tmr)
+            ClearCockie("cookie_EquipmentEntityAssignExport");
+        }
+    }, 1000);
 }
 
 

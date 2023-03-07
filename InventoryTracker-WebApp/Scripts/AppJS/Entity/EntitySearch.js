@@ -638,7 +638,14 @@ $('#entityType').change(function () {
 function exportData() {
     AddLoader();
     window.location = "/Entity/Export?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEntityStr').val().trim();
-    setTimeout(function () { RemoveLoader(); }, 2000);
+    _tmr = window.setInterval(function () {
+        var _str = getCookie("cookie_EntitySearchData");
+        if (document.cookie.indexOf(_str) !== -1) {
+            setTimeout(function () { RemoveLoader(); }, 1000);
+            clearInterval(_tmr)
+            ClearCockie("cookie_EntitySearchData");
+        }
+    }, 1000);
 }
 
 function importExcel() {

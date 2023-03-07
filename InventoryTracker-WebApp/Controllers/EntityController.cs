@@ -298,7 +298,7 @@ namespace InventoryTracker_WebApp.Controllers
                 sl.SaveAs(ms);
             }
             ms.Position = 0;
-
+            ControllerContext.HttpContext.Response.Cookies.Add(new HttpCookie("cookie_EntitySearchData", new DateTime().ToShortDateString()));
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Entity.xlsx");
         }
 
@@ -614,7 +614,6 @@ namespace InventoryTracker_WebApp.Controllers
                         i++;
                     }
 
-                    sl.SetColumnStyle(j, j + 200, sLStyle);
                     var entIDList = equipment_ent_assignment.Where(x => x.EQUIP_ID == equipmentID).Select(x => x.ENT_ID).ToList();
                     sl.SetCellValue(2, j, "Entity Name");
                     foreach (var entityID in entIDList)
@@ -625,6 +624,8 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                     i++;
                 }
+
+                sl.SetColumnStyle(j, j + 200, sLStyle);
                 sl.AutoFitColumn(1, j);
                 sLStyleColor.Protection.Locked = true;
                 sl.SetRowStyle(1, sLStyleColor);
@@ -632,7 +633,7 @@ namespace InventoryTracker_WebApp.Controllers
                 sl.SaveAs(ms);
             }
             ms.Position = 0;
-
+            ControllerContext.HttpContext.Response.Cookies.Add(new HttpCookie("cookie_EntityEquipmentAssignExport", new DateTime().ToShortDateString()));
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EntityEquipmentAssignExport.xlsx");
         }
 
@@ -961,7 +962,7 @@ namespace InventoryTracker_WebApp.Controllers
                         i++;
                     }
 
-                    sl.SetColumnStyle(j, j + 200, sLStyle);
+                    
                     var entIDList = equipment_ent_assignment.Where(x => x.EQUIP_ID == equipmentID).Select(x => x.ENT_ID).ToList();
                     sl.SetCellValue(2, j, "Entity Name");
                     foreach (var entityID in entIDList)
@@ -983,6 +984,7 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                     i++;
                 }
+                sl.SetColumnStyle(j, j + 200, sLStyle);
                 sl.AutoFitColumn(1, j);
                 sLStyleColor.Protection.Locked = true;
                 sl.SetRowStyle(1, sLStyleColor);

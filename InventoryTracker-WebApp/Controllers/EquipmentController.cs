@@ -304,7 +304,7 @@ namespace InventoryTracker_WebApp.Controllers
                     sl.SaveAs(ms);
                 }
                 ms.Position = 0;
-
+                ControllerContext.HttpContext.Response.Cookies.Add(new HttpCookie("cookie_EquipmentSearchData", new DateTime().ToShortDateString()));
                 return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Equipment.xlsx");
             }
             catch (Exception e)
@@ -622,7 +622,6 @@ namespace InventoryTracker_WebApp.Controllers
                     {
                         i++;
                     }
-                    sl.SetColumnStyle(j, j + 200, sLStyle);
                     var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entID).Select(x => x.EQUIP_ID).ToList();
                     sl.SetCellValue(2, j, "Unit ID");
                     foreach (var equipID in equipIDList)
@@ -634,6 +633,7 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                     i++;
                 }
+                sl.SetColumnStyle(j, j + 200, sLStyle);
                 sl.AutoFitColumn(1, j);
                 sLStyleColor.Protection.Locked = true;
                 sl.SetRowStyle(1, sLStyleColor);
@@ -641,7 +641,7 @@ namespace InventoryTracker_WebApp.Controllers
                 sl.SaveAs(ms);
             }
             ms.Position = 0;
-
+            ControllerContext.HttpContext.Response.Cookies.Add(new HttpCookie("cookie_EquipmentEntityAssignExport", new DateTime().ToShortDateString()));
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EquipmentEntityAssignExport.xlsx");
         }
 
@@ -873,7 +873,7 @@ namespace InventoryTracker_WebApp.Controllers
                     {
                         i++;
                     }
-                    sl.SetColumnStyle(j, j + 200, sLStyle);
+                    
                     var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entID).Select(x => x.EQUIP_ID).ToList();
                     sl.SetCellValue(2, j, "Unit ID");
                     foreach (var equipID in equipIDList)
@@ -895,6 +895,7 @@ namespace InventoryTracker_WebApp.Controllers
                     }
                     i++;
                 }
+                sl.SetColumnStyle(j, j + 200, sLStyle);
                 sl.AutoFitColumn(1, j);
                 sLStyleColor.Protection.Locked = true;
                 sl.SetRowStyle(1, sLStyleColor);

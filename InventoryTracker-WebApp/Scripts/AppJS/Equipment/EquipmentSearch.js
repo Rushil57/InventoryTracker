@@ -726,7 +726,14 @@ $('#equipType').change(function () {
 function exportData() {
     AddLoader();
     window.location = "/Equipment/Export?startDate=" + $('#mainDate').val() + "&searchString=" + $('#searchEquipmentStr').val().trim();
-    setTimeout(function () { RemoveLoader(); }, 2000);
+    _tmr = window.setInterval(function () {
+        var _str = getCookie("cookie_EquipmentSearchData");
+        if (document.cookie.indexOf(_str) !== -1) {
+            setTimeout(function () { RemoveLoader(); }, 1000);
+            clearInterval(_tmr)
+            ClearCockie("cookie_EquipmentSearchData");
+        }
+    }, 1000);
 }
 
 function importExcel() {
