@@ -986,6 +986,7 @@ namespace InventoryTracker_WebApp.Controllers
                 sl.AutoFitColumn(1, j);
                 sLStyleColor.Protection.Locked = true;
                 sl.SetRowStyle(1, sLStyleColor);
+                sl.SetCellStyle(1, 3, sLStyle);
                 sl.ProtectWorksheet(sp);
                 sl.SaveAs(ms);
             }
