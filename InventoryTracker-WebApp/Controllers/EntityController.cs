@@ -257,7 +257,7 @@ namespace InventoryTracker_WebApp.Controllers
 
                 sl.ImportDataTable("A2", entity, true);
                 sl.AutoFitColumn(1, entity.Columns.Count);
-                sl.SetRowStyle(1, entity.Rows.Count + 50, sLStyleColor);
+                sl.SetRowStyle(1, entity.Rows.Count + 2, sLStyleColor);
                 sl.SetColumnStyle(3, entity.Columns.Count, sLStyle);
                 sl.RemoveRowStyle(1, 2);
                 sl.SetRowStyle(1,2,sLStyleColor);
@@ -983,7 +983,7 @@ namespace InventoryTracker_WebApp.Controllers
                                         {
                                             break;
                                         }
-                                        if (!string.IsNullOrEmpty(cellValue) && cellValue.IndexOf("-") < 0 && (columnHeader[j - 1].ToLower().ToString() == "start date" || columnHeader[j - 1].ToLower().ToString() == "end date"))
+                                        if (!string.IsNullOrEmpty(cellValue) && cellValue.IndexOf("-") < 0 && (columnHeader[j - 1].ToLower().ToString().Trim() == "start date" || columnHeader[j - 1].ToLower().ToString().Trim() == "end date"))
                                         {
                                             cellValue = (sheet.GetCellValueAsDateTime(i, j)).ToShortDateString();
                                         }
