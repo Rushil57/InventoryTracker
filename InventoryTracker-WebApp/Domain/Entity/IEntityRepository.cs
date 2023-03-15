@@ -1,5 +1,6 @@
 ﻿using InventoryTracker_WebApp.Models;
 using System.Collections.Generic;
+using System.Data;
 
 namespace InventoryTracker_WebApp.Domain.Entity
 {
@@ -18,10 +19,10 @@ namespace InventoryTracker_WebApp.Domain.Entity
         List<EquipmentHeader> GetEntityEquipmentAssignment(int entityID);
         bool DeleteEntityHeader(int entityID);
         bool SaveEntityHDR(EntityHeader entityHDR, List<EntityDetail> entityDtl);
-        List<dynamic> ExportEntity(string startDate,string searchString);
+        DataTable ExportEntity(string startDate,string searchString);
         bool UpdateTemplateDetails(string startDate,List<string> columnHeader, List<string> values);
        
-        List<dynamic> ExportEntityEquipmentAssign(string startDate, string searchString, string columns);
+        DataTable ExportEntityEquipmentAssign(string startDate, string searchString, string columns);
         List<EntityHeader> GetAllEntityHeaders(string entityName = null);
         bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName);
 

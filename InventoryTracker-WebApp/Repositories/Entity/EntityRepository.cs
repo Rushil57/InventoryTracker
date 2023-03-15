@@ -4,6 +4,7 @@ using InventoryTracker_WebApp.Helpers;
 using InventoryTracker_WebApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web.UI.WebControls;
 
@@ -482,7 +483,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             finally { connection.Close(); }
         }
 
-        public List<dynamic> ExportEntity(string startDate, string searchString)
+        public DataTable ExportEntity(string startDate, string searchString)
         {
             List<dynamic> entities = new List<dynamic>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -497,8 +498,11 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                     query += "and  eh.ENT_NAME like ''%" + searchString + "%'' or Prop_name like ''%" + searchString + "%''";
                 }
                 query += ") t  PIVOT( max(Ent_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
-                entities = connection.Query<dynamic>(query).ToList();
-                return entities;
+                //entities = connection.Query<dynamic>(query).ToList();
+                DataSet ds = new DataSet();
+                ds = CommonDatabaseOperationHelper.GetDataSet(query);
+                
+                return ds.Tables[0];
             }
             catch (Exception e)
             {
@@ -553,7 +557,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             finally { connection.Close(); }
         }
 
-        public List<dynamic> ExportEntityEquipmentAssign(string startDate, string searchString, string columns)
+        public DataTable ExportEntityEquipmentAssign(string startDate, string searchString, string columns)
         {
             List<dynamic> equipments = new List<dynamic>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -578,8 +582,11 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                     }
                     query += ") t  PIVOT( max(Eq_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
                 }
-                equipments = connection.Query<dynamic>(query).ToList();
-                return equipments;
+                //equipments = connection.Query<dynamic>(query).ToList();
+                DataSet ds = new DataSet();
+                ds = CommonDatabaseOperationHelper.GetDataSet(query);
+
+                return ds.Tables[0];
             }
             catch (Exception e)
             {

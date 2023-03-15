@@ -243,7 +243,7 @@ namespace InventoryTracker_WebApp.Controllers
                     sLStyleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGray, System.Drawing.Color.LightGray);
 
                     sLStyleColor.Font.Bold = true;
-
+                    sLStyleColor.Protection.Locked = true;
                     sLStyleColor.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
                     sLStyleColor.Border.LeftBorder.Color = System.Drawing.Color.Black;
 
@@ -259,47 +259,13 @@ namespace InventoryTracker_WebApp.Controllers
                     sl.SetCellValue(1, 2, "Start Date:");
                     sl.SetCellValue(1, 3, startDate);
 
-                    int i = 2;
-                    sl.SetRowStyle(1, sLStyleColor);
-                    sl.SetRowStyle(i + 1, sLStyleColor);
-                    sl.AutoFitColumn(1);
-                    int j = 0;
-                    foreach (var e in equipment)
-                    {
-                        j = 1;
-                        sl.SetRowStyle(i, sLStyleColor);
-                        sl.AutoFitColumn(j);
+                    sl.ImportDataTable("A2", equipment, true);
+                    sl.AutoFitColumn(1, equipment.Columns.Count);
+                    sl.SetRowStyle(1, equipment.Rows.Count + 50, sLStyleColor);
+                    sl.SetColumnStyle(3, equipment.Columns.Count, sLStyle);
+                    sl.RemoveRowStyle(1, 2);
+                    sl.SetRowStyle(1, 2, sLStyleColor);
 
-                        foreach (var item in e)
-                        {
-                            if (i == 2)
-                            {
-                                sl.SetCellValue(i, j, item.Key);
-                                sl.SetCellValue((i + 1), j, item.Value == null ? "" : item.Value.ToString());
-                                if (j != 1 && j != 2 && j != 3 && j != 4)
-                                {
-                                    sl.RemoveCellStyle((i + 1), j);
-                                    sl.SetCellStyle((i + 1), j, sLStyle);
-                                }
-                            }
-                            else
-                            {
-                                sl.SetCellValue(i, j, item.Value == null ? "" : item.Value.ToString());
-                                if (j != 1 && j != 2 && j != 3 && j != 4)
-                                {
-                                    sl.RemoveCellStyle(i, j);
-                                    sl.SetCellStyle(i, j, sLStyle);
-                                }
-                            }
-                            j++;
-                        }
-                        if (i == 2)
-                        {
-                            i++;
-                        }
-                        i++;
-                    }
-                    sl.AutoFitColumn(1, j);
                     sl.ProtectWorksheet(sp);
                     sl.SaveAs(ms);
                 }
@@ -571,7 +537,7 @@ namespace InventoryTracker_WebApp.Controllers
                 sLStyleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGray, System.Drawing.Color.LightGray);
 
                 sLStyleColor.Font.Bold = true;
-
+                sLStyleColor.Protection.Locked = true;
                 sLStyleColor.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
                 sLStyleColor.Border.LeftBorder.Color = System.Drawing.Color.Black;
 
@@ -586,57 +552,33 @@ namespace InventoryTracker_WebApp.Controllers
 
                 sl.SetCellValue(1, 2, "Start Date:");
                 sl.SetCellValue(1, 3, startDate);
-
-                int i = 2;
-                sl.SetColumnStyle(1, sLStyleColor);
-                sl.SetColumnStyle(i + 1, sLStyleColor);
-                sl.AutoFitColumn(1);
-                int j = 0;
-                foreach (var e in entities)
+                int newcolumnCount = 0;
+                var firstUnitID = entities.Columns.Count;
+                var unitIDStr = "Unit ID";
+                foreach (var eRows in entities.Rows.Cast<DataRow>())
                 {
-                    j = 1;
-                    int entID = 0;
-                    sl.SetColumnStyle(i, sLStyleColor);
-                    sl.AutoFitColumn(j);
+                    var entityID =Convert.ToInt64(((System.Data.DataRow)eRows).ItemArray[0]);
+                    var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entityID).Select(x => x.EQUIP_ID).ToList();
 
-                    foreach (var item in e)
-                    {
-                        if (i == 2)
-                        {
-                            sl.RemoveCellStyle((i + 1), j);
-                            sl.SetCellValue(i, j, item.Key);
-                            sl.SetCellValue((i + 1), j, item.Value == null ? "" : item.Value.ToString());
-                        }
-                        else
-                        {
-                            sl.RemoveCellStyle(i, j);
-                            sl.SetCellValue(i, j, item.Value == null ? "" : item.Value.ToString());
-                        }
-                        j++;
-                        if (item.Key == "ENT_ID")
-                        {
-                            entID = item.Value;
-                        }
-                    }
-                    if (i == 2)
-                    {
-                        i++;
-                    }
-                    var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entID).Select(x => x.EQUIP_ID).ToList();
-                    sl.SetCellValue(2, j, "Unit ID");
+                    var j = firstUnitID;
                     foreach (var equipID in equipIDList)
                     {
-                        sl.SetCellValue(i, j, equipmentHdr.Where(x => x.EQUIP_ID == equipID).Select(x => x.UNIT_ID).FirstOrDefault());
-                        sl.SetCellValue(2, j, "Unit ID");
-
+                        if (newcolumnCount < equipIDList.Count)
+                        {
+                            entities.Columns.Add(unitIDStr);
+                            newcolumnCount++;
+                            unitIDStr += " ";
+                        }
+                        eRows[j] = equipmentHdr.Where(x => x.EQUIP_ID == equipID).Select(x => x.UNIT_ID).FirstOrDefault();
                         j++;
                     }
-                    i++;
                 }
-                sl.SetColumnStyle(j, j + 200, sLStyle);
-                sl.AutoFitColumn(1, j);
-                sLStyleColor.Protection.Locked = true;
+                sl.ImportDataTable("A2", entities, true);
+                sl.AutoFitColumn(1, entities.Columns.Count);
+                sl.SetColumnStyle(1, firstUnitID, sLStyleColor);
+                sl.SetColumnStyle(firstUnitID + 1, entities.Columns.Count + 1000, sLStyle);
                 sl.SetRowStyle(1, sLStyleColor);
+
                 sl.ProtectWorksheet(sp);
                 sl.SaveAs(ms);
             }
@@ -798,7 +740,6 @@ namespace InventoryTracker_WebApp.Controllers
                 var entities = _equipmentRepository.ExportEquipmentEntityAssign(startDate, searchString, string.Empty);
                 var equipmentHdr = _equipmentRepository.GetAllEquipmentHeaders();
                 var equipment_ent_assignment = _equipmentRepository.GetAllEquipment_Entity_AssignmentByDate(startDate);
-
                 SLStyle sLStyle = new SLStyle();
                 sLStyle.Protection.Locked = false;
                 sLStyle.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.White, System.Drawing.Color.White);
@@ -822,7 +763,7 @@ namespace InventoryTracker_WebApp.Controllers
                 sLStyleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGray, System.Drawing.Color.LightGray);
 
                 sLStyleColor.Font.Bold = true;
-
+                sLStyleColor.Protection.Locked = true;
                 sLStyleColor.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
                 sLStyleColor.Border.LeftBorder.Color = System.Drawing.Color.Black;
 
@@ -837,69 +778,42 @@ namespace InventoryTracker_WebApp.Controllers
 
                 sl.SetCellValue(1, 2, "Start Date:");
                 sl.SetCellValue(1, 3, startDate);
-
-                int i = 2;
-                sl.SetColumnStyle(1, sLStyleColor);
-                sl.SetColumnStyle(i + 1, sLStyleColor);
-                sl.AutoFitColumn(1);
-                int j = 0;
-                foreach (var e in entities)
+                int newcolumnCount = 0;
+                var firstUnitID = entities.Columns.Count;
+                var unitIDStr = "Unit ID";
+                var startDateStr = "Start Date";
+                var endDateStr = "End Date";
+                foreach (var eRows in entities.Rows.Cast<DataRow>())
                 {
-                    j = 1;
-                    int entID = 0;
-                    sl.SetColumnStyle(i, sLStyleColor);
-                    sl.AutoFitColumn(j);
+                    var entityID = Convert.ToInt64(((System.Data.DataRow)eRows).ItemArray[0]);
+                    var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entityID).Select(x => x.EQUIP_ID).ToList();
 
-                    foreach (var item in e)
-                    {
-                        if (i == 2)
-                        {
-                            sl.RemoveCellStyle((i + 1), j);
-                            sl.SetCellValue(i, j, item.Key);
-                            sl.SetCellValue((i + 1), j, item.Value == null ? "" : item.Value.ToString());
-                        }
-                        else
-                        {
-                            sl.RemoveCellStyle(i, j);
-                            sl.SetCellValue(i, j, item.Value == null ? "" : item.Value.ToString());
-                        }
-                        j++;
-                        if (item.Key == "ENT_ID")
-                        {
-                            entID = item.Value;
-                        }
-                    }
-                    if (i == 2)
-                    {
-                        i++;
-                    }
-                    
-                    var equipIDList = equipment_ent_assignment.Where(x => x.ENT_ID == entID).Select(x => x.EQUIP_ID).ToList();
-                    sl.SetCellValue(2, j, "Unit ID");
+                    var j = firstUnitID;
                     foreach (var equipID in equipIDList)
                     {
-                        sl.SetCellValue(i, j, equipmentHdr.Where(x => x.EQUIP_ID == equipID).Select(x => x.UNIT_ID).FirstOrDefault());
-                        sl.SetCellValue(2, j, "Unit ID");
-                        sl.AutoFitColumn(j);
+                        if (newcolumnCount < equipIDList.Count)
+                        {
+                            entities.Columns.Add(unitIDStr);
+                            entities.Columns.Add(startDateStr);
+                            entities.Columns.Add(endDateStr);
+                            newcolumnCount++;
+                            unitIDStr += " ";
+                            startDateStr += " ";
+                            endDateStr += " ";
+                        }
+                        eRows[j] = equipmentHdr.Where(x => x.EQUIP_ID == equipID).Select(x => x.UNIT_ID).FirstOrDefault();
                         j++;
-
-                        sl.SetCellValue(i, j, equipment_ent_assignment.Where(x => x.EQUIP_ID == equipID && x.ENT_ID == entID).Select(x => x.START_DATE.ToShortDateString()).FirstOrDefault());
-                        sl.SetCellValue(2, j, "Start date");
-                        sl.AutoFitColumn(j);
+                       
+                        eRows[j] = equipment_ent_assignment.Where(x => x.EQUIP_ID == equipID && x.ENT_ID == entityID).Select(x => x.START_DATE.ToShortDateString()).FirstOrDefault();
                         j++;
-
-                        sl.SetCellValue(i, j, equipment_ent_assignment.Where(x => x.EQUIP_ID == equipID && x.ENT_ID == entID).Select(x => x.END_DATE.ToShortDateString()).FirstOrDefault());
-                        sl.SetCellValue(2, j, "End date");
-                        sl.AutoFitColumn(j);
+                        eRows[j] = equipment_ent_assignment.Where(x => x.EQUIP_ID == equipID && x.ENT_ID == entityID).Select(x => x.END_DATE.ToShortDateString()).FirstOrDefault();
                         j++;
                     }
-                    i++;
                 }
-                sl.SetColumnStyle(j, j + 200, sLStyle);
-                sl.AutoFitColumn(1, j);
-                sLStyleColor.Protection.Locked = true;
-                sl.SetRowStyle(1, sLStyleColor);
-                sl.SetCellStyle(1, 3, sLStyle);
+                sl.ImportDataTable("A2", entities, true);
+                sl.AutoFitColumn(1, entities.Columns.Count);
+                sl.SetColumnStyle(1, firstUnitID, sLStyleColor);
+                sl.SetColumnStyle(firstUnitID + 1, entities.Columns.Count + 1000, sLStyle);
                 sl.ProtectWorksheet(sp);
                 sl.SaveAs(ms);
             }
@@ -975,9 +889,9 @@ namespace InventoryTracker_WebApp.Controllers
                                         {
                                             break;
                                         }
-                                        if (!string.IsNullOrEmpty(cellValue) && (columnHeader[j - 1].ToLower().ToString() == "start date" || columnHeader[j - 1].ToLower().ToString() == "end date"))
+                                        if (!string.IsNullOrEmpty(cellValue) && cellValue.IndexOf("-") < 0 && (columnHeader[j - 1].ToLower().ToString() == "start date" || columnHeader[j - 1].ToLower().ToString() == "end date"))
                                         {
-                                            cellValue = (sheet.GetCellValueAsDateTime(i, j)).ToString();
+                                            cellValue = (sheet.GetCellValueAsDateTime(i, j)).ToShortDateString();
                                         }
                                         var valueOFCell = cellValue == null ? "" : cellValue.ToString();
                                         values.Add(valueOFCell.Trim());
