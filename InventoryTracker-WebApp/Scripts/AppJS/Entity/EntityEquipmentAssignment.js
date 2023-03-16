@@ -17,6 +17,7 @@ var dateRangeTmp = '';
 var isSearchDropDown = false;
 var alreadyAddedEntityCol = [];
 var alreadyAddedEquipmentCol = [];
+var ccEntityID = undefined;
 
 $(document).ready(function () {
     loadAllEquipTemp();

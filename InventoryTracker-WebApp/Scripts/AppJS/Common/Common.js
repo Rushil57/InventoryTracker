@@ -199,7 +199,7 @@ function loadAllEntityTemp() {
                 for (var i = 0; i < data.uniquePropName.length; i++) {
                     var propName = data.uniquePropName[i].Prop_name.trim();
                     var entityTypeValue = data.uniquePropNameEnt.filter(x => x.Prop_name === propName)[0].Ent_type.toUpperCase();
-                    templateString += '<div entType="' + entityTypeValue +'" class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
+                    templateString += '<div entType="' + entityTypeValue + '" class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
                 }
 
                 uniqueEntityType = "";
@@ -235,12 +235,12 @@ function loadAllEquipTemp() {
         success: function (data) {
             if (data.IsValid) {
                 var templateString = '';
-                    templateString += 'Equipment type: <select name="equipType" class="dropdown-control" id="equipTypeInColumns" onchange="equipTypeChange()"></select>';
+                templateString += 'Equipment type: <select name="equipType" class="dropdown-control" id="equipTypeInColumns" onchange="equipTypeChange()"></select>';
                 for (var i = 0; i < data.uniquePropName.length; i++) {
                     var propName = data.uniquePropName[i].Prop_Name.trim();
                     //equipType.push(data.data[i].Equipment_Type.trim());
                     var equipTypeValue = data.uniquePropNameEqu.filter(x => x.Prop_Name === propName)[0].Equipment_Type.toUpperCase();
-                    templateString += '<div equipType=' + equipTypeValue +' class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
+                    templateString += '<div equipType=' + equipTypeValue + ' class="form-check"><input class="form-check-input" type="checkbox" value="" id="' + propName + '"> <label class="form-check-label" for="' + propName + '"> ' + propName + ' </label> </div>';
                 }
                 //$.unique(equipType);
                 uniqueEquipType = "";
@@ -354,7 +354,7 @@ function addEntityColumn() {
     $("#entityHDR").trigger("destroy", [false, function () {
         $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
     }]);
-    
+
 }
 
 
@@ -635,6 +635,17 @@ function resetDeleteAssignmentModel() {
         $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', deleteStartDate);
     }
     $('#calendarControlModel').css('z-index', '1055');
+    deleteAssignmentModel.modal('hide');
+    if (ccEntityID != undefined) {
+        openCC('', deleteEntityID);
+        getEquipmentEntityAssignmentByYear(deleteEntityID);
+        loadEntityHDR('', false);
+    }
+    else {
+        openCC('', deleteEquipID, '', '');
+        getEquipmentEntityAssignmentByYear(deleteEquipID);
+        loadEquipmentHDR('', false);
+    }
 }
 
 
@@ -734,6 +745,16 @@ function resetEditModel() {
         $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', sdate);
     }
     $('#calendarControlModel').css('z-index', '1055');
+    $('#editEntityEquipment').modal('hide');
+    $('#calendarControlModel').modal('hide');
+    if (ccEntityID != undefined) {
+        $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');
+    }
+    else {
+        $("#equipHDR > tbody").find("[value='" + ccEquipID + "']").parent().trigger('click');
+    }
+    $('#editTemplate').trigger('click');
+    setTimeout(callFunction, 500)
 }
 
 function callFunction() {

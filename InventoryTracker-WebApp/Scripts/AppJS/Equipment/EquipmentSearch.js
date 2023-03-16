@@ -24,6 +24,7 @@ var filterStr = '';
 var isFirstTimeEdit = true;
 var isEntityDeleted = 0;
 var isSearchDropDown = true;
+var ccEntityID = undefined;
 
 $(document).ready(function () {
     $('#selectedMenu').text($('#menuEquipSearch').text());
