@@ -254,11 +254,11 @@ namespace InventoryTracker_WebApp.Controllers
 
                 sl.SetCellValue(1, 2, "Start Date:");
                 sl.SetCellValue(1, 3, startDate);
-
+                entity.Columns.Remove("ENT_ID");
                 sl.ImportDataTable("A2", entity, true);
                 sl.AutoFitColumn(1, entity.Columns.Count);
                 sl.SetRowStyle(1, entity.Rows.Count + 2, sLStyleColor);
-                sl.SetColumnStyle(3, entity.Columns.Count, sLStyle);
+                sl.SetColumnStyle(2, entity.Columns.Count, sLStyle);
                 sl.RemoveRowStyle(1, 2);
                 sl.SetRowStyle(1,2,sLStyleColor);
                 sl.ProtectWorksheet(sp);

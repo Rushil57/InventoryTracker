@@ -27,6 +27,14 @@ var isSearchDropDown = true;
 var ccEntityID = undefined;
 
 $(document).ready(function () {
+    $('#divbulkImport , #bulkImport').attr('data-bs-title', 'New Equipment Import');
+    var popover = new bootstrap.Popover(document.querySelector('#bulkImport'), {
+        container: 'body',
+        html: true,
+        content: document.getElementById('mypopover-content'),
+    })
+    $('#divbulkImport').tooltip('dispose');
+    $('#divbulkImport').tooltip();
     $('#selectedMenu').text($('#menuEquipSearch').text());
     $('#equipActive').remove();
     loadEquipmentHDR('', false);
