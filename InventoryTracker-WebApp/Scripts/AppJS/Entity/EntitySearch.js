@@ -754,11 +754,8 @@ function openCC(entityName, entityID) {
     var legendStr = '';
     filterStr = '<option value="0" selected>No Filter</option>';
     ccPropDetails = [];
-    var entityTmpIDList = [];
+    var entityDtlIDList = [];
     $("#tblTemplateDtl > tbody >  tr").each(function () {
-        if ($(this).attr('hidden')) {
-            return;
-        }
         var zerotdText = $(this).find("td:eq(0)").text();
         var firstText = $(this).find("td:eq(1) > input").val();
         var secondtd = $(this).find("td:eq(2) > input").val();
@@ -771,11 +768,11 @@ function openCC(entityName, entityID) {
 
         var color = getRandomColor();
         
-        if (entityTmpIDList.filter(x => x.id == entityTmpID) == 0) {
+        if (entityDtlIDList.filter(x => x.id == entityDtlID) == 0) {
             filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>';
             legendStr += '<tr dataType="' + dataType + '" entityTempID="' + entityTmpID + '" isBorderedBox="1" entityDtlID="' + entityDtlID + '" data-ent-id="' + entityHDRID.val() + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="cursor:pointer;background-color:' + color + ' !important"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
-            entityTmpIDList.push({
-                id: entityTmpID
+            entityDtlIDList.push({
+                id: entityDtlID
             })
         }
 

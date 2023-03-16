@@ -18,6 +18,7 @@ var isFirstTimeEntEqu = true;
 var isDeleted = 2;
 var deleteEquipEntID = 0;
 var cookieValue = "123";
+var isDeleteAssignment = true;
 
 const rgba2hex = (rgba) => `#${rgba.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+\.{0,1}\d*))?\)$/).slice(1).map((n, i) => (i === 3 ? Math.round(parseFloat(n) * 255) : parseFloat(n)).toString(16).padStart(2, '0').replace('NaN', '')).join('')}`
 
@@ -521,6 +522,7 @@ function deleteAssignment(entityID, equipID, el, startDate, endDate, equipEntID)
     deleteElement = el;
     deleteStartDate = startDate;
     deleteEndDate = endDate;
+    isDeleteAssignment = true;
     resetDeleteAssignmentModel();
 }
 
@@ -635,16 +637,18 @@ function resetDeleteAssignmentModel() {
         $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', deleteStartDate);
     }
     $('#calendarControlModel').css('z-index', '1055');
-    deleteAssignmentModel.modal('hide');
-    if (ccEntityID != undefined) {
-        openCC('', deleteEntityID);
-        getEquipmentEntityAssignmentByYear(deleteEntityID);
-        loadEntityHDR('', false);
-    }
-    else {
-        openCC('', deleteEquipID, '', '');
-        getEquipmentEntityAssignmentByYear(deleteEquipID);
-        loadEquipmentHDR('', false);
+    if (!isDeleteAssignment || isDeleteAssignment == undefined) {
+        deleteAssignmentModel.modal('hide');
+        if (ccEntityID != undefined) {
+            openCC('', deleteEntityID);
+            getEquipmentEntityAssignmentByYear(deleteEntityID);
+            loadEntityHDR('', false);
+        }
+        else {
+            openCC('', deleteEquipID, '', '');
+            getEquipmentEntityAssignmentByYear(deleteEquipID);
+            loadEquipmentHDR('', false);
+        }
     }
 }
 

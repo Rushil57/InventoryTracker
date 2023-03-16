@@ -853,12 +853,8 @@ function openCC(unitID, equipID) {
     var legendStr = '';
     filterStr = '<option value="0" selected>No Filter</option>';
     ccPropDetails = [];
-    var equipmentTmpIDList = [];
+    var equipDtlIDList = [];
     $("#tblTemplateDtl > tbody >  tr").each(function () {
-        if ($(this).attr('hidden')) {
-            return;
-        }
-
         var zerotdText = $(this).find("td:eq(0)").text();
         var firstText = $(this).find("td:eq(1) > input").val();
         var secondtd = $(this).find("td:eq(2) > input").val();
@@ -871,12 +867,12 @@ function openCC(unitID, equipID) {
 
         var color = getRandomColor();
 
-        if (equipmentTmpIDList.filter(x => x.id == equipTmpID) == 0) {
+        if (equipDtlIDList.filter(x => x.id == equipDtlID) == 0) {
             legendStr += '<tr equipTmpID="' + equipTmpID + '" isBorderedBox="1" equipDtlID="' + equipDtlID + '" data-equip-id="' + equipmentHDRID.val() + '" dataType="' + dataType + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important;cursor:pointer"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
 
             filterStr += '<option value=' + equipTmpID + '>' + zerotdText + '</option>';
-            equipmentTmpIDList.push({
-                id: equipTmpID
+            equipDtlIDList.push({
+                id: equipDtlID
             })
         }
 

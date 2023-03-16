@@ -926,6 +926,8 @@ function openAssignmentPopup() {
     deleteEquipID = equipmentID;
     deleteStartDate = new Date($(gbl_selected_td).attr('data-start-date'));
     deleteEndDate = new Date($(gbl_selected_td).attr('data-end-date'));
+
+    isDeleteAssignment = false;
     resetDeleteAssignmentModel();
     
 

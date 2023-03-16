@@ -974,8 +974,9 @@ function openAssignmentPopup() {
     //deleteElement = el;
     deleteStartDate = new Date($(gbl_selected_td).attr('data-start-date'));
     deleteEndDate = new Date($(gbl_selected_td).attr('data-end-date'));
-    resetDeleteAssignmentModel();
 
+    isDeleteAssignment = false;
+    resetDeleteAssignmentModel();
 
     $('#startDateLbl').text($('.updateStartDatepicker').val());
     $('#endDateLbl').text($('.updateEndDatepicker').val());
