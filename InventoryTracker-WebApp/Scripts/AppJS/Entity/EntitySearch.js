@@ -22,6 +22,8 @@ var filterStr = '';
 var isFirstTimeEdit = true;
 var isEntityDeleted = 1;
 var isSearchDropDown = true;
+var isFirstTimeCC = true;
+var preservedColor = [];
 
 $(document).ready(function () {
     //    loadAllEntityTemp();
@@ -765,9 +767,18 @@ function openCC(entityName, entityID) {
         var entityTmpID = $(this).find('.entityTmpID').val();
         var entityDtlID = $(this).find('.entityDtlID').val();
         var dataType = $(this).find('.dataType').val();
-
-        var color = getRandomColor();
-        
+        var color = '';
+        if (preservedColor.filter(x => x.entityDtlID == entityDtlID).length > 0) {
+            color = preservedColor.filter(x => x.entityDtlID == entityDtlID)[0].RandomColor;
+        }
+        else {
+            var obj = {
+                RandomColor: getRandomColor() ,
+                entityDtlID: entityDtlID
+            };
+            preservedColor.push(obj);
+            color = obj.RandomColor;
+        }
         if (entityDtlIDList.filter(x => x.id == entityDtlID) == 0) {
             filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>';
             legendStr += '<tr dataType="' + dataType + '" entityTempID="' + entityTmpID + '" isBorderedBox="1" entityDtlID="' + entityDtlID + '" data-ent-id="' + entityHDRID.val() + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="cursor:pointer;background-color:' + color + ' !important"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
@@ -820,8 +831,11 @@ function openCC(entityName, entityID) {
     $('#tblLegend > tbody').append(legendStr);
     bindTooltip();
     $('.selectDrpDown').html(filterStr).val(dropDownVal);
-    $('#calendarControlModel').modal('show').css('z-index', '1055');
+    if (isFirstTimeCC) {
+        $('#calendarControlModel').modal('show').css('z-index', '1055');
+    }
     setTimeout(onChangeYear(), 500)
+    isFirstTimeCC = true;
 }
 
 
