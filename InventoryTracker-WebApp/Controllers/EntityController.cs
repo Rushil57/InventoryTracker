@@ -254,11 +254,51 @@ namespace InventoryTracker_WebApp.Controllers
 
                 sl.SetCellValue(1, 2, "Start Date:");
                 sl.SetCellValue(1, 3, startDate);
-                entity.Columns.Remove("ENT_ID");
-                sl.ImportDataTable("A2", entity, true);
-                sl.AutoFitColumn(1, entity.Columns.Count);
-                sl.SetRowStyle(1, entity.Rows.Count + 2, sLStyleColor);
-                sl.SetColumnStyle(2, entity.Columns.Count, sLStyle);
+                int newcolumnCount = 0;
+                var firstEntityIDCount = entity[0].Columns.Count;
+                var valueStr = "Value";
+                var startDateStr = "Start Date";
+                var endDateStr = "End Date";
+                var entDtlIDStr = "Ent_Dtl_ID";
+                foreach (var eRows in entity[0].Rows.Cast<DataRow>())
+                {
+                    var j = firstEntityIDCount;
+                    foreach (var eRowsVal in entity[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).ToList())
+                    {
+                        if (newcolumnCount < entity[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).Count())
+                        {
+                            entity[0].Columns.Add(entDtlIDStr);
+                            entity[0].Columns.Add(valueStr);
+                            entity[0].Columns.Add(startDateStr);
+                            entity[0].Columns.Add(endDateStr);
+                            newcolumnCount++;
+                            valueStr += " ";
+                            startDateStr += " ";
+                            endDateStr += " ";
+                            entDtlIDStr += " ";
+                        }
+                        eRows[j] = eRowsVal[2];
+                        j++;
+                        eRows[j] = eRowsVal[3];
+                        j++;
+                        eRows[j] = Convert.ToDateTime(eRowsVal[4]).ToShortDateString();
+                        j++;
+                        eRows[j] = Convert.ToDateTime(eRowsVal[5]).ToShortDateString();
+                        j++;
+                    }
+                }
+
+                entity[0].Columns.Remove("ENT_ID");
+                entity[0].Columns.Remove("Ent_Temp_ID");
+                sl.ImportDataTable("A2", entity[0], true);
+                sl.AutoFitColumn(1, entity[0].Columns.Count);
+                sl.SetColumnStyle(1, entity[0].Columns.Count, sLStyle);
+                sl.SetRowStyle(1, entity[0].Rows.Count + 2, sLStyleColor);
+                sl.SetColumnStyle(4, entity[0].Columns.Count, sLStyle);
+                for (int i = 3; i < entity[0].Columns.Count; i = i + 4)
+                {
+                    sl.SetColumnStyle(i, sLStyleColor);
+                }
                 sl.RemoveRowStyle(1, 2);
                 sl.SetRowStyle(1,2,sLStyleColor);
                 sl.ProtectWorksheet(sp);
@@ -321,6 +361,10 @@ namespace InventoryTracker_WebApp.Controllers
                                         if (columnHeader.Count < j)
                                         {
                                             break;
+                                        }
+                                        if (!string.IsNullOrEmpty(cellValue) && cellValue.IndexOf("-") < 0 && (columnHeader[j - 1].ToLower().ToString().Trim() == "start date" || columnHeader[j - 1].ToLower().ToString().Trim() == "end date"))
+                                        {
+                                            cellValue = (sheet.GetCellValueAsDateTime(i, j)).ToShortDateString();
                                         }
                                         var valueOFCell = cellValue == null ? "" : cellValue.ToString();
                                         values.Add(valueOFCell);

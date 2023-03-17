@@ -259,13 +259,54 @@ namespace InventoryTracker_WebApp.Controllers
                     sl.SetCellValue(1, 2, "Start Date:");
                     sl.SetCellValue(1, 3, startDate);
 
-                    sl.ImportDataTable("A2", equipment, true);
-                    sl.AutoFitColumn(1, equipment.Columns.Count);
-                    sl.SetRowStyle(1, equipment.Rows.Count + 2, sLStyleColor);
-                    sl.SetColumnStyle(3, equipment.Columns.Count, sLStyle);
+                    int newcolumnCount = 0;
+                    var firstEquipIDCount = equipment[0].Columns.Count;
+                    var valueStr = "Value";
+                    var startDateStr = "Start Date";
+                    var endDateStr = "End Date";
+                    var equipDtlIDStr = "Equip_Dtl_ID";
+                    foreach (var eRows in equipment[0].Rows.Cast<DataRow>())
+                    {
+                        var j = firstEquipIDCount;
+                        foreach (var eRowsVal in equipment[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).ToList())
+                        {
+                            if (newcolumnCount < equipment[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).Count())
+                            {
+                                equipment[0].Columns.Add(equipDtlIDStr);
+                                equipment[0].Columns.Add(valueStr);
+                                equipment[0].Columns.Add(startDateStr);
+                                equipment[0].Columns.Add(endDateStr);
+                                newcolumnCount++;
+                                valueStr += " ";
+                                startDateStr += " ";
+                                endDateStr += " ";
+                                equipDtlIDStr += " ";
+                            }
+                            eRows[j] = eRowsVal[2];
+                            j++;
+                            eRows[j] = eRowsVal[3];
+                            j++;
+                            eRows[j] = Convert.ToDateTime(eRowsVal[4]).ToShortDateString();
+                            j++;
+                            eRows[j] = Convert.ToDateTime(eRowsVal[5]).ToShortDateString();
+                            j++;
+                        }
+                    }
+
+                    equipment[0].Columns.Remove("Equip_ID");
+                    equipment[0].Columns.Remove("Equip_Temp_ID");
+                    sl.ImportDataTable("A2", equipment[0], true);
+                    sl.AutoFitColumn(1, equipment[0].Columns.Count);
+                    sl.SetColumnStyle(1, equipment[0].Columns.Count, sLStyle);
+                    sl.SetRowStyle(1, equipment[0].Rows.Count + 2, sLStyleColor);
+                    sl.SetColumnStyle(6, equipment[0].Columns.Count, sLStyle);
+                    for (int i = 5; i < equipment[0].Columns.Count; i = i + 4)
+                    {
+                        sl.SetColumnStyle(i, sLStyleColor);
+                    }
+
                     sl.RemoveRowStyle(1, 2);
                     sl.SetRowStyle(1, 2, sLStyleColor);
-
                     sl.ProtectWorksheet(sp);
                     sl.SaveAs(ms);
                 }
@@ -333,6 +374,10 @@ namespace InventoryTracker_WebApp.Controllers
                                         if (columnHeader.Count < j)
                                         {
                                             break;
+                                        }
+                                        if (!string.IsNullOrEmpty(cellValue) && cellValue.IndexOf("-") < 0 && (columnHeader[j - 1].ToLower().ToString().Trim() == "start date" || columnHeader[j - 1].ToLower().ToString().Trim() == "end date"))
+                                        {
+                                            cellValue = (sheet.GetCellValueAsDateTime(i, j)).ToShortDateString();
                                         }
                                         var valueOFCell = cellValue == null ? "" : cellValue.ToString();
                                         values.Add(valueOFCell);

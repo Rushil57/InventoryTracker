@@ -484,7 +484,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             finally { connection.Close(); }
         }
 
-        public DataTable ExportEntity(string startDate, string searchString)
+        public DataTableCollection ExportEntity(string startDate, string searchString)
         {
             List<dynamic> entities = new List<dynamic>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -493,17 +493,18 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 connection.Open();
                 var query = string.Empty;
 
-                query = "DECLARE  @columns NVARCHAR(MAX) = ''; SELECT @columns += QUOTENAME(prop_name) + ',' FROM (select distinct prop_name from Entity_Template) s	 ORDER BY  prop_name;PRINT @columns; SET @columns = LEFT(@columns, LEN(@columns) - 1); PRINT @columns; DECLARE @query varchar(max); set @query = 'SELECT * FROM   ( select eh.ENT_ID ,eh.ENT_NAME ,et.Prop_name,ed.Ent_Value from ENTITY_HDR eh inner join Entity_Dtl ed on ed.Ent_ID = eh.ENT_ID inner join Entity_Template et ON ed.Ent_temp_id = et.Ent_temp_id ";
+                query = "select max(eh.ENT_ID) as ENT_ID,max(ed.Ent_Temp_ID) as Ent_Temp_ID ,eh.ENT_NAME ,et.Prop_name  from ENTITY_HDR eh inner join Entity_Dtl ed  on ed.Ent_ID = eh.ENT_ID inner join Entity_Template et  ON ed.Ent_temp_id = et.Ent_temp_id group by  ed.Ent_ID,ed.Ent_Temp_ID,eh.Ent_Name,et.Prop_Name ";
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    query += "and  eh.ENT_NAME like ''%" + searchString + "%'' or Prop_name like ''%" + searchString + "%''";
+                    query = "select * from ( " + query + " ) as ed where  ed.ENT_NAME like '%" + searchString + "%' or ed.Prop_name like '%" + searchString + "%'";
                 }
-                query += ") t  PIVOT( max(Ent_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
-                //entities = connection.Query<dynamic>(query).ToList();
+
+                query += "  order by ed.Ent_ID , Prop_name ";
+                query += "select ed.Ent_ID,ed.Ent_Temp_ID,ed.Ent_Dtl_ID ,ed.Ent_Value,ed.Start_Date,ed.End_Date from ENTITY_HDR eh inner join Entity_Dtl ed  on ed.Ent_ID = eh.ENT_ID inner join Entity_Template et  ON ed.Ent_temp_id = et.Ent_temp_id order by ed.Ent_ID , Prop_name";
                 DataSet ds = new DataSet();
                 ds = CommonDatabaseOperationHelper.GetDataSet(query);
                 
-                return ds.Tables[0];
+                return ds.Tables;
             }
             catch (Exception e)
             {
@@ -519,9 +520,14 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             {
                 connection.Open();
                 var query = string.Empty;
-                for (int i = 2; i < columnHeader.Count; i++)
+                for (int i = 2; i < columnHeader.Count; i = i + 4)
                 {
-                    query += "UPDATE [dbo].[Entity_Dtl] SET  [Ent_Value] = '" + values[i].Replace("'", "''") + "' WHERE Ent_ID = " + values[0] + " and Ent_Temp_ID = (select top 1 [Ent_temp_id] FROM  [dbo].[Entity_Template] where [Ent_type] = (SELECT top 1 [ENT_TYPE] FROM [dbo].[ENTITY_HDR] where ENT_NAME = '" + values[1].Replace("'", "''") + "') and [Prop_name] = '" + columnHeader[i].Replace("'", "''") + "');"; //and Start_Date = " + startDate + "
+                    if (!string.IsNullOrEmpty(values[i + 2]) && !string.IsNullOrEmpty(values[i + 3]))
+                    {
+                        var sDate = Convert.ToDateTime(values[i + 2]).Year + "-" + Convert.ToDateTime(values[i + 2]).Month + "-" + Convert.ToDateTime(values[i + 2]).Day;
+                        var eDate = Convert.ToDateTime(values[i + 3]).Year + "-" + Convert.ToDateTime(values[i + 3]).Month + "-" + Convert.ToDateTime(values[i + 3]).Day;
+                        query += $"UPDATE [Entity_Dtl] SET  [Ent_Value] = '{values[i + 1].Replace("'", "''")}' , Start_Date ='{sDate}' , End_Date ='{eDate}'  WHERE Ent_Dtl_ID = {values[i]};";
+                    }
                 }
                 var isUpdated = connection.Query<bool>(query).FirstOrDefault();
                 return isUpdated;
