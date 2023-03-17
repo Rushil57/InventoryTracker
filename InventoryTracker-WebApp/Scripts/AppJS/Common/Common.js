@@ -844,12 +844,16 @@ function bindTooltip() {
 
 function nextPrevYear() {
     $('#nextYear').click(function () {
+        AddLoader();
         $('.ui-icon-circle-triangle-e').trigger('click');
         setTimeout(onChangeYear(), 500);
+        setTimeout(RemoveLoader(), 1000);
     });
     $('#prevYear').click(function () {
+        AddLoader();
         $('.ui-icon-circle-triangle-w').trigger('click');
         setTimeout(onChangeYear(), 500)
+        setTimeout(RemoveLoader(), 1000);
     });
 
 }
