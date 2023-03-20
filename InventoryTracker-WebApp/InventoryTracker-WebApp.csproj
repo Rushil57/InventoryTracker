@@ -240,10 +240,12 @@
     <Content Include="Content\Img\user.png" />
     <Content Include="DBScripts\InventoryTracker_Master.sql" />
     <Content Include="DBScripts\IT_Main.sql" />
+    <Content Include="ExcelFiles\EntityEquipmentAssignDateRangeSample.xlsx" />
     <Content Include="ExcelFiles\EntityEquipmentAssignSample.xlsx" />
     <Content Include="ExcelFiles\EntityImportSample.xlsx" />
     <Content Include="ExcelFiles\Entity_Bulk_Import.xlsx" />
     <Content Include="ExcelFiles\Entity_Template.xlsx" />
+    <Content Include="ExcelFiles\EquipmentEntityAssignDateRangeSample.xlsx" />
     <Content Include="ExcelFiles\EquipmentEntityAssignSample.xlsx" />
     <Content Include="ExcelFiles\EquipmentImportSample.xlsx" />
     <Content Include="ExcelFiles\Equipment_Bulk_Import.xlsx" />
@@ -392,8 +394,6 @@
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker3.css.map" />
     <Content Include="Scripts\bootstrap-datepicker\css\bootstrap-datepicker3.standalone.css.map" />
     <Content Include="ExcelFiles\Entity.xlsx" />
-    <Content Include="ExcelFiles\EquipmentEntityAssignDateRangeSample.xlsx" />
-    <Content Include="ExcelFiles\EntityEquipmentAssignDateRangeSample.xlsx" />
     <None Include="Scripts\jquery-3.6.1.intellisense.js" />
     <Content Include="Scripts\datatables-responsive\dataTables.responsive.js" />
     <Content Include="Scripts\datatables-responsive\dataTables.responsive.min.js" />

@@ -23,7 +23,7 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         List<EquipmentEntityAssignment> GetEquipmentEntityAssignment(string startDate);
         bool CheckDuplicateEquipmentHDR(EquipmentHeader equipmentHeader);
 
-        DataTable ExportEquipment(string startDate, string searchString);
+        DataTableCollection ExportEquipment(string startDate, string searchString);
         DataTable ExportEquipmentEntityAssign(string startDate, string searchString,string columns);
         bool UpdateTemplateDetails(string startDate, List<string> columnHeader, List<string> values);
         bool UpdateInsertEQUENTASS(string startDate, List<string> columnHeader, List<string> values, out string totalNewAssigned, out int totalRemoved, out string invalidUnitID);

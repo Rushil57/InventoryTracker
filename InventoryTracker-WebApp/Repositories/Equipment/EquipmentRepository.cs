@@ -547,7 +547,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
         }
 
-        public DataTable ExportEquipment(string startDate, string searchString)
+        public DataTableCollection ExportEquipment(string startDate, string searchString)
         {
             List<dynamic> equipments = new List<dynamic>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
@@ -556,17 +556,19 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 connection.Open();
                 var query = string.Empty;
 
-                query = "DECLARE  @columns NVARCHAR(MAX) = ''; SELECT @columns += QUOTENAME(prop_name) + ',' FROM (select distinct prop_name from Equipment_Template) s	 ORDER BY  prop_name;PRINT @columns; SET @columns = LEFT(@columns, LEN(@columns) - 1); PRINT @columns; DECLARE @query varchar(max); set @query = 'SELECT * FROM   ( select eh.[EQUIP_ID] ,eh.[EQUIP_TYPE],eh.[VENDOR],eh.[UNIT_ID],et.Prop_name,ed.[Eq_Value] from [EQUIPMENT_HDR] eh inner join Equipment_Dtl ed on ed.[Equip_ID] = eh.[EQUIP_ID] inner join Equipment_Template et ON ed.[Equip_Temp_ID] = et.[Equip_Temp_ID]";
+                query = "select max(eh.[EQUIP_ID]) AS EQUIP_ID, max(ed.Equip_Temp_ID) as Equip_Temp_ID ,eh.[EQUIP_TYPE],eh.[VENDOR],eh.[UNIT_ID],et.Prop_name from [EQUIPMENT_HDR] eh inner join Equipment_Dtl ed on ed.[Equip_ID] = eh.[EQUIP_ID] inner join  Equipment_Template et ON ed.[Equip_Temp_ID] = et.[Equip_Temp_ID] group by   ed.EQUIP_ID,ed.Equip_Temp_ID,eh.EQUIP_TYPE,EH.VENDOR,EH.UNIT_ID,et.Prop_Name  ";
                 if (!string.IsNullOrEmpty(searchString))
                 {
-                    query += "and  eh.EQUIP_TYPE like ''%" + searchString + "%'' or Prop_name like ''%" + searchString + "%'' or VENDOR like ''%" + searchString + "%'' or UNIT_ID like ''%" + searchString + "%''";
+                    query = $"select * from ({query}) as eh where eh.EQUIP_TYPE like '%{searchString}%' or Prop_name like '%{searchString}%' or VENDOR like '%{searchString}%' or UNIT_ID like '%{searchString}%'";
                 }
-                query += ") t  PIVOT( max(Eq_Value)  FOR prop_name IN ('+@columns+') ) AS pivot_table;' exec (@query)";
-                //equipments = connection.Query<dynamic>(query).ToList();
+
+                query += "  order by Equip_ID , Prop_name ; ";
+                query += "select ed.Equip_ID,ed.Equip_Temp_ID,ed.Equip_Dtl_ID ,ed.Eq_Value,ed.Start_Date,ed.End_Date from EQUIPMENT_HDR eh inner join Equipment_Dtl ed   on ed.Equip_ID = eh.EQUIP_ID  inner join Equipment_Template et ON ed.Equip_Temp_ID = et.Equip_Temp_ID  order by ed.Equip_ID , Prop_name";
+
                 DataSet ds = new DataSet();
                 ds = CommonDatabaseOperationHelper.GetDataSet(query);
 
-                return ds.Tables[0];
+                return ds.Tables;
             }
             catch (Exception e)
             {
@@ -582,9 +584,15 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             {
                 connection.Open();
                 var query = string.Empty;
-                for (int i = 2; i < columnHeader.Count; i++)
+
+                for (int i =4; i < columnHeader.Count; i = i + 4)
                 {
-                    query += "UPDATE [dbo].[Equipment_Dtl] SET  [Eq_Value] = '" + values[i].Replace("'", "''") + "' WHERE [Equip_ID] = " + values[0] + " and [Equip_Temp_ID] = (select top 1 Equip_Temp_ID FROM  [dbo].[Equipment_Template] where [Equipment_Type] ='" + values[1].Replace("'", "''") + "' and [Prop_name] = '" + columnHeader[i].Replace("'", "''") + "');"; //and Start_Date = " + startDate + "
+                    if (!string.IsNullOrEmpty(values[i + 2]) && !string.IsNullOrEmpty(values[i + 3]))
+                    {
+                        var sDate = Convert.ToDateTime(values[i + 2]).Year + "-" + Convert.ToDateTime(values[i + 2]).Month + "-" + Convert.ToDateTime(values[i + 2]).Day;
+                        var eDate = Convert.ToDateTime(values[i + 3]).Year + "-" + Convert.ToDateTime(values[i + 3]).Month + "-" + Convert.ToDateTime(values[i + 3]).Day;
+                        query += $"UPDATE Equipment_Dtl SET  [Eq_Value] = '{values[i + 1].Replace("'", "''")}' , Start_Date ='{sDate}' , End_Date ='{eDate}'  WHERE Equip_Dtl_ID = {values[i]};";
+                    }
                 }
                 var isUpdated = connection.Query<bool>(query).FirstOrDefault();
                 return isUpdated;

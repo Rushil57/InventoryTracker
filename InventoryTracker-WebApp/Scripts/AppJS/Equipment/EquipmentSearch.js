@@ -25,6 +25,8 @@ var isFirstTimeEdit = true;
 var isEntityDeleted = 0;
 var isSearchDropDown = true;
 var ccEntityID = undefined;
+var isFirstTimeCC = true;
+var preservedColor = [];
 
 $(document).ready(function () {
     $('#divbulkImport , #bulkImport').attr('data-bs-title', 'New Equipment Import');
@@ -864,8 +866,18 @@ function openCC(unitID, equipID) {
         var equipTmpID = $(this).find('.equipTmpID').val();
         var equipDtlID = $(this).find('.equipDtlID').val();
         var dataType = $(this).find('.dataType').val();
-
-        var color = getRandomColor();
+        var color = '';
+        if (preservedColor.filter(x => x.equipDtlID == equipDtlID).length > 0) {
+            color = preservedColor.filter(x => x.equipDtlID == equipDtlID)[0].RandomColor;
+        }
+        else {
+            var obj = {
+                RandomColor: getRandomColor(),
+                equipDtlID: equipDtlID
+            };
+            preservedColor.push(obj);
+            color = obj.RandomColor;
+        }
 
         if (equipDtlIDList.filter(x => x.id == equipDtlID) == 0) {
             legendStr += '<tr equipTmpID="' + equipTmpID + '" isBorderedBox="1" equipDtlID="' + equipDtlID + '" data-equip-id="' + equipmentHDRID.val() + '" dataType="' + dataType + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important;cursor:pointer"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
@@ -921,7 +933,10 @@ function openCC(unitID, equipID) {
     $('#tblLegend > tbody').append(legendStr);
     bindTooltip();
     $('.selectDrpDown').html(filterStr).val(dropDownVal);
-    $('#calendarControlModel').modal('show').css('z-index', '1055');
+    if (isFirstTimeCC) {
+        $('#calendarControlModel').modal('show').css('z-index', '1055');
+    }
+    isFirstTimeCC = true;
     setTimeout(onChangeYear(), 500)
 }
 

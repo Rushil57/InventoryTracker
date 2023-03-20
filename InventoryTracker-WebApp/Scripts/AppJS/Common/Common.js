@@ -749,16 +749,13 @@ function resetEditModel() {
         $('.updateStartDatepicker').bootstrapDP({ autoclose: true }).bootstrapDP('setDate', sdate);
     }
     $('#calendarControlModel').css('z-index', '1055');
-    $('#editEntityEquipment').modal('hide');
-    $('#calendarControlModel').modal('hide');
+    isFirstTimeCC = false;
     if (ccEntityID != undefined) {
-        $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');
+        openCC('', deleteEntityID);
     }
     else {
-        $("#equipHDR > tbody").find("[value='" + ccEquipID + "']").parent().trigger('click');
+        openCC('', deleteEquipID, '', '');
     }
-    $('#editTemplate').trigger('click');
-    setTimeout(callFunction, 500)
 }
 
 function callFunction() {
@@ -847,12 +844,16 @@ function bindTooltip() {
 
 function nextPrevYear() {
     $('#nextYear').click(function () {
+        AddLoader();
         $('.ui-icon-circle-triangle-e').trigger('click');
         setTimeout(onChangeYear(), 500);
+        setTimeout(RemoveLoader(), 1000);
     });
     $('#prevYear').click(function () {
+        AddLoader();
         $('.ui-icon-circle-triangle-w').trigger('click');
         setTimeout(onChangeYear(), 500)
+        setTimeout(RemoveLoader(), 1000);
     });
 
 }
@@ -970,10 +971,10 @@ function removeEntEquDetail() {
                 $('#editEntityEquipment').modal('hide');
                 $('#calendarControlModel').modal('hide');
                 if (isEntityDeleted) {
-                    $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');
+                    $("#entityHDR > tbody").find("[id='" + entityHDRID.val() + "']").trigger('click');
                 }
                 else {
-                    $("#equipHDR > tbody").find("[value='" + ccEquipID + "']").parent().trigger('click');
+                    $("#equipHDR > tbody").find("[id='" + equipmentHDRID.val() + "']").trigger('click');
                 }
                 $('#editTemplate').trigger('click');
                 setTimeout(callFunction, 500)
