@@ -434,7 +434,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                                 else
                                 {
                                     var EntiyDtlID = string.IsNullOrEmpty(EntityDtlID) ? 0 : Convert.ToInt32(EntityDtlID);
-                                    var isRecordOfEndRange = "SELECT Ent_Dtl_ID FROM [dbo].[Entity_Dtl] where Ent_ID = " + entityHDR.ENT_ID + " and Ent_Temp_ID = " + ed.Ent_Temp_ID + " and  (" + endDate + " between Start_Date and End_Date) ";
+                                    var isRecordOfEndRange = "SELECT Ent_Dtl_ID FROM [dbo].[Entity_Dtl] where Ent_ID = " + entityHDR.ENT_ID + " and Ent_Temp_ID = " + ed.Ent_Temp_ID + " and  ((" + endDate + " between Start_Date and End_Date) OR (" + startDate + " between Start_Date and End_Date))";
                                     if (EntiyDtlID > 0)
                                     {
                                         isRecordOfEndRange = isRecordOfEndRange + "and [Ent_Dtl_ID] NOT IN(" + EntiyDtlID + ")";
@@ -455,12 +455,6 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                                     {
                                        var entDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
                                         if (entDtlID > 0)
-                                        {
-                                            var insertUpdate = "UPDATE [dbo].[Entity_Dtl]  SET [End_Date] = " + endDate + " , [Start_Date] = " + startDate + " WHERE [Ent_Dtl_ID] = " + entDtlID + "; ";
-                                            //insertUpdate += "INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (" + entityHDR.ENT_ID + "," + ed.Ent_Temp_ID + ",'" + ed.Ent_Value + "'," + endDate + ",'01/01/9999')";
-                                            connection.Query<int>(insertUpdate).FirstOrDefault();
-                                        }
-                                        else
                                         {
                                             isSuccess = false;
                                         }
