@@ -198,7 +198,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             finally { connection.Close(); }
         }
 
-        public bool SaveEquipmentHDR(EquipmentHeader equipmentHDR, List<EquipmentDetail> equipmentDtl)
+        public bool SaveEquipmentHDR(EquipmentHeader equipmentHDR, List<EquipmentDetail> equipmentDtl, string EntityDtlID)
         {
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
@@ -257,19 +257,39 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                                 }
                                 else
                                 {
-                                    var isRecordOfEndRange = "SELECT Equip_Dtl_ID FROM Equipment_Dtl where EQUIP_ID = " + equipmentHDR.EQUIP_ID + " and Equip_Temp_ID = " + ed.Equip_Temp_ID + " and  (" + startDate + " between Start_Date and End_Date)";
-                                        //and End_Date = '01/01/9999'";
-                                    var equDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
-                                    if (equDtlID > 0)
+                                    var entDtlID = string.IsNullOrEmpty(EntityDtlID) ? 0 : Convert.ToInt32(EntityDtlID);
+                                    var isRecordOfEndRange = "SELECT Equip_Dtl_ID FROM Equipment_Dtl where EQUIP_ID = " + equipmentHDR.EQUIP_ID + " and Equip_Temp_ID = " + ed.Equip_Temp_ID + " and  (" + endDate + " between Start_Date and End_Date)";
+                                    //and End_Date = '01/01/9999'";
+                                    if (entDtlID > 0)
                                     {
-                                        var insertUpdate = "UPDATE [dbo].[Equipment_Dtl]  SET [End_Date] = " + endDate + " , [Start_Date] = " + startDate + " WHERE [Equip_Dtl_ID] = " + equDtlID + "; ";
-                                        //endDate = Convert.ToDateTime(startDate.Replace("'", "")) > Convert.ToDateTime(endDate.Replace("'", "")) ? startDate : endDate;
-                                        //insertUpdate += "INSERT INTO [dbo].[Equipment_Dtl] ([Equip_ID] ,[Equip_Temp_ID] ,[Eq_Value] ,[Start_Date] ,[End_Date]) VALUES (" + equipmentHDR.EQUIP_ID + "," + ed.Equip_Temp_ID + ",'" + ed.Eq_Value + "'," + endDate + ",'01/01/9999')";
-                                        connection.Query<int>(insertUpdate).FirstOrDefault();
+                                        isRecordOfEndRange = isRecordOfEndRange + "and [Equip_Dtl_ID] NOT IN(" + entDtlID + ")";
+                                        var equDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
+                                        if (equDtlID == 0)
+                                        {
+                                            var insertUpdate = "UPDATE [dbo].[Equipment_Dtl]  SET [End_Date] = " + endDate + " , [Start_Date] = " + startDate + " WHERE [Equip_Dtl_ID] = " + entDtlID + "; ";
+                                            //endDate = Convert.ToDateTime(startDate.Replace("'", "")) > Convert.ToDateTime(endDate.Replace("'", "")) ? startDate : endDate;
+                                            //insertUpdate += "INSERT INTO [dbo].[Equipment_Dtl] ([Equip_ID] ,[Equip_Temp_ID] ,[Eq_Value] ,[Start_Date] ,[End_Date]) VALUES (" + equipmentHDR.EQUIP_ID + "," + ed.Equip_Temp_ID + ",'" + ed.Eq_Value + "'," + endDate + ",'01/01/9999')";
+                                            connection.Query<int>(insertUpdate).FirstOrDefault();
+                                        }
+                                        else
+                                        {
+                                            isSuccess = false;
+                                        }
                                     }
                                     else
                                     {
-                                        isSuccess = false;
+                                        var equDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
+                                        if (equDtlID > 0)
+                                        {
+                                            var insertUpdate = "UPDATE [dbo].[Equipment_Dtl]  SET [End_Date] = " + endDate + " , [Start_Date] = " + startDate + " WHERE [Equip_Dtl_ID] = " + entDtlID + "; ";
+                                            //endDate = Convert.ToDateTime(startDate.Replace("'", "")) > Convert.ToDateTime(endDate.Replace("'", "")) ? startDate : endDate;
+                                            //insertUpdate += "INSERT INTO [dbo].[Equipment_Dtl] ([Equip_ID] ,[Equip_Temp_ID] ,[Eq_Value] ,[Start_Date] ,[End_Date]) VALUES (" + equipmentHDR.EQUIP_ID + "," + ed.Equip_Temp_ID + ",'" + ed.Eq_Value + "'," + endDate + ",'01/01/9999')";
+                                            connection.Query<int>(insertUpdate).FirstOrDefault();
+                                        }
+                                        else
+                                        {
+                                            isSuccess = false;
+                                        }
                                     }
                                 }
                             }

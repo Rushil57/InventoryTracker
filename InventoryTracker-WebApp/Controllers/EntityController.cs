@@ -173,7 +173,7 @@ namespace InventoryTracker_WebApp.Controllers
         }
 
         [HttpPost]
-        public string SaveEntityHDRTempData(string entityHDR, string entityTmpDtl)
+        public string SaveEntityHDRTempData(string entityHDR, string entityTmpDtl,string currEntDTLID)
         {
             if (!string.IsNullOrEmpty(entityHDR))
             {
@@ -187,7 +187,7 @@ namespace InventoryTracker_WebApp.Controllers
                         return JsonConvert.SerializeObject(new { IsValid = false, data = "This entity header is already exist." });
                     }
                 }
-                bool isInserted = _entityRepository.SaveEntityHDR(entityHeaders[0], entityDtl);
+                bool isInserted = _entityRepository.SaveEntityHDR(entityHeaders[0], entityDtl, currEntDTLID);
                 if (!isInserted)
                 {
                     return JsonConvert.SerializeObject(new { IsValid = true, data = "Value is already present on selected date range for this property." });

@@ -375,7 +375,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             }
         }
 
-        public bool SaveEntityHDR(EntityHeader entityHDR, List<EntityDetail> entityDtl)
+        public bool SaveEntityHDR(EntityHeader entityHDR, List<EntityDetail> entityDtl, string EntityDtlID)
         {
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
@@ -433,18 +433,37 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                                 }
                                 else
                                 {
-                                    var isRecordOfEndRange = "SELECT Ent_Dtl_ID FROM [dbo].[Entity_Dtl] where Ent_ID = " + entityHDR.ENT_ID + " and Ent_Temp_ID = " + ed.Ent_Temp_ID + " and  (" + endDate + " between Start_Date and End_Date)";
-                                        //and End_Date = '01/01/9999'";
-                                    var entDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
-                                    if (entDtlID > 0)
+                                    var EntiyDtlID = string.IsNullOrEmpty(EntityDtlID) ? 0 : Convert.ToInt32(EntityDtlID);
+                                    var isRecordOfEndRange = "SELECT Ent_Dtl_ID FROM [dbo].[Entity_Dtl] where Ent_ID = " + entityHDR.ENT_ID + " and Ent_Temp_ID = " + ed.Ent_Temp_ID + " and  (" + endDate + " between Start_Date and End_Date) ";
+                                    if (EntiyDtlID > 0)
                                     {
-                                        var insertUpdate = "UPDATE [dbo].[Entity_Dtl]  SET [End_Date] = " + endDate + " , [Start_Date] = " + startDate + " WHERE [Ent_Dtl_ID] = " + entDtlID + "; ";
-                                        //insertUpdate += "INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (" + entityHDR.ENT_ID + "," + ed.Ent_Temp_ID + ",'" + ed.Ent_Value + "'," + endDate + ",'01/01/9999')";
-                                        connection.Query<int>(insertUpdate).FirstOrDefault();
+                                        isRecordOfEndRange = isRecordOfEndRange + "and [Ent_Dtl_ID] NOT IN(" + EntiyDtlID + ")";
+                                        //and End_Date = '01/01/9999'";
+                                        var entDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
+                                        if (entDtlID == 0)
+                                        {
+                                            var insertUpdate = "UPDATE [dbo].[Entity_Dtl]  SET [End_Date] = " + endDate + " , [Start_Date] = " + startDate + " WHERE [Ent_Dtl_ID] = " + EntiyDtlID + "; ";
+                                            //insertUpdate += "INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (" + entityHDR.ENT_ID + "," + ed.Ent_Temp_ID + ",'" + ed.Ent_Value + "'," + endDate + ",'01/01/9999')";
+                                            connection.Query<int>(insertUpdate).FirstOrDefault();
+                                        }
+                                        else
+                                        {
+                                            isSuccess = false;
+                                        }
                                     }
                                     else
                                     {
-                                        isSuccess = false;
+                                       var entDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
+                                        if (entDtlID > 0)
+                                        {
+                                            var insertUpdate = "UPDATE [dbo].[Entity_Dtl]  SET [End_Date] = " + endDate + " , [Start_Date] = " + startDate + " WHERE [Ent_Dtl_ID] = " + entDtlID + "; ";
+                                            //insertUpdate += "INSERT INTO [dbo].[Entity_Dtl] ([Ent_ID],[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES (" + entityHDR.ENT_ID + "," + ed.Ent_Temp_ID + ",'" + ed.Ent_Value + "'," + endDate + ",'01/01/9999')";
+                                            connection.Query<int>(insertUpdate).FirstOrDefault();
+                                        }
+                                        else
+                                        {
+                                            isSuccess = false;
+                                        }
                                     }
                                 }
                             }
@@ -502,7 +521,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 //entities = connection.Query<dynamic>(query).ToList();
                 DataSet ds = new DataSet();
                 ds = CommonDatabaseOperationHelper.GetDataSet(query);
-                
+
                 return ds.Tables[0];
             }
             catch (Exception e)
@@ -751,7 +770,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
 
         #region Equipment Entity Assign Date Range Export - Import
 
-        public bool UpdateInsertENTEQUDateRangeASS(string startDate, List<string> columnHeader, List<string> values, int operation, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName,out string totalNewUpdated)
+        public bool UpdateInsertENTEQUDateRangeASS(string startDate, List<string> columnHeader, List<string> values, int operation, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName, out string totalNewUpdated)
         {
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             var date = Convert.ToDateTime(startDate).ToString("MM/d/yyyy").Replace("-", "/");

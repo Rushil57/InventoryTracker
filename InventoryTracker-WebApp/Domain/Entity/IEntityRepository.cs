@@ -18,7 +18,7 @@ namespace InventoryTracker_WebApp.Domain.Entity
         List<EntityDetail> EntityValueByPropName(string propName, string date);
         List<EquipmentHeader> GetEntityEquipmentAssignment(int entityID);
         bool DeleteEntityHeader(int entityID);
-        bool SaveEntityHDR(EntityHeader entityHDR, List<EntityDetail> entityDtl);
+        bool SaveEntityHDR(EntityHeader entityHDR, List<EntityDetail> entityDtl,string currEntDTLID);
         DataTable ExportEntity(string startDate,string searchString);
         bool UpdateTemplateDetails(string startDate,List<string> columnHeader, List<string> values);
        

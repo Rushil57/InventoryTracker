@@ -341,7 +341,7 @@ function saveHDRTemplateDtl() {
             dataType: 'json',
             type: 'POST',
             async: false,
-            data: JSON.stringify({ 'equipmentHDR': JSON.stringify(equipmentHDR), 'equipmentTmpDtl': JSON.stringify(equipmentTmpDtl) }),
+            data: JSON.stringify({ 'equipmentHDR': JSON.stringify(equipmentHDR), 'equipmentTmpDtl': JSON.stringify(equipmentTmpDtl), 'currEquipmentDTLID': $('#currEntDTLID').val() }),
             success: function (data) {
                 if (data.IsValid) {
                     alert(data.data);
@@ -1061,7 +1061,7 @@ function updateEditOption() {
     var sdate = $('.updateStartDatepicker').val();
     var edate = $('.updateEndDatepicker').val();
     var dataValue = $('#dataValue').val();
-    var changeValueEle = $('#tblTemplateDtl >  tbody').find("[value='" + $('#currEntDTLID').val() + "']");
+    var changeValueEle = $('#tblTemplateDtl >  tbody').find("[value='" + $('#currEntDTLID').val() + "']").parent();
     var dataType = $('#propName').attr('dataType').toLowerCase();
 
     if (dataType == 'bool') {
@@ -1176,8 +1176,10 @@ $('#dateRange').change(function () {
 
     $('#startDateLbl').text(sDateTmp);
     $('#endDateLbl').text(eDateTmp);
-    $('.updateStartDatepicker').val(sDateTmp);
-    $('.updateEndDatepicker').val(eDateTmp);
+    //$('.updateStartDatepicker').val(sDateTmp)
+    //$('.updateEndDatepicker').val(eDateTmp)
+    $('.updateStartDatepicker').bootstrapDP('setDate', sDateTmp);
+    $('.updateEndDatepicker').bootstrapDP('setDate', eDateTmp);
     $('#currEntDTLID').val(dropdownEquipDtlID);
     $('#dataValue').attr('type', textTypeTemp).val(eqValueTemp);
     if (dataTypeTemp == 'bool') {

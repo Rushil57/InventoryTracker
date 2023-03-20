@@ -110,7 +110,7 @@ namespace InventoryTracker_WebApp.Controllers
         }
 
         [HttpPost]
-        public string SaveEquipmentHDRTempData(string equipmentHDR, string equipmentTmpDtl)
+        public string SaveEquipmentHDRTempData(string equipmentHDR, string equipmentTmpDtl,string currEquipmentDTLID)
         {
             if (!string.IsNullOrEmpty(equipmentHDR))
             {
@@ -124,7 +124,7 @@ namespace InventoryTracker_WebApp.Controllers
                         return JsonConvert.SerializeObject(new { IsValid = false, data = "This equipment header is already exist." });
                     }
                 }
-                bool isInserted = _equipmentRepository.SaveEquipmentHDR(equipmentHeaders[0], equipmentDtl);
+                bool isInserted = _equipmentRepository.SaveEquipmentHDR(equipmentHeaders[0], equipmentDtl, currEquipmentDTLID);
                 if (!isInserted)
                 {
                     return JsonConvert.SerializeObject(new { IsValid = true, data = "Value is already present on selected date range for this property." });
