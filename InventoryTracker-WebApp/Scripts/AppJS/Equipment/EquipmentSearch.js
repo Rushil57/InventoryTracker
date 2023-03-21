@@ -1166,7 +1166,7 @@ function saveData() {
                 alert(data.data);
                 $('#editEntityEquipment').modal('hide');
                 $('#calendarControlModel').modal('hide');
-                $("#equipHDR > tbody").find("[value='" + ccEquipID + "']").parent().trigger('click');
+                $("#equipHDR > tbody").find("[value='" + equipmentHDRID.val() + "']").parent().trigger('click');
                 $('#editTemplate').trigger('click');
                 setTimeout(callFunction, 500)
             }
