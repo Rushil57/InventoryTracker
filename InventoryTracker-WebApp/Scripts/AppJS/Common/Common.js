@@ -848,16 +848,20 @@ function nextPrevYear() {
         setTimeout(function () {
             $('.ui-icon-circle-triangle-e').trigger('click');
             setTimeout(onChangeYear(), 500);
-            setTimeout(RemoveLoader(), 1000);
         }, 100)
+        setTimeout(function () {
+            setTimeout(RemoveLoader(), 3000);
+        }, 1000)
     });
     $('#prevYear').click(function () {
         AddLoader();
         setTimeout(function () {
             $('.ui-icon-circle-triangle-w').trigger('click');
-            setTimeout(onChangeYear(), 500)
-            setTimeout(RemoveLoader(), 1000);
+            setTimeout(onChangeYear(), 500);
         }, 100)
+        setTimeout(function () {
+            setTimeout(RemoveLoader(), 3000);
+        }, 1000)
     });
 
 }
