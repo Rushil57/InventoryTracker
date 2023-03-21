@@ -869,6 +869,8 @@ $('.selectDrpDown').change(function () {
 })
 
 function openAssignmentPopup() {
+    AddLoader();
+    setTimeout(function () {
     $('#updateAssignmentOption').attr('hidden', false);
     $('#removeAssignmentOption').attr('hidden', false);
     $('#saveAssignmentOption').attr('hidden', true);
@@ -933,7 +935,9 @@ function openAssignmentPopup() {
 
     $('#startDateLbl').text($('.updateStartDatepicker').val());
     $('#endDateLbl').text($('.updateEndDatepicker').val());
-    $('#calendarControlModel').css('z-index', '1035')
+    $('#calendarControlModel').css('z-index', '1035');
+    setTimeout(function () { RemoveLoader(); }, 500);
+}, 100)
 }
 
 function bindTooltipForDates() {
@@ -995,7 +999,9 @@ function bindTooltipForDates() {
 }
 
 $('#changeEntityName').change(function () {
+    
     if (!isAddNewEntity) {
+        resetDeleteAssignmentModel();
         isDropDownChange = true;
         gbl_selected_td = $($('.ui-datepicker-calendar').find('[entname="' + $(this).find(":selected").text() + '"]')[0]);
         if (gbl_selected_td[0] == undefined) {

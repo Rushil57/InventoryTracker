@@ -60,7 +60,7 @@ function loadEntityHDR(searchString, searchflag) {
     }
     $.ajax({
         before: AddLoader(),
-        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
+        complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
         url: '/Entity/GetEntityHeaderfromEntityEquipment',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -87,11 +87,11 @@ function loadEntityHDR(searchString, searchflag) {
                     addEntityColumn();
                 }
                 $("#entityHDR").trigger("destroy", [false, function () {
-                    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");    
+                    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
                 }]);
-                var rowCount = $('#entityHDR tr').length -1;
+                var rowCount = $('#entityHDR tr').length - 1;
 
-                $("#totalCount").html("Displaying " + rowCount + " out of "+ data.totalCount);
+                $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -216,7 +216,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
 
     $.ajax({
         before: AddLoader(),
-        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
+        complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
         url: '/Entity/GetEntityTemplateDetails',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -237,7 +237,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                             z = z - 1;
                         }
                         fdata = filterData[z];
-                        
+
                         if (z != 0) {
                             --i;
                         }
@@ -349,7 +349,7 @@ $('#deleteTemplate').click(function () {
         if (confirm('Are you sure you want to delete this record?')) {
             $.ajax({
                 before: AddLoader(),
-                complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
+                complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
                 url: '/Entity/DeleteEntityHeader',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -479,7 +479,7 @@ function saveHDRTemplateDtl() {
 
         $.ajax({
             before: AddLoader(),
-            complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
+            complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
             url: '/Entity/SaveEntityHDRTempData',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -630,7 +630,7 @@ $('#entityType').change(function () {
                 $('.enddate').datepicker({
                     autoclose: true
                 }).datepicker('setDate', '01/01/9999');
-                
+
             }
         }, error: function (ex) { }
     });
@@ -727,115 +727,119 @@ function sampleFileImportDownload() {
 nextPrevYear();
 
 function openCC(entityName, entityID) {
-    ccEntityID = entityID;
-    ccEntityName = entityName;
-    if (entityName != '') {
+    AddLoader();
+    setTimeout(function () {
+        ccEntityID = entityID;
         ccEntityName = entityName;
-    }
-    if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
-        var datepicker = $.fn.datepicker.noConflict();
-        $.fn.bootstrapDP = datepicker;
-    }
-    $('#currentYear').text($('.ui-datepicker-year:first').text());
-    $("#monthsDatePicker").datepicker("destroy");
-    $("#monthsDatePicker").datepicker({
-        numberOfMonths: [3, 4],
-        changeMonth: false,
-        changeYear: false,
-        stepMonths: 12,
-        defaultDate: '01/01/' + new Date().getFullYear(),
-        onSelect: function (date, inst) {
-            inst.show();
+        if (entityName != '') {
+            ccEntityName = entityName;
         }
-    });
-
-    $('.ui-datepicker').addClass('ccStyle')
-
-    $('#ccEntityName').attr('hidden', false).text(ccEntityName);
-
-    var legendStr = '';
-    filterStr = '<option value="0" selected>No Filter</option>';
-    ccPropDetails = [];
-    var entityDtlIDList = [];
-    $("#tblTemplateDtl > tbody >  tr").each(function () {
-        var zerotdText = $(this).find("td:eq(0)").text();
-        var firstText = $(this).find("td:eq(1) > input").val();
-        var secondtd = $(this).find("td:eq(2) > input").val();
-        var thirdtd = $(this).find("td:eq(3) >  input").val();
-        var secondtdDate = new Date(secondtd);
-        var thirdtdDate = new Date(thirdtd);
-        var entityTmpID = $(this).find('.entityTmpID').val();
-        var entityDtlID = $(this).find('.entityDtlID').val();
-        var dataType = $(this).find('.dataType').val();
-        var color = '';
-        if (preservedColor.filter(x => x.entityDtlID == entityDtlID).length > 0) {
-            color = preservedColor.filter(x => x.entityDtlID == entityDtlID)[0].RandomColor;
+        if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
+            var datepicker = $.fn.datepicker.noConflict();
+            $.fn.bootstrapDP = datepicker;
         }
-        else {
-            var obj = {
-                RandomColor: getRandomColor() ,
-                entityDtlID: entityDtlID
-            };
-            preservedColor.push(obj);
-            color = obj.RandomColor;
-        }
-        if (entityDtlIDList.filter(x => x.id == entityDtlID) == 0) {
-            filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>';
-            legendStr += '<tr dataType="' + dataType + '" entityTempID="' + entityTmpID + '" isBorderedBox="1" entityDtlID="' + entityDtlID + '" data-ent-id="' + entityHDRID.val() + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="cursor:pointer;background-color:' + color + ' !important"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
-            entityDtlIDList.push({
-                id: entityDtlID
-            })
-        }
-
-        ccPropDetails.push({
-            tmpID: entityTmpID,
-            propName: zerotdText,
-            startDate: secondtd,
-            endDate: thirdtd,
-            color: color,
-            dataValue: firstText,
-            entityDtlID: entityDtlID,
-            dataType: dataType
-        })
-        $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
-            var currMonth = $(this).attr('data-month');
-            var currYear = $(this).attr('data-year');
-            var currDay = $(this).text()
-            var currDate = new Date(currYear, currMonth, currDay);
-            if (secondtdDate <= currDate && thirdtdDate >= currDate) {
-                if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
-                    $(this).children()
-                        .attr('data-start-date', secondtd).attr('data-end-date', thirdtd)
-                        .attr('data-ent-id', entityHDRID.val())
-                        .attr('onclick', "openEditPopup(this)")
-                        .css('background-color', '\'' + color + '\'')
-                        .attr('isBorderedBox', '0')
-                        .attr('data-bs-toggle', 'tooltip')
-                        .attr('data-bs-placement', 'bottom')
-                        .attr('data-bs-title', 'Property Name: ' + zerotdText + '<br/> Data Value: ' + firstText)
-                        .attr('data-bs-html', true)
-                        .attr('propName', zerotdText)
-                        .attr('dataValue', firstText)
-                        .attr('entityDtlID', entityDtlID)
-                        .attr('entityTempID', entityTmpID)
-                        .attr('dataType', dataType);
-                }
-                else {
-                    $(this).children().css('border', '2px solid black')
-                        .attr('isBorderedBox', '1');
-                }
+        $('#currentYear').text($('.ui-datepicker-year:first').text());
+        $("#monthsDatePicker").datepicker("destroy");
+        $("#monthsDatePicker").datepicker({
+            numberOfMonths: [3, 4],
+            changeMonth: false,
+            changeYear: false,
+            stepMonths: 12,
+            defaultDate: '01/01/' + new Date().getFullYear(),
+            onSelect: function (date, inst) {
+                inst.show();
             }
-        })
-    });
-    $('#tblLegend > tbody > tr').remove();
-    $('#tblLegend > tbody').append(legendStr);
-    bindTooltip();
-    $('.selectDrpDown').html(filterStr).val(dropDownVal);
-    if (isFirstTimeCC) {
-        $('#calendarControlModel').modal('show').css('z-index', '1055');
-    }
-    setTimeout(onChangeYear(), 500)
-    isFirstTimeCC = true;
+        });
+
+        $('.ui-datepicker').addClass('ccStyle')
+
+        $('#ccEntityName').attr('hidden', false).text(ccEntityName);
+
+        var legendStr = '';
+        filterStr = '<option value="0" selected>No Filter</option>';
+        ccPropDetails = [];
+        var entityDtlIDList = [];
+        $("#tblTemplateDtl > tbody >  tr").each(function () {
+            var zerotdText = $(this).find("td:eq(0)").text();
+            var firstText = $(this).find("td:eq(1) > input").val();
+            var secondtd = $(this).find("td:eq(2) > input").val();
+            var thirdtd = $(this).find("td:eq(3) >  input").val();
+            var secondtdDate = new Date(secondtd);
+            var thirdtdDate = new Date(thirdtd);
+            var entityTmpID = $(this).find('.entityTmpID').val();
+            var entityDtlID = $(this).find('.entityDtlID').val();
+            var dataType = $(this).find('.dataType').val();
+            var color = '';
+            if (preservedColor.filter(x => x.entityDtlID == entityDtlID).length > 0) {
+                color = preservedColor.filter(x => x.entityDtlID == entityDtlID)[0].RandomColor;
+            }
+            else {
+                var obj = {
+                    RandomColor: getRandomColor(),
+                    entityDtlID: entityDtlID
+                };
+                preservedColor.push(obj);
+                color = obj.RandomColor;
+            }
+            if (entityDtlIDList.filter(x => x.id == entityDtlID) == 0) {
+                filterStr += '<option value=' + entityTmpID + '>' + zerotdText + '</option>';
+                legendStr += '<tr dataType="' + dataType + '" entityTempID="' + entityTmpID + '" isBorderedBox="1" entityDtlID="' + entityDtlID + '" data-ent-id="' + entityHDRID.val() + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + entityTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + entityTmpID + '"><td style="cursor:pointer;background-color:' + color + ' !important"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
+                entityDtlIDList.push({
+                    id: entityDtlID
+                })
+            }
+
+            ccPropDetails.push({
+                tmpID: entityTmpID,
+                propName: zerotdText,
+                startDate: secondtd,
+                endDate: thirdtd,
+                color: color,
+                dataValue: firstText,
+                entityDtlID: entityDtlID,
+                dataType: dataType
+            })
+            $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
+                var currMonth = $(this).attr('data-month');
+                var currYear = $(this).attr('data-year');
+                var currDay = $(this).text()
+                var currDate = new Date(currYear, currMonth, currDay);
+                if (secondtdDate <= currDate && thirdtdDate >= currDate) {
+                    if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
+                        $(this).children()
+                            .attr('data-start-date', secondtd).attr('data-end-date', thirdtd)
+                            .attr('data-ent-id', entityHDRID.val())
+                            .attr('onclick', "openEditPopup(this)")
+                            .css('background-color', '\'' + color + '\'')
+                            .attr('isBorderedBox', '0')
+                            .attr('data-bs-toggle', 'tooltip')
+                            .attr('data-bs-placement', 'bottom')
+                            .attr('data-bs-title', 'Property Name: ' + zerotdText + '<br/> Data Value: ' + firstText)
+                            .attr('data-bs-html', true)
+                            .attr('propName', zerotdText)
+                            .attr('dataValue', firstText)
+                            .attr('entityDtlID', entityDtlID)
+                            .attr('entityTempID', entityTmpID)
+                            .attr('dataType', dataType);
+                    }
+                    else {
+                        $(this).children().css('border', '2px solid black')
+                            .attr('isBorderedBox', '1');
+                    }
+                }
+            })
+        });
+        $('#tblLegend > tbody > tr').remove();
+        $('#tblLegend > tbody').append(legendStr);
+        bindTooltip();
+        $('.selectDrpDown').html(filterStr).val(dropDownVal);
+        if (isFirstTimeCC) {
+            $('#calendarControlModel').modal('show').css('z-index', '1055');
+        }
+        setTimeout(onChangeYear(), 500)
+        isFirstTimeCC = true;
+        setTimeout(function () { RemoveLoader(); }, 500);
+    }, 100)
 }
 
 
@@ -905,59 +909,64 @@ function bindDate(filterVal = 0) {
 
 var dateRangeTmp = '';
 function openEditPopup(element) {
-    var sdate = $(element).attr('data-start-date');
-    var edate = $(element).attr('data-end-date');
-    var entityID = $(element).attr('data-ent-id');
-    var propName = $(element).attr('propName');
-    var dataValue = $(element).attr('dataValue');
-    var entityDtlID = $(element).attr('entityDtlID');
-    var isBorderedBoxVal = $(element).attr('isBorderedBox');
-    var entityTempID = $(element).attr('entityTempID');
-    var dataType = $(element).attr('dataType').toLowerCase();
-    $('#changeProp').attr('hidden', true);
-    $('#saveData').attr('hidden', true);
-    $('#updateData').attr('hidden', false);
-    $('#removeDetail').attr('hidden', false);
-    $('#dateRangeDiv').attr('hidden', false);
-    //if (isBorderedBoxVal == '1' || isDropDownChange) {
-    // //$('#changeProp').attr('hidden', false).html(filterStr).val(entityTempID);
-    //    //$($('#changeProp >  option')[0]).remove()
-    //    // Neee to uncommit
-    //    isDropDownChange = false;
-    //}
-    //else {
-    //    $('#changeProp').attr('hidden', true)
-    //}
-    var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
-    dateRangeTmp = '';
+    AddLoader();
+    setTimeout(function () {
 
-    $("#tblTemplateDtl > tbody >  tr:hidden").each(function () {
-        var sDateTmp = $(this).find('td:eq(2) >  input').val();
-        var eDateTmp = $(this).find('td:eq(3) >  input').val();
-        var currEntDTLIDTemp = $(this).find('.entityDtlID').val();
-        var currEntityTempID = $(this).find('.entityTmpID').val();
-        var selectedText = sDateTmp == sdate && eDateTmp == edate && currEntDTLIDTemp == entityDtlID ? 'selected' : '';
-        if (currEntityTempID == entityTempID) {
-            dateRangeTmp += '<option ' + selectedText + ' currEntDTLID="' + currEntDTLIDTemp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+        var sdate = $(element).attr('data-start-date');
+        var edate = $(element).attr('data-end-date');
+        var entityID = $(element).attr('data-ent-id');
+        var propName = $(element).attr('propName');
+        var dataValue = $(element).attr('dataValue');
+        var entityDtlID = $(element).attr('entityDtlID');
+        var isBorderedBoxVal = $(element).attr('isBorderedBox');
+        var entityTempID = $(element).attr('entityTempID');
+        var dataType = $(element).attr('dataType').toLowerCase();
+        $('#changeProp').attr('hidden', true);
+        $('#saveData').attr('hidden', true);
+        $('#updateData').attr('hidden', false);
+        $('#removeDetail').attr('hidden', false);
+        $('#dateRangeDiv').attr('hidden', false);
+        //if (isBorderedBoxVal == '1' || isDropDownChange) {
+        // //$('#changeProp').attr('hidden', false).html(filterStr).val(entityTempID);
+        //    //$($('#changeProp >  option')[0]).remove()
+        //    // Neee to uncommit
+        //    isDropDownChange = false;
+        //}
+        //else {
+        //    $('#changeProp').attr('hidden', true)
+        //}
+        var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+        dateRangeTmp = '';
+
+        $("#tblTemplateDtl > tbody >  tr:hidden").each(function () {
+            var sDateTmp = $(this).find('td:eq(2) >  input').val();
+            var eDateTmp = $(this).find('td:eq(3) >  input').val();
+            var currEntDTLIDTemp = $(this).find('.entityDtlID').val();
+            var currEntityTempID = $(this).find('.entityTmpID').val();
+            var selectedText = sDateTmp == sdate && eDateTmp == edate && currEntDTLIDTemp == entityDtlID ? 'selected' : '';
+            if (currEntityTempID == entityTempID) {
+                dateRangeTmp += '<option ' + selectedText + ' currEntDTLID="' + currEntDTLIDTemp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+            }
+        })
+        $('#dateRange').html(dateRangeTmp);
+        $('#currEntDTLID').val(entityDtlID);
+        $('#startDateLbl').text(sdate);
+        $('#endDateLbl').text(edate);
+        $('.updateStartDatepicker').val(sdate);
+        $('.updateEndDatepicker').val(edate);
+        $('#propName').text(propName).attr('dataType', dataType);
+        $('#dataValue').attr('type', textType).val(dataValue);
+        if (dataType == 'bool') {
+            $('#dataValue').prop('checked', dataValue == 'true' ? true : false).addClass('checkboxStyleEdit');
         }
-    })
-    $('#dateRange').html(dateRangeTmp);
-    $('#currEntDTLID').val(entityDtlID);
-    $('#startDateLbl').text(sdate);
-    $('#endDateLbl').text(edate);
-    $('.updateStartDatepicker').val(sdate);
-    $('.updateEndDatepicker').val(edate);
-    $('#propName').text(propName).attr('dataType', dataType);
-    $('#dataValue').attr('type', textType).val(dataValue);
-    if (dataType == 'bool') {
-        $('#dataValue').prop('checked', dataValue == 'true' ? true : false).addClass('checkboxStyleEdit');
-    }
-    else {
-        $('#dataValue').removeClass('checkboxStyleEdit');
-    }
-    resetEditModel();
-    $('#editEntityEquipment').modal('show');
-    $('#calendarControlModel').css('z-index', '1035')
+        else {
+            $('#dataValue').removeClass('checkboxStyleEdit');
+        }
+        resetEditModel();
+        $('#editEntityEquipment').modal('show');
+        $('#calendarControlModel').css('z-index', '1035');
+        setTimeout(function () { RemoveLoader(); }, 500);
+    }, 100)
 }
 
 function updateEditOption() {

@@ -925,66 +925,72 @@ $('.selectDrpDown').change(function () {
 })
 
 function openAssignmentPopup() {
-    $('#updateAssignmentOption').attr('hidden', false);
-    $('#removeAssignmentOption').attr('hidden', false);
-    $('#saveAssignmentOption').attr('hidden', true);
-    $('#dateRangeDiv').attr('hidden', false);
-    $('#addNewPropOfAssign').attr('hidden', false);
-    isAddNew = false;
-    isDeleted = 2;
-    var EQUIP_ENT_ID = $(gbl_selected_td).attr('equip_ent_id');
-    var equipmentID = $(gbl_selected_td).attr('equipmentid');
-    var ent_id = $(gbl_selected_td).attr('data-ent-id');
-    var unitID = $(gbl_selected_td).attr('unitID');
-    var isBorderedBoxVal = $(gbl_selected_td).attr('isBorderedBox');
-    $('#currEquipID').text(unitID)
-    $('#currID').val(EQUIP_ENT_ID)
-    $('#currEquipDiv').attr('hidden', false);
-    dateRangeTmp = '';
-    ccUnitIDSelectList = '';
-    var selectedOption = '';
-    $("#tblLegend > tbody >  tr").each(function () {
-        var equipmentid = $(this).find('input').attr('equipmentid');
-        var equipEntID = $(this).find('input').attr('EQUIP_ENT_ID');
-        selectedOption = '';
-        if (!$(this).prop('hidden')) {
-            if (equipmentid == equipmentID) {
-                selectedOption = 'selected';
+    AddLoader();
+    setTimeout(function () {
+        $('#updateAssignmentOption').attr('hidden', false);
+        $('#removeAssignmentOption').attr('hidden', false);
+        $('#saveAssignmentOption').attr('hidden', true);
+        $('#dateRangeDiv').attr('hidden', false);
+        $('#addNewPropOfAssign').attr('hidden', false);
+        isAddNew = false;
+        isDeleted = 2;
+        var EQUIP_ENT_ID = $(gbl_selected_td).attr('equip_ent_id');
+        var equipmentID = $(gbl_selected_td).attr('equipmentid');
+        var ent_id = $(gbl_selected_td).attr('data-ent-id');
+        var unitID = $(gbl_selected_td).attr('unitID');
+        var isBorderedBoxVal = $(gbl_selected_td).attr('isBorderedBox');
+        $('#currEquipID').text(unitID)
+        $('#currID').val(EQUIP_ENT_ID)
+        $('#currEquipDiv').attr('hidden', false);
+        dateRangeTmp = '';
+        ccUnitIDSelectList = '';
+        var selectedOption = '';
+        $("#tblLegend > tbody >  tr").each(function () {
+            var equipmentid = $(this).find('input').attr('equipmentid');
+            var equipEntID = $(this).find('input').attr('EQUIP_ENT_ID');
+            selectedOption = '';
+            if (!$(this).prop('hidden')) {
+                if (equipmentid == equipmentID) {
+                    selectedOption = 'selected';
+                }
+                ccUnitIDSelectList += '<option ' + selectedOption + ' value=' + equipmentid + '>' + $(this).find('input').attr('unitid') + '</option>';
             }
-            ccUnitIDSelectList += '<option ' + selectedOption + ' value=' + equipmentid + '>' + $(this).find('input').attr('unitid') + '</option>';
+            if (equipmentID == equipmentid) {
+                var sDateTmp = getFormattedDate($(this).find('input').attr('data-start-date'));
+                var eDateTmp = getFormattedDate($(this).find('input').attr('data-end-date'));
+                var selectedText = sDateTmp == deleteStartDate && eDateTmp == deleteEndDate ? 'selected' : '';
+                dateRangeTmp += '<option ' + selectedText + 'EQUIP_ENT_ID="' + equipEntID + '" equipmentid="' + equipmentid + '" startDate="' + sDateTmp + '" endDate="' + eDateTmp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+            }
+        })
+        $('#dateRange').html(dateRangeTmp);
+        if (isBorderedBoxVal == '1' || isDropDownChange) {
+            $('#changeUnitID').attr('hidden', false).html(ccUnitIDSelectList).val(equipmentID);
+            isDropDownChange = false;
         }
-        if (equipmentID == equipmentid) {
-            var sDateTmp = getFormattedDate($(this).find('input').attr('data-start-date'));
-            var eDateTmp = getFormattedDate($(this).find('input').attr('data-end-date'));
-            var selectedText = sDateTmp == deleteStartDate && eDateTmp == deleteEndDate ? 'selected' : '';
-            dateRangeTmp += '<option ' + selectedText + 'EQUIP_ENT_ID="' + equipEntID + '" equipmentid="' + equipmentid + '" startDate="' + sDateTmp + '" endDate="' + eDateTmp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+        else {
+            $('#changeUnitID').attr('hidden', true)
         }
-    })
-    $('#dateRange').html(dateRangeTmp);
-    if (isBorderedBoxVal == '1' || isDropDownChange) {
-        $('#changeUnitID').attr('hidden', false).html(ccUnitIDSelectList).val(equipmentID);
-        isDropDownChange = false;
-    }
-    else {
-        $('#changeUnitID').attr('hidden', true)
-    }
-    deleteAssignmentModel.modal('show');
-    deleteEntityID = ent_id;
-    deleteEquipID = equipmentID;
-    //deleteElement = el;
-    deleteStartDate = new Date($(gbl_selected_td).attr('data-start-date'));
-    deleteEndDate = new Date($(gbl_selected_td).attr('data-end-date'));
+        deleteAssignmentModel.modal('show');
+        deleteEntityID = ent_id;
+        deleteEquipID = equipmentID;
+        //deleteElement = el;
+        deleteStartDate = new Date($(gbl_selected_td).attr('data-start-date'));
+        deleteEndDate = new Date($(gbl_selected_td).attr('data-end-date'));
 
-    isDeleteAssignment = false;
-    resetDeleteAssignmentModel();
+        isDeleteAssignment = false;
+        resetDeleteAssignmentModel();
 
-    $('#startDateLbl').text($('.updateStartDatepicker').val());
-    $('#endDateLbl').text($('.updateEndDatepicker').val());
-    $('#calendarControlModel').css('z-index', '1035')
+        $('#startDateLbl').text($('.updateStartDatepicker').val());
+        $('#endDateLbl').text($('.updateEndDatepicker').val());
+        $('#calendarControlModel').css('z-index', '1035');
+        setTimeout(function () { RemoveLoader(); }, 500);
+    }, 100)
 }
 
 $('#changeUnitID').change(function () {
+    
     if (!isAddNew) {
+        resetDeleteAssignmentModel()
         isDropDownChange = true;
         gbl_selected_td = $($('.ui-datepicker-calendar').find('[unitid="' + $(this).find(":selected").text() + '"]')[0])
         if (gbl_selected_td[0] == undefined) {
