@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
 using InventoryTracker_WebApp.Domain.Equipment;
 using InventoryTracker_WebApp.Helpers;
 using InventoryTracker_WebApp.Models;
@@ -10,8 +9,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using System.Web.Mvc;
 
@@ -300,14 +297,18 @@ namespace InventoryTracker_WebApp.Controllers
                     sl.AutoFitColumn(1, equipment[0].Columns.Count);
                     sl.SetColumnStyle(1, equipment[0].Columns.Count, sLStyle);
                     sl.SetRowStyle(1, equipment[0].Rows.Count + 2, sLStyleColor);
-                    sl.SetColumnStyle(6, equipment[0].Columns.Count, sLStyle);
-                    for (int i = 5; i < equipment[0].Columns.Count; i = i + 4)
-                    {
-                        sl.SetColumnStyle(i, sLStyleColor);
-                    }
-
+                    sl.SetColumnStyle(5, equipment[0].Columns.Count, sLStyle);
+                   
                     sl.RemoveRowStyle(1, 2);
                     sl.SetRowStyle(1, 2, sLStyleColor);
+
+
+                    sl.SetColumnStyle(equipment[0].Columns.Count + 1, equipment[0].Columns.Count + 40, sLStyle);
+                    sl.MergeWorksheetCells(1, 5, 1, 12);
+                    sl.SetCellValue(1, 5, "Don't change Equip_Dtl_ID value of existing records.For new records add NEW in Equip_Dtl_ID column.");
+                    sLStyleColor.Font.FontColor = System.Drawing.Color.Red;
+                    sl.SetCellStyle(1, 5, sLStyleColor);
+
                     sl.ProtectWorksheet(sp);
                     sl.SaveAs(ms);
                 }

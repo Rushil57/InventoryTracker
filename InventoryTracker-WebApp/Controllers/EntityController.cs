@@ -251,9 +251,12 @@ namespace InventoryTracker_WebApp.Controllers
 
                 sLStyleColor.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
                 sLStyleColor.Border.TopBorder.Color = System.Drawing.Color.Black;
-
+                
                 sl.SetCellValue(1, 2, "Start Date:");
                 sl.SetCellValue(1, 3, startDate);
+
+                
+                
                 int newcolumnCount = 0;
                 var firstEntityIDCount = entity[0].Columns.Count;
                 var valueStr = "Value";
@@ -295,13 +298,14 @@ namespace InventoryTracker_WebApp.Controllers
                 sl.AutoFitColumn(1, entity[0].Columns.Count);
                 sl.SetColumnStyle(1, entity[0].Columns.Count, sLStyle);
                 sl.SetRowStyle(1, entity[0].Rows.Count + 2, sLStyleColor);
-                sl.SetColumnStyle(4, entity[0].Columns.Count, sLStyle);
-                for (int i = 3; i < entity[0].Columns.Count; i = i + 4)
-                {
-                    sl.SetColumnStyle(i, sLStyleColor);
-                }
+                sl.SetColumnStyle(3, entity[0].Columns.Count, sLStyle);
                 sl.RemoveRowStyle(1, 2);
                 sl.SetRowStyle(1,2,sLStyleColor);
+                sl.SetColumnStyle(entity[0].Columns.Count + 1 , entity[0].Columns.Count + 40, sLStyle);
+                sl.MergeWorksheetCells(1, 5, 1, 12);
+                sl.SetCellValue(1, 5, "Don't change Ent_Dtl_ID value of existing records.For new records add NEW in Ent_Dtl_ID column.");
+                sLStyleColor.Font.FontColor = System.Drawing.Color.Red;
+                sl.SetCellStyle(1, 5, sLStyleColor);
                 sl.ProtectWorksheet(sp);
                 sl.SaveAs(ms);
             }
