@@ -263,7 +263,7 @@ namespace InventoryTracker_WebApp.Controllers
                 foreach (var eRows in entity[0].Rows.Cast<DataRow>())
                 {
                     var j = firstEntityIDCount;
-                    var rowList = entity[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).ToList();
+                    var rowList = entity[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).OrderBy(x => x.ItemArray[4]).ToList();
                     foreach (var eRowsVal in rowList)
                     {
                         if (newcolumnCount < rowList.Count)

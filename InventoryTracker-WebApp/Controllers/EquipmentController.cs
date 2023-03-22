@@ -267,7 +267,7 @@ namespace InventoryTracker_WebApp.Controllers
                     var equipDtlIDStr = "Equip_Dtl_ID";
                     foreach (var eRows in equipment[0].Rows.Cast<DataRow>())
                     {
-                        var rowList = equipment[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).ToList();
+                        var rowList = equipment[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).OrderBy(x => x.ItemArray[4]).ToList();
                         var j = firstEquipIDCount;
                         foreach (var eRowsVal in rowList)
                         {
