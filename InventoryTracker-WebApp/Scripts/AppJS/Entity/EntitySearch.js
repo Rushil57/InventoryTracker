@@ -60,7 +60,7 @@ function loadEntityHDR(searchString, searchflag) {
     }
     $.ajax({
         before: AddLoader(),
-        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
+        complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
         url: '/Entity/GetEntityHeaderfromEntityEquipment',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -87,11 +87,11 @@ function loadEntityHDR(searchString, searchflag) {
                     addEntityColumn();
                 }
                 $("#entityHDR").trigger("destroy", [false, function () {
-                    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");    
+                    $("#entityHDR").tablesorter({ emptyTo: 'none/zero' }).trigger("update");
                 }]);
-                var rowCount = $('#entityHDR tr').length -1;
+                var rowCount = $('#entityHDR tr').length - 1;
 
-                $("#totalCount").html("Displaying " + rowCount + " out of "+ data.totalCount);
+                $("#totalCount").html("Displaying " + rowCount + " out of " + data.totalCount);
             }
         }, error: function (ex) { }
     });
@@ -216,7 +216,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
 
     $.ajax({
         before: AddLoader(),
-        complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
+        complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
         url: '/Entity/GetEntityTemplateDetails',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
@@ -237,7 +237,7 @@ function loadTemplateDetails(entityID, entityTypeVal, entityNameVal, startDate, 
                             z = z - 1;
                         }
                         fdata = filterData[z];
-                        
+
                         if (z != 0) {
                             --i;
                         }
@@ -349,7 +349,7 @@ $('#deleteTemplate').click(function () {
         if (confirm('Are you sure you want to delete this record?')) {
             $.ajax({
                 before: AddLoader(),
-                complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
+                complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
                 url: '/Entity/DeleteEntityHeader',
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
@@ -431,7 +431,7 @@ function saveHDRTemplateDtl() {
         var entityTmpDtl = [];
         var isStartGTEnd = false;
         $("#tblTemplateDtl > tbody >  tr").each(function () {
-            if ($(this).attr('hidden')) {
+            if ($(this).attr('hidden') && ($('#currEntDTLID').val() == null || $('#currEntDTLID').val() == 0)) {
                 return;
             }
             var Ent_Dtl_ID = $(this).find('.entityDtlID').val();
@@ -462,14 +462,25 @@ function saveHDRTemplateDtl() {
                 $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
                 return;
             }
-
-            entityTmpDtl.push({
-                Ent_Dtl_ID: Ent_Dtl_ID,
-                Ent_Temp_ID: Ent_Temp_ID,
-                Ent_Value: firsttd,
-                Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
-                End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
-            })
+            if (Ent_Dtl_ID == $('#currEntDTLID').val()) {
+                entityTmpDtl = [];
+                entityTmpDtl.push({
+                    Ent_Dtl_ID: Ent_Dtl_ID,
+                    Ent_Temp_ID: Ent_Temp_ID,
+                    Ent_Value: firsttd,
+                    Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
+                    End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
+                })
+                return false;
+            } else {
+                entityTmpDtl.push({
+                    Ent_Dtl_ID: Ent_Dtl_ID,
+                    Ent_Temp_ID: Ent_Temp_ID,
+                    Ent_Value: firsttd,
+                    Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
+                    End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
+                })
+            }
         });
 
         if (isStartGTEnd) {
@@ -479,7 +490,7 @@ function saveHDRTemplateDtl() {
 
         $.ajax({
             before: AddLoader(),
-            complete: function () {setTimeout(function () {RemoveLoader();}, 500);},
+            complete: function () { setTimeout(function () { RemoveLoader(); }, 500); },
             url: '/Entity/SaveEntityHDRTempData',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
@@ -522,6 +533,7 @@ function saveHDRTemplateDtl() {
                             }
                         }
                     });
+                    resetEntDTLID();
                 }
                 else {
                     alert(data.data)
@@ -630,7 +642,7 @@ $('#entityType').change(function () {
                 $('.enddate').datepicker({
                     autoclose: true
                 }).datepicker('setDate', '01/01/9999');
-                
+
             }
         }, error: function (ex) { }
     });
@@ -773,7 +785,7 @@ function openCC(entityName, entityID) {
         }
         else {
             var obj = {
-                RandomColor: getRandomColor() ,
+                RandomColor: getRandomColor(),
                 entityDtlID: entityDtlID
             };
             preservedColor.push(obj);
@@ -964,7 +976,7 @@ function updateEditOption() {
     var sdate = $('.updateStartDatepicker').val();
     var edate = $('.updateEndDatepicker').val();
     var dataValue = $('#dataValue').val();
-    var changeValueEle = $('#tblTemplateDtl >  tbody').find("[value='" + $('#currEntDTLID').val() + "']").parent();
+    var changeValueEle = $('#tblTemplateDtl >  tbody').find("[value='" + $('#currEntDTLID').val() + "']");
     var dataType = $('#propName').attr('dataType').toLowerCase();
 
     if (dataType == 'bool') {
@@ -975,12 +987,12 @@ function updateEditOption() {
     changeValueEle.parent().find('td:eq(2) > input').val(sdate);
     changeValueEle.parent().find('td:eq(3) > input').val(edate);
     saveHDRTemplateDtl();
-    $('#editEntityEquipment').modal('hide');
-    $('#calendarControlModel').modal('hide');
-    $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');
-    $('#editTemplate').trigger('click');
-    setTimeout(callFunction, 500)
-}
+                $('#editEntityEquipment').modal('hide');
+                $('#calendarControlModel').modal('hide');
+                $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');
+                $('#editTemplate').trigger('click');
+                setTimeout(callFunction, 500)
+            }
 bindChangeProp();
 function GetAllTemplate() {
     $.ajax({
