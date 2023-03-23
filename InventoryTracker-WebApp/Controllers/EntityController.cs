@@ -59,11 +59,11 @@ namespace InventoryTracker_WebApp.Controllers
                 x.Prop_name
             }).Select(x => new EntityTemplate
             {
-                Ent_type =  x.Key.Ent_type,
+                Ent_type = x.Key.Ent_type,
                 Prop_name = x.Key.Prop_name
             }).ToList();
 
-            return JsonConvert.SerializeObject(new { IsValid = true, data = entityTemplates, uniqueEntityTemplates = uniqueEntityTemplates, uniquePropName = uniquePropName, uniquePropNameEnt= uniquePropNameEnt });
+            return JsonConvert.SerializeObject(new { IsValid = true, data = entityTemplates, uniqueEntityTemplates = uniqueEntityTemplates, uniquePropName = uniquePropName, uniquePropNameEnt = uniquePropNameEnt });
         }
         public string GetEntityHeaders(string searchString)
         {
@@ -71,11 +71,11 @@ namespace InventoryTracker_WebApp.Controllers
             int totalCount = _entityRepository.GetEntityHeaderRowCount();
             return JsonConvert.SerializeObject(new { IsValid = true, data = entityHeaders, totalCount = totalCount });
         }
-        public string GetEntityHeaderfromEntityEquipment(string searchString,string startDate)
+        public string GetEntityHeaderfromEntityEquipment(string searchString, string startDate)
         {
             List<EntityHeader> entityHeaders = _entityRepository.GetEntityHeaderfromEntityEquipment(searchString, startDate);
             int totalCount = _entityRepository.GetEntityHeaderRowCount();
-            return JsonConvert.SerializeObject(new { IsValid = true, data = entityHeaders, totalCount = totalCount }) ;
+            return JsonConvert.SerializeObject(new { IsValid = true, data = entityHeaders, totalCount = totalCount });
         }
 
         [HttpPost]
@@ -173,7 +173,7 @@ namespace InventoryTracker_WebApp.Controllers
         }
 
         [HttpPost]
-        public string SaveEntityHDRTempData(string entityHDR, string entityTmpDtl,string currEntDTLID)
+        public string SaveEntityHDRTempData(string entityHDR, string entityTmpDtl, string currEntDTLID)
         {
             if (!string.IsNullOrEmpty(entityHDR))
             {
@@ -210,50 +210,10 @@ namespace InventoryTracker_WebApp.Controllers
 
         public FileResult Export(string startDate, string searchString)
         {
-            MemoryStream ms = new MemoryStream();
-            using (SLDocument sl = new SLDocument())
+            try
             {
                 var entity = _entityRepository.ExportEntity(startDate, searchString);
 
-                SLStyle sLStyle = new SLStyle();
-                sLStyle.Protection.Locked = false;
-
-                sLStyle.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.White, System.Drawing.Color.White);
-
-                sLStyle.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
-                sLStyle.Border.LeftBorder.Color = System.Drawing.Color.Black;
-
-                sLStyle.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
-                sLStyle.Border.RightBorder.Color = System.Drawing.Color.Black;
-
-                sLStyle.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
-                sLStyle.Border.BottomBorder.Color = System.Drawing.Color.Black;
-
-                sLStyle.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
-                sLStyle.Border.TopBorder.Color = System.Drawing.Color.Black;
-                sLStyle.Font.Bold = false;
-
-                SLSheetProtection sp = new SLSheetProtection();
-                sp.AllowEditObjects = true;
-                SLStyle sLStyleColor = new SLStyle();
-                sLStyleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGray, System.Drawing.Color.LightGray);
-
-                sLStyleColor.Font.Bold = true;
-                sLStyleColor.Protection.Locked = true;
-                sLStyleColor.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
-                sLStyleColor.Border.LeftBorder.Color = System.Drawing.Color.Black;
-
-                sLStyleColor.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
-                sLStyleColor.Border.RightBorder.Color = System.Drawing.Color.Black;
-
-                sLStyleColor.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
-                sLStyleColor.Border.BottomBorder.Color = System.Drawing.Color.Black;
-
-                sLStyleColor.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
-                sLStyleColor.Border.TopBorder.Color = System.Drawing.Color.Black;
-
-                sl.SetCellValue(1, 2, "Start Date:");
-                sl.SetCellValue(1, 3, startDate);
                 int newcolumnCount = 0;
                 var firstEntityIDCount = entity[0].Columns.Count;
                 var valueStr = "Value";
@@ -263,7 +223,7 @@ namespace InventoryTracker_WebApp.Controllers
                 foreach (var eRows in entity[0].Rows.Cast<DataRow>())
                 {
                     var j = firstEntityIDCount;
-                    var rowList = entity[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).ToList();
+                    var rowList = entity[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).OrderBy(x => x.ItemArray[4]).ToList();
                     foreach (var eRowsVal in rowList)
                     {
                         if (newcolumnCount < rowList.Count)
@@ -291,23 +251,75 @@ namespace InventoryTracker_WebApp.Controllers
 
                 entity[0].Columns.Remove("ENT_ID");
                 entity[0].Columns.Remove("Ent_Temp_ID");
-                sl.ImportDataTable("A2", entity[0], true);
-                sl.AutoFitColumn(1, entity[0].Columns.Count);
-                sl.SetColumnStyle(1, entity[0].Columns.Count, sLStyle);
-                sl.SetRowStyle(1, entity[0].Rows.Count + 2, sLStyleColor);
-                sl.SetColumnStyle(4, entity[0].Columns.Count, sLStyle);
-                for (int i = 3; i < entity[0].Columns.Count; i = i + 4)
+
+                MemoryStream ms = new MemoryStream();
+                using (SLDocument sl = new SLDocument())
                 {
-                    sl.SetColumnStyle(i, sLStyleColor);
+                    SLStyle sLStyle = new SLStyle();
+                    sLStyle.Protection.Locked = false;
+
+                    sLStyle.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.White, System.Drawing.Color.White);
+
+                    sLStyle.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
+                    sLStyle.Border.LeftBorder.Color = System.Drawing.Color.Black;
+
+                    sLStyle.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
+                    sLStyle.Border.RightBorder.Color = System.Drawing.Color.Black;
+
+                    sLStyle.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
+                    sLStyle.Border.BottomBorder.Color = System.Drawing.Color.Black;
+
+                    sLStyle.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
+                    sLStyle.Border.TopBorder.Color = System.Drawing.Color.Black;
+                    sLStyle.Font.Bold = false;
+
+                    SLSheetProtection sp = new SLSheetProtection();
+                    sp.AllowEditObjects = true;
+                    SLStyle sLStyleColor = new SLStyle();
+                    sLStyleColor.Fill.SetPattern(PatternValues.Solid, System.Drawing.Color.LightGray, System.Drawing.Color.LightGray);
+
+                    sLStyleColor.Font.Bold = true;
+                    sLStyleColor.Protection.Locked = true;
+                    sLStyleColor.Border.LeftBorder.BorderStyle = BorderStyleValues.Thin;
+                    sLStyleColor.Border.LeftBorder.Color = System.Drawing.Color.Black;
+
+                    sLStyleColor.Border.RightBorder.BorderStyle = BorderStyleValues.Thin;
+                    sLStyleColor.Border.RightBorder.Color = System.Drawing.Color.Black;
+
+                    sLStyleColor.Border.BottomBorder.BorderStyle = BorderStyleValues.Thin;
+                    sLStyleColor.Border.BottomBorder.Color = System.Drawing.Color.Black;
+
+                    sLStyleColor.Border.TopBorder.BorderStyle = BorderStyleValues.Thin;
+                    sLStyleColor.Border.TopBorder.Color = System.Drawing.Color.Black;
+
+                    sl.SetCellValue(1, 2, "Start Date:");
+                    sl.SetCellValue(1, 3, startDate);
+
+
+                    sl.ImportDataTable("A2", entity[0], true);
+                    sl.AutoFitColumn(1, entity[0].Columns.Count);
+                    sl.SetColumnStyle(1, entity[0].Columns.Count, sLStyle);
+                    sl.SetRowStyle(1, entity[0].Rows.Count + 2, sLStyleColor);
+                    sl.SetColumnStyle(3, entity[0].Columns.Count, sLStyle);
+                    sl.RemoveRowStyle(1, 2);
+                    sl.SetRowStyle(1, 2, sLStyleColor);
+                    sl.SetColumnStyle(entity[0].Columns.Count + 1, entity[0].Columns.Count + 40, sLStyle);
+                    sl.MergeWorksheetCells(1, 5, 1, 12);
+                    sl.SetCellValue(1, 5, "Don't change Ent_Dtl_ID value of existing records.For new records add NEW in Ent_Dtl_ID column.");
+                    sLStyleColor.Font.FontColor = System.Drawing.Color.Red;
+                    sl.SetCellStyle(1, 5, sLStyleColor);
+                    sl.ProtectWorksheet(sp);
+                    sl.SaveAs(ms);
                 }
-                sl.RemoveRowStyle(1, 2);
-                sl.SetRowStyle(1,2,sLStyleColor);
-                sl.ProtectWorksheet(sp);
-                sl.SaveAs(ms);
+                ms.Position = 0;
+                ControllerContext.HttpContext.Response.Cookies.Add(new HttpCookie("cookie_EntitySearchData", new DateTime().ToShortDateString()));
+                return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Entity.xlsx");
             }
-            ms.Position = 0;
-            ControllerContext.HttpContext.Response.Cookies.Add(new HttpCookie("cookie_EntitySearchData", new DateTime().ToShortDateString()));
-            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Entity.xlsx");
+            catch (Exception e)
+            {
+                CommonDatabaseOperationHelper.Log("Entity Search Export", e.Message + "==>" + e.StackTrace, true);
+                throw;
+            }
         }
 
         [HttpPost]
@@ -328,7 +340,7 @@ namespace InventoryTracker_WebApp.Controllers
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        
+
                         SLDocument sheet = new SLDocument(fs);
                         var startDate = (sheet.GetCellValueAsDateTime(1, 3));
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -420,7 +432,7 @@ namespace InventoryTracker_WebApp.Controllers
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        
+
                         SLDocument sheet = new SLDocument(fs);
 
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -653,7 +665,7 @@ namespace InventoryTracker_WebApp.Controllers
                     List<string> columnHeader = new List<string>();
                     using (SLDocument sl = new SLDocument())
                     {
-                        
+
                         SLDocument sheet = new SLDocument(fs);
 
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
@@ -865,7 +877,7 @@ namespace InventoryTracker_WebApp.Controllers
 
         #region Equipment Entity Assign Date Range Export - Import
 
-        public FileResult EntityEquipmentAssignDateRangeExport(string startDate, string searchString,string cookievalue)
+        public FileResult EntityEquipmentAssignDateRangeExport(string startDate, string searchString, string cookievalue)
         {
             MemoryStream ms = new MemoryStream();
             using (SLDocument sl = new SLDocument())

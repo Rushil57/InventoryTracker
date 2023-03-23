@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
 using InventoryTracker_WebApp.Domain.Equipment;
 using InventoryTracker_WebApp.Helpers;
 using InventoryTracker_WebApp.Models;
@@ -10,8 +9,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 using System.Web.Mvc;
 
@@ -213,11 +210,48 @@ namespace InventoryTracker_WebApp.Controllers
         {
             try
             {
+                var equipment = _equipmentRepository.ExportEquipment(startDate, searchString);
+                int newcolumnCount = 0;
+                var firstEquipIDCount = equipment[0].Columns.Count;
+                var valueStr = "Value";
+                var startDateStr = "Start Date";
+                var endDateStr = "End Date";
+                var equipDtlIDStr = "Equip_Dtl_ID";
+                foreach (var eRows in equipment[0].Rows.Cast<DataRow>())
+                {
+                    var rowList = equipment[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).OrderBy(x => x.ItemArray[4]).ToList();
+                    var j = firstEquipIDCount;
+                    foreach (var eRowsVal in rowList)
+                    {
+                        if (newcolumnCount < rowList.Count)
+                        {
+                            equipment[0].Columns.Add(equipDtlIDStr);
+                            equipment[0].Columns.Add(valueStr);
+                            equipment[0].Columns.Add(startDateStr);
+                            equipment[0].Columns.Add(endDateStr);
+                            newcolumnCount++;
+                            valueStr += " ";
+                            startDateStr += " ";
+                            endDateStr += " ";
+                            equipDtlIDStr += " ";
+                        }
+                        eRows[j] = eRowsVal[2];
+                        j++;
+                        eRows[j] = eRowsVal[3];
+                        j++;
+                        eRows[j] = Convert.ToDateTime(eRowsVal[4]).ToShortDateString();
+                        j++;
+                        eRows[j] = Convert.ToDateTime(eRowsVal[5]).ToShortDateString();
+                        j++;
+                    }
+                }
+
+                equipment[0].Columns.Remove("Equip_ID");
+                equipment[0].Columns.Remove("Equip_Temp_ID");
+
                 MemoryStream ms = new MemoryStream();
                 using (SLDocument sl = new SLDocument())
                 {
-                    var equipment = _equipmentRepository.ExportEquipment(startDate, searchString);
-
                     SLStyle sLStyle = new SLStyle();
                     sLStyle.Protection.Locked = false;
 
@@ -259,55 +293,21 @@ namespace InventoryTracker_WebApp.Controllers
                     sl.SetCellValue(1, 2, "Start Date:");
                     sl.SetCellValue(1, 3, startDate);
 
-                    int newcolumnCount = 0;
-                    var firstEquipIDCount = equipment[0].Columns.Count;
-                    var valueStr = "Value";
-                    var startDateStr = "Start Date";
-                    var endDateStr = "End Date";
-                    var equipDtlIDStr = "Equip_Dtl_ID";
-                    foreach (var eRows in equipment[0].Rows.Cast<DataRow>())
-                    {
-                        var rowList = equipment[1].Rows.Cast<DataRow>().Where(x => x.ItemArray[1].Equals(eRows[1]) && x.ItemArray[0].Equals(eRows[0])).ToList();
-                        var j = firstEquipIDCount;
-                        foreach (var eRowsVal in rowList)
-                        {
-                            if (newcolumnCount < rowList.Count)
-                            {
-                                equipment[0].Columns.Add(equipDtlIDStr);
-                                equipment[0].Columns.Add(valueStr);
-                                equipment[0].Columns.Add(startDateStr);
-                                equipment[0].Columns.Add(endDateStr);
-                                newcolumnCount++;
-                                valueStr += " ";
-                                startDateStr += " ";
-                                endDateStr += " ";
-                                equipDtlIDStr += " ";
-                            }
-                            eRows[j] = eRowsVal[2];
-                            j++;
-                            eRows[j] = eRowsVal[3];
-                            j++;
-                            eRows[j] = Convert.ToDateTime(eRowsVal[4]).ToShortDateString();
-                            j++;
-                            eRows[j] = Convert.ToDateTime(eRowsVal[5]).ToShortDateString();
-                            j++;
-                        }
-                    }
-
-                    equipment[0].Columns.Remove("Equip_ID");
-                    equipment[0].Columns.Remove("Equip_Temp_ID");
                     sl.ImportDataTable("A2", equipment[0], true);
                     sl.AutoFitColumn(1, equipment[0].Columns.Count);
                     sl.SetColumnStyle(1, equipment[0].Columns.Count, sLStyle);
                     sl.SetRowStyle(1, equipment[0].Rows.Count + 2, sLStyleColor);
-                    sl.SetColumnStyle(6, equipment[0].Columns.Count, sLStyle);
-                    for (int i = 5; i < equipment[0].Columns.Count; i = i + 4)
-                    {
-                        sl.SetColumnStyle(i, sLStyleColor);
-                    }
-
+                    sl.SetColumnStyle(5, equipment[0].Columns.Count, sLStyle);
+                   
                     sl.RemoveRowStyle(1, 2);
                     sl.SetRowStyle(1, 2, sLStyleColor);
+
+                    sl.SetColumnStyle(equipment[0].Columns.Count + 1, equipment[0].Columns.Count + 40, sLStyle);
+                    sl.MergeWorksheetCells(1, 5, 1, 12);
+                    sl.SetCellValue(1, 5, "Don't change Equip_Dtl_ID value of existing records.For new records add NEW in Equip_Dtl_ID column.");
+                    sLStyleColor.Font.FontColor = System.Drawing.Color.Red;
+                    sl.SetCellStyle(1, 5, sLStyleColor);
+
                     sl.ProtectWorksheet(sp);
                     sl.SaveAs(ms);
                 }
@@ -317,6 +317,7 @@ namespace InventoryTracker_WebApp.Controllers
             }
             catch (Exception e)
             {
+                CommonDatabaseOperationHelper.Log("Equipment Search Export", e.Message + "==>" + e.StackTrace, true);
                 throw;
             }
             finally

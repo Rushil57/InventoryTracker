@@ -839,119 +839,123 @@ function sampleFileImportDownload() {
 nextPrevYear();
 
 function openCC(unitID, equipID) {
-    ccEquipID = equipID;
-    ccUnitID = unitID;
-    if (unitID != '') {
+    AddLoader();
+    setTimeout(function () {
+        ccEquipID = equipID;
         ccUnitID = unitID;
-    }
-
-    if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
-        var datepicker = $.fn.datepicker.noConflict();
-        $.fn.bootstrapDP = datepicker;
-    }
-    $('#currentYear').text($('.ui-datepicker-year:first').text());
-    $("#monthsDatePicker").datepicker("destroy");
-    $("#monthsDatePicker").datepicker({
-        numberOfMonths: [3, 4],
-        changeMonth: false,
-        changeYear: false,
-        stepMonths: 12,
-        defaultDate: '01/01/' + new Date().getFullYear(),
-        onSelect: function (date, inst) {
-            inst.show();
-        }
-    });
-
-    $('.ui-datepicker').addClass('ccStyle')
-
-    $('#ccUnitID').attr('hidden', false).text(ccUnitID);
-
-    var legendStr = '';
-    filterStr = '<option value="0" selected>No Filter</option>';
-    ccPropDetails = [];
-    var equipDtlIDList = [];
-    $("#tblTemplateDtl > tbody >  tr").each(function () {
-        var zerotdText = $(this).find("td:eq(0)").text();
-        var firstText = $(this).find("td:eq(1) > input").val();
-        var secondtd = $(this).find("td:eq(2) > input").val();
-        var thirdtd = $(this).find("td:eq(3) >  input").val();
-        var secondtdDate = new Date(secondtd);
-        var thirdtdDate = new Date(thirdtd);
-        var equipTmpID = $(this).find('.equipTmpID').val();
-        var equipDtlID = $(this).find('.equipDtlID').val();
-        var dataType = $(this).find('.dataType').val();
-        var color = '';
-        if (preservedColor.filter(x => x.equipDtlID == equipDtlID).length > 0) {
-            color = preservedColor.filter(x => x.equipDtlID == equipDtlID)[0].RandomColor;
-        }
-        else {
-            var obj = {
-                RandomColor: getRandomColor(),
-                equipDtlID: equipDtlID
-            };
-            preservedColor.push(obj);
-            color = obj.RandomColor;
+        if (unitID != '') {
+            ccUnitID = unitID;
         }
 
-        if (equipDtlIDList.filter(x => x.id == equipDtlID) == 0) {
-            legendStr += '<tr equipTmpID="' + equipTmpID + '" isBorderedBox="1" equipDtlID="' + equipDtlID + '" data-equip-id="' + equipmentHDRID.val() + '" dataType="' + dataType + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important;cursor:pointer"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
-
-            filterStr += '<option value=' + equipTmpID + '>' + zerotdText + '</option>';
-            equipDtlIDList.push({
-                id: equipDtlID
-            })
+        if (!$.fn.bootstrapDP && $.fn.datepicker && $.fn.datepicker.noConflict) {
+            var datepicker = $.fn.datepicker.noConflict();
+            $.fn.bootstrapDP = datepicker;
         }
-
-        ccPropDetails.push({
-            tmpID: equipTmpID,
-            propName: zerotdText,
-            startDate: secondtd,
-            endDate: thirdtd,
-            color: color,
-            dataValue: firstText,
-            equipDtlID: equipDtlID,
-            dataType: dataType
-        })
-        $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
-            var currMonth = $(this).attr('data-month');
-            var currYear = $(this).attr('data-year');
-            var currDay = $(this).text()
-            var currDate = new Date(currYear, currMonth, currDay);
-            if (secondtdDate <= currDate && thirdtdDate >= currDate) {
-                if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
-                    $(this).children()
-                        .attr('data-start-date', secondtd)
-                        .attr('data-end-date', thirdtd)
-                        .attr('data-equip-id', equipmentHDRID.val())
-                        .attr('onclick', "openEditPopup(this)")
-                        .css('background-color', '\'' + color + '\'')
-                        .attr('isBorderedBox', '0')
-                        .attr('data-bs-toggle', 'tooltip')
-                        .attr('data-bs-placement', 'bottom')
-                        .attr('data-bs-title', 'Property Name: ' + zerotdText + '<br/> Data Value: ' + firstText)
-                        .attr('data-bs-html', true)
-                        .attr('propName', zerotdText)
-                        .attr('dataValue', firstText)
-                        .attr('equipDtlID', equipDtlID)
-                        .attr('equipTmpID', equipTmpID)
-                        .attr('dataType', dataType);
-                }
-                else {
-                    $(this).children().css('border', '2px solid black')
-                        .attr('isBorderedBox', '1');
-                }
+        $('#currentYear').text($('.ui-datepicker-year:first').text());
+        $("#monthsDatePicker").datepicker("destroy");
+        $("#monthsDatePicker").datepicker({
+            numberOfMonths: [3, 4],
+            changeMonth: false,
+            changeYear: false,
+            stepMonths: 12,
+            defaultDate: '01/01/' + new Date().getFullYear(),
+            onSelect: function (date, inst) {
+                inst.show();
             }
-        })
-    });
-    $('#tblLegend > tbody > tr').remove();
-    $('#tblLegend > tbody').append(legendStr);
-    bindTooltip();
-    $('.selectDrpDown').html(filterStr).val(dropDownVal);
-    if (isFirstTimeCC) {
-        $('#calendarControlModel').modal('show').css('z-index', '1055');
-    }
-    isFirstTimeCC = true;
-    setTimeout(onChangeYear(), 500)
+        });
+
+        $('.ui-datepicker').addClass('ccStyle')
+
+        $('#ccUnitID').attr('hidden', false).text(ccUnitID);
+
+        var legendStr = '';
+        filterStr = '<option value="0" selected>No Filter</option>';
+        ccPropDetails = [];
+        var equipDtlIDList = [];
+        $("#tblTemplateDtl > tbody >  tr").each(function () {
+            var zerotdText = $(this).find("td:eq(0)").text();
+            var firstText = $(this).find("td:eq(1) > input").val();
+            var secondtd = $(this).find("td:eq(2) > input").val();
+            var thirdtd = $(this).find("td:eq(3) >  input").val();
+            var secondtdDate = new Date(secondtd);
+            var thirdtdDate = new Date(thirdtd);
+            var equipTmpID = $(this).find('.equipTmpID').val();
+            var equipDtlID = $(this).find('.equipDtlID').val();
+            var dataType = $(this).find('.dataType').val();
+            var color = '';
+            if (preservedColor.filter(x => x.equipDtlID == equipDtlID).length > 0) {
+                color = preservedColor.filter(x => x.equipDtlID == equipDtlID)[0].RandomColor;
+            }
+            else {
+                var obj = {
+                    RandomColor: getRandomColor(),
+                    equipDtlID: equipDtlID
+                };
+                preservedColor.push(obj);
+                color = obj.RandomColor;
+            }
+
+            if (equipDtlIDList.filter(x => x.id == equipDtlID) == 0) {
+                legendStr += '<tr equipTmpID="' + equipTmpID + '" isBorderedBox="1" equipDtlID="' + equipDtlID + '" data-equip-id="' + equipmentHDRID.val() + '" dataType="' + dataType + '" data-start-date="' + secondtd + '" data-end-date="' + thirdtd + '" currDTLID="' + equipTmpID + '" dataValue="' + firstText + '" propName="' + zerotdText + '" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="Property Name: ' + zerotdText + '<br/> Start date: ' + secondtd + '<br/> End date: ' + thirdtd + '"><input type="hidden" value="' + equipTmpID + '"><td style="background-color:' + color + ' !important;cursor:pointer"></td><td style="cursor:pointer" onclick="openEditPopupFromChild(this)">' + zerotdText + '</td></tr>';
+
+                filterStr += '<option value=' + equipTmpID + '>' + zerotdText + '</option>';
+                equipDtlIDList.push({
+                    id: equipDtlID
+                })
+            }
+
+            ccPropDetails.push({
+                tmpID: equipTmpID,
+                propName: zerotdText,
+                startDate: secondtd,
+                endDate: thirdtd,
+                color: color,
+                dataValue: firstText,
+                equipDtlID: equipDtlID,
+                dataType: dataType
+            })
+            $(".ui-datepicker-calendar > tbody > tr > td").each(function () {
+                var currMonth = $(this).attr('data-month');
+                var currYear = $(this).attr('data-year');
+                var currDay = $(this).text()
+                var currDate = new Date(currYear, currMonth, currDay);
+                if (secondtdDate <= currDate && thirdtdDate >= currDate) {
+                    if ($(this).children().css('background-color') == 'rgb(246, 246, 246)') {
+                        $(this).children()
+                            .attr('data-start-date', secondtd)
+                            .attr('data-end-date', thirdtd)
+                            .attr('data-equip-id', equipmentHDRID.val())
+                            .attr('onclick', "openEditPopup(this)")
+                            .css('background-color', '\'' + color + '\'')
+                            .attr('isBorderedBox', '0')
+                            .attr('data-bs-toggle', 'tooltip')
+                            .attr('data-bs-placement', 'bottom')
+                            .attr('data-bs-title', 'Property Name: ' + zerotdText + '<br/> Data Value: ' + firstText)
+                            .attr('data-bs-html', true)
+                            .attr('propName', zerotdText)
+                            .attr('dataValue', firstText)
+                            .attr('equipDtlID', equipDtlID)
+                            .attr('equipTmpID', equipTmpID)
+                            .attr('dataType', dataType);
+                    }
+                    else {
+                        $(this).children().css('border', '2px solid black')
+                            .attr('isBorderedBox', '1');
+                    }
+                }
+            })
+        });
+        $('#tblLegend > tbody > tr').remove();
+        $('#tblLegend > tbody').append(legendStr);
+        bindTooltip();
+        $('.selectDrpDown').html(filterStr).val(dropDownVal);
+        if (isFirstTimeCC) {
+            $('#calendarControlModel').modal('show').css('z-index', '1055');
+        }
+        isFirstTimeCC = true;
+        setTimeout(onChangeYear(), 500);
+        setTimeout(function () { RemoveLoader(); }, 500);
+    }, 100)
 }
 
 
@@ -1025,64 +1029,70 @@ function bindDate(filterVal = 0) {
 
 var dateRangeTmp = '';
 function openEditPopup(element) {
-    var sdate = $(element).attr('data-start-date');
-    var edate = $(element).attr('data-end-date');
-    var equipID = $(element).attr('data-equip-id');
-    var propName = $(element).attr('propName');
-    var dataValue = $(element).attr('dataValue');
-    var equipDtlID = $(element).attr('equipDtlID');
-    var isBorderedBoxVal = $(element).attr('isBorderedBox');
-    var equipTmpID = $(element).attr('equipTmpID');
-    var dataType = $(element).attr('dataType').toLowerCase();
 
-    $('#changeProp').attr('hidden', true);
-    $('#saveData').attr('hidden', true);
-    $('#updateData').attr('hidden', false);
-    $('#removeDetail').attr('hidden', false);
-    $('#dateRangeDiv').attr('hidden', false);
+    AddLoader();
+    setTimeout(function () {
 
-    //if (isBorderedBoxVal == '1' || isDropDownChange) {
-    //    //$('#changeProp').attr('hidden', false).html(filterStr).val(equipTmpID);
-    //    //$($('#changeProp >  option')[0]).remove()
-    //    // Neee to uncommit
-    //    isDropDownChange = false;
-    //}
-    //else {
-    //    $('#changeProp').attr('hidden', true)
-    //}
-    var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+        var sdate = $(element).attr('data-start-date');
+        var edate = $(element).attr('data-end-date');
+        var equipID = $(element).attr('data-equip-id');
+        var propName = $(element).attr('propName');
+        var dataValue = $(element).attr('dataValue');
+        var equipDtlID = $(element).attr('equipDtlID');
+        var isBorderedBoxVal = $(element).attr('isBorderedBox');
+        var equipTmpID = $(element).attr('equipTmpID');
+        var dataType = $(element).attr('dataType').toLowerCase();
 
-    dateRangeTmp = '';
+        $('#changeProp').attr('hidden', true);
+        $('#saveData').attr('hidden', true);
+        $('#updateData').attr('hidden', false);
+        $('#removeDetail').attr('hidden', false);
+        $('#dateRangeDiv').attr('hidden', false);
 
-    $("#tblTemplateDtl > tbody >  tr:hidden").each(function () {
-        var sDateTmp = $(this).find('td:eq(2) >  input').val();
-        var eDateTmp = $(this).find('td:eq(3) >  input').val();
-        var currEquDTLIDTemp = $(this).find('.equipDtlID').val();
-        var currEquipTempID = $(this).find('.equipTmpID').val();
-        var selectedText = sDateTmp == sdate && eDateTmp == edate && currEquDTLIDTemp == equipDtlID ? 'selected' : '';
-        if (currEquipTempID == equipTmpID) {
-            dateRangeTmp += '<option ' + selectedText + ' currEquipmentDTLID="' + currEquDTLIDTemp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+        //if (isBorderedBoxVal == '1' || isDropDownChange) {
+        //    //$('#changeProp').attr('hidden', false).html(filterStr).val(equipTmpID);
+        //    //$($('#changeProp >  option')[0]).remove()
+        //    // Neee to uncommit
+        //    isDropDownChange = false;
+        //}
+        //else {
+        //    $('#changeProp').attr('hidden', true)
+        //}
+        var textType = dataType == 'bool' ? 'checkbox' : dataType == 'int' || dataType == 'decimal' ? 'number' : dataType == 'hyperlink' ? 'url' : dataType == 'datetime' ? 'date' : 'text';
+
+        dateRangeTmp = '';
+
+        $("#tblTemplateDtl > tbody >  tr:hidden").each(function () {
+            var sDateTmp = $(this).find('td:eq(2) >  input').val();
+            var eDateTmp = $(this).find('td:eq(3) >  input').val();
+            var currEquDTLIDTemp = $(this).find('.equipDtlID').val();
+            var currEquipTempID = $(this).find('.equipTmpID').val();
+            var selectedText = sDateTmp == sdate && eDateTmp == edate && currEquDTLIDTemp == equipDtlID ? 'selected' : '';
+            if (currEquipTempID == equipTmpID) {
+                dateRangeTmp += '<option ' + selectedText + ' currEquipmentDTLID="' + currEquDTLIDTemp + '">' + sDateTmp + ' - ' + eDateTmp + '</option>';
+            }
+        })
+        $('#dateRange').html(dateRangeTmp);
+
+
+        $('#currEntDTLID').val(equipDtlID);
+        $('#startDateLbl').text(sdate);
+        $('#endDateLbl').text(edate);
+        $('.updateStartDatepicker').val(sdate);
+        $('.updateEndDatepicker').val(edate);
+        $('#propName').text(propName).attr('dataType', dataType);
+        $('#dataValue').attr('type', textType).val(dataValue);
+        if (dataType == 'bool') {
+            $('#dataValue').prop('checked', dataValue == 'true' ? true : false).addClass('checkboxStyleEdit');
         }
-    })
-    $('#dateRange').html(dateRangeTmp);
-
-
-    $('#currEntDTLID').val(equipDtlID);
-    $('#startDateLbl').text(sdate);
-    $('#endDateLbl').text(edate);
-    $('.updateStartDatepicker').val(sdate);
-    $('.updateEndDatepicker').val(edate);
-    $('#propName').text(propName).attr('dataType', dataType);
-    $('#dataValue').attr('type', textType).val(dataValue);
-    if (dataType == 'bool') {
-        $('#dataValue').prop('checked', dataValue == 'true' ? true : false).addClass('checkboxStyleEdit');
-    }
-    else {
-        $('#dataValue').removeClass('checkboxStyleEdit');
-    }
-    resetEditModel();
-    $('#editEntityEquipment').modal('show');
-    $('#calendarControlModel').css('z-index', '1035')
+        else {
+            $('#dataValue').removeClass('checkboxStyleEdit');
+        }
+        resetEditModel();
+        $('#editEntityEquipment').modal('show');
+        $('#calendarControlModel').css('z-index', '1035');
+        setTimeout(function () { RemoveLoader(); }, 500);
+    }, 100)
 }
 
 

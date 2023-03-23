@@ -845,15 +845,23 @@ function bindTooltip() {
 function nextPrevYear() {
     $('#nextYear').click(function () {
         AddLoader();
-        $('.ui-icon-circle-triangle-e').trigger('click');
-        setTimeout(onChangeYear(), 500);
-        setTimeout(RemoveLoader(), 1000);
+        setTimeout(function () {
+            $('.ui-icon-circle-triangle-e').trigger('click');
+            setTimeout(onChangeYear(), 500);
+        }, 100)
+        setTimeout(function () {
+            setTimeout(RemoveLoader(), 3000);
+        }, 1000)
     });
     $('#prevYear').click(function () {
         AddLoader();
-        $('.ui-icon-circle-triangle-w').trigger('click');
-        setTimeout(onChangeYear(), 500)
-        setTimeout(RemoveLoader(), 1000);
+        setTimeout(function () {
+            $('.ui-icon-circle-triangle-w').trigger('click');
+            setTimeout(onChangeYear(), 500);
+        }, 100)
+        setTimeout(function () {
+            setTimeout(RemoveLoader(), 3000);
+        }, 1000)
     });
 
 }
@@ -946,7 +954,11 @@ function onChangePropDropDown() {
 
 
 function openEditPopupFromChild(element) {
-    openEditPopup($(element).parent())
+    AddLoader();
+    setTimeout(function () {
+        openEditPopup($(element).parent());
+        setTimeout(function () { RemoveLoader(); }, 500);
+    }, 100)
 }
 
 

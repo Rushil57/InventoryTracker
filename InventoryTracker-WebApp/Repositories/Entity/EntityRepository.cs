@@ -454,7 +454,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                                     }
                                     else
                                     {
-                                       var entDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
+                                        var entDtlID = connection.Query<int>(isRecordOfEndRange).FirstOrDefault();
                                         if (entDtlID > 0)
                                         {
                                             isSuccess = false;
@@ -517,7 +517,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 query += "select ed.Ent_ID,ed.Ent_Temp_ID,ed.Ent_Dtl_ID ,ed.Ent_Value,ed.Start_Date,ed.End_Date from ENTITY_HDR eh inner join Entity_Dtl ed  on ed.Ent_ID = eh.ENT_ID inner join Entity_Template et  ON ed.Ent_temp_id = et.Ent_temp_id order by ed.Ent_ID , Prop_name";
                 DataSet ds = new DataSet();
                 ds = CommonDatabaseOperationHelper.GetDataSet(query);
-                
+
                 return ds.Tables;
             }
             catch (Exception e)
@@ -536,11 +536,20 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                 var query = string.Empty;
                 for (int i = 2; i < columnHeader.Count; i = i + 4)
                 {
-                    if (!string.IsNullOrEmpty(values[i + 2]) && !string.IsNullOrEmpty(values[i + 3]))
+
+                    if (!string.IsNullOrEmpty(values[i + 2]) && !string.IsNullOrEmpty(values[i + 3]) && !string.IsNullOrEmpty(values[i]) && (Convert.ToDateTime(values[i + 2]) < Convert.ToDateTime(values[i + 3])))
                     {
                         var sDate = Convert.ToDateTime(values[i + 2]).Year + "-" + Convert.ToDateTime(values[i + 2]).Month + "-" + Convert.ToDateTime(values[i + 2]).Day;
                         var eDate = Convert.ToDateTime(values[i + 3]).Year + "-" + Convert.ToDateTime(values[i + 3]).Month + "-" + Convert.ToDateTime(values[i + 3]).Day;
-                        query += $"UPDATE [Entity_Dtl] SET  [Ent_Value] = '{values[i + 1].Replace("'", "''")}' , Start_Date ='{sDate}' , End_Date ='{eDate}'  WHERE Ent_Dtl_ID = {values[i]};";
+
+                        if (values[i].Trim().ToLower() != "new")
+                        {
+                            query += $"UPDATE [Entity_Dtl] SET  [Ent_Value] = '{values[i + 1].Replace("'", "''")}' , Start_Date ='{sDate}' , End_Date ='{eDate}'  WHERE Ent_Dtl_ID = {values[i]};";
+                        }
+                        else
+                        {
+                            query += $" IF((select count(Ent_Dtl_ID) from [Entity_Dtl] edtl join ENTITY_HDR ed on ed.ENT_ID =  edtl.Ent_ID join Entity_Template et on et.Ent_temp_id = edtl.Ent_Temp_ID where ed.ENT_NAME = '{values[0].Trim().Replace("'", "''")}' and et.Prop_name = '{values[1].Trim().Replace("'", "''")}' and (('{sDate}'between edtl.Start_Date and edtl.End_Date) or ('{eDate}'between edtl.Start_Date and edtl.End_Date))) = 0 ) BEGIN INSERT INTO [Entity_Dtl] ([Ent_ID] ,[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date]) VALUES ((select top 1 ENT_ID from ENTITY_HDR where ENT_NAME = '{values[0].Trim().Replace("'", "''")}'),(select top 1 Ent_temp_id from Entity_Template where Prop_name = '{values[1].Trim().Replace("'", "''")}' and Ent_type = (select Ent_type from ENTITY_HDR where ENT_NAME = '{values[0].Trim().Replace("'", "''")}')),'{values[i + 1].Replace("'", "''")}','{sDate}','{eDate}') END ";
+                        }
                     }
                 }
                 var isUpdated = connection.Query<bool>(query).FirstOrDefault();
