@@ -5,7 +5,7 @@
             <div class="modal-header">
                 <h6 class="modal-title" id="editEntityEquipmentLabel">Edit</h6>
                 <button type="button" class="btn btn-primary float-end" style="margin-left:300px" onclick="AddNewProp()">Add New</button>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick=" resetEditModel()"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick=" resetEditModel();resetEntDTLID();"></button>
             </div>
             <div class="modal-body" style="height:300px; overflow: auto;" id="editEntityEquipmentBody">
                 <div class="row">
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetEditModel()">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetEditModel(); resetEntDTLID();">Cancel</button>
                 <button type="button" id="removeDetail" class="btn btn-primary" onclick="removeEntEquDetail()">Remove Entire Row</button>
             </div>
         </div>

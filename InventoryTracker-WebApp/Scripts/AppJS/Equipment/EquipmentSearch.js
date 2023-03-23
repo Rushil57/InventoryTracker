@@ -286,7 +286,9 @@ function saveHDRTemplateDtl() {
         var isStartGTEnd = false;
 
         $("#tblTemplateDtl > tbody >  tr").each(function () {
-            if ($(this).attr("hidden")) { return; }
+            if ($(this).attr('hidden') && ($('#currEntDTLID').val() == null || $('#currEntDTLID').val() == 0)) {
+                return;
+            }
             var Equip_Dtl_ID = $(this).find('.equipDtlID').val();
             var Equip_Temp_ID = $(this).find('.equipTmpID').val();
             var dataType = $(this).find('.dataType').val().toLowerCase();
@@ -316,14 +318,25 @@ function saveHDRTemplateDtl() {
                 $(this).find("td:eq(2)  > input").css('background-color', '#f5cece');
                 return;
             }
-
-            equipmentTmpDtl.push({
-                Equip_Dtl_ID: Equip_Dtl_ID,
-                Equip_Temp_ID: Equip_Temp_ID,
-                Eq_Value: firsttd,
-                Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
-                End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
-            })
+            if (Equip_Dtl_ID == $('#currEntDTLID').val()) {
+                equipmentTmpDtl = [];
+                equipmentTmpDtl.push({
+                    Equip_Dtl_ID: Equip_Dtl_ID,
+                    Equip_Temp_ID: Equip_Temp_ID,
+                    Eq_Value: firsttd,
+                    Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
+                    End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
+                })
+                return false;
+            } else {
+                equipmentTmpDtl.push({
+                    Equip_Dtl_ID: Equip_Dtl_ID,
+                    Equip_Temp_ID: Equip_Temp_ID,
+                    Eq_Value: firsttd,
+                    Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
+                    End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
+                })
+            }
         });
 
         if (isStartGTEnd) {
@@ -380,6 +393,7 @@ function saveHDRTemplateDtl() {
                             }
                         }
                     });
+                    resetEntDTLID();
                 }
                 else {
                     alert(data.data)
@@ -1086,7 +1100,7 @@ function updateEditOption() {
     var sdate = $('.updateStartDatepicker').val();
     var edate = $('.updateEndDatepicker').val();
     var dataValue = $('#dataValue').val();
-    var changeValueEle = $('#tblTemplateDtl >  tbody').find("[value='" + $('#currEntDTLID').val() + "']").parent();
+    var changeValueEle = $('#tblTemplateDtl >  tbody').find("[value='" + $('#currEntDTLID').val() + "']");
     var dataType = $('#propName').attr('dataType').toLowerCase();
 
     if (dataType == 'bool') {

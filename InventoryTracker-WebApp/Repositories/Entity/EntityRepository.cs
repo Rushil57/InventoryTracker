@@ -433,7 +433,8 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                                 }
                                 else
                                 {
-                                    var EntiyDtlID = string.IsNullOrEmpty(EntityDtlID) || EntityDtlID == "0" ? string.IsNullOrEmpty(ed.Ent_Dtl_ID.ToString()) || ed.Ent_Dtl_ID.ToString() == "0" ? 0 : Convert.ToInt32(ed.Ent_Dtl_ID.ToString()) : Convert.ToInt32(EntityDtlID);
+                                    //var EntiyDtlID = string.IsNullOrEmpty(EntityDtlID) || EntityDtlID == "0" ? string.IsNullOrEmpty(ed.Ent_Dtl_ID.ToString()) || ed.Ent_Dtl_ID.ToString() == "0" ? 0 : Convert.ToInt32(ed.Ent_Dtl_ID.ToString()) : Convert.ToInt32(EntityDtlID);
+                                    var EntiyDtlID = string.IsNullOrEmpty(ed.Ent_Dtl_ID.ToString()) || ed.Ent_Dtl_ID.ToString() == "0" ? 0 : Convert.ToInt32(ed.Ent_Dtl_ID.ToString());
                                     var isRecordOfEndRange = "SELECT Ent_Dtl_ID FROM [dbo].[Entity_Dtl] where Ent_ID = " + entityHDR.ENT_ID + " and Ent_Temp_ID = " + ed.Ent_Temp_ID + " and  ((" + endDate + " between Start_Date and End_Date) OR (" + startDate + " between Start_Date and End_Date))";
                                     if (EntiyDtlID > 0)
                                     {

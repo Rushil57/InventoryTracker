@@ -257,7 +257,8 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                                 }
                                 else
                                 {
-                                    var entDtlID = string.IsNullOrEmpty(EntityDtlID) || EntityDtlID == "0" ? string.IsNullOrEmpty(ed.Equip_Dtl_ID.ToString()) || ed.Equip_Dtl_ID.ToString() == "0" ? 0 : Convert.ToInt32(ed.Equip_Dtl_ID.ToString()) : Convert.ToInt32(EntityDtlID);
+                                    //var entDtlID = string.IsNullOrEmpty(EntityDtlID) || EntityDtlID == "0" ? string.IsNullOrEmpty(ed.Equip_Dtl_ID.ToString()) || ed.Equip_Dtl_ID.ToString() == "0" ? 0 : Convert.ToInt32(ed.Equip_Dtl_ID.ToString()) : Convert.ToInt32(EntityDtlID);
+                                    var entDtlID = string.IsNullOrEmpty(ed.Equip_Dtl_ID.ToString()) || ed.Equip_Dtl_ID.ToString() == "0" ? 0 : Convert.ToInt32(ed.Equip_Dtl_ID.ToString());
                                     var isRecordOfEndRange = "SELECT Equip_Dtl_ID FROM Equipment_Dtl where EQUIP_ID = " + equipmentHDR.EQUIP_ID + " and Equip_Temp_ID = " + ed.Equip_Temp_ID + " and  ((" + endDate + " between Start_Date and End_Date) OR (" + startDate + " between Start_Date and End_Date))";
                                     //and End_Date = '01/01/9999'";
                                     if (entDtlID > 0)
