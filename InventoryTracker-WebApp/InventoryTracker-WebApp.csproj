@@ -176,6 +176,7 @@
     <Compile Include="Controllers\EntityController.cs" />
     <Compile Include="Controllers\EquipmentController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Controllers\MultiInstanceController.cs" />
     <Compile Include="Controllers\ResetPasswordController.cs" />
     <Compile Include="Controllers\UserDefinitionController.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Models\EquipmentDetail.cs" />
     <Compile Include="Models\EquipmentHeader.cs" />
     <Compile Include="Models\EquipmentTemplate.cs" />
+    <Compile Include="Models\MapDetail.cs" />
     <Compile Include="Models\ResponseModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Admin\AdminRepository.cs" />
@@ -232,6 +234,7 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Css\EquipmentEntityAssignment.css" />
     <Content Include="Content\Css\LoginIndex.css" />
+    <Content Include="Content\Css\Map.css" />
     <Content Include="Content\Css\MultiInstance.css" />
     <Content Include="Content\Css\ResetPassword.css" />
     <Content Include="Content\Css\Style.css" />
@@ -264,6 +267,7 @@
     <Content Include="Scripts\AppJS\Equipment\EquipmentEntityAssignment.js" />
     <Content Include="Scripts\AppJS\Equipment\EquipmentSearch.js" />
     <Content Include="Scripts\AppJS\Login\LoginIndex.js" />
+    <Content Include="Scripts\AppJS\Map\Map.js" />
     <Content Include="Scripts\AppJS\MultiInstance\MultiInstance.js" />
     <Content Include="Scripts\AppJS\ResetPassword\ResetPassword.js" />
     <Content Include="Scripts\AppJS\UserDefination\UserDefination.js" />
@@ -486,6 +490,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jQueryMultiselect\jquery.multiselect.css" />
+    <Content Include="Scripts\jQueryMultiselect\jquery.multiselect.js" />
     <Content Include="Scripts\jqueryui\jquery-ui.js" />
     <Content Include="Scripts\jqueryui\jquery-ui.min.js" />
     <Content Include="Scripts\jqueryui\themes\base\images\ui-icons_444444_256x240.png" />
@@ -894,6 +900,9 @@
     <Content Include="Scripts\jqueryui\themes\vader\theme.css" />
     <Content Include="Scripts\jqueryui\themes\vader\theme.min.css" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\ol-debug.js" />
+    <Content Include="Scripts\ol.css" />
+    <Content Include="Scripts\ol.js" />
     <Content Include="Scripts\popper.min.js" />
     <Content Include="Scripts\Spectrum\i18n\jquery.spectrum-ar.js" />
     <Content Include="Scripts\Spectrum\i18n\jquery.spectrum-ar.min.js" />
@@ -992,9 +1001,11 @@
     <Content Include="Views\Shared\_EntityTemplateDetail.cshtml" />
     <Content Include="Views\Shared\_CalendarControlSearchModel.cshtml" />
     <Content Include="Views\Shared\_EditEntityEquipmentModel.cshtml" />
+    <Content Include="Views\Map\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\bootstrap-multiselect\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

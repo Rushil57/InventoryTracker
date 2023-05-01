@@ -591,7 +591,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                         }
                         else
                         {
-                            query += $" IF((select count(Equip_Dtl_ID) from [Equipment_Dtl] edtl join EQUIPMENT_HDR ed on  ed.EQUIP_ID =  edtl.Equip_ID join Equipment_Template et on  et.Equip_Temp_ID = edtl.Equip_Temp_ID where  ed.EQUIP_TYPE = '{values[0].Trim().Replace("'", "''")}' and ed.VENDOR = '{values[1].Trim().Replace("'", "''")}' and ed.UNIT_ID = '{values[2].Trim().Replace("'", "''")}' and  et.Prop_name = '{values[3].Trim().Replace("'", "''")}' and (('{sDate}'between edtl.Start_Date and edtl.End_Date)  or ('{eDate}'between edtl.Start_Date and edtl.End_Date))) = 0 )   BEGIN  INSERT INTO [Equipment_Dtl]([Equip_ID],[Equip_Temp_ID],[Eq_Value],[Start_Date],[End_Date]) VALUES ((select top 1 EQUIP_ID from EQUIPMENT_HDR ed where ed.EQUIP_TYPE = '{values[0].Trim().Replace("'", "''")}' and ed.VENDOR = '{values[1].Trim().Replace("'", "''")}' and ed.UNIT_ID = '{values[2].Trim().Replace("'", "''")}'), (select top 1 Equip_Temp_ID from Equipment_Template where Prop_Name = '{values[3].Trim().Replace("'", "''")}' and Equipment_Type = '{values[0].Trim().Replace("'", "''")}'),'{values[i+1].Trim().Replace("'", "''")}','{sDate}','{eDate}')  END ";
+                            query += $" IF((select count(Equip_Dtl_ID) from [Equipment_Dtl] edtl join EQUIPMENT_HDR ed on  ed.EQUIP_ID =  edtl.Equip_ID join Equipment_Template et on  et.Equip_Temp_ID = edtl.Equip_Temp_ID where  ed.EQUIP_TYPE = '{values[0].Trim().Replace("'", "''")}' and ed.VENDOR = '{values[1].Trim().Replace("'", "''")}' and ed.UNIT_ID = '{values[2].Trim().Replace("'", "''")}' and  et.Prop_name = '{values[3].Trim().Replace("'", "''")}' and (('{sDate}'between edtl.Start_Date and edtl.End_Date)  or ('{eDate}'between edtl.Start_Date and edtl.End_Date))) = 0 )   BEGIN  INSERT INTO [Equipment_Dtl]([Equip_ID],[Equip_Temp_ID],[Eq_Value],[Start_Date],[End_Date]) VALUES ((select top 1 EQUIP_ID from EQUIPMENT_HDR ed where ed.EQUIP_TYPE = '{values[0].Trim().Replace("'", "''")}' and ed.VENDOR = '{values[1].Trim().Replace("'", "''")}' and ed.UNIT_ID = '{values[2].Trim().Replace("'", "''")}'), (select top 1 Equip_Temp_ID from Equipment_Template where Prop_Name = '{values[3].Trim().Replace("'", "''")}' and Equipment_Type = '{values[0].Trim().Replace("'", "''")}'),'{values[i + 1].Trim().Replace("'", "''")}','{sDate}','{eDate}')  END ";
                         }
                     }
                 }
@@ -1018,5 +1018,44 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
         }
         #endregion
 
+        #region Map
+        public List<EquipmentTemplate> GetEquipmentNumericProp()
+        {
+            List<EquipmentTemplate> equipmentTemplates = new List<EquipmentTemplate>();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                query = "select Equipment_Type, Prop_name, ed.Eq_Value from Equipment_Template et join Equipment_Dtl ed on ed.Equip_Temp_ID = et.Equip_Temp_ID where Prop_name != 'latitude' and Prop_name != 'longitude' and (  Datatype = 'Decimal' or Datatype = 'Int' ) and ed.Eq_Value is not null and ed.Eq_Value != '' order by Prop_Name";
+                equipmentTemplates = connection.Query<EquipmentTemplate>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return equipmentTemplates;
+        }
+
+        public List<EquipmentTemplate> GetEquipmentNullNumericProp()
+        {
+            List<EquipmentTemplate> equipmentTemplates = new List<EquipmentTemplate>();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                query = "select Equipment_Type, Prop_name, ed.Eq_Value from Equipment_Template et  join Equipment_Dtl ed on ed.Equip_Temp_ID = et.Equip_Temp_ID  where Prop_name != 'latitude' and Prop_name != 'longitude'  and (  Datatype = 'Decimal' or Datatype = 'Int' ) and (ed.Eq_Value is  null or ed.Eq_Value = '') order by Prop_Name";
+                equipmentTemplates = connection.Query<EquipmentTemplate>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return equipmentTemplates;
+        }
+        #endregion
     }
 }

@@ -7,5 +7,6 @@
         public string Prop_Name { get; set; }
         public string Datatype { get; set; }
         public int Sequence { get; set; }
+        public string Eq_Value { get; set; }
     }
 }

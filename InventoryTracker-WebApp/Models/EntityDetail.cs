@@ -14,6 +14,7 @@ namespace InventoryTracker_WebApp.Models
         public string Prop_Name { get; set; }
         public string Datatype { get; set; }
         public string Sequence { get; set; }
+        public string Ent_type { get; set; }
 
         public List<EntityDetail> EntityDetailsByTemplate { get; set; }
     }

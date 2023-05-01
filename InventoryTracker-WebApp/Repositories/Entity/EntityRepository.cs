@@ -232,7 +232,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
             {
                 connection.Open();
                 string query = string.Empty;
-                query += "SELECT [Ent_Dtl_ID],[Ent_ID],ed.[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date],et.Prop_name,et.Datatype FROM [dbo].[Entity_Dtl] as ed join[dbo].[Entity_Template] as et on ed.Ent_Temp_ID = et.Ent_temp_id";
+                query += "SELECT [Ent_Dtl_ID],[Ent_ID],ed.[Ent_Temp_ID],[Ent_Value],[Start_Date],[End_Date],et.Prop_name,et.Datatype,et.Ent_type  FROM [dbo].[Entity_Dtl] as ed join[dbo].[Entity_Template] as et on ed.Ent_Temp_ID = et.Ent_temp_id";
 
                 if (entityID > 0 && !string.IsNullOrEmpty(startDate))
                 {
@@ -247,7 +247,7 @@ namespace InventoryTracker_WebApp.Repositories.Entity
                     query += " where ('" + startDate + "' between Start_Date and End_Date)";
                 }
 
-                query += "order by et.Sequence";
+                query += "  order by et.Sequence";
                 entityDetailList = connection.Query<EntityDetail>(query).ToList();
                 EntityDetailListByDtl(ref entityDetailList);
             }
@@ -930,5 +930,53 @@ namespace InventoryTracker_WebApp.Repositories.Entity
         }
         #endregion
 
+
+        #region Map
+        public List<EntityTemplate> GetEntityNumericProp()
+        {
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            List<EntityTemplate> entityNumericProp = new List<EntityTemplate>();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                query = " select Ent_type, Prop_name, ed.Ent_Value from Entity_Template et join Entity_Dtl ed on ed.Ent_Temp_ID = et.Ent_temp_id where Prop_name != 'latitude' and Prop_name != 'longitude' and (  Datatype = 'Decimal' or Datatype = 'Int' ) and ed.Ent_Value is not null and ed.Ent_Value != ''";
+                entityNumericProp = connection.Query<EntityTemplate>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return entityNumericProp;
+        }
+
+        public List<MapDetail> GetAllEntityEquipmentAssignment()
+        {
+            List<MapDetail> mapDetails = new List<MapDetail>();
+            var connection = CommonDatabaseOperationHelper.CreateConnection();
+            try
+            {
+                connection.Open();
+                string query = string.Empty;
+                query = "  select distinct ENT_TYPE,EQUIP_TYPE,START_DATE,END_DATE,eea.ENT_ID from [EQUIPMENT_ENTITY_ASSIGNMENT] eea join EQUIPMENT_HDR eh on eea.EQUIP_ID = eh.EQUIP_ID  join ENTITY_HDR enth on enth.ENT_ID = eea.ENT_ID";
+                mapDetails = connection.Query<MapDetail>(query).ToList();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally { connection.Close(); }
+            return mapDetails;
+        }
+        #endregion
+
     }
 }
+
+
+
+

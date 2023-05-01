@@ -1,0 +1,506 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var versionUpdate = System.Configuration.ConfigurationManager.AppSettings["versionKey"];
+}
+<head>
+    <link rel="stylesheet" href="~/Content/Css/Map.css">
+    <link rel="stylesheet" href="~/Scripts/ol.css">
+    <link rel="stylesheet" href="~/Scripts/jQueryMultiselect/jquery.multiselect.css">
+</head>
+<div id="map" class="map" tabindex="0">
+    <div id="info"></div>
+</div>
+<div class="right-sidebar">
+    <div class="tray-container">
+        <div class="top mb-1">
+            @*<ul class="top-bar-btns">
+                    <li>
+                        <button type="button" class="bs-tooltip" id="btn_MapStateDetail"
+                                title="Save Map State">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-save">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z">
+                                </path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="bs-tooltip" id="btn_clear_map_state"
+                                title="Clear Map State">
+                            <img src="~/Content/Img/clear-map-state.svg">
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="bs-tooltip" id="btn_Measure_distance"
+                                title="Measure (distance or area)">
+                            <img src="~/Content/Img/ruler.svg">
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="bs-tooltip" id="btn_Measure_Zoom_data"
+                                title="Zoom to extents of data">
+                            <img src="~/Content/Img/zoom.svg">
+                        </button>
+                    </li>
+                </ul>*@
+            <div class="map-tray-view" style="display:block">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Entity type:</td>
+                            <td>
+                                <select id="selectEntityType" class="entityDropdownStyle  dropdown-control">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Equipment type:</td>
+                            <td>
+                                <select id="selectEquipType" class="equipDropdownStyle   dropdown-control">
+                                    <option value="0"> -- Select --</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Date:</td>
+                            <td>
+                                <input type="text" class="datepicker dropdown-control" style="display: inline; width: 93%; height:32px" id="mainDate" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="middle">
+            <ul class="traybtn-group">
+                <li>
+                    <button type="button" class="close tray-open" id="traybtn"></button>
+                </li>
+                <li>
+                    <button class="tablinks bs-tooltip" type="button"
+                            onclick="openTool(event, 'lasso')" title="Lasso/well selection" id="defaultOpen">
+                        <img src="~/Content/Img/lasso.svg">
+                    </button>
+                </li>
+                @*<li>
+                        <button class="tablinks bs-tooltip" type="button"
+                                onclick="openTool(event, 'layers')"
+                                title="Layer order and symbology" id="defaultOpen">
+                            <img src="~/Content/Img/layers.svg">
+                        </button>
+                    </li>*@
+                <li>
+                    <button class="tablinks bs-tooltip" type="button"
+                            onclick="openTool(event, 'bubblemap')"
+                            title="Bubble map attributes">
+                        <img src="~/Content/Img/map-pointer.svg">
+                    </button>
+                </li>
+                <li>
+                    <button class="tablinks bs-tooltip" type="button"
+                            onclick="openTool(event, 'dbAttributes')"
+                            title="Database attributes">
+                        <img src="~/Content/Img/db-attributes.svg">
+                    </button>
+                </li>
+            </ul>
+            <div id="lasso" class="tabcontent">
+                <div class=" d-flex justify-content-end w-auto">
+                    <div class="d-flex flex-column" style="overflow:auto">
+                        <div class="d-flex flex-column lasso-box" style="width:270px">
+                            <button type="button mb-2" id="btn_draw_polygon">
+                                <img src="~/Content/Img/polygon.svg"> Draw
+                                Polygon
+                            </button>
+                            @*<button type="button mb-2" id="btn_draw_rectangle">
+                                    <img src="~/Content/Img/rectangle.svg"> Draw
+                                    Rectangle
+                                </button>
+                                <div class="btn-inner" style="pointer-events: none;opacity: 0.6;">
+                                    <button type="button">
+                                        <img src="~/Content/Img/circle-big.svg"> Draw
+                                        Circle
+                                    </button>
+                                    <div class="mx-2">
+                                        <div class="n-chk">
+                                            <label class="new-control new-checkbox new-checkbox-rounded checkbox-primary">
+                                                <input type="checkbox"
+                                                       class="new-control-input">
+                                                <span class="new-control-indicator"></span>Freeform
+                                            </label>
+                                        </div>
+                                        <div class="n-chk">
+                                            <label class="new-control new-checkbox new-checkbox-rounded checkbox-primary">
+                                                <input type="checkbox"
+                                                       class="new-control-input">
+                                                <span class="new-control-indicator"></span>Radius
+                                                (ft)
+                                            </label>
+                                        </div>
+                                        <div class="n-chk">
+                                            <label class="new-control new-checkbox new-checkbox-rounded checkbox-primary">
+                                                <input type="checkbox"
+                                                       class="new-control-input">
+                                                <span class="new-control-indicator"></span>Area
+                                                (Ac)
+                                            </label>
+                                        </div>
+                                        <input class="form-control" value="" placeholder="">
+                                    </div>
+                                </div>*@
+                            <div class="devider"></div>
+                            <div class="sub-btns d-flex">
+                                <button type="button" onclick="InvertSelection()" class="me-1">Invert</button>
+                                <button type="button" onclick="ResetSelection()">Reset Selection</button>
+                            </div>
+                            <div class="sub-btns d-flex">
+                                <button type="button" onclick="FilterSelection()" class="me-1">Filter</button>
+                                <button type="button" onclick="ResetFilter()">Reset Filter</button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column lasso-box bottom" style="width:270px">
+                            @*<button type="button" id="PushSelection" onclick="PushSelectionToGrid()">
+                                    <img src="~/Content/Img/grid.svg">Push Selection
+                                    to
+                                    Table
+                                </button>*@
+                            <select class="mt-1" size="5" id="selectEquipTypeProp"></select>
+                            <div class="devider"></div>
+                            @*<div>
+                                    <label class="text-dark">Add Selection Note</label>
+                                    <textarea class="form-control mb-2 p-2" id="notes"></textarea>
+                                    <button type="button" class="bs-tooltip" data-original-title="Notes will be saved to Bolt Map Notes field" id="PushNotes" onclick="PushNotesToTable()">
+                                        Push Note to Table
+                                    </button>
+                                </div>*@
+                        </div>
+                        <div class="d-flex flex-column lasso-box bottom" style="width:270px">
+                            <label>Count:<label id="countLbl"></label></label>
+                            <label>Sum:<label id="sumLbl"></label></label>
+                            <label>Max:<label id="maxLbl"></label></label>
+                            <label>Min:<label id="minLbl"></label></label>
+                            <label>Average:<label id="avgLbl"></label></label>
+                            <label>Null:<label id="nullLbl"></label></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="layers" class="tabcontent">
+                <div class="d-flex justify-content-end">
+                    <div class="d-flex flex-column w-100">
+                        <div class="layers-container">
+                            <h4 id="div_projectwell_layer" data-is-hide="0" onclick="projectwell_layer_clicked()">
+                                <div>
+                                    <span class="open-layer"></span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18"
+                                         height="18" viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round"
+                                         class="feather feather-sun me-1">
+                                        <circle cx="12" cy="12" r="5"></circle>
+                                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64">
+                                        </line>
+                                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78">
+                                        </line>
+                                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36">
+                                        </line>
+                                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22">
+                                        </line>
+                                    </svg> Project Wells
+                                </div>
+                                <div class="sub-layer" data-toggle="modal"
+                                     data-target="#ProjectwellsSymbology">
+                                    <img src="~/Content/Img/color.svg"> Colors
+                                </div>
+                            </h4>
+                            <div class="well-content">
+                                <div class="body">
+                                    <ul id="layers-items-sortable">
+                                    </ul>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="shape me-1"
+                                            id="LayerShowHide">
+                                        Hide
+                                    </button>
+                                    <button id="btnProjectWellRemove" class="shape">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-row">
+                            <button class="shape me-1" data-toggle="modal"
+                                    onclick="OpenModalSHP()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18"
+                                     height="18" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round"
+                                     class="feather feather-plus me-1">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg> SHP
+                            </button>
+                            <button class="shape" data-toggle="modal" style="background: #D3D3D3"
+                                    data-target="#ModalKML" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18"
+                                     height="18" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round"
+                                     class="feather feather-plus me-1">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg> KML
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="bubblemap" class="tabcontent">
+                <div class="bubble-container">
+                    <div class="form-group row">
+                        <div class="col-md-7">
+                            <label class="custom-lbl mb-0">Database Attributes</label>
+                        </div>
+                        <div class="col-md-5">
+                            <select class="zzselectpicker" id="DBCatAttrib">
+                                <option value="0"> -- Select --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-7">
+                            <label class="custom-lbl mb-0">Num Breaks</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control cls-bma-num-break" name="btn-count"
+                                   value="10">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="ag-calculators-block">
+                            <div class="ag-format-container">
+                                <div id="affiliate" class="ag-calculator-block">
+                                    <div class="js-calculator_input-wrap ag-calculator_input-wrap row">
+                                        <div class="col-md-7">
+                                            <label class="ag-calculator_label custom-lbl col-md-8"
+                                                   for="level1-clients">Min Bubble Size</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="level1-clients"
+                                                   class="form-control col-md-3 m-0 js-calculator_text-input ag-calculator_text-input"
+                                                   type="number" name="level1-clients" min="1"
+                                                   max="99" value="1">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input class="js-calculator_range col-md-12 cls-range-min-size"
+                                                   step="1" type="range" name="level1-clients"
+                                                   min="1" max="99" value="1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0 maxBubbleSizeCls">
+                        <div class="ag-calculators-block">
+                            <div class="ag-format-container">
+                                <div id="affiliate" class="ag-calculator-block">
+                                    <div class="js-calculator_input-wrap ag-calculator_input-wrap row">
+                                        <div class="col-md-7">
+                                            <label class="ag-calculator_label custom-lbl col-md-8"
+                                                   for="level1-clients">Max Bubble Size</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="level1-clients"
+                                                   class="form-control col-md-3 m-0 js-calculator_text-input ag-calculator_text-input" style="width:55px"
+                                                   type="number" name="level1-clients" min="2"
+                                                   max="100" value="50">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input class="js-calculator_range col-md-12 cls-range-max-size"
+                                                   step="1" type="range" name="level1-clients"
+                                                   min="2" max="100" value="50">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row mb-0 logarithmicCls">
+                        <div class="col-md-7">
+                            <label class="custom-lbl mb-0">Logarithmic</label>
+                        </div>
+                        <div class="col-md-5 text-right">
+                            <div class="n-chk">
+                                <label class="new-control new-checkbox checkbox-primary m-0">
+                                    <input type="checkbox" class="custom-control-input cls-chk-logarithmic">
+                                    <span class="new-control-indicator"></span>&nbsp;
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row valueBounds">
+                        <div class="col-md-7" style="padding-bottom:8px;">
+                            <label class="custom-lbl mb-1">Value Bounds</label>
+                        </div>
+                        <div class="col-md-5 text-right">
+                            <div class="n-chk">
+                                <label class="new-control new-checkbox checkbox-primary m-0">
+                                    <input type="checkbox" id="chkValueBounds" onclick="chkValueBounds_clicked()" class="custom-control-input">
+                                    <span class="new-control-indicator"></span>&nbsp;
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 d-flex align-items-center pr-0">
+                            <label class="custom-lbl mb-0 me-1">Min</label>
+                            <input type="text" value="0" disabled class="form-control cls-valuebound-min">
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center pr-0 pl-0">
+                            <label class="custom-lbl mb-0 me-1">Max</label>
+                            <input type="text" value="0" disabled class="form-control cls-valuebound-max">
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1 me-0 ms-0">
+                        <div class="col-md-12">
+                            <button class="btn btn-teal color-picker cls-bubble-clr-pckr"
+                                    value="#cccccc">
+                                Color
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-md-7">
+                            <label class="custom-lbl mb-1">Color By:</label>
+                        </div>
+                        <div class="col-md-5">
+                            <select class="zzselectpicker" id="coolorby">
+                                <option value="0"> -- Select --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group mb-0">
+                        <div class="ag-calculators-block">
+                            <div class="ag-format-container">
+                                <div id="affiliate" class="ag-calculator-block">
+                                    <div class="js-calculator_input-wrap ag-calculator_input-wrap row">
+                                        <div class="col-md-7">
+                                            <label class="ag-calculator_label custom-lbl col-md-8"
+                                                   for="level1-clients">Opacity</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input id="level1-clients"
+                                                   class="form-control col-md-3 m-0 js-calculator_text-input ag-calculator_text-input"
+                                                   type="number" name="level1-clients" min="0"
+                                                   max="100" value="100">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <input class="js-calculator_range col-md-12 cls-range-gbl-opacity"
+                                                   step="1" type="range" name="level1-clients"
+                                                   min="0" max="100" value="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="shape me-1" id="ShowHideBubble">
+                    <span class="show-bubble"></span>
+                    <div class="innertxt">Hide Bubbles</div>
+                </button>
+            </div>
+            <div id="dbAttributes" class="tabcontent">
+                <div class="bubble-container">
+                    <div class="form-group row">
+                        <div class="col-md-12 multiselectContainer overflow-auto" style="height:70px !important">
+                            <label class="custom-lbl mb-0">Database Attributes</label>
+                            <select id="multiSelectEquProp" multiple>
+                                <option value="0"> -- Select --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12 tblSortableContainer d-none">
+                            <label class="custom-lbl mb-0">Drag-drop rows within the grid to change sequence.</label><br />
+                            <table id="dbAttrSortable" class="table-responsive table-striped tblSortable">
+                                <thead>
+                                    <tr class="ui-state-default">
+                                        <th colspan="8">Column Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label class="custom-lbl mb-0">Font Style</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="zzselectpicker" id="points-font">
+                                <option value="Arial" selected="selected">Arial</option>
+                                <option value="'Courier New'">Courier New</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label class="custom-lbl mb-0">Font Size</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="number" class="form-control pointlbl-size" name="btn-count"
+                                   value="12">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label class="custom-lbl mb-0">Rotation</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="zzselectpicker" id="ddl_rotation" style="width:112px">
+                                <option value="0">0°</option>
+                                <option value="0.523598776">30°</option>
+                                <option value="0.785398164">45°</option>
+                                <option value="1.047197551">60°</option>
+                                <option value="1.570796327">90°</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-1">
+                        <div class="col-md-12">
+                            <button class="btn btn-teal color-picker cls-label-clr-pckr"
+                                    value="#00000">
+                                Color
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/Scripts/AppJS/Common/Common.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/ol.js"></script>
+    <script src="~/Scripts/AppJS/Map/Map.js?v=@versionUpdate"></script>
+    <script src="~/Scripts/jQueryMultiselect/jquery.multiselect.js"></script>
+}

@@ -35,5 +35,10 @@ namespace InventoryTracker_WebApp.Domain.Entity
         #region Entity Equipment Assign Date Range Export - Import
         bool UpdateInsertENTEQUDateRangeASS(string startDate, List<string> columnHeader, List<string> values, int operation, out string totalNewAssigned, out int totalRemoved, out string invalidEntityName, out string totalNewUpdated);
         #endregion
+
+        #region Map
+        List<EntityTemplate> GetEntityNumericProp();
+        List<MapDetail> GetAllEntityEquipmentAssignment();
+        #endregion
     }
 }
