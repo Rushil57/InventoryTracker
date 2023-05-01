@@ -50,8 +50,10 @@ function getLatLong() {
                     var Ent_ID = data.entityLatLong[i].Ent_ID;
                     var Ent_type = data.entityLatLong[i].Ent_type;
                     var Ent_Dtl_ID = data.entityLatLong[i].Ent_Dtl_ID;
+                    var startDate = data.entityLatLong[i].Start_Date;
+                    var endDate = data.entityLatLong[i].End_Date;
 
-                    var longVal = data.entityLatLong.filter(x => x.Ent_ID == Ent_ID && x.Start_Date == data.entityLatLong[i].Start_Date && x.End_Date == data.entityLatLong[i].End_Date && x.Ent_Temp_ID != data.entityLatLong[i].Ent_Temp_ID)[0].Ent_Value;
+                    var longVal = data.entityLatLong.filter(x => x.Ent_ID == Ent_ID && x.Start_Date == startDate && x.End_Date == endDate && x.Ent_Temp_ID != data.entityLatLong[i].Ent_Temp_ID)[0].Ent_Value;
 
 
                     if (latVal != null && latVal != "" && longVal != null && longVal != "") {
@@ -63,7 +65,9 @@ function getLatLong() {
                             ])),
                             Ent_type: Ent_type,
                             Ent_Dtl_ID: Ent_Dtl_ID,
-                            Ent_ID: Ent_ID
+                            Ent_ID: Ent_ID,
+                            startDate: startDate,
+                            endDate: endDate
                         });
 
                         if (entTypeWithColor.length == 0 || entTypeWithColor.filter(x => x.Ent_type == data.entityLatLong[i].Ent_type).length == 0) {
@@ -126,22 +130,6 @@ var map = new ol.Map({
     }),
 });
 
-colorFeatureByEntityType();
-
-function colorFeatureByEntityType() {
-    var features = vectorLayer.getSource().getFeatures();
-    for (var i = 0; i < features.length; i++) {
-        var clr = entTypeWithColor.filter(x => x.Ent_type == features[i].N.Ent_type)[0];
-        features[i].setStyle(new ol.style.Style({
-            image: new ol.style.Circle({
-                radius: 5,
-                fill: new ol.style.Fill({ color: clr.color })
-            })
-        }));
-    }
-
-
-}
 
 window.addEventListener('resize', function () {
     const minZoom = getMinZoom();
@@ -305,11 +293,47 @@ function loadAllEntityEquipType() {
                 getAllEnEqAss = data.getAllEnEqAss;
                 uniqueEnEqAss = data.uniqueEnEqAss;
                 equipNullNumericProp = data.equipNullNumericProp;
+
+                colorFeatureByEntityType();
             }
         }, error: function (ex) { }
     });
 }
 
+
+function colorFeatureByEntityType() {
+    //var features = vectorLayer.getSource().getFeatures();
+
+    //for (var i = 0; i < features.length; i++) {
+    //    var clr = entTypeWithColor.filter(x => x.Ent_type == features[i].N.Ent_type)[0];
+    //    features[i].setStyle(new ol.style.Style({
+    //        image: new ol.style.Circle({
+    //            radius: 5,
+    //            fill: new ol.style.Fill({ color: clr.color })
+    //        })
+    //    }));
+    //}
+
+    var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+    for (var i = 0; i < features.length; i++) {
+        features[i].setStyle(new ol.style.Style({
+        }));
+    }
+    for (var i = 0; i < assignedEntEqu.length; i++) {
+        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        if (newFeatures.length == 1) {
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
+            newFeatures[0].setStyle(new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 5,
+                    fill: new ol.style.Fill({ color: clr.color })
+                })
+            }));
+        }
+    }
+
+
+}
 
 $('#selectEntityType').change(function () {
     colorFeatureByEntityType();
@@ -321,7 +345,7 @@ $('#selectEntityType').change(function () {
 
     var assignedEquipment = uniqueEnEqAss.filter(x => x.ENT_TYPE == selectedDropDownText);
     uniqueEquipType = "";
-    uniqueEquipType += "<option value='0' > -- Select -- </option>";
+    uniqueEquipType += assignedEquipment.length > 0 ? "<option value='0' > -- Select All -- </option>" : "<option value='0' > -- Select -- </option>";
     for (var k = 0; k < assignedEquipment.length; k++) {
         var equipType = assignedEquipment[k].EQUIP_TYPE;
         uniqueEquipType += '<option value=' + equipType.toUpperCase() + ' >' + equipType + '</option>'
@@ -368,11 +392,12 @@ $('#selectEquipType').change(function () {
     $('#minLbl').text(0);
     $('#avgLbl').text(0);
     $('#nullLbl').text(0);
+    var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_TYPE == $('#selectEntityType :selected').val());
     if (selectedDropDownText != '' && selectedDropDownText != null && selectedDropDownVal != "0") {
-        var newEquipNumericProp = equipNumericProp.filter(x => x.Equipment_Type == selectedDropDownText);
+        var newEquipNumericProp = equipNumericProp.filter(x => x.EQUIP_TYPE == selectedDropDownText);
         for (var i = 0; i < newEquipNumericProp.length; i++) {
             var propName = newEquipNumericProp[i].Prop_Name;
-            var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.Equipment_Type == selectedDropDownText).length;
+            var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate)).length;
             equipTypePropVal += '<option value="' + propName + '"> ' + propName + ' (' + currPropList +')</option>';
         }
         selectEquipTypeProp.html(equipTypePropVal);
@@ -395,9 +420,28 @@ $('#selectEquipType').change(function () {
         });
         $("#ddl_dbAttributes").append(equipTypePropVal);
 
+        assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedDropDownText);
+        
     }
     else {
         $('#multiSelectEquProp').multiselect('destroy').html('');
+    }
+
+    for (var i = 0; i < features.length; i++) {
+        features[i].setStyle(new ol.style.Style({
+        }));
+    }
+    for (var i = 0; i < assignedEntEqu.length; i++) {
+        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        if (newFeatures.length == 1) {
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
+            newFeatures[0].setStyle(new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 5,
+                    fill: new ol.style.Fill({ color: clr.color })
+                })
+            }));
+        }
     }
 })
 
@@ -406,7 +450,7 @@ $('#selectEquipTypeProp').change(function () {
     selectedProp = selectedProp.substring(1, selectedProp.indexOf('(') - 1);
     var selectedDropDown = $('#selectEquipType :selected');
     var selectedDropDownText = selectedDropDown.text();
-    var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == selectedProp && x.Equipment_Type == selectedDropDownText);
+    var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == selectedProp && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     var currPropCount = currPropList.length;
     var currPropSum = 0;
     var maxProp = 0;
@@ -435,7 +479,7 @@ $('#selectEquipTypeProp').change(function () {
     $('#minLbl').text(minProp);
     $('#avgLbl').text(currPorpAvg.toFixed(2));
 
-    var currNullPropList = equipNullNumericProp.filter(x => x.Prop_Name == selectedProp && x.Equipment_Type == selectedDropDownText);
+    var currNullPropList = equipNullNumericProp.filter(x => x.Prop_Name == selectedProp && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     $('#nullLbl').text(currNullPropList.length);
 })
 
@@ -585,19 +629,26 @@ function InitDrawFeature() {
                 //selectedFeatures.clear();
                 var polygon = event.feature.getGeometry();
                 var features = vectorLayer.getSource().getFeatures();
-                //vectorLayer_Comp pointsLayer
-                for (var i = 0; i < features.length; i++) {
-                    if (polygon.intersectsExtent(features[i].getGeometry().getExtent())) {
-                        features[i].setStyle(new ol.style.Style({
-                            image: new ol.style.Circle({
-                                radius: 5,
-                                fill: new ol.style.Fill({ color: "red" })
-                            })
-                        }));
-                        selectedFeatures.push(features[i]);
 
+                //vectorLayer_Comp pointsLayer
+                var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+
+                for (var i = 0; i < assignedEntEqu.length; i++) {
+                    var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+                    if (newFeatures.length == 1) {
+                        if (polygon.intersectsExtent(newFeatures[0].getGeometry().getExtent())) {
+                            newFeatures[0].setStyle(new ol.style.Style({
+                                image: new ol.style.Circle({
+                                    radius: 5,
+                                    fill: new ol.style.Fill({ color: "red" })
+                                })
+                            }));
+                            selectedFeatures.push(newFeatures[0]);
+
+                        }
                     }
                 }
+                
                 polySelectedMapData = [];
                 setTimeout(function () {
 
@@ -646,14 +697,23 @@ function InvertSelection() {
         if (newFeatures.length > 0) {
             selectedFeatures.a = [];
         }
-        for (var i = 0; i < newFeatures.length; i++) {
-            newFeatures[i].setStyle(new ol.style.Style({
+        var newFeaturesForRed = [];
+        var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+        for (var i = 0; i < assignedEntEqu.length; i++) {
+            var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+            if (newFeature.length == 1) {
+                newFeaturesForRed.push(newFeature[0]);
+            }
+        }
+
+        for (var i = 0; i < newFeaturesForRed.length; i++) {
+            newFeaturesForRed[i].setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
                     fill: new ol.style.Fill({ color: "red" })
                 })
             }));
-            selectedFeatures.a.push(newFeatures[i]);
+            selectedFeatures.a.push(newFeaturesForRed[i]);
         }
     }, 500);
 }
@@ -666,8 +726,17 @@ function FilterSelection() {
     else {
         newFeatures = features.filter(item => !selectedFeatures.includes(item))
     }
-    for (var i = 0; i < newFeatures.length; i++) {
-        newFeatures[i].setStyle(new ol.style.Style({}));
+
+    var newFeaturesForRed = [];
+    var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+    for (var i = 0; i < assignedEntEqu.length; i++) {
+        var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        if (newFeature.length == 1) {
+            newFeaturesForRed.push(newFeature[0]);
+        }
+    }
+    for (var i = 0; i < newFeaturesForRed.length; i++) {
+        newFeaturesForRed[i].setStyle(new ol.style.Style({}));
     }
 }
 
@@ -679,14 +748,25 @@ function ResetFilter() {
     else {
         newFeatures = features.filter(item => !selectedFeatures.includes(item))
     }
-    for (var i = 0; i < newFeatures.length; i++) {
-        var clr = entTypeWithColor.filter(x => x.Ent_type == features[i].N.Ent_type)[0];
-        newFeatures[i].setStyle(new ol.style.Style({
+
+    var newFeaturesForRed = [];
+    var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+    for (var i = 0; i < assignedEntEqu.length; i++) {
+        var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        if (newFeature.length == 1) {
+            newFeaturesForRed.push(newFeature[0]);
+        }
+    }
+
+    for (var i = 0; i < newFeaturesForRed.length; i++) {
+        var clr = entTypeWithColor.filter(x => x.Ent_type == newFeaturesForRed[i].N.Ent_type)[0];
+        newFeaturesForRed[i].setStyle(new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 5,
                 fill: new ol.style.Fill({ color: clr.color })
             })
         }));
+        selectedFeatures.a.push(newFeaturesForRed[i]);
     }
 }
 
@@ -752,14 +832,27 @@ function hideShowPointLayer(isHide) {
 }
 function highLightSpotOfEntityEquipAssign(currentDate) {
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
-    ResetSelection();
+
+    var selectedEquipment = $('#selectEquipType :selected').val();
+    if (selectedEquipment != '' && selectedEquipment != null && selectedEquipment != "0") {
+        assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedEquipment);
+    }
+    var selectedEntity = $('#selectEntityType').val()
+    if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
+        assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
+    }
+    for (var i = 0; i < features.length; i++) {
+        features[i].setStyle(new ol.style.Style({
+        }));
+    }
     for (var i = 0; i < assignedEntEqu.length; i++) {
         var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
             newFeatures[0].setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
-                    fill: new ol.style.Fill({ color: "red" })
+                    fill: new ol.style.Fill({ color: clr.color })
                 })
             }));
         }
@@ -894,3 +987,9 @@ $(".js-calculator_range").on("change input", function (e) {
         }, 600);
     }
 });
+
+
+function ChangeBubbleSize() {
+    //CalculateBubbleSize();
+    IsProjectWellStyleSelected = false;//$#
+}

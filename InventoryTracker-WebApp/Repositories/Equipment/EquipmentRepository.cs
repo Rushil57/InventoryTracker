@@ -1019,16 +1019,17 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
         #endregion
 
         #region Map
-        public List<EquipmentTemplate> GetEquipmentNumericProp()
+        public List<MapDetail> GetEquipmentNumericProp()
         {
-            List<EquipmentTemplate> equipmentTemplates = new List<EquipmentTemplate>();
+            List<MapDetail> equipmentTemplates = new List<MapDetail>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
                 string query = string.Empty;
-                query = "select Equipment_Type, Prop_name, ed.Eq_Value from Equipment_Template et join Equipment_Dtl ed on ed.Equip_Temp_ID = et.Equip_Temp_ID where Prop_name != 'latitude' and Prop_name != 'longitude' and (  Datatype = 'Decimal' or Datatype = 'Int' ) and ed.Eq_Value is not null and ed.Eq_Value != '' order by Prop_Name";
-                equipmentTemplates = connection.Query<EquipmentTemplate>(query).ToList();
+                //query = "select Equipment_Type, Prop_name, ed.Eq_Value from Equipment_Template et join Equipment_Dtl ed on ed.Equip_Temp_ID = et.Equip_Temp_ID where Prop_name != 'latitude' and Prop_name != 'longitude' and (  Datatype = 'Decimal' or Datatype = 'Int' ) and ed.Eq_Value is not null and ed.Eq_Value != '' order by Prop_Name";
+                query = "SELECT distinct Eq_Value,eea.START_DATE,eea.END_DATE,eq.EQUIP_TYPE,e.ENT_TYPE,Prop_Name FROM [EQUIPMENT_ENTITY_ASSIGNMENT] eea inner join ENTITY_HDR e on eea.ENT_ID = e.ENT_ID inner join EQUIPMENT_HDR eq on eq.EQUIP_ID =  eea.EQUIP_ID inner join Equipment_Dtl ed on ed.Equip_ID =  eea.EQUIP_ID inner join Equipment_Template et on et.Equipment_Type = eq.EQUIP_TYPE where et.Prop_name != 'latitude' and et.Prop_name != 'longitude' and(  et.Datatype = 'Decimal' or et.Datatype = 'Int' ) and ed.Eq_Value is not null and ed.Eq_Value != '' order by Prop_Name";
+                equipmentTemplates = connection.Query<MapDetail>(query).ToList();
             }
             catch (Exception e)
             {
@@ -1038,16 +1039,17 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
             return equipmentTemplates;
         }
 
-        public List<EquipmentTemplate> GetEquipmentNullNumericProp()
+        public List<MapDetail> GetEquipmentNullNumericProp()
         {
-            List<EquipmentTemplate> equipmentTemplates = new List<EquipmentTemplate>();
+            List<MapDetail> equipmentTemplates = new List<MapDetail>();
             var connection = CommonDatabaseOperationHelper.CreateConnection();
             try
             {
                 connection.Open();
                 string query = string.Empty;
-                query = "select Equipment_Type, Prop_name, ed.Eq_Value from Equipment_Template et  join Equipment_Dtl ed on ed.Equip_Temp_ID = et.Equip_Temp_ID  where Prop_name != 'latitude' and Prop_name != 'longitude'  and (  Datatype = 'Decimal' or Datatype = 'Int' ) and (ed.Eq_Value is  null or ed.Eq_Value = '') order by Prop_Name";
-                equipmentTemplates = connection.Query<EquipmentTemplate>(query).ToList();
+                //query = "select Equipment_Type, Prop_name, ed.Eq_Value from Equipment_Template et  join Equipment_Dtl ed on ed.Equip_Temp_ID = et.Equip_Temp_ID  where Prop_name != 'latitude' and Prop_name != 'longitude'  and (  Datatype = 'Decimal' or Datatype = 'Int' ) and (ed.Eq_Value is  null or ed.Eq_Value = '') order by Prop_Name";
+                query = "SELECT distinct Eq_Value,eea.START_DATE,eea.END_DATE,eq.EQUIP_TYPE,e.ENT_TYPE,Prop_Name FROM [EQUIPMENT_ENTITY_ASSIGNMENT] eea inner join ENTITY_HDR e on eea.ENT_ID = e.ENT_ID inner join EQUIPMENT_HDR eq on eq.EQUIP_ID =  eea.EQUIP_ID inner join Equipment_Dtl ed on ed.Equip_ID =  eea.EQUIP_ID inner join Equipment_Template et on et.Equipment_Type = eq.EQUIP_TYPE where et.Prop_name != 'latitude' and et.Prop_name != 'longitude' and(  et.Datatype = 'Decimal' or et.Datatype = 'Int' ) and (ed.Eq_Value is null or ed.Eq_Value = '') order by Prop_Name";
+                equipmentTemplates = connection.Query<MapDetail>(query).ToList();
             }
             catch (Exception e)
             {

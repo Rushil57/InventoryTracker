@@ -47,8 +47,8 @@ namespace InventoryTracker_WebApp.Domain.Equipment
         #endregion
 
         #region Map
-        List<EquipmentTemplate> GetEquipmentNumericProp();
-        List<EquipmentTemplate> GetEquipmentNullNumericProp();
+        List<MapDetail> GetEquipmentNumericProp();
+        List<MapDetail> GetEquipmentNullNumericProp();
         #endregion
     }
 }

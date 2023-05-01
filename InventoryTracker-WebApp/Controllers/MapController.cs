@@ -49,17 +49,17 @@ namespace InventoryTracker_WebApp.Controllers
             }).ToList();
 
             var equipNumericPropValue = _equipmentRepository.GetEquipmentNumericProp();
-            var equipNumericProp = equipNumericPropValue.Select(x => new EquipmentTemplate
+            var equipNumericProp = equipNumericPropValue.Select(x => new MapDetail
             {
-                Equipment_Type = x.Equipment_Type,
-                Prop_Name = x.Prop_Name
+                EQUIP_TYPE = x.EQUIP_TYPE,
+                Prop_Name = x.Prop_Name 
             }).GroupBy(x => new
             {
-                x.Equipment_Type,
+                x.EQUIP_TYPE,
                 x.Prop_Name
-            }).Select(x => new EquipmentTemplate
+            }).Select(x => new MapDetail
             {
-                Equipment_Type = x.Key.Equipment_Type,
+                EQUIP_TYPE = x.Key.EQUIP_TYPE,
                 Prop_Name = x.Key.Prop_Name
             }).ToList();
 
