@@ -10,6 +10,8 @@ var currentDate = "";
 var equipNullNumericProp;
 var miniMaxSliderLastCall;
 var miniMaxOpacitySliderLastCall;
+var IsProjectWellStyleSelected = false;
+var allDbAttr;
 var predefinedStyles = {
     'circles': new ol.style.Style({
         text: new ol.style.Text({
@@ -124,9 +126,13 @@ var map = new ol.Map({
     ],
     target: 'map',
     view: new ol.View({
-        center: [0, 0],
-        minZoom: initialZoom,
-        zoom: 2,
+        projection: 'EPSG:3857',
+        center: [-10909310.10, 4650301.84],
+        zoom: 5,
+        units: 'us-ft'
+    }),
+    controls: ol.control.defaults({
+        rotate: false,
     }),
 });
 
@@ -305,7 +311,7 @@ function colorFeatureByEntityType() {
     //var features = vectorLayer.getSource().getFeatures();
 
     //for (var i = 0; i < features.length; i++) {
-    //    var clr = entTypeWithColor.filter(x => x.Ent_type == features[i].N.Ent_type)[0];
+    //    var clr = entTypeWithColor.filter(x => x.Ent_type == features[i].values_.Ent_type)[0];
     //    features[i].setStyle(new ol.style.Style({
     //        image: new ol.style.Circle({
     //            radius: 5,
@@ -320,9 +326,9 @@ function colorFeatureByEntityType() {
         }));
     }
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
-            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].values_.Ent_type)[0];
             newFeatures[0].setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
@@ -371,9 +377,9 @@ $('#selectEntityType').change(function () {
 
         var features = vectorLayer.getSource().getFeatures();
         for (var i = 0; i < features.length; i++) {
-            if ($('#selectEntityType').val() != features[i].N.Ent_type) {
+            if ($('#selectEntityType').val() != features[i].values_.Ent_type) {
                 features[i].setStyle(new ol.style.Style({}));
-            }   
+            }
         }
     }
 })
@@ -394,11 +400,11 @@ $('#selectEquipType').change(function () {
     $('#nullLbl').text(0);
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_TYPE == $('#selectEntityType :selected').val());
     if (selectedDropDownText != '' && selectedDropDownText != null && selectedDropDownVal != "0") {
-        var newEquipNumericProp = equipNumericProp.filter(x => x.EQUIP_TYPE == selectedDropDownText);
+        var newEquipNumericProp = equipNumericProp.filter(x => x.Equipment_Type.toLowerCase() == selectedDropDownText.toLowerCase());
         for (var i = 0; i < newEquipNumericProp.length; i++) {
             var propName = newEquipNumericProp[i].Prop_Name;
-            var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate)).length;
-            equipTypePropVal += '<option value="' + propName + '"> ' + propName + ' (' + currPropList +')</option>';
+            var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.Equipment_Type == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate)).length;
+            equipTypePropVal += '<option value="' + propName + '"> ' + propName + ' (' + currPropList + ')</option>';
         }
         selectEquipTypeProp.html(equipTypePropVal);
 
@@ -407,7 +413,7 @@ $('#selectEquipType').change(function () {
         $('#coolorby').html(noneAddedtoOption + equipTypePropVal);
         $('#multiSelectEquProp').html(equipTypePropVal);
         $('#multiSelectEquProp').multiselect({
-            buttonWidth: 265,  
+            buttonWidth: 265,
             checkAll: function (element) {
                 setDbAttrSortabelRows(true)
             },
@@ -421,7 +427,7 @@ $('#selectEquipType').change(function () {
         $("#ddl_dbAttributes").append(equipTypePropVal);
 
         assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedDropDownText);
-        
+
     }
     else {
         $('#multiSelectEquProp').multiselect('destroy').html('');
@@ -432,9 +438,9 @@ $('#selectEquipType').change(function () {
         }));
     }
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
-            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].values_.Ent_type)[0];
             newFeatures[0].setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
@@ -450,7 +456,7 @@ $('#selectEquipTypeProp').change(function () {
     selectedProp = selectedProp.substring(1, selectedProp.indexOf('(') - 1);
     var selectedDropDown = $('#selectEquipType :selected');
     var selectedDropDownText = selectedDropDown.text();
-    var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == selectedProp && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+    var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == selectedProp && x.Equipment_Type == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))
     var currPropCount = currPropList.length;
     var currPropSum = 0;
     var maxProp = 0;
@@ -479,7 +485,7 @@ $('#selectEquipTypeProp').change(function () {
     $('#minLbl').text(minProp);
     $('#avgLbl').text(currPorpAvg.toFixed(2));
 
-    var currNullPropList = equipNullNumericProp.filter(x => x.Prop_Name == selectedProp && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+    var currNullPropList = equipNullNumericProp.filter(x => x.Prop_Name == selectedProp && x.Equipment_Type == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     $('#nullLbl').text(currNullPropList.length);
 })
 
@@ -634,7 +640,7 @@ function InitDrawFeature() {
                 var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
 
                 for (var i = 0; i < assignedEntEqu.length; i++) {
-                    var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+                    var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
                     if (newFeatures.length == 1) {
                         if (polygon.intersectsExtent(newFeatures[0].getGeometry().getExtent())) {
                             newFeatures[0].setStyle(new ol.style.Style({
@@ -648,7 +654,7 @@ function InitDrawFeature() {
                         }
                     }
                 }
-                
+
                 polySelectedMapData = [];
                 setTimeout(function () {
 
@@ -700,7 +706,7 @@ function InvertSelection() {
         var newFeaturesForRed = [];
         var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
         for (var i = 0; i < assignedEntEqu.length; i++) {
-            var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+            var newFeature = newFeatures.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
             if (newFeature.length == 1) {
                 newFeaturesForRed.push(newFeature[0]);
             }
@@ -730,7 +736,7 @@ function FilterSelection() {
     var newFeaturesForRed = [];
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeature = newFeatures.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeature.length == 1) {
             newFeaturesForRed.push(newFeature[0]);
         }
@@ -752,14 +758,14 @@ function ResetFilter() {
     var newFeaturesForRed = [];
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeature = newFeatures.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeature.length == 1) {
             newFeaturesForRed.push(newFeature[0]);
         }
     }
 
     for (var i = 0; i < newFeaturesForRed.length; i++) {
-        var clr = entTypeWithColor.filter(x => x.Ent_type == newFeaturesForRed[i].N.Ent_type)[0];
+        var clr = entTypeWithColor.filter(x => x.Ent_type == newFeaturesForRed[i].values_.Ent_type)[0];
         newFeaturesForRed[i].setStyle(new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 5,
@@ -846,9 +852,9 @@ function highLightSpotOfEntityEquipAssign(currentDate) {
         }));
     }
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
-            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].values_.Ent_type)[0];
             newFeatures[0].setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
@@ -865,7 +871,7 @@ function setDbAttrSortabelRows(isCheckedAll, value, isChecked) {
     if (value == undefined && isChecked == undefined) {
         tbody.html('');
         if (isCheckedAll) {
-            var allDbAttr = $($('#multiSelectEquProp')[0]).find('option');
+            allDbAttr = $($('#multiSelectEquProp')[0]).find('option');
             var totalAllDbAttr = allDbAttr.length;
             if (totalAllDbAttr.length == 0) {
                 if (!$(".tblSortableContainer").hasClass('d-none')) {
@@ -880,7 +886,7 @@ function setDbAttrSortabelRows(isCheckedAll, value, isChecked) {
                 var propName = $(this).text();
                 propName = propName.substring(0, propName.indexOf('(') - 1);
                 tbody.append('<tr class="ui-state-default">'
-                    + '<td colspan="4"  data-colValue="' + propName + '">' + propName + '</td>'
+                    + '<td colspan="4"  data-colValue="' + propName.trim() + '">' + propName.trim() + '</td>'
                     + '</tr>');
             })
         }
@@ -889,7 +895,9 @@ function setDbAttrSortabelRows(isCheckedAll, value, isChecked) {
                 $(".tblSortableContainer").addClass('d-none')
             }
             $('#dbAttrSortable > tbody').html('');
+            allDbAttr = '';
         }
+        setLabelBasedOnDataAttribute();
     }
     else {
         if (isChecked) {
@@ -897,7 +905,7 @@ function setDbAttrSortabelRows(isCheckedAll, value, isChecked) {
                 $(".tblSortableContainer").removeClass('d-none')
             }
             tbody.append('<tr class="ui-state-default">'
-                + '<td colspan="4"  data-colValue="' + value + '">' + value + '</td>'
+                + '<td colspan="4"  data-colValue="' + value.trim() + '">' + value.trim() + '</td>'
                 + '</tr>');
         }
         else {
@@ -908,20 +916,156 @@ function setDbAttrSortabelRows(isCheckedAll, value, isChecked) {
                 }
             }
         }
+        var allDbAttTimeOut = setTimeout(function () {
+            allDbAttr = $($('#multiSelectEquProp')[0]).find('option:selected');
+            setLabelBasedOnDataAttribute();
+            clearInterval(allDbAttTimeOut);
+        }, 500);
     }
 }
+
+
+$(".pointlbl-size").change(function () {
+    setLabelBasedOnDataAttribute();
+});
+
+$("#ddl_rotation").change(function () {
+    setLabelBasedOnDataAttribute();
+});
+$("#points-font").change(function () {
+    setLabelBasedOnDataAttribute();
+});
+
+function setLabelBasedOnDataAttribute() {
+
+    if (!vectorLayer) {
+        return;
+    }
+
+    var sourceLayer = vectorLayer.getSource();
+    var sourceFeatures = sourceLayer.getFeatures();
+
+    var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+    var selectedEntity = $('#selectEntityType').val()
+    if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
+        assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
+    }
+    for (var i = 0; i < assignedEntEqu.length; i++) {
+        var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
+        if (newFeatures.length == 1) {
+            var dataVal = "";
+            var style = newFeatures[0].getStyle();
+            //var fontStyle = style.text_.font_;
+            var sizeFont = 30;
+            var sortVal = [];
+            if (allDbAttr.length) {
+                for (var j = 0; j < allDbAttr.length; j++) {
+                    var selectedProp = '';
+                    var propName = '';
+                    if ($(allDbAttr[j]).text().indexOf('(') >= 0) {
+                        selectedProp = $(allDbAttr[j]).text();
+                        propName = selectedProp.substring(1, selectedProp.indexOf('(') - 1);
+                    }
+                    else {
+                        selectedProp = allDbAttr[j];
+                        propName = selectedProp;
+                    }
+
+                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.Equipment_Type == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.Equipment_Type == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))[0].Eq_Value : '';
+
+                    if (dataVal) {
+                        sortVal.push(dataVal);
+                    }
+                }
+                dataVal = sortVal.join('\n');
+            }
+
+            //var l_str = fontStyle.split(' ');
+            //if (l_str.length > 1) {
+            //    var str = l_str[1];
+            //    if (str.includes('px')) {
+            //        str = str.slice(0, -2);
+            //        sizeFont = parseInt(str);
+            //    }
+            //}
+            var lineStyle = getTextLabelStyle(dataVal);
+            lineStyle = updateTextLabelLocation(lineStyle, 12);
+            if (style.length > 1) {
+                style = style[0];
+            }
+            newFeatures[0].setStyle([style, lineStyle]);
+            newFeatures[0].set('newStyle', [style, lineStyle]);
+        }
+    }
+}
+
+
+function getTextLabelStyle(val) {
+    //val = ValConvertToString(val);
+    var rotate = $("#ddl_rotation").val();
+    var fontVal = $("#points-font").val();
+    var defltClr = $('.cls-label-clr-pckr').val();// == "" ? '#0000' : $('.cls-label-clr-pckr').val();
+
+    var align = 'center';
+    var baseline = 'top';
+    var size = $(".pointlbl-size").val();
+    var placement = 'point';
+    var overflow = 'true';
+    var rotation = parseFloat(rotate);
+    var padding = [0, 0, 1, 0];
+    var font = size + 'px ' + fontVal;
+    var fillColor = defltClr;
+    var outlineColor = defltClr;
+    var outlineWidth = 1;
+
+    var lineStyle = new ol.style.Style({
+        text: new ol.style.Text({
+            font: font,
+            text: '\n' + val,
+            fill: new ol.style.Fill({ color: fillColor }),
+            stroke: new ol.style.Stroke({ color: outlineColor, width: outlineWidth }),
+            overflow: overflow,
+            rotation: rotation,
+            textAlign: align,
+            textBaseline: baseline,
+
+        })
+    });
+    return lineStyle;
+}
+function updateTextLabelLocation(lineStyle, size) {
+    if (size > 30 && size <= 60) {
+        lineStyle.text_.setOffsetY(8)
+    }
+    if (size > 60 && size <= 90) {
+        lineStyle.text_.setOffsetY(18)
+    }
+    if (size > 90 && size <= 120) {
+        lineStyle.text_.setOffsetY(25)
+    }
+    if (size > 120 && size <= 150) {
+        lineStyle.text_.setOffsetY(36)
+    }
+    if (size > 150 && size <= 180) {
+        lineStyle.text_.setOffsetY(47)
+    }
+    if (size > 180 && size <= 210) {
+        lineStyle.text_.setOffsetY(58)
+    }
+    return lineStyle;
+}
+
 
 $("#dbAttrSortable tbody").sortable({
 
     stop: function (e, ui) {
-        //multiSelectValues = [];
-        //var tds = $("#dbAttrSortable tbody td");
-        //tds.each(function (e) {
-        //    var sortColVal = this.dataset.colvalue
-        //    multiSelectValues.push(sortColVal);
-        //});
-
-        //setLabelBasedOnDataAttribute();
+        allDbAttr = [];
+        var tds = $("#dbAttrSortable tbody td");
+        tds.each(function (e) {
+            var sortColVal = this.dataset.colvalue
+            allDbAttr.push(sortColVal.trim());
+        });
+        setLabelBasedOnDataAttribute();
 
     },
     receive: function (event, ui) {
@@ -935,7 +1079,7 @@ $("#dbAttrSortable tbody").disableSelection();
 
 $(".js-calculator_range").on("change input", function (e) {
     var rangeValue = $(this).val();
-    $(this).parent().find(".js-calculator_text-input").val($(this).val());
+    $(this).parent().parent().find(".js-calculator_text-input").val($(this).val());
     if ($(this).hasClass("cls-range-gbl-opacity")) {
         if (IsProjectWellStyleSelected) {
             if (miniMaxSliderLastCall != undefined) {
