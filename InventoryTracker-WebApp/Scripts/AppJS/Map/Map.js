@@ -311,7 +311,7 @@ function colorFeatureByEntityType() {
     //var features = vectorLayer.getSource().getFeatures();
 
     //for (var i = 0; i < features.length; i++) {
-    //    var clr = entTypeWithColor.filter(x => x.Ent_type == features[i].values_.Ent_type)[0];
+    //    var clr = entTypeWithColor.filter(x => x.Ent_type == features[i].N.Ent_type)[0];
     //    features[i].setStyle(new ol.style.Style({
     //        image: new ol.style.Circle({
     //            radius: 5,
@@ -326,9 +326,9 @@ function colorFeatureByEntityType() {
         }));
     }
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
-            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].values_.Ent_type)[0];
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
             newFeatures[0].setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
@@ -377,7 +377,7 @@ $('#selectEntityType').change(function () {
 
         var features = vectorLayer.getSource().getFeatures();
         for (var i = 0; i < features.length; i++) {
-            if ($('#selectEntityType').val() != features[i].values_.Ent_type) {
+            if ($('#selectEntityType').val() != features[i].N.Ent_type) {
                 features[i].setStyle(new ol.style.Style({}));
             }
         }
@@ -438,9 +438,9 @@ $('#selectEquipType').change(function () {
         }));
     }
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
-            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].values_.Ent_type)[0];
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
             newFeatures[0].setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
@@ -640,7 +640,7 @@ function InitDrawFeature() {
                 var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
 
                 for (var i = 0; i < assignedEntEqu.length; i++) {
-                    var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
+                    var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
                     if (newFeatures.length == 1) {
                         if (polygon.intersectsExtent(newFeatures[0].getGeometry().getExtent())) {
                             newFeatures[0].setStyle(new ol.style.Style({
@@ -706,7 +706,7 @@ function InvertSelection() {
         var newFeaturesForRed = [];
         var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
         for (var i = 0; i < assignedEntEqu.length; i++) {
-            var newFeature = newFeatures.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
+            var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
             if (newFeature.length == 1) {
                 newFeaturesForRed.push(newFeature[0]);
             }
@@ -736,7 +736,7 @@ function FilterSelection() {
     var newFeaturesForRed = [];
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeature = newFeatures.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeature.length == 1) {
             newFeaturesForRed.push(newFeature[0]);
         }
@@ -758,14 +758,14 @@ function ResetFilter() {
     var newFeaturesForRed = [];
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeature = newFeatures.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeature.length == 1) {
             newFeaturesForRed.push(newFeature[0]);
         }
     }
 
     for (var i = 0; i < newFeaturesForRed.length; i++) {
-        var clr = entTypeWithColor.filter(x => x.Ent_type == newFeaturesForRed[i].values_.Ent_type)[0];
+        var clr = entTypeWithColor.filter(x => x.Ent_type == newFeaturesForRed[i].N.Ent_type)[0];
         newFeaturesForRed[i].setStyle(new ol.style.Style({
             image: new ol.style.Circle({
                 radius: 5,
@@ -852,9 +852,9 @@ function highLightSpotOfEntityEquipAssign(currentDate) {
         }));
     }
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
-            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].values_.Ent_type)[0];
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
             newFeatures[0].setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
@@ -951,7 +951,7 @@ function setLabelBasedOnDataAttribute() {
         assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
     }
     for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeatures = features.filter(item => item.values_.Ent_ID == assignedEntEqu[i].ENT_ID);
+        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
             var dataVal = "";
             var style = newFeatures[0].getStyle();
@@ -993,7 +993,7 @@ function setLabelBasedOnDataAttribute() {
             if (style.length > 1) {
                 style = style[0];
             }
-            newFeatures[0].setStyle([style, lineStyle]);
+            newFeatures[0].setStyle([style, lineStyle]);    
             newFeatures[0].set('newStyle', [style, lineStyle]);
         }
     }
