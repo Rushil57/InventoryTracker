@@ -1179,10 +1179,7 @@ function CalculateBubbleSize() {
 
         var minBubbleVal = parseFloat($(".cls-range-min-size").val()) * 2;
         var maxBubbleVal = parseFloat($(".cls-range-max-size").val()) * 2;
-        var numBreak = parseFloat($(".cls-bma-num-break").val()); // 5
-        //var diff = max_range - min_range;
-        //var diff = maxBubbleVal - minBubbleVal;
-        //var breakValue = parseFloat(diff) / numBreak;
+        var numBreak = parseFloat($(".cls-bma-num-break").val());
         var bubbleDiff = maxBubbleVal - minBubbleVal;
         var bubbleBreakValue = parseFloat(bubbleDiff) / (numBreak*10);
         var dataVal = 0;
@@ -1210,22 +1207,9 @@ function CalculateBubbleSize() {
                 prevDataVal.push({
                     ENT_ID: assignedEntEqu[i].ENT_ID, val: dataVal
                 });
-                //if (dataVal > prevDataVal) {
-                //    radiusVal += bubbleBreakValue;
-                //}
-                //else {
-                //    radiusVal -= bubbleBreakValue;
-                //}
-                ////bubbleBreakValue += 1;
-                //newFeatures[0].setStyle(new ol.style.Style({
-                //    image: new ol.style.Circle({
-                //        radius: radiusVal,
-                //        fill: new ol.style.Fill({ color: currentColor })
-                //    })
-                //}));
             }
         }
-        prevDataVal.sort(function (a, b) { return parseInt(a.val) - parseInt(b.val) });
+        prevDataVal.sort(function (a, b) { return parseFloat(a.val) - parseFloat(b.val) });
         for (var i = 0; i < prevDataVal.length; i++) {
             var newFeatures = features.filter(item => item.N.Ent_ID == prevDataVal[i].ENT_ID);
             if (newFeatures.length == 1) {
