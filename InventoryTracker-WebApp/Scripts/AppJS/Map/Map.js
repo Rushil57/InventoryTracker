@@ -13,6 +13,7 @@ var miniMaxOpacitySliderLastCall;
 var IsProjectWellStyleSelected = false;
 var allDbAttr = '';
 var defaultShape = '\u25CF';
+var arrEntID = [];
 var predefinedStyles = {
     'circles': new ol.style.Style({
         text: new ol.style.Text({
@@ -428,6 +429,7 @@ $('#selectEquipType').change(function () {
     var selectedDropDownVal = selectedDropDown.val();
     var selectEquipTypeProp = $('#selectEquipTypeProp');
     var equipTypePropVal = '';
+    arrEntID = [];
     setDbAttrSortabelRows(false);
     selectEquipTypeProp.html('');
     $('#countLbl').text(0);
@@ -439,11 +441,32 @@ $('#selectEquipType').change(function () {
     $('#multiSelectEquProp').multiselect()
     $('#multiSelectEquProp').multiselect('destroy').html('');
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_TYPE == $('#selectEntityType :selected').val());
+    for (var i = 0; i < features.length; i++) {
+        features[i].setStyle(new ol.style.Style({
+        }));
+    }
+    if (selectedDropDownText != '' && selectedDropDownText != null && selectedDropDownVal != "0") {
+        assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedDropDownText);
+    }
+    for (var i = 0; i < assignedEntEqu.length; i++) {
+        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        if (newFeatures.length == 1) {
+            arrEntID.push(assignedEntEqu[i].ENT_ID);
+            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
+            newFeatures[0].setStyle(new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 5,
+                    fill: new ol.style.Fill({ color: clr.color })
+                })
+            }));
+        }
+    }
     if (selectedDropDownText != '' && selectedDropDownText != null && selectedDropDownVal != "0") {
         var newEquipNumericProp = equipNumericProp.filter(x => x.Equipment_Type.toLowerCase() == selectedDropDownText.toLowerCase());
         for (var i = 0; i < newEquipNumericProp.length; i++) {
             var propName = newEquipNumericProp[i].Prop_Name;
-            var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.Equipment_Type == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate)).length;
+            var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))
+            currPropList = currPropList.filter(item => arrEntID.includes(item.ENT_ID)).length;
             equipTypePropVal += '<option value="' + propName + '"> ' + propName + ' (' + currPropList + ')</option>';
         }
         selectEquipTypeProp.html(equipTypePropVal);
@@ -465,30 +488,12 @@ $('#selectEquipType').change(function () {
             },
         });
         $("#ddl_dbAttributes").append(equipTypePropVal);
-
-        assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedDropDownText);
-
     }
     else {
         $('#multiSelectEquProp').multiselect('destroy').html('');
     }
 
-    for (var i = 0; i < features.length; i++) {
-        features[i].setStyle(new ol.style.Style({
-        }));
-    }
-    for (var i = 0; i < assignedEntEqu.length; i++) {
-        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
-        if (newFeatures.length == 1) {
-            var clr = entTypeWithColor.filter(x => x.Ent_type == newFeatures[0].N.Ent_type)[0];
-            newFeatures[0].setStyle(new ol.style.Style({
-                image: new ol.style.Circle({
-                    radius: 5,
-                    fill: new ol.style.Fill({ color: clr.color })
-                })
-            }));
-        }
-    }
+
 })
 
 $('#selectEquipTypeProp').change(function () {
@@ -496,7 +501,8 @@ $('#selectEquipTypeProp').change(function () {
     selectedProp = selectedProp.substring(1, selectedProp.indexOf('(') - 1);
     var selectedDropDown = $('#selectEquipType :selected');
     var selectedDropDownText = selectedDropDown.text();
-    var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == selectedProp && x.Equipment_Type == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))
+    var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == selectedProp && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))
+    currPropList = currPropList.filter(item => arrEntID.includes(item.ENT_ID));
     var currPropCount = currPropList.length;
     var currPropSum = 0;
     var maxProp = 0;
@@ -526,7 +532,8 @@ $('#selectEquipTypeProp').change(function () {
     $('#avgLbl').text(currPorpAvg.toFixed(2));
 
     var currNullPropList = equipNullNumericProp.filter(x => x.Prop_Name == selectedProp && x.Equipment_Type == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
-    $('#nullLbl').text(currNullPropList.length);
+    currNullPropList = currNullPropList.filter(item => arrEntID.includes(item.ENT_ID)).length;
+    $('#nullLbl').text(currNullPropList);
 })
 
 //$('#selectEntityTypeProp').change(function () {
@@ -706,8 +713,9 @@ function InitDrawFeature() {
                     CalculateBubbleSize();
                     setLabelBasedOnDataAttribute();
                     ChangeBubbleOpacity();
+                    selectedPolygonPropData();
                     drawingSource.clear();
-                    
+
                 }, 500)
                 //if (selectedFeatures.array_.length > 0) {
                 //    UpdateFilterGrid(selectedFeatures);
@@ -728,6 +736,7 @@ function ResetSelection() {
         selectedFeatures = [];
     }
     colorFeatureByEntityType();
+    $('#selectEquipTypeProp').trigger('change');
 }
 
 function InvertSelection() {
@@ -781,6 +790,7 @@ function InvertSelection() {
         CalculateBubbleSize();
         setLabelBasedOnDataAttribute();
         ChangeBubbleOpacity();
+        selectedPolygonPropData();
     }, 500);
 }
 
@@ -1049,7 +1059,7 @@ function setLabelBasedOnDataAttribute() {
                         propName = selectedProp;
                     }
 
-                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.Equipment_Type == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.Equipment_Type == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
+                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
 
                     if (dataVal) {
                         sortVal.push(dataVal);
@@ -1229,7 +1239,7 @@ function CalculateBubbleSize() {
         var maxBubbleVal = parseFloat($(".cls-range-max-size").val()) * 2;
         var numBreak = parseFloat($(".cls-bma-num-break").val());
         var bubbleDiff = maxBubbleVal - minBubbleVal;
-        var bubbleBreakValue = parseFloat(bubbleDiff) / (numBreak*10);
+        var bubbleBreakValue = parseFloat(bubbleDiff) / (numBreak * 10);
         var dataVal = 0;
         var prevDataVal = [];
         var radiusVal = 5;
@@ -1250,7 +1260,7 @@ function CalculateBubbleSize() {
                     currentStyle = currentStyle[0];
                 }
                 currentColor = currentStyle.M.Xa.b;
-                dataVal = equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.Equipment_Type == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.Equipment_Type == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
+                dataVal = equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
 
                 prevDataVal.push({
                     ENT_ID: assignedEntEqu[i].ENT_ID, val: dataVal
@@ -1339,3 +1349,53 @@ const convertHexToRGBA = (hexCode, opacity = 1) => {
 
     return `rgba(${r},${g},${b},${opacity})`;
 };
+
+function selectedPolygonPropData() {
+    var selectEquipTypePropVal = $('#selectEquipTypeProp').val();
+    var selectedDropDown = $('#selectEquipType :selected');
+    var selectedDropDownText = selectedDropDown.text();
+    var currPropCount = 0;
+    var currPropSum = 0;
+    var currPorpAvg = 0;
+    var maxProp = 0;
+    var minProp = 0;
+    var currNullPropList = 0;
+    var isFirstMax = true;
+    var isFirstMin = true;
+    var newSelectedFeatures = '';
+    if (selectEquipTypePropVal != null) {
+        if (selectedFeatures.a != undefined) {
+            newSelectedFeatures = selectedFeatures.a;
+        }
+        else {
+            newSelectedFeatures = selectedFeatures;
+        }
+        for (var i = 0; i < newSelectedFeatures.length; i++) {
+            var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == selectEquipTypePropVal && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == newSelectedFeatures[i].N.Ent_ID)
+            currPropCount += currPropList.length;
+            for (var j = 0; j < currPropList.length; j++) {
+                var num = parseFloat(currPropList[j].Eq_Value);
+                currPropSum += num;
+                if (num > maxProp || isFirstMax) {
+                    maxProp = num;
+                    isFirstMax = false;
+                }
+                if (num < minProp || isFirstMin) {
+                    minProp = num;
+                    isFirstMin = false;
+                }
+            }
+
+            currNullPropList += equipNullNumericProp.filter(x => x.Prop_Name == selectEquipTypePropVal && x.Equipment_Type == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == newSelectedFeatures[i].N.Ent_ID).length;
+        }
+        if (currPropCount > 0 && currPropSum > 0) {
+            currPorpAvg = currPropSum / currPropCount;
+        }
+        $('#countLbl').text(currPropCount);
+        $('#sumLbl').text(currPropSum.toFixed(2));
+        $('#maxLbl').text(maxProp);
+        $('#minLbl').text(minProp);
+        $('#avgLbl').text(currPorpAvg.toFixed(2));
+        $('#nullLbl').text(currNullPropList);
+    }
+}

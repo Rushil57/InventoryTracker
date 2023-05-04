@@ -1028,7 +1028,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 connection.Open();
                 string query = string.Empty;
                 //query = "select Equipment_Type, Prop_name, ed.Eq_Value from Equipment_Template et join Equipment_Dtl ed on ed.Equip_Temp_ID = et.Equip_Temp_ID where Prop_name != 'latitude' and Prop_name != 'longitude' and (  Datatype = 'Decimal' or Datatype = 'Int' ) and ed.Eq_Value is not null and ed.Eq_Value != '' order by Prop_Name";
-                query = "SELECT distinct [Equip_Dtl_ID] ,ed.[Equip_ID] ,ed.[Equip_Temp_ID] ,et.Prop_Name ,[Eq_Value] ,eea.[Start_Date] ,eea.[End_Date], et.Datatype,et.Equipment_Type,enh.ENT_TYPE,enh.ENT_ID FROM [dbo].[Equipment_Dtl] as ed join [dbo].[Equipment_Template] as et on ed.Equip_Temp_ID = et.Equip_Temp_ID join EQUIPMENT_ENTITY_ASSIGNMENT as eea on eea.EQUIP_ID = ed.Equip_ID join ENTITY_HDR enh on enh.ENT_ID = eea.ENT_ID where ed.Eq_Value != '' and ed.Eq_Value is not null  and Prop_Name != 'latitude' and Prop_Name != 'longitude'";
+                query = "SELECT distinct [Equip_Dtl_ID] ,ed.[Equip_ID] ,ed.[Equip_Temp_ID] ,et.Prop_Name ,[Eq_Value] ,eea.[Start_Date] ,eea.[End_Date], et.Datatype,et.Equipment_Type as EQUIP_TYPE,enh.ENT_TYPE,enh.ENT_ID FROM [dbo].[Equipment_Dtl] as ed join [dbo].[Equipment_Template] as et on ed.Equip_Temp_ID = et.Equip_Temp_ID join EQUIPMENT_ENTITY_ASSIGNMENT as eea on eea.EQUIP_ID = ed.Equip_ID join ENTITY_HDR enh on enh.ENT_ID = eea.ENT_ID where ed.Eq_Value != '' and ed.Eq_Value is not null  and Prop_Name != 'latitude' and Prop_Name != 'longitude'";
                 equipmentTemplates = connection.Query<MapDetail>(query).ToList();
             }
             catch (Exception e)
@@ -1048,7 +1048,7 @@ namespace InventoryTracker_WebApp.Repositories.Equipment
                 connection.Open();
                 string query = string.Empty;
                 //query = "select Equipment_Type, Prop_name, ed.Eq_Value from Equipment_Template et  join Equipment_Dtl ed on ed.Equip_Temp_ID = et.Equip_Temp_ID  where Prop_name != 'latitude' and Prop_name != 'longitude'  and (  Datatype = 'Decimal' or Datatype = 'Int' ) and (ed.Eq_Value is  null or ed.Eq_Value = '') order by Prop_Name";
-                query = "SELECT distinct [Equip_Dtl_ID] ,ed.[Equip_ID] ,ed.[Equip_Temp_ID] ,et.Prop_Name ,[Eq_Value] ,eea.[Start_Date] ,eea.[End_Date], et.Datatype,et.Equipment_Type,enh.ENT_TYPE,enh.ENT_ID FROM [dbo].[Equipment_Dtl] as ed join [dbo].[Equipment_Template] as et on ed.Equip_Temp_ID = et.Equip_Temp_ID join EQUIPMENT_ENTITY_ASSIGNMENT as eea on eea.EQUIP_ID = ed.Equip_ID join ENTITY_HDR enh on enh.ENT_ID = eea.ENT_ID where (ed.Eq_Value = '' or ed.Eq_Value is null) and Prop_Name != 'latitude' and Prop_Name != 'longitude'";
+                query = "SELECT distinct [Equip_Dtl_ID] ,ed.[Equip_ID] ,ed.[Equip_Temp_ID] ,et.Prop_Name ,[Eq_Value] ,eea.[Start_Date] ,eea.[End_Date], et.Datatype,et.Equipment_Type as EQUIP_TYPE,enh.ENT_TYPE,enh.ENT_ID FROM [dbo].[Equipment_Dtl] as ed join [dbo].[Equipment_Template] as et on ed.Equip_Temp_ID = et.Equip_Temp_ID join EQUIPMENT_ENTITY_ASSIGNMENT as eea on eea.EQUIP_ID = ed.Equip_ID join ENTITY_HDR enh on enh.ENT_ID = eea.ENT_ID where (ed.Eq_Value = '' or ed.Eq_Value is null) and Prop_Name != 'latitude' and Prop_Name != 'longitude'";
                 equipmentTemplates = connection.Query<MapDetail>(query).ToList();
             }
             catch (Exception e)
