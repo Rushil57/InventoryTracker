@@ -11,7 +11,7 @@ var equipNullNumericProp;
 var miniMaxSliderLastCall;
 var miniMaxOpacitySliderLastCall;
 var IsProjectWellStyleSelected = false;
-var allDbAttr;
+var allDbAttr = '';
 var defaultShape = '\u25CF';
 var predefinedStyles = {
     'circles': new ol.style.Style({
@@ -352,6 +352,14 @@ function colorFeatureByEntityType() {
         features[i].setStyle(new ol.style.Style({
         }));
     }
+    var selectedEntity = $('#selectEntityType').val();
+    if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
+        assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
+    }
+    var selectedEquip = $('#selectEquipType').val();
+    if (selectedEquip != '' && selectedEquip != null && selectedEquip != "0") {
+        assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedEquip);
+    }
     for (var i = 0; i < assignedEntEqu.length; i++) {
         var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
@@ -365,7 +373,9 @@ function colorFeatureByEntityType() {
         }
     }
 
-
+    CalculateBubbleSize();
+    setLabelBasedOnDataAttribute();
+    ChangeBubbleOpacity();
 }
 
 $('#selectEntityType').change(function () {
@@ -613,7 +623,7 @@ function InitDrawFeature() {
         var selectedType = "Polygon";
 
         var listener;
-        var fill = new ol.style.Fill({ color: "red" });
+        var fill = new ol.style.Fill({ color: "#FF0000" });
         var newStyle = new ol.style.Style({
             //stroke: stroke,
             fill: fill
@@ -662,13 +672,20 @@ function InitDrawFeature() {
             draw.on('drawend', function (event) {
 
                 //delaySelectActivate();
-                //selectedFeatures.clear();
+                selectedFeatures = [];
                 var polygon = event.feature.getGeometry();
                 var features = vectorLayer.getSource().getFeatures();
 
                 //vectorLayer_Comp pointsLayer
                 var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
-
+                var selectedEntity = $('#selectEntityType').val();
+                if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
+                    assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
+                }
+                var selectedEquip = $('#selectEquipType').val();
+                if (selectedEquip != '' && selectedEquip != null && selectedEquip != "0") {
+                    assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedEquip);
+                }
                 for (var i = 0; i < assignedEntEqu.length; i++) {
                     var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
                     if (newFeatures.length == 1) {
@@ -676,7 +693,7 @@ function InitDrawFeature() {
                             newFeatures[0].setStyle(new ol.style.Style({
                                 image: new ol.style.Circle({
                                     radius: 5,
-                                    fill: new ol.style.Fill({ color: "red" })
+                                    fill: new ol.style.Fill({ color: "#FF0000" })
                                 })
                             }));
                             selectedFeatures.push(newFeatures[0]);
@@ -684,11 +701,13 @@ function InitDrawFeature() {
                         }
                     }
                 }
-
                 polySelectedMapData = [];
                 setTimeout(function () {
-
+                    CalculateBubbleSize();
+                    setLabelBasedOnDataAttribute();
+                    ChangeBubbleOpacity();
                     drawingSource.clear();
+                    
                 }, 500)
                 //if (selectedFeatures.array_.length > 0) {
                 //    UpdateFilterGrid(selectedFeatures);
@@ -735,6 +754,14 @@ function InvertSelection() {
         }
         var newFeaturesForRed = [];
         var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+        var selectedEntity = $('#selectEntityType').val();
+        if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
+            assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
+        }
+        var selectedEquip = $('#selectEquipType').val();
+        if (selectedEquip != '' && selectedEquip != null && selectedEquip != "0") {
+            assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedEquip);
+        }
         for (var i = 0; i < assignedEntEqu.length; i++) {
             var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
             if (newFeature.length == 1) {
@@ -746,11 +773,14 @@ function InvertSelection() {
             newFeaturesForRed[i].setStyle(new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: 5,
-                    fill: new ol.style.Fill({ color: "red" })
+                    fill: new ol.style.Fill({ color: "#FF0000" })
                 })
             }));
             selectedFeatures.a.push(newFeaturesForRed[i]);
         }
+        CalculateBubbleSize();
+        setLabelBasedOnDataAttribute();
+        ChangeBubbleOpacity();
     }, 500);
 }
 
@@ -787,6 +817,16 @@ function ResetFilter() {
 
     var newFeaturesForRed = [];
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+
+    var selectedEntity = $('#selectEntityType').val();
+    if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
+        assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
+    }
+    var selectedEquip = $('#selectEquipType').val();
+    if (selectedEquip != '' && selectedEquip != null && selectedEquip != "0") {
+        assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedEquip);
+    }
+
     for (var i = 0; i < assignedEntEqu.length; i++) {
         var newFeature = newFeatures.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeature.length == 1) {
@@ -802,8 +842,16 @@ function ResetFilter() {
                 fill: new ol.style.Fill({ color: clr.color })
             })
         }));
-        selectedFeatures.a.push(newFeaturesForRed[i]);
+        if (selectedFeatures.a != undefined) {
+            selectedFeatures.a.push(newFeaturesForRed[i]);
+        }
+        else {
+            selectedFeatures.push(newFeaturesForRed[i]);
+        }
     }
+    CalculateBubbleSize();
+    setLabelBasedOnDataAttribute();
+    ChangeBubbleOpacity();
 }
 
 //$("#drpMapType").change(function () {
@@ -988,7 +1036,7 @@ function setLabelBasedOnDataAttribute() {
             //var fontStyle = style.text_.font_;
             var sizeFont = 30;
             var sortVal = [];
-            if (allDbAttr.length) {
+            if (allDbAttr.length > 0) {
                 for (var j = 0; j < allDbAttr.length; j++) {
                     var selectedProp = '';
                     var propName = '';
@@ -1233,3 +1281,61 @@ function CalculateBubbleSize() {
         setLabelBasedOnDataAttribute();
     }
 }
+
+
+function ChangeBubbleOpacity() {
+    IsProjectWellStyleSelected = false;//$#
+    var opacityValue = $(".cls-range-gbl-opacity").val();
+    var currentColor = '';
+    var currentRadius = '';
+    var val = parseFloat(opacityValue) * parseFloat(0.01);
+    var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+    var selectedEntity = $('#selectEntityType').val()
+    if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
+        assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
+    }
+    for (var i = 0; i < assignedEntEqu.length; i++) {
+        var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
+        if (newFeatures.length == 1) {
+            var currentStyle = newFeatures[0].getStyle();
+            if (currentStyle.length > 1) {
+                currentStyle = currentStyle[0];
+            }
+            currentColor = currentStyle.M.Xa.b;
+            currentRadius = currentStyle.M.b;
+            if (currentColor.indexOf('#') >= 0) {
+                currentColor = convertHexToRGBA(currentColor, val)
+            }
+            else {
+                currentColor = currentColor.substring(0, currentColor.lastIndexOf(','));
+                currentColor += ',' + val + ')';
+            }
+            newFeatures[0].setStyle(new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: currentRadius,
+                    fill: new ol.style.Fill({ color: currentColor })
+                })
+            }));
+        }
+    }
+    setLabelBasedOnDataAttribute();
+}
+
+const convertHexToRGBA = (hexCode, opacity = 1) => {
+    let hex = hexCode.replace('#', '');
+
+    if (hex.length === 3) {
+        hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+    }
+
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    /* Backward compatibility for whole number based opacity values. */
+    if (opacity > 1 && opacity <= 100) {
+        opacity = opacity / 100;
+    }
+
+    return `rgba(${r},${g},${b},${opacity})`;
+};
