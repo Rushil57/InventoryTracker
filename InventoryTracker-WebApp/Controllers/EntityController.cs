@@ -82,7 +82,7 @@ namespace InventoryTracker_WebApp.Controllers
         public string SaveEntityTemplate(string entityTemplate)
         {
             List<EntityTemplate> entityTemplates = JsonConvert.DeserializeObject<List<EntityTemplate>>(entityTemplate);
-            if (entityTemplates.Count > 0)
+            if (entityTemplates.Count > 0 && entityTemplates.Find(x => x.Prop_name.ToLower() == "latitude") != null && entityTemplates.Find(x => x.Prop_name.ToLower() == "longitude") != null)
             {
                 bool isSaved = _entityRepository.SaveEntityTemplate(entityTemplates);
                 return JsonConvert.SerializeObject(new { IsValid = true, data = isSaved });

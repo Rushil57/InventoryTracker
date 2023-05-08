@@ -115,8 +115,15 @@ function editTemplate(type) {
 
         $("#tblTemplate > tbody >  tr ").each(function () {
             var zerotd = $(this).find("td:eq(0)");
+            var zeroTdText = zerotd.text().trim();
             //var onetd = $(this).find("td:eq(1)");
-            zerotd.html("<input type='text' class='dropdown-control' value='" + zerotd.text().trim() + "'>");
+            if (zeroTdText.toLowerCase() == 'latitude' || zeroTdText.toLowerCase() == 'longitude') {
+                zerotd.html("<label>" + zeroTdText + "</label>");
+                $(this).find("td:eq(3)").html('');
+            }
+            else {
+                zerotd.html("<input type='text' class='dropdown-control' value='" + zeroTdText + "'>");
+            }
             //onetd.html("<input type='text' value='" + onetd.text().trim() + "'>");
         })
         $("#tblTemplate > tbody >  tr:last ").remove();

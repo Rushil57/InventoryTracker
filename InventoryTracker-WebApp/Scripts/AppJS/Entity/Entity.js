@@ -1,10 +1,14 @@
 ﻿$(document).ready(function () {
     loadEntity();
     $('#selectedMenu').text($('#menuEntTemp').text());
-    $('#tblTemplateHDR > tbody').append('<tr><td>Entity Name</td><td>String</td></tr>')
+    $('#tblTemplateHDR > tbody').append('<tr><td>Entity Name</td><td>String</td></tr>');
+    
 })
 function loadTemplate(entityType, currentLI) {
     $("#ul > li").removeClass('cls-selected-li');
+    $('#tblTemplateHDR > tbody').find('.latLong').remove();
+    $('#tblTemplateHDR').parent().parent().removeClass('min-vh-16').addClass('min-vh-12');
+    $('#tblTemplate').parent().parent().removeClass('min-vh-58').addClass('min-vh-60');
     isFirstTimeEntEqu = true;
     if (currentLI != undefined) {
         $("#"+currentLI).addClass('cls-selected-li');
@@ -90,6 +94,22 @@ function saveTemplate() {
         });
     })
     data.pop();
+    if (data[0].Ent_temp_id == 0) {
+        data.push({
+            Ent_temp_id: typeof $("#tblTemplate > tbody >  tr ").find("input[type=hidden]").val() != 'undefined' ? $("#tblTemplate > tbody >  tr ").find("input[type=hidden]").val() : 0,
+            Ent_type: entityType,
+            Prop_name: 'Latitude',
+            Datatype: 'Decimal',
+            Sequence: data.length + 1
+        })
+        data.push({
+            Ent_temp_id: typeof $("#tblTemplate > tbody >  tr ").find("input[type=hidden]").val() != 'undefined' ? $("#tblTemplate > tbody >  tr ").find("input[type=hidden]").val() : 0,
+            Ent_type: entityType,
+            Prop_name: 'Longitude',
+            Datatype: 'Decimal',
+            Sequence: data.length + 1
+        })
+    }
     if (data.length == 0) {
         alert('Please enter data into table.');
         return;
@@ -135,6 +155,9 @@ function saveTemplate() {
 $('#newTemplate').click(function () {
     loadTemplate('');
     elementTemplateName.append('<input type="text" class="dropdown-control textBox-BackColor" id="templateName" />');
+    $('#tblTemplateHDR > tbody').append('<tr class="latLong"><td>Latitude</td><td>Decimal</td></tr><tr class="latLong"><td>Longitude</td><td>Decimal</td></tr>');
+    $('#tblTemplateHDR').parent().parent().removeClass('min-vh-12').addClass('min-vh-16');
+    $('#tblTemplate').parent().parent().removeClass('min-vh-60').addClass('min-vh-58');
     addCursorFunc();
     isFirstTimeEntEqu = true;
 })
