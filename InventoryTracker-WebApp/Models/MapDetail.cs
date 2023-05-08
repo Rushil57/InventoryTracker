@@ -14,5 +14,6 @@
         public int Equip_Temp_ID { get; set; }
         public string Datatype { get; set; }
         public string Equipment_Type { get; set; }
+        public string logEqValue { get; set; }         
     }
 }

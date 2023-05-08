@@ -14,6 +14,9 @@ var IsProjectWellStyleSelected = false;
 var allDbAttr = '';
 var defaultShape = '\u25CF';
 var arrEntID = [];
+var logarithmicEle = $('.cls-chk-logarithmic');
+var chkValueBoundsEle = $('#chkValueBounds');
+//var currentBubbleColor = '';
 var predefinedStyles = {
     'circles': new ol.style.Style({
         text: new ol.style.Text({
@@ -36,6 +39,7 @@ $(document).ready(function () {
     }).datepicker('setDate', new Date());
     $('#selectedMenu').text($('#menuMap').text());
     document.getElementById("defaultOpen").click();
+    chkValueBoundsEle.prop('disabled', true);
 })
 
 function getLatLong() {
@@ -201,6 +205,10 @@ $('.color-picker').spectrum({
 
 function ChangeBubbleColor(color) {
     color = '' + color + '';
+    //currentBubbleColor = color;
+    var dbAttrVal = $('#DBCatAttrib').val();
+    var minValueBound = Number($('.cls-valuebound-min').val());
+    var maxValueBound = Number($('.cls-valuebound-max').val());
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     var selectedEntity = $('#selectEntityType').val();
     if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
@@ -213,16 +221,30 @@ function ChangeBubbleColor(color) {
     for (var i = 0; i < assignedEntEqu.length; i++) {
         var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
         if (newFeatures.length == 1) {
-            newFeatures[0].setStyle(new ol.style.Style({
-                image: new ol.style.Circle({
-                    radius: 5,
-                    fill: new ol.style.Fill({ color: color })
-                })
-            }));
+            if (dbAttrVal != "None" && dbAttrVal != "" && dbAttrVal != null && dbAttrVal != "0" && chkValueBoundsEle.is(':checked') && minValueBound != 0 && maxValueBound != 0 && minValueBound <= maxValueBound) {
+                var valueBound = equipNumericPropValue.filter(x => x.ENT_ID == assignedEntEqu[i].ENT_ID && x.EQUIP_TYPE == selectedEquip && x.ENT_TYPE == selectedEntity && x.Prop_Name == dbAttrVal && x.logEqValue >= minValueBound && x.logEqValue <= maxValueBound).length;
+                if (valueBound > 0) {
+                    newFeatures[0].setStyle(new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: 5,
+                            fill: new ol.style.Fill({ color: color })
+                        })
+                    }));
+                }
+            }
+            else {
+                newFeatures[0].setStyle(new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 5,
+                        fill: new ol.style.Fill({ color: color })
+                    })
+                }));
+            }
         }
     }
     CalculateBubbleSize();
     setLabelBasedOnDataAttribute();
+    ChangeBubbleOpacity();
     //OR
 
 
@@ -1058,9 +1080,12 @@ function setLabelBasedOnDataAttribute() {
                         selectedProp = allDbAttr[j];
                         propName = selectedProp;
                     }
-
-                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
-
+                    if (logarithmicEle.is(':checked')) {
+                        dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].logEqValue : '';
+                    }
+                    else {
+                        dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
+                    }
                     if (dataVal) {
                         sortVal.push(dataVal);
                     }
@@ -1260,7 +1285,12 @@ function CalculateBubbleSize() {
                     currentStyle = currentStyle[0];
                 }
                 currentColor = currentStyle.M.Xa.b;
-                dataVal = equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
+                if (logarithmicEle.is(':checked')) {
+                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].logEqValue : '';
+                }
+                else {
+                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
+                }
 
                 prevDataVal.push({
                     ENT_ID: assignedEntEqu[i].ENT_ID, val: dataVal
@@ -1276,7 +1306,7 @@ function CalculateBubbleSize() {
                     currentStyle = currentStyle[0];
                 }
                 currentColor = currentStyle.M.Xa.b;
-                if (i > 0 && prevDataVal[i].val != prevDataVal[i - 1].val) {
+                if (i > 0 && Number(prevDataVal[i].val) != Number(prevDataVal[i - 1].val)) {
                     radiusVal += bubbleBreakValue;
                 }
                 bubbleBreakValue += 1;
@@ -1399,3 +1429,30 @@ function selectedPolygonPropData() {
         $('#nullLbl').text(currNullPropList);
     }
 }
+
+logarithmicEle.change(function () {
+    if ($(this).is(':checked')) {
+        chkValueBoundsEle.prop('disabled', false);
+    }
+    else {
+        chkValueBoundsEle.prop('checked', false).prop('disabled', true);
+        $('.cls-valuebound-min, .cls-valuebound-max').val(0);
+        $('.cls-valuebound-min, .cls-valuebound-max').prop('disabled', true);
+    }
+    CalculateBubbleSize();
+})
+
+chkValueBoundsEle.change(function () {
+    if ($(this).is(':checked')) {
+        $('.cls-valuebound-min, .cls-valuebound-max').prop('disabled', false);
+    }
+    else {
+        $('.cls-valuebound-min, .cls-valuebound-max').val(0);
+        $('.cls-valuebound-min, .cls-valuebound-max').prop('disabled', true);
+    }
+})
+//$('.cls-valuebound-min, .cls-valuebound-max').change(function () {
+//    if (currentBubbleColor != '') {
+//        ChangeBubbleColor(currentBubbleColor);
+//    }
+//})
