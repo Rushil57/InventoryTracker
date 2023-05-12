@@ -16,6 +16,7 @@ var defaultShape = '\u25CF';
 var arrEntID = [];
 var logarithmicEle = $('.cls-chk-logarithmic');
 var chkValueBoundsEle = $('#chkValueBounds');
+var isFirstWindowLoad = true;
 //var currentBubbleColor = '';
 var predefinedStyles = {
     'circles': new ol.style.Style({
@@ -40,13 +41,16 @@ $(document).ready(function () {
     $('#selectedMenu').text($('#menuMap').text());
     document.getElementById("defaultOpen").click();
     chkValueBoundsEle.prop('disabled', true);
+    $(window).resize();
+    isFirstWindowLoad = true;
 })
 var height = $(this).height(),
     width = $(this).width();
 $(window).resize(function () {
 
-    if (($(this).height() != height || $(this).width() != width)) {
-        $('#map').css('height', $(this).height() - 100);
+    if (($(this).height() != height || $(this).width() != width) || isFirstWindowLoad) {
+        $('#map').css('height', $(this).height() - 80);
+        isFirstWindowLoad = false;
     }
 });
 function getLatLong() {
