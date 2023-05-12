@@ -41,7 +41,14 @@ $(document).ready(function () {
     document.getElementById("defaultOpen").click();
     chkValueBoundsEle.prop('disabled', true);
 })
+var height = $(this).height(),
+    width = $(this).width();
+$(window).resize(function () {
 
+    if (($(this).height() != height || $(this).width() != width)) {
+        $('#map').css('height', $(this).height() - 100);
+    }
+});
 function getLatLong() {
     $.ajax({
         before: AddLoader(),
