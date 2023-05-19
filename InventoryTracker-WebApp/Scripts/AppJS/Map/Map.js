@@ -368,7 +368,7 @@ function loadAllEntityEquipType() {
 }
 
 
-function colorFeatureByEntityType() {
+function colorFeatureByEntityType() {    
     //var features = vectorLayer.getSource().getFeatures();
 
     //for (var i = 0; i < features.length; i++) {
@@ -413,14 +413,14 @@ function colorFeatureByEntityType() {
 }
 
 $('#selectEntityType').change(function () {
-    colorFeatureByEntityType();
+    
     var selectedDropDown = $('#selectEntityType :selected');
     var selectedDropDownVal = selectedDropDown.val();
-    var selectedDropDownText = selectedDropDown.text();
+    var selectedDropDownText = selectedDropDown.text().toUpperCase();
     var selectEntityTypeProp = $('#selectEntityTypeProp');
     var entityTypePropVal = '';
 
-    var assignedEquipment = uniqueEnEqAss.filter(x => x.ENT_TYPE == selectedDropDownText);
+    var assignedEquipment = uniqueEnEqAss.filter(x => x.ENT_TYPE.toUpperCase() == selectedDropDownText);
     uniqueEquipType = "";
     uniqueEquipType += assignedEquipment.length > 0 ? "<option value='0' > -- Select All -- </option>" : "<option value='0' > -- Select -- </option>";
     for (var k = 0; k < assignedEquipment.length; k++) {
@@ -441,7 +441,7 @@ $('#selectEntityType').change(function () {
 
     if (selectedDropDownText != '' && selectedDropDownText != null && selectedDropDownVal != "0") {
         selectEntityTypeProp.html('');
-        var newEntityNumericProp = entityNumericProp.filter(x => x.Ent_type == selectedDropDownText);
+        var newEntityNumericProp = entityNumericProp.filter(x => x.Ent_type.toUpperCase() == selectedDropDownText);
         for (var i = 0; i < newEntityNumericProp.length; i++) {
             entityTypePropVal += '<option>' + newEntityNumericProp[i].Prop_name + '</option>';
         }
@@ -454,11 +454,13 @@ $('#selectEntityType').change(function () {
             }
         }
     }
+
+    colorFeatureByEntityType();
 })
 
 $('#selectEquipType').change(function () {
     var selectedDropDown = $('#selectEquipType :selected');
-    var selectedDropDownText = selectedDropDown.text();
+    var selectedDropDownText = selectedDropDown.text().toUpperCase();
     var selectedDropDownVal = selectedDropDown.val();
     var selectEquipTypeProp = $('#selectEquipTypeProp');
     var equipTypePropVal = '';
@@ -474,6 +476,7 @@ $('#selectEquipType').change(function () {
     $('#multiSelectEquProp').multiselect()
     $('#multiSelectEquProp').multiselect('destroy').html('');
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_TYPE == $('#selectEntityType :selected').val());
+    
     for (var i = 0; i < features.length; i++) {
         features[i].setStyle(new ol.style.Style({
         }));
@@ -498,7 +501,7 @@ $('#selectEquipType').change(function () {
         var newEquipNumericProp = equipNumericProp.filter(x => x.Equipment_Type.toLowerCase() == selectedDropDownText.toLowerCase());
         for (var i = 0; i < newEquipNumericProp.length; i++) {
             var propName = newEquipNumericProp[i].Prop_Name;
-            var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))
+            var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE.toUpperCase() == selectedDropDownText.toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))
             currPropList = currPropList.filter(item => arrEntID.includes(item.ENT_ID)).length;
             equipTypePropVal += '<option value="' + propName + '"> ' + propName + ' (' + currPropList + ')</option>';
         }
@@ -534,7 +537,7 @@ $('#selectEquipTypeProp').change(function () {
     selectedProp = selectedProp.substring(1, selectedProp.indexOf('(') - 1);
     var selectedDropDown = $('#selectEquipType :selected');
     var selectedDropDownText = selectedDropDown.text();
-    var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == selectedProp && x.EQUIP_TYPE == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))
+    var currPropList = equipNumericPropValue.filter(x => x.Prop_Name == selectedProp && x.EQUIP_TYPE.toUpperCase() == selectedDropDownText.toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate))
     currPropList = currPropList.filter(item => arrEntID.includes(item.ENT_ID));
     var currPropCount = currPropList.length;
     var currPropSum = 0;
@@ -564,7 +567,7 @@ $('#selectEquipTypeProp').change(function () {
     $('#minLbl').text(minProp);
     $('#avgLbl').text(currPorpAvg.toFixed(2));
 
-    var currNullPropList = equipNullNumericProp.filter(x => x.Prop_Name == selectedProp && x.Equipment_Type == selectedDropDownText && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
+    var currNullPropList = equipNullNumericProp.filter(x => x.Prop_Name == selectedProp && x.Equipment_Type.toUpperCase() == selectedDropDownText.toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     currNullPropList = currNullPropList.filter(item => arrEntID.includes(item.ENT_ID)).length;
     $('#nullLbl').text(currNullPropList);
 })
