@@ -368,7 +368,7 @@ function loadAllEntityEquipType() {
 }
 
 
-function colorFeatureByEntityType() {    
+function colorFeatureByEntityType() {
     //var features = vectorLayer.getSource().getFeatures();
 
     //for (var i = 0; i < features.length; i++) {
@@ -413,7 +413,7 @@ function colorFeatureByEntityType() {
 }
 
 $('#selectEntityType').change(function () {
-    
+
     var selectedDropDown = $('#selectEntityType :selected');
     var selectedDropDownVal = selectedDropDown.val();
     var selectedDropDownText = selectedDropDown.text().toUpperCase();
@@ -476,7 +476,7 @@ $('#selectEquipType').change(function () {
     $('#multiSelectEquProp').multiselect()
     $('#multiSelectEquProp').multiselect('destroy').html('');
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_TYPE == $('#selectEntityType :selected').val());
-    
+
     for (var i = 0; i < features.length; i++) {
         features[i].setStyle(new ol.style.Style({
         }));
@@ -1095,10 +1095,10 @@ function setLabelBasedOnDataAttribute() {
                         propName = selectedProp;
                     }
                     if (logarithmicEle.is(':checked')) {
-                        dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].logEqValue : '';
+                        dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE.toUpperCase() == $('#selectEquipType :selected').text().toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE.toUpperCase() == $('#selectEquipType :selected').text().toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].logEqValue : '';
                     }
                     else {
-                        dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
+                        dataVal = equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE.toUpperCase() == $('#selectEquipType :selected').text().toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == propName && x.EQUIP_TYPE.toUpperCase() == $('#selectEquipType :selected').text().toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
                     }
                     if (dataVal) {
                         sortVal.push(dataVal);
@@ -1271,6 +1271,7 @@ $(".js-calculator_text-input").on("change input", function () {
     $(this).parent().parent().find(".js-calculator_range").val($(this).val()).change();
 });
 function CalculateBubbleSize() {
+    debugger;
     var dBCatAttribVal = $('#DBCatAttrib').val();
     if (dBCatAttribVal != "None" && dBCatAttribVal != "" && dBCatAttribVal != null && dBCatAttribVal != "0") {
 
@@ -1284,10 +1285,12 @@ function CalculateBubbleSize() {
         var radiusVal = 5;
         var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
         var selectedEntity = $('#selectEntityType').val();
+
         if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
             assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
         }
         var selectedEquip = $('#selectEquipType').val();
+        
         if (selectedEquip != '' && selectedEquip != null && selectedEquip != "0") {
             assignedEntEqu = assignedEntEqu.filter(x => x.EQUIP_TYPE == selectedEquip);
         }
@@ -1298,12 +1301,12 @@ function CalculateBubbleSize() {
                 if (currentStyle.length > 1) {
                     currentStyle = currentStyle[0];
                 }
-                currentColor = currentStyle.M.Xa.b;
+
                 if (logarithmicEle.is(':checked')) {
-                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].logEqValue : '';
+                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE.toUpperCase() == $('#selectEquipType :selected').text().toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE.toUpperCase() == $('#selectEquipType :selected').text().toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].logEqValue : '';
                 }
                 else {
-                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE == $('#selectEquipType :selected').text() && x.ENT_TYPE == $('#selectEntityType :selected').text() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
+                    dataVal = equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE.toUpperCase() == $('#selectEquipType :selected').text().toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0] != undefined ? equipNumericPropValue.filter(x => x.Prop_Name == dBCatAttribVal && x.EQUIP_TYPE.toUpperCase() == $('#selectEquipType :selected').text().toUpperCase() && x.ENT_TYPE.toUpperCase() == $('#selectEntityType :selected').text().toUpperCase() && new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate) && x.ENT_ID == assignedEntEqu[i].ENT_ID)[0].Eq_Value : '';
                 }
 
                 prevDataVal.push({
@@ -1320,6 +1323,7 @@ function CalculateBubbleSize() {
                     currentStyle = currentStyle[0];
                 }
                 currentColor = currentStyle.M.Xa.b;
+                
                 if (i > 0 && Number(prevDataVal[i].val) != Number(prevDataVal[i - 1].val)) {
                     radiusVal += bubbleBreakValue;
                 }
@@ -1346,7 +1350,7 @@ function ChangeBubbleOpacity() {
     var assignedEntEqu = getAllEnEqAss.filter(x => new Date(x.START_DATE) <= new Date(currentDate) && new Date(x.END_DATE) >= new Date(currentDate));
     var selectedEntity = $('#selectEntityType').val()
     if (selectedEntity != '' && selectedEntity != null && selectedEntity != "0") {
-        assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE == selectedEntity);
+        assignedEntEqu = assignedEntEqu.filter(x => x.ENT_TYPE.toUpperCase() == selectedEntity.toUpperCase());
     }
     for (var i = 0; i < assignedEntEqu.length; i++) {
         var newFeatures = features.filter(item => item.N.Ent_ID == assignedEntEqu[i].ENT_ID);
