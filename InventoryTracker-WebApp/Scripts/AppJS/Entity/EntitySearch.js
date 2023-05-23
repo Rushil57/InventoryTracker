@@ -430,7 +430,10 @@ function saveHDRTemplateDtl() {
 
         var entityTmpDtl = [];
         var isStartGTEnd = false;
+
         $("#tblTemplateDtl > tbody >  tr").each(function () {
+            debugger;
+            console.log("Loop : ");
             if ($(this).attr('hidden') && ($('#currEntDTLID').val() == null || $('#currEntDTLID').val() == 0)) {
                 return;
             }
@@ -463,23 +466,23 @@ function saveHDRTemplateDtl() {
                 return;
             }
             if (Ent_Dtl_ID == $('#currEntDTLID').val()) {
-                entityTmpDtl = [];
+                //entityTmpDtl = [];
                 entityTmpDtl.push({
                     Ent_Dtl_ID: Ent_Dtl_ID,
                     Ent_Temp_ID: Ent_Temp_ID,
                     Ent_Value: firsttd,
                     Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
                     End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
-                })
-                return false;
+                });
+                //return false;
             } else {
-                entityTmpDtl.push({
-                    Ent_Dtl_ID: Ent_Dtl_ID,
-                    Ent_Temp_ID: Ent_Temp_ID,
-                    Ent_Value: firsttd,
-                    Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
-                    End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
-                })
+            entityTmpDtl.push({
+                Ent_Dtl_ID: Ent_Dtl_ID,
+                Ent_Temp_ID: Ent_Temp_ID,
+                Ent_Value: firsttd,
+                Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
+                End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
+            })
             }
         });
 
@@ -996,12 +999,12 @@ function updateEditOption() {
     changeValueEle.parent().find('td:eq(2) > input').val(sdate);
     changeValueEle.parent().find('td:eq(3) > input').val(edate);
     saveHDRTemplateDtl();
-                $('#editEntityEquipment').modal('hide');
-                $('#calendarControlModel').modal('hide');
-                $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');
-                $('#editTemplate').trigger('click');
-                setTimeout(callFunction, 500)
-            }
+    $('#editEntityEquipment').modal('hide');
+    $('#calendarControlModel').modal('hide');
+    $("#entityHDR > tbody").find("[value='" + ccEntityID + "']").parent().trigger('click');
+    $('#editTemplate').trigger('click');
+    setTimeout(callFunction, 500)
+}
 bindChangeProp();
 function GetAllTemplate() {
     $.ajax({

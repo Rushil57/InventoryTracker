@@ -238,6 +238,7 @@ $('#newTemplate').click(function () {
 })
 
 function saveHDRTemplateDtl() {
+    debugger;
     var equipType = equipTypeEle.val().trim();
     var vendor = vendorEle.val().trim();
     var unitid = unitidEle.val().trim();
@@ -286,6 +287,7 @@ function saveHDRTemplateDtl() {
         var isStartGTEnd = false;
 
         $("#tblTemplateDtl > tbody >  tr").each(function () {
+            debugger;
             if ($(this).attr('hidden') && ($('#currEntDTLID').val() == null || $('#currEntDTLID').val() == 0)) {
                 return;
             }
@@ -319,7 +321,7 @@ function saveHDRTemplateDtl() {
                 return;
             }
             if (Equip_Dtl_ID == $('#currEntDTLID').val()) {
-                equipmentTmpDtl = [];
+                //equipmentTmpDtl = [];
                 equipmentTmpDtl.push({
                     Equip_Dtl_ID: Equip_Dtl_ID,
                     Equip_Temp_ID: Equip_Temp_ID,
@@ -327,7 +329,7 @@ function saveHDRTemplateDtl() {
                     Start_Date: secondtd == '' ? "01/01/0001" : secondtd,
                     End_Date: thirdtd == '' ? "01/01/0001" : thirdtd
                 })
-                return false;
+                //return false;
             } else {
                 equipmentTmpDtl.push({
                     Equip_Dtl_ID: Equip_Dtl_ID,
