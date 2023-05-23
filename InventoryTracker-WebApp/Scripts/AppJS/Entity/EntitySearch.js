@@ -432,8 +432,6 @@ function saveHDRTemplateDtl() {
         var isStartGTEnd = false;
 
         $("#tblTemplateDtl > tbody >  tr").each(function () {
-            debugger;
-            console.log("Loop : ");
             if ($(this).attr('hidden') && ($('#currEntDTLID').val() == null || $('#currEntDTLID').val() == 0)) {
                 return;
             }

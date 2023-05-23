@@ -238,7 +238,6 @@ $('#newTemplate').click(function () {
 })
 
 function saveHDRTemplateDtl() {
-    debugger;
     var equipType = equipTypeEle.val().trim();
     var vendor = vendorEle.val().trim();
     var unitid = unitidEle.val().trim();
@@ -287,7 +286,6 @@ function saveHDRTemplateDtl() {
         var isStartGTEnd = false;
 
         $("#tblTemplateDtl > tbody >  tr").each(function () {
-            debugger;
             if ($(this).attr('hidden') && ($('#currEntDTLID').val() == null || $('#currEntDTLID').val() == 0)) {
                 return;
             }
