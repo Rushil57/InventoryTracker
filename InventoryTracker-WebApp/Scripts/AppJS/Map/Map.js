@@ -1271,7 +1271,6 @@ $(".js-calculator_text-input").on("change input", function () {
     $(this).parent().parent().find(".js-calculator_range").val($(this).val()).change();
 });
 function CalculateBubbleSize() {
-    debugger;
     var dBCatAttribVal = $('#DBCatAttrib').val();
     if (dBCatAttribVal != "None" && dBCatAttribVal != "" && dBCatAttribVal != null && dBCatAttribVal != "0") {
 
