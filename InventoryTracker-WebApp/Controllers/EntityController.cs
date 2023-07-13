@@ -791,6 +791,8 @@ namespace InventoryTracker_WebApp.Controllers
                         SLDocument sheet = new SLDocument(fs);
 
                         SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
+                        List<string> previousEntityTypes = new List<string>();
+
                         for (int i = 1; i <= stats.EndRowIndex; i++)
                         {
                             var headerCellValue = (sheet.GetCellValueAsString(i, 1));
@@ -827,8 +829,24 @@ namespace InventoryTracker_WebApp.Controllers
                                         values.Add(valueOFCell);
                                     }
                                 }
-                                if (i != 1)
+                                if (i != 1 && values[1].ToLower() != "latitude" && values[1].ToLower() != "longitude")
                                 {
+                                    if (isEntity && !previousEntityTypes.Contains(values[0]))
+                                    {
+                                        List<string> newValue = new List<string>();
+                                        newValue.Add(values[0]);
+                                        newValue.Add("Latitude");
+                                        newValue.Add("Decimal");
+                                        newValue.Add((stats.EndRowIndex + 1).ToString());
+                                        bool isDefaultInserted = _entityRepository.InsertTemplate(columnHeader, newValue, isEntity);
+                                        newValue = new List<string>();
+                                        newValue.Add(values[0]);
+                                        newValue.Add("Longitude");
+                                        newValue.Add("Decimal");
+                                        newValue.Add((stats.EndRowIndex + 2).ToString());
+                                        isDefaultInserted = _entityRepository.InsertTemplate(columnHeader, newValue, isEntity);
+                                    }
+                                    previousEntityTypes.Add(values[0]);
                                     bool isInserted = _entityRepository.InsertTemplate(columnHeader, values, isEntity);
                                 }
                                 else
