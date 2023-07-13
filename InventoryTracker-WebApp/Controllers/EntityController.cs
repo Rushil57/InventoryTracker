@@ -845,8 +845,9 @@ namespace InventoryTracker_WebApp.Controllers
                                         newValue.Add("Decimal");
                                         newValue.Add((stats.EndRowIndex + 2).ToString());
                                         isDefaultInserted = _entityRepository.InsertTemplate(columnHeader, newValue, isEntity);
+                                        previousEntityTypes.Add(values[0]);
                                     }
-                                    previousEntityTypes.Add(values[0]);
+                                   
                                     bool isInserted = _entityRepository.InsertTemplate(columnHeader, values, isEntity);
                                 }
                                 else
