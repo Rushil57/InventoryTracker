@@ -829,7 +829,7 @@ namespace InventoryTracker_WebApp.Controllers
                                         values.Add(valueOFCell);
                                     }
                                 }
-                                if (i != 1 && values[1].ToLower() != "latitude" && values[1].ToLower() != "longitude")
+                                if (i != 1)
                                 {
                                     if (isEntity && !previousEntityTypes.Contains(values[0]))
                                     {
@@ -847,8 +847,14 @@ namespace InventoryTracker_WebApp.Controllers
                                         isDefaultInserted = _entityRepository.InsertTemplate(columnHeader, newValue, isEntity);
                                         previousEntityTypes.Add(values[0]);
                                     }
-                                   
-                                    bool isInserted = _entityRepository.InsertTemplate(columnHeader, values, isEntity);
+                                    if (isEntity && values[1].ToLower() != "latitude" && values[1].ToLower() != "longitude")
+                                    {
+                                        bool isInserted = _entityRepository.InsertTemplate(columnHeader, values, isEntity);
+                                    }
+                                    else
+                                    {
+                                        bool isInserted = _entityRepository.InsertTemplate(columnHeader, values, isEntity);
+                                    }
                                 }
                                 else
                                 {
